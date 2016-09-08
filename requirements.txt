@@ -1,0 +1,2 @@
+# ethereum
+-e git+https://github.com/ethereum/pyethereum.git@develop#egg=pyethereum

@@ -30,4 +30,4 @@ The following people have reviewed the code (commit they reviewed in parentheses
 
 License
 -------------
-[GPL v3](https://github.com/ConsenSys/MultiSigWallet/blob/master/LICENSE.txt)
+[GPL v3](https://www.gnu.org/licenses/gpl-3.0.txt)

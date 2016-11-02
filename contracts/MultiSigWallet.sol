@@ -1,3 +1,6 @@
+pragma solidity ^0.4.0;
+
+
 /// @title Multisignature wallet - Allows multiple parties to agree on transactions before execution.
 /// @author Stefan George - <stefan.george@consensys.net>
 contract MultiSigWallet {
@@ -9,6 +12,7 @@ contract MultiSigWallet {
     event Deposit(address sender, uint value);
     event OwnerAddition(address owner);
     event OwnerRemoval(address owner);
+    event RequiredUpdate(uint required);
 
     mapping (bytes32 => Transaction) public transactions;
     mapping (bytes32 => mapping (address => bool)) public confirmations;
@@ -87,27 +91,26 @@ contract MultiSigWallet {
         maxRequired(owners, _required)
     {
         required = _required;
+        RequiredUpdate(_required);
     }
 
     function confirmationCount(bytes32 transactionHash)
         constant
         public
-        returns (uint)
+        returns (uint count)
     {
-        uint count = 0;
         for (uint i=0; i<owners.length; i++)
             if (confirmations[transactionHash][owners[i]])
                 count += 1;
-        return count;
     }
 
     function submitTransaction(address destination, uint value, bytes data, uint nonce)
         external
         ownerExists(msg.sender)
         notExecuted(sha3(destination, value, data, nonce))
-        returns (bytes32)
+        returns (bytes32 transactionHash)
     {
-        bytes32 transactionHash = sha3(destination, value, data,  nonce);
+        transactionHash = sha3(destination, value, data,  nonce);
         transactions[transactionHash] = Transaction({
             destination: destination,
             value: value,
@@ -117,7 +120,6 @@ contract MultiSigWallet {
         });
         Submission(msg.sender, transactionHash);
         confirmTransaction(transactionHash);
-        return transactionHash;
     }
 
     function confirmTransaction(bytes32 transactionHash)

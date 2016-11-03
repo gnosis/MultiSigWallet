@@ -25,7 +25,7 @@ All contracts are WITHOUT ANY WARRANTY; without even the implied warranty of MER
 
 Reviewers
 -------------
-The following people have reviewed the code (commit they reviewed in parentheses):
+The following people have reviewed the code at the time of the linked commit:
 - Stefan George ([Georgi87](https://github.com/Georgi87)): [62247de24b979ab0d055768589784cb275a07afe](https://github.com/ConsenSys/MultiSigWallet/tree/62247de24b979ab0d055768589784cb275a07afe)
 
 License

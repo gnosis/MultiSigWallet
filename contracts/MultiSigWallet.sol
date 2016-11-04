@@ -19,6 +19,7 @@ contract MultiSigWallet {
     mapping (address => bool) public isOwner;
     uint public ownerCount;
     uint public required;
+    bytes32[] transactionList;
 
     struct Transaction {
         address destination;
@@ -118,6 +119,7 @@ contract MultiSigWallet {
                 confirmations: 0,
                 executed: false
             });
+            transactionList.push(transactionHash);
             Submission(msg.sender, transactionHash);
         }
         confirmTransaction(transactionHash);
@@ -167,5 +169,42 @@ contract MultiSigWallet {
     {
         if (msg.value > 0)
             Deposit(msg.sender, msg.value);
+    }
+
+    function filterTransactions(bool isPending)
+        private
+        constant
+        returns (bytes32[] _transactionList)
+    {
+        uint count = 0;
+        for (uint i=0; i<transactionList.length; i++)
+            if (   isPending && !transactions[transactionList[i]].executed
+                || !isPending && transactions[transactionList[i]].executed)
+                count += 1;
+        _transactionList = new bytes32[](count);
+        count = 0;
+        for (i=0; i<transactionList.length; i++)
+            if (   isPending && !transactions[transactionList[i]].executed
+                || !isPending && transactions[transactionList[i]].executed)
+            {
+                _transactionList[count] = transactionList[i];
+                count += 1;
+            }
+    }
+
+    function getPendingTransactions()
+        external
+        constant
+        returns (bytes32[] _transactionList)
+    {
+        return filterTransactions(true);
+    }
+
+    function getExecutedTransactions()
+        external
+        constant
+        returns (bytes32[] _transactionList)
+    {
+        return filterTransactions(false);
     }
 }

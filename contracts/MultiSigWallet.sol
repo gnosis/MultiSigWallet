@@ -7,8 +7,8 @@ contract MultiSigWallet {
 
     event Confirmation(address sender, bytes32 transactionHash);
     event Revocation(address sender, bytes32 transactionHash);
-    event Submission(address sender, bytes32 transactionHash);
-    event Execution(address sender, bytes32 transactionHash);
+    event Submission(bytes32 transactionHash);
+    event Execution(bytes32 transactionHash);
     event Deposit(address sender, uint value);
     event OwnerAddition(address owner);
     event OwnerRemoval(address owner);
@@ -33,6 +33,13 @@ contract MultiSigWallet {
     modifier onlyWallet() {
         if (msg.sender != address(this))
             throw;
+        _;
+    }
+
+    modifier signaturesFromOwners(bytes32 transactionHash, uint8[] v, bytes32[] rs) {
+        for (uint i=0; i<v.length; i++)
+            if (!isOwner[ecrecover(transactionHash, v[i], rs[i], rs[v.length + i])])
+                throw;
         _;
     }
 
@@ -103,10 +110,8 @@ contract MultiSigWallet {
         RequiredUpdate(_required);
     }
 
-    function submitTransaction(address destination, uint value, bytes data, uint nonce)
-        external
-        ownerExists(msg.sender)
-        notExecuted(sha3(destination, value, data, nonce))
+    function addTransaction(address destination, uint value, bytes data, uint nonce)
+        private
         returns (bytes32 transactionHash)
     {
         transactionHash = sha3(destination, value, data,  nonce);
@@ -120,9 +125,37 @@ contract MultiSigWallet {
                 executed: false
             });
             transactionList.push(transactionHash);
-            Submission(msg.sender, transactionHash);
+            Submission(transactionHash);
         }
+    }
+
+    function submitTransaction(address destination, uint value, bytes data, uint nonce)
+        external
+        ownerExists(msg.sender)
+        notExecuted(sha3(destination, value, data, nonce))
+        returns (bytes32 transactionHash)
+    {
+        transactionHash = addTransaction(destination, value, data,  nonce);
         confirmTransaction(transactionHash);
+    }
+
+    function submitTransactionWithSignatures(address destination, uint value, bytes data, uint nonce, uint8[] v, bytes32[] rs)
+        external
+        signaturesFromOwners(sha3(destination, value, data, nonce), v, rs)
+        notExecuted(sha3(destination, value, data, nonce))
+        returns (bytes32 transactionHash)
+    {
+        transactionHash = addTransaction(destination, value, data,  nonce);
+        confirmTransactionWithSignatures(transactionHash, v, rs);
+    }
+
+    function addConfirmation(bytes32 transactionHash, address owner)
+        private
+    {
+        confirmations[transactionHash][owner] = true;
+        Transaction tx = transactions[transactionHash];
+        tx.confirmations += 1;
+        Confirmation(owner, transactionHash);
     }
 
     function confirmTransaction(bytes32 transactionHash)
@@ -131,15 +164,32 @@ contract MultiSigWallet {
         notExecuted(transactionHash)
         notConfirmed(transactionHash, msg.sender)
     {
-        confirmations[transactionHash][msg.sender] = true;
+        addConfirmation(transactionHash, msg.sender);
+        executeTransaction(transactionHash);
+    }
+
+    function confirmTransactionWithSignatures(bytes32 transactionHash, uint8[] v, bytes32[] rs)
+        public
+        signaturesFromOwners(transactionHash, v, rs)
+        notExecuted(transactionHash)
+    {
+        for (uint i=0; i<v.length; i++) {
+            address owner = ecrecover(transactionHash, v[i], rs[i], rs[i + v.length]);
+            if (!confirmations[transactionHash][owner])
+                addConfirmation(transactionHash, owner);
+        }
+        executeTransaction(transactionHash);
+    }
+
+    function executeTransaction(bytes32 transactionHash)
+        private
+    {
         Transaction tx = transactions[transactionHash];
-        tx.confirmations += 1;
-        Confirmation(msg.sender, transactionHash);
         if (tx.confirmations >= required) {
             tx.executed = true;
             if (!tx.destination.call.value(tx.value)(tx.data))
                 throw;
-            Execution(msg.sender, transactionHash);
+            Execution(transactionHash);
         }
     }
 
@@ -173,7 +223,6 @@ contract MultiSigWallet {
 
     function filterTransactions(bool isPending)
         private
-        constant
         returns (bytes32[] _transactionList)
     {
         uint count = 0;

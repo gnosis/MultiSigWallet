@@ -46,6 +46,12 @@ contract MultiSigWallet {
         _;
     }
 
+    modifier minRequired(address[] _owners, uint _required) {
+        if (_required == 0 || _owners.length == 0)
+            throw;
+        _;
+    }
+
     modifier maxRequired(address[] _owners, uint _required) {
         if (_required > _owners.length)
             throw;
@@ -88,6 +94,7 @@ contract MultiSigWallet {
     function updateRequired(uint _required)
         external
         onlyWallet
+        minRequired(owners, _required)
         maxRequired(owners, _required)
     {
         required = _required;
@@ -148,6 +155,7 @@ contract MultiSigWallet {
     }
 
     function MultiSigWallet(address[] _owners, uint _required)
+        minRequired(_owners, _required)
         maxRequired(_owners, _required)
     {
         for (uint i=0; i<_owners.length; i++)

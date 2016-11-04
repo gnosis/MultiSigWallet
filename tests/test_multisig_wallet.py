@@ -35,13 +35,10 @@ class TestContract(TestCase):
             constructor_parameters=constructor_parameters
         )
         # Validate deployment
-        self.assertEqual(self.multisig_wallet.owners(0), accounts[wa_1].encode('hex'))
-        self.assertEqual(self.multisig_wallet.owners(1), accounts[wa_2].encode('hex'))
-        self.assertEqual(self.multisig_wallet.owners(2), accounts[wa_3].encode('hex'))
-        self.assertEqual(self.multisig_wallet.required(), required_accounts)
         self.assertTrue(self.multisig_wallet.isOwner(accounts[wa_1]))
         self.assertTrue(self.multisig_wallet.isOwner(accounts[wa_2]))
         self.assertTrue(self.multisig_wallet.isOwner(accounts[wa_3]))
+        self.assertEqual(self.multisig_wallet.required(), required_accounts)
         # Create ABIs
         multisig_abi = self.multisig_wallet.translator
         # Send money to wallet contract
@@ -62,19 +59,19 @@ class TestContract(TestCase):
         # He changes his mind, confirms again
         self.multisig_wallet.confirmTransaction(transaction_hash, sender=keys[wa_1])
         self.assertTrue(self.multisig_wallet.confirmations(transaction_hash, accounts[wa_1]))
-        self.assertEqual(self.multisig_wallet.confirmationCount(transaction_hash), 1)
+        self.assertEqual(self.multisig_wallet.transactions(transaction_hash)[4], 1)
         # Other owner wa_2 confirms and executes transaction at the same time as min sig are available
-        self.assertFalse(self.multisig_wallet.transactions(transaction_hash)[4])
+        self.assertFalse(self.multisig_wallet.transactions(transaction_hash)[5])
         self.multisig_wallet.confirmTransaction(transaction_hash, sender=keys[wa_2])
-        self.assertEqual(self.multisig_wallet.owners(3), accounts[wa_4].encode('hex'))
-        self.assertEqual(self.multisig_wallet.confirmationCount(transaction_hash), 2)
-        # Transaction was executed and deleted
-        self.assertTrue(self.multisig_wallet.transactions(transaction_hash)[4])
+        self.assertTrue(self.multisig_wallet.isOwner(accounts[wa_4]))
+        self.assertEqual(self.multisig_wallet.transactions(transaction_hash)[4], 2)
+        # Transaction was executed
+        self.assertTrue(self.multisig_wallet.transactions(transaction_hash)[5])
         # Update required to 4
         update_required_data = multisig_abi.encode("updateRequired", [4])
         transaction_hash = self.multisig_wallet.submitTransaction(self.multisig_wallet.address, 0, update_required_data, 0, sender=keys[wa_1])
         self.multisig_wallet.confirmTransaction(transaction_hash, sender=keys[wa_2])
-        self.assertEqual(self.multisig_wallet.owners(3), accounts[wa_4].encode('hex'))
+        self.assertTrue(self.multisig_wallet.isOwner(accounts[wa_4]))
         self.assertEqual(self.multisig_wallet.required(), required_accounts + 2)
         # Delete owner wa_3. All parties have to confirm.
         remove_owner_data = multisig_abi.encode("removeOwner", [accounts[wa_3]])
@@ -84,6 +81,6 @@ class TestContract(TestCase):
         self.multisig_wallet.confirmTransaction(transaction_hash, sender=keys[wa_4])
         # Transaction was successfully processed
         self.assertEqual(self.multisig_wallet.required(), required_accounts + 1)
-        self.assertEqual(self.multisig_wallet.owners(0), accounts[wa_1].encode('hex'))
-        self.assertEqual(self.multisig_wallet.owners(1), accounts[wa_2].encode('hex'))
-        self.assertEqual(self.multisig_wallet.owners(2), accounts[wa_4].encode('hex'))
+        self.assertTrue(self.multisig_wallet.isOwner(accounts[wa_1]))
+        self.assertTrue(self.multisig_wallet.isOwner(accounts[wa_2]))
+        self.assertTrue(self.multisig_wallet.isOwner(accounts[wa_4]))

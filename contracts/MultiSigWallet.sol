@@ -17,7 +17,7 @@ contract MultiSigWallet {
     mapping (bytes32 => Transaction) public transactions;
     mapping (bytes32 => mapping (address => bool)) public confirmations;
     mapping (address => bool) public isOwner;
-    address[] public owners;
+    uint public ownerCount;
     uint public required;
 
     struct Transaction {
@@ -25,6 +25,7 @@ contract MultiSigWallet {
         uint value;
         bytes data;
         uint nonce;
+        uint confirmations;
         bool executed;
     }
 
@@ -46,14 +47,20 @@ contract MultiSigWallet {
         _;
     }
 
-    modifier minRequired(address[] _owners, uint _required) {
-        if (_required == 0 || _owners.length == 0)
+    modifier checkRequired(uint _ownerCount, uint _required) {
+        if (_required > _ownerCount || _required == 0 || _ownerCount == 0)
             throw;
         _;
     }
 
-    modifier maxRequired(address[] _owners, uint _required) {
-        if (_required > _owners.length)
+    modifier confirmed(bytes32 transactionHash, address owner) {
+        if (!confirmations[transactionHash][owner])
+            throw;
+        _;
+    }
+
+    modifier notConfirmed(bytes32 transactionHash, address owner) {
+        if (confirmations[transactionHash][owner])
             throw;
         _;
     }
@@ -70,7 +77,7 @@ contract MultiSigWallet {
         ownerDoesNotExist(owner)
     {
         isOwner[owner] = true;
-        owners.push(owner);
+        ownerCount += 1;
         OwnerAddition(owner);
     }
 
@@ -79,36 +86,20 @@ contract MultiSigWallet {
         onlyWallet
         ownerExists(owner)
     {
-        for (uint i=0; i<owners.length - 1; i++) {
-            if (owners[i] == owner)
-                isOwner[owner] = false;
-            if (!isOwner[owner])
-                owners[i] = owners[i+1];
-        }
-        owners.length -= 1;
-        if (required > owners.length)
-            required = owners.length;
+        isOwner[owner] = false;
+        ownerCount -= 1;
+        if (required > ownerCount)
+            updateRequired(ownerCount);
         OwnerRemoval(owner);
     }
 
     function updateRequired(uint _required)
-        external
+        public
         onlyWallet
-        minRequired(owners, _required)
-        maxRequired(owners, _required)
+        checkRequired(ownerCount, _required)
     {
         required = _required;
         RequiredUpdate(_required);
-    }
-
-    function confirmationCount(bytes32 transactionHash)
-        constant
-        public
-        returns (uint count)
-    {
-        for (uint i=0; i<owners.length; i++)
-            if (confirmations[transactionHash][owners[i]])
-                count += 1;
     }
 
     function submitTransaction(address destination, uint value, bytes data, uint nonce)
@@ -123,6 +114,7 @@ contract MultiSigWallet {
             value: value,
             data: data,
             nonce: nonce,
+            confirmations: 0,
             executed: false
         });
         Submission(msg.sender, transactionHash);
@@ -133,11 +125,13 @@ contract MultiSigWallet {
         public
         ownerExists(msg.sender)
         notExecuted(transactionHash)
+        notConfirmed(transactionHash, msg.sender)
     {
         confirmations[transactionHash][msg.sender] = true;
+        Transaction tx = transactions[transactionHash];
+        tx.confirmations += 1;
         Confirmation(msg.sender, transactionHash);
-        if (confirmationCount(transactionHash) >= required) {
-            Transaction tx = transactions[transactionHash];
+        if (tx.confirmations >= required) {
             tx.executed = true;
             if (!tx.destination.call.value(tx.value)(tx.data))
                 throw;
@@ -149,19 +143,21 @@ contract MultiSigWallet {
         external
         ownerExists(msg.sender)
         notExecuted(transactionHash)
+        confirmed(transactionHash, msg.sender)
     {
         confirmations[transactionHash][msg.sender] = false;
+        Transaction tx = transactions[transactionHash];
+        tx.confirmations -= 1;
         Revocation(msg.sender, transactionHash);
     }
 
     function MultiSigWallet(address[] _owners, uint _required)
-        minRequired(_owners, _required)
-        maxRequired(_owners, _required)
+        checkRequired(_owners.length, _required)
     {
         for (uint i=0; i<_owners.length; i++)
             isOwner[_owners[i]] = true;
+        ownerCount = _owners.length;
         required = _required;
-        owners = _owners;
     }
 
     function()

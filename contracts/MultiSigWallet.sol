@@ -109,15 +109,17 @@ contract MultiSigWallet {
         returns (bytes32 transactionHash)
     {
         transactionHash = sha3(destination, value, data,  nonce);
-        transactions[transactionHash] = Transaction({
-            destination: destination,
-            value: value,
-            data: data,
-            nonce: nonce,
-            confirmations: 0,
-            executed: false
-        });
-        Submission(msg.sender, transactionHash);
+        if (transactions[transactionHash].confirmations == 0) {
+            transactions[transactionHash] = Transaction({
+                destination: destination,
+                value: value,
+                data: data,
+                nonce: nonce,
+                confirmations: 0,
+                executed: false
+            });
+            Submission(msg.sender, transactionHash);
+        }
         confirmTransaction(transactionHash);
     }
 

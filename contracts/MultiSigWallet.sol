@@ -225,20 +225,19 @@ contract MultiSigWallet {
         private
         returns (bytes32[] _transactionList)
     {
+        bytes32[] memory _transactionListTemp = new bytes32[](transactionList.length);
         uint count = 0;
         for (uint i=0; i<transactionList.length; i++)
             if (   isPending && !transactions[transactionList[i]].executed
                 || !isPending && transactions[transactionList[i]].executed)
-                count += 1;
-        _transactionList = new bytes32[](count);
-        count = 0;
-        for (i=0; i<transactionList.length; i++)
-            if (   isPending && !transactions[transactionList[i]].executed
-                || !isPending && transactions[transactionList[i]].executed)
             {
-                _transactionList[count] = transactionList[i];
+                _transactionListTemp[count] = transactionList[i];
                 count += 1;
             }
+        _transactionList = new bytes32[](count);
+        for (i=0; i<count; i++)
+            if (_transactionListTemp[i] > 0)
+                _transactionList[i] = _transactionListTemp[i];
     }
 
     function getPendingTransactions()

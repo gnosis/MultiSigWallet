@@ -177,10 +177,8 @@ contract MultiSigWallet {
         public
         signaturesFromOwners(transactionHash, v, rs)
     {
-        for (uint i=0; i<v.length; i++) {
-            address owner = ecrecover(transactionHash, v[i], rs[i], rs[i + v.length]);
-            addConfirmation(transactionHash, owner);
-        }
+        for (uint i=0; i<v.length; i++)
+            addConfirmation(transactionHash, ecrecover(transactionHash, v[i], rs[i], rs[i + v.length]));
         executeTransaction(transactionHash);
     }
 
@@ -188,7 +186,7 @@ contract MultiSigWallet {
         public
         notExecuted(transactionHash)
     {
-        if (confirmationCount(transactionHash) >= required) {
+        if (isConfirmed(transactionHash)) {
             Transaction tx = transactions[transactionHash];
             tx.executed = true;
             if (!tx.destination.call.value(tx.value)(tx.data))
@@ -197,30 +195,14 @@ contract MultiSigWallet {
         }
     }
 
-    function revokeConfirmation(bytes32 transactionHash, address owner)
-        private
-        confirmed(transactionHash, owner)
-        notExecuted(transactionHash)
-    {
-        confirmations[transactionHash][owner] = false;
-        Revocation(owner, transactionHash);
-    }
-
     function revokeConfirmation(bytes32 transactionHash)
         external
         ownerExists(msg.sender)
+        confirmed(transactionHash, msg.sender)
+        notExecuted(transactionHash)
     {
-        revokeConfirmation(transactionHash, msg.sender);
-    }
-
-    function revokeConfirmationWithSignatures(bytes32 transactionHash, uint8[] v, bytes32[] rs)
-        external
-        signaturesFromOwners(transactionHash, v, rs)
-    {
-        for (uint i=0; i<v.length; i++) {
-            address owner = ecrecover(transactionHash, v[i], rs[i], rs[i + v.length]);
-            revokeConfirmation(transactionHash, owner);
-        }
+        confirmations[transactionHash][msg.sender] = false;
+        Revocation(msg.sender, transactionHash);
     }
 
     function MultiSigWallet(address[] _owners, uint _required)
@@ -239,8 +221,21 @@ contract MultiSigWallet {
             Deposit(msg.sender, msg.value);
     }
 
-    function confirmationCount(bytes32 transactionHash)
+    function isConfirmed(bytes32 transactionHash)
         public
+        constant
+        returns (bool)
+    {
+        uint count = 0;
+        for (uint i=0; i<owners.length; i++)
+            if (confirmations[transactionHash][owners[i]])
+                count += 1;
+            if (count == required)
+                return true;
+    }
+
+    function confirmationCount(bytes32 transactionHash)
+        external
         constant
         returns (uint count)
     {

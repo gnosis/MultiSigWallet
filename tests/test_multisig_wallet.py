@@ -65,14 +65,12 @@ class TestContract(TestCase):
         # He changes his mind, confirms again
         self.multisig_wallet.confirmTransaction(transaction_hash, sender=keys[wa_1])
         self.assertTrue(self.multisig_wallet.confirmations(transaction_hash, accounts[wa_1]))
-        self.assertEqual(self.multisig_wallet.transactions(transaction_hash)[4], 1)
         # Other owner wa_2 confirms and executes transaction at the same time as min sig are available
-        self.assertFalse(self.multisig_wallet.transactions(transaction_hash)[5])
+        self.assertFalse(self.multisig_wallet.transactions(transaction_hash)[4])
         self.multisig_wallet.confirmTransaction(transaction_hash, sender=keys[wa_2])
         self.assertTrue(self.multisig_wallet.isOwner(accounts[wa_4]))
-        self.assertEqual(self.multisig_wallet.transactions(transaction_hash)[4], 2)
         # Transaction was executed
-        self.assertTrue(self.multisig_wallet.transactions(transaction_hash)[5])
+        self.assertTrue(self.multisig_wallet.transactions(transaction_hash)[4])
         self.assertEqual(self.multisig_wallet.getPendingTransactions(), [])
         self.assertEqual(self.multisig_wallet.getExecutedTransactions(), [transaction_hash])
         # Update required to 4

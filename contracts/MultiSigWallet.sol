@@ -259,8 +259,7 @@ contract MultiSigWallet {
             }
         _transactionList = new bytes32[](count);
         for (i=0; i<count; i++)
-            if (_transactionListTemp[i] > 0)
-                _transactionList[i] = _transactionListTemp[i];
+            _transactionList[i] = _transactionListTemp[i];
     }
 
     function getPendingTransactions()

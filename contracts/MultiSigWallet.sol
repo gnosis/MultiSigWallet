@@ -127,7 +127,7 @@ contract MultiSigWallet {
         notNull(destination)
         returns (bytes32 transactionHash)
     {
-        transactionHash = sha3(destination, value, data, nonce);
+        transactionHash = keccak256(destination, value, data, nonce);
         if (transactions[transactionHash].destination == 0) {
             transactions[transactionHash] = Transaction({
                 destination: destination,

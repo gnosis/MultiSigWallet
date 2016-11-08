@@ -46,6 +46,5 @@ contract MultiSigWalletWithDailyLimit is MultiSigWallet {
         MultiSigWallet(_owners, _required)
     {
         dailyLimit = _dailyLimit;
-        lastDay = now;
     }
 }

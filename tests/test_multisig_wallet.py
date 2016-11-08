@@ -29,11 +29,14 @@ class TestContract(TestCase):
             [accounts[wa_1], accounts[wa_2], accounts[wa_3]],
             required_accounts
         )
+        gas = self.s.block.gas_used
         self.multisig_wallet = self.s.abi_contract(
             open('contracts/MultiSigWallet.sol').read(),
             language='solidity',
             constructor_parameters=constructor_parameters
         )
+        self.assertLess(self.s.block.gas_used - gas, 2000000)
+        print "Deployment costs: {}".format(self.s.block.gas_used - gas)
         # Validate deployment
         self.assertTrue(self.multisig_wallet.isOwner(accounts[wa_1]))
         self.assertTrue(self.multisig_wallet.isOwner(accounts[wa_2]))
@@ -59,24 +62,28 @@ class TestContract(TestCase):
         self.assertEqual(self.multisig_wallet.getPendingTransactions(), [transaction_hash])
         self.assertEqual(self.multisig_wallet.getExecutedTransactions(), [])
         self.assertTrue(self.multisig_wallet.confirmations(transaction_hash, accounts[wa_1]))
+        self.assertEqual(self.multisig_wallet.confirmationCount(transaction_hash), 1)
         # But owner wa_1 revokes confirmation
         self.multisig_wallet.revokeConfirmation(transaction_hash, sender=keys[wa_1])
         self.assertFalse(self.multisig_wallet.confirmations(transaction_hash, accounts[wa_1]))
+        self.assertEqual(self.multisig_wallet.confirmationCount(transaction_hash), 0)
         # He changes his mind, confirms again
         self.multisig_wallet.confirmTransaction(transaction_hash, sender=keys[wa_1])
         self.assertTrue(self.multisig_wallet.confirmations(transaction_hash, accounts[wa_1]))
+        self.assertEqual(self.multisig_wallet.confirmationCount(transaction_hash), 1)
         # Other owner wa_2 confirms and executes transaction at the same time as min sig are available
         self.assertFalse(self.multisig_wallet.transactions(transaction_hash)[4])
         self.multisig_wallet.confirmTransaction(transaction_hash, sender=keys[wa_2])
         self.assertTrue(self.multisig_wallet.isOwner(accounts[wa_4]))
+        self.assertEqual(self.multisig_wallet.confirmationCount(transaction_hash), 2)
         # Transaction was executed
         self.assertTrue(self.multisig_wallet.transactions(transaction_hash)[4])
         self.assertEqual(self.multisig_wallet.getPendingTransactions(), [])
         self.assertEqual(self.multisig_wallet.getExecutedTransactions(), [transaction_hash])
         # Update required to 4
-        update_required_data = multisig_abi.encode("updateRequired", [4])
+        update_requirement_data = multisig_abi.encode("updateRequirement", [4])
         transaction_hash_2 = self.multisig_wallet.submitTransaction(self.multisig_wallet.address, 0,
-                                                                    update_required_data, 0, sender=keys[wa_1])
+                                                                    update_requirement_data, 0, sender=keys[wa_1])
         self.assertEqual(self.multisig_wallet.getPendingTransactions(), [transaction_hash_2])
         self.assertEqual(self.multisig_wallet.getExecutedTransactions(), [transaction_hash])
         self.multisig_wallet.confirmTransaction(transaction_hash_2, sender=keys[wa_2])

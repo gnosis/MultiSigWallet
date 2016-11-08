@@ -1,4 +1,4 @@
-pragma solidity ^0.4.0;
+pragma solidity 0.4.4;
 
 
 /// @title Multisignature wallet - Allows multiple parties to agree on transactions before execution.
@@ -12,7 +12,7 @@ contract MultiSigWallet {
     event Deposit(address sender, uint value);
     event OwnerAddition(address owner);
     event OwnerRemoval(address owner);
-    event RequiredUpdate(uint required);
+    event RequirementUpdate(uint required);
 
     mapping (bytes32 => Transaction) public transactions;
     mapping (bytes32 => mapping (address => bool)) public confirmations;
@@ -32,13 +32,6 @@ contract MultiSigWallet {
     modifier onlyWallet() {
         if (msg.sender != address(this))
             throw;
-        _;
-    }
-
-    modifier signaturesFromOwners(bytes32 transactionHash, uint8[] v, bytes32[] rs) {
-        for (uint i=0; i<v.length; i++)
-            if (!isOwner[ecrecover(transactionHash, v[i], rs[i], rs[v.length + i])])
-                throw;
         _;
     }
 
@@ -109,17 +102,17 @@ contract MultiSigWallet {
             }
         owners.length -= 1;
         if (required > owners.length)
-            updateRequired(owners.length);
+            updateRequirement(owners.length);
         OwnerRemoval(owner);
     }
 
-    function updateRequired(uint _required)
+    function updateRequirement(uint _required)
         public
         onlyWallet
         validRequired(owners.length, _required)
     {
         required = _required;
-        RequiredUpdate(_required);
+        RequirementUpdate(_required);
     }
 
     function addTransaction(address destination, uint value, bytes data, uint nonce)
@@ -127,7 +120,7 @@ contract MultiSigWallet {
         notNull(destination)
         returns (bytes32 transactionHash)
     {
-        transactionHash = sha3(destination, value, data, nonce);
+        transactionHash = keccak256(destination, value, data, nonce);
         if (transactions[transactionHash].destination == 0) {
             transactions[transactionHash] = Transaction({
                 destination: destination,
@@ -149,14 +142,6 @@ contract MultiSigWallet {
         confirmTransaction(transactionHash);
     }
 
-    function submitTransactionWithSignatures(address destination, uint value, bytes data, uint nonce, uint8[] v, bytes32[] rs)
-        external
-        returns (bytes32 transactionHash)
-    {
-        transactionHash = addTransaction(destination, value, data, nonce);
-        confirmTransactionWithSignatures(transactionHash, v, rs);
-    }
-
     function addConfirmation(bytes32 transactionHash, address owner)
         private
         notConfirmed(transactionHash, owner)
@@ -170,15 +155,6 @@ contract MultiSigWallet {
         ownerExists(msg.sender)
     {
         addConfirmation(transactionHash, msg.sender);
-        executeTransaction(transactionHash);
-    }
-
-    function confirmTransactionWithSignatures(bytes32 transactionHash, uint8[] v, bytes32[] rs)
-        public
-        signaturesFromOwners(transactionHash, v, rs)
-    {
-        for (uint i=0; i<v.length; i++)
-            addConfirmation(transactionHash, ecrecover(transactionHash, v[i], rs[i], rs[i + v.length]));
         executeTransaction(transactionHash);
     }
 
@@ -227,11 +203,12 @@ contract MultiSigWallet {
         returns (bool)
     {
         uint count = 0;
-        for (uint i=0; i<owners.length; i++)
+        for (uint i=0; i<owners.length; i++) {
             if (confirmations[transactionHash][owners[i]])
                 count += 1;
             if (count == required)
                 return true;
+        }
     }
 
     function confirmationCount(bytes32 transactionHash)

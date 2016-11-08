@@ -71,7 +71,7 @@ contract MultiSigWallet {
         _;
     }
 
-    modifier validRequired(uint _ownerCount, uint _required) {
+    modifier validRequirement(uint _ownerCount, uint _required) {
         if (   _required > _ownerCount
             || _required == 0
             || _ownerCount == 0)
@@ -109,7 +109,7 @@ contract MultiSigWallet {
     function updateRequirement(uint _required)
         public
         onlyWallet
-        validRequired(owners.length, _required)
+        validRequirement(owners.length, _required)
     {
         required = _required;
         RequirementUpdate(_required);
@@ -182,7 +182,7 @@ contract MultiSigWallet {
     }
 
     function MultiSigWallet(address[] _owners, uint _required)
-        validRequired(_owners.length, _required)
+        validRequirement(_owners.length, _required)
     {
         for (uint i=0; i<_owners.length; i++)
             isOwner[_owners[i]] = true;

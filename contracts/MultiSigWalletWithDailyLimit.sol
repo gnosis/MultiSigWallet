@@ -32,12 +32,12 @@ contract MultiSigWalletWithDailyLimit is MultiSigWallet {
         DailyLimitUpdate(_dailyLimit);
     }
 
-    function withdraw(address destination, uint value, bytes data)
+    function withdraw(address destination, uint value)
         external
         ownerExists(msg.sender)
         underLimit(value)
     {
-        if (!destination.call.value(value)(data))
+        if (!destination.send(value))
             throw;
         Withdraw(msg.sender, value);
     }

@@ -59,13 +59,13 @@ class TestContract(TestCase):
         self.assertEqual(self.multisig_wallet.dailyLimit(), daily_limit_updated)
         # Withdraw daily limit
         value = 1000
-        self.multisig_wallet.withdraw(accounts[wa_1], value, "", sender=keys[wa_1])
-        self.multisig_wallet.withdraw(accounts[wa_1], value, "", sender=keys[wa_1])
+        self.multisig_wallet.withdraw(accounts[wa_1], value, sender=keys[wa_1])
+        self.multisig_wallet.withdraw(accounts[wa_1], value, sender=keys[wa_1])
         # Third time fails, because daily limit was reached
-        self.assertRaises(TransactionFailed, self.multisig_wallet.withdraw, accounts[wa_1], value, "",
-                          sender=keys[wa_1])
+        self.assertRaises(TransactionFailed, self.multisig_wallet.withdraw, accounts[wa_1], value, sender=keys[wa_1])
         self.assertEqual(self.s.block.get_balance(self.multisig_wallet.address), deposit - daily_limit_updated)
         # Let one day pass
         self.s.block.timestamp += self.TWENTY_FOUR_HOURS + 1
         # Daily withdraw is possible again
-        self.multisig_wallet.withdraw(accounts[wa_1], value, "", sender=keys[wa_1])
+        self.multisig_wallet.withdraw(accounts[wa_1], value, sender=keys[wa_1])
+        self.assertEqual(self.s.block.get_balance(self.multisig_wallet.address), deposit - daily_limit_updated - value)

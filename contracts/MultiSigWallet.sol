@@ -116,7 +116,7 @@ contract MultiSigWallet {
     }
 
     function addTransaction(address destination, uint value, bytes data, uint nonce)
-        private
+        internal
         notNull(destination)
         returns (bytes32 transactionHash)
     {
@@ -143,7 +143,7 @@ contract MultiSigWallet {
     }
 
     function addConfirmation(bytes32 transactionHash, address owner)
-        private
+        internal
         notConfirmed(transactionHash, owner)
     {
         confirmations[transactionHash][owner] = true;

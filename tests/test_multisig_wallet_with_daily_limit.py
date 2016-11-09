@@ -52,7 +52,7 @@ class TestContract(TestCase):
         self.assertEqual(self.multisig_wallet.dailyLimit(), daily_limit)
         # Update daily limit
         daily_limit_updated = 2000
-        update_daily_limit = multisig_abi.encode("updateDailyLimit", [daily_limit_updated])
+        update_daily_limit = multisig_abi.encode("changeDailyLimit", [daily_limit_updated])
         transaction_hash = self.multisig_wallet.submitTransaction(self.multisig_wallet.address, 0,
                                                                   update_daily_limit, 0, sender=keys[wa_1])
         self.multisig_wallet.confirmTransaction(transaction_hash, sender=keys[wa_2])

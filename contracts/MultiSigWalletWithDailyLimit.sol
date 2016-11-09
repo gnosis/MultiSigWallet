@@ -6,7 +6,7 @@ import "MultiSigWallet.sol";
 /// @author Stefan George - <stefan.george@consensys.net>
 contract MultiSigWalletWithDailyLimit is MultiSigWallet {
 
-    event DailyLimitUpdate(uint dailyLimit);
+    event DailyLimitChange(uint dailyLimit);
     event Withdraw(address sender, uint amount);
 
     uint public dailyLimit;
@@ -24,12 +24,12 @@ contract MultiSigWalletWithDailyLimit is MultiSigWallet {
         _;
     }
 
-    function updateDailyLimit(uint _dailyLimit)
+    function changeDailyLimit(uint _dailyLimit)
         external
         onlyWallet
     {
         dailyLimit = _dailyLimit;
-        DailyLimitUpdate(_dailyLimit);
+        DailyLimitChange(_dailyLimit);
     }
 
     function withdraw(address destination, uint value)

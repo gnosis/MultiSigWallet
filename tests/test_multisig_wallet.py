@@ -81,7 +81,7 @@ class TestContract(TestCase):
         self.assertEqual(self.multisig_wallet.getPendingTransactions(), [])
         self.assertEqual(self.multisig_wallet.getExecutedTransactions(), [transaction_hash])
         # Update required to 4
-        update_requirement_data = multisig_abi.encode("updateRequirement", [4])
+        update_requirement_data = multisig_abi.encode("changeRequirement", [4])
         transaction_hash_2 = self.multisig_wallet.submitTransaction(self.multisig_wallet.address, 0,
                                                                     update_requirement_data, 0, sender=keys[wa_1])
         self.assertEqual(self.multisig_wallet.getPendingTransactions(), [transaction_hash_2])

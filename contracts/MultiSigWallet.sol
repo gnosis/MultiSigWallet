@@ -14,7 +14,7 @@ contract MultiSigWallet {
     event Deposit(address sender, uint value);
     event OwnerAddition(address owner);
     event OwnerRemoval(address owner);
-    event RequirementUpdate(uint required);
+    event RequirementChange(uint required);
 
     mapping (bytes32 => Transaction) public transactions;
     mapping (bytes32 => mapping (address => bool)) public confirmations;
@@ -105,17 +105,17 @@ contract MultiSigWallet {
             }
         owners.length -= 1;
         if (required > owners.length)
-            updateRequirement(owners.length);
+            changeRequirement(owners.length);
         OwnerRemoval(owner);
     }
 
-    function updateRequirement(uint _required)
+    function changeRequirement(uint _required)
         public
         onlyWallet
         validRequirement(owners.length, _required)
     {
         required = _required;
-        RequirementUpdate(_required);
+        RequirementChange(_required);
     }
 
     function addTransaction(address destination, uint value, bytes data, uint nonce)

@@ -7,7 +7,7 @@ import "MultiSigWallet.sol";
 contract MultiSigWalletWithDailyLimit is MultiSigWallet {
 
     event DailyLimitChange(uint dailyLimit);
-    event Withdraw(address sender, uint amount);
+    event Withdraw(address sender, address destination, uint amount);
 
     uint public dailyLimit;
     uint public lastDay;
@@ -39,7 +39,7 @@ contract MultiSigWalletWithDailyLimit is MultiSigWallet {
     {
         if (!destination.send(value))
             throw;
-        Withdraw(msg.sender, value);
+        Withdraw(msg.sender, destination, value);
     }
 
     function MultiSigWalletWithDailyLimit(address[] _owners, uint _required, uint _dailyLimit)

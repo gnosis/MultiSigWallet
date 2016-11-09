@@ -5,6 +5,8 @@ pragma solidity 0.4.4;
 /// @author Stefan George - <stefan.george@consensys.net>
 contract MultiSigWallet {
 
+    uint constant public MAX_OWNER_COUNT = 50;
+
     event Confirmation(address sender, bytes32 transactionHash);
     event Revocation(address sender, bytes32 transactionHash);
     event Submission(bytes32 transactionHash);
@@ -72,7 +74,8 @@ contract MultiSigWallet {
     }
 
     modifier validRequirement(uint _ownerCount, uint _required) {
-        if (   _required > _ownerCount
+        if (   _ownerCount > MAX_OWNER_COUNT
+            || _required > _ownerCount
             || _required == 0
             || _ownerCount == 0)
             throw;

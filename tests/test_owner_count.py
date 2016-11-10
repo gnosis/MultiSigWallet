@@ -54,7 +54,8 @@ class TestContract(TestCase):
         self.s.send(keys[0], self.multisig_wallet.address, deposit)
         self.assertEqual(self.s.block.get_balance(self.multisig_wallet.address), 1000)
         # Transfer money from wallet
-        transaction_hash = self.multisig_wallet.submitTransaction(accounts[0], deposit, "", 0, sender=keys[0])
+        nonce = self.multisig_wallet.getNonce(accounts[0], deposit, "")
+        transaction_hash = self.multisig_wallet.submitTransaction(accounts[0], deposit, "", nonce, sender=keys[0])
         self.assertEqual(self.multisig_wallet.getPendingTransactions(), [transaction_hash])
         for i in range(1, account_count):
             self.multisig_wallet.confirmTransaction(transaction_hash, sender=keys[i])
@@ -63,8 +64,9 @@ class TestContract(TestCase):
         self.assertEqual(self.multisig_wallet.getExecutedTransactions(), [transaction_hash])
         # Delete owner wa_3. All parties have to confirm.
         remove_owner_data = multisig_abi.encode("removeOwner", [accounts[account_count - 1]])
+        nonce = self.multisig_wallet.getNonce(self.multisig_wallet.address, 0, remove_owner_data)
         transaction_hash_2 = self.multisig_wallet.submitTransaction(self.multisig_wallet.address, 0, remove_owner_data,
-                                                                    0, sender=keys[0])
+                                                                    nonce, sender=keys[0])
         self.assertEqual(self.multisig_wallet.getPendingTransactions(), [transaction_hash_2])
         self.assertEqual(self.multisig_wallet.getExecutedTransactions(), [transaction_hash])
         for i in range(1, account_count):

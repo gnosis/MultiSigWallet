@@ -46,7 +46,8 @@ class TestContract(TestCase):
         self.assertEqual(self.test_token.balanceOf(self.multisig_wallet.address), token_count)
         # Multisig wallet sends tokens to wa_1
         transfer_data = test_token_abi.encode("transfer", [accounts[wa_1], token_count/2])
-        transaction_hash = self.multisig_wallet.submitTransaction(self.test_token.address, 0, transfer_data, 0,
+        nonce = self.multisig_wallet.getNonce(self.test_token.address, 0, transfer_data)
+        transaction_hash = self.multisig_wallet.submitTransaction(self.test_token.address, 0, transfer_data, nonce,
                                                                   sender=keys[wa_1])
         self.assertEqual(self.multisig_wallet.getPendingTransactions(), [transaction_hash])
         self.assertEqual(self.multisig_wallet.getExecutedTransactions(), [])

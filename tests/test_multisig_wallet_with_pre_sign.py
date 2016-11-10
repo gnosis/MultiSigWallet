@@ -56,7 +56,7 @@ class TestContract(TestCase):
         # Pre sign transaction
         value = 1000
         data = ""
-        nonce = 0
+        nonce = self.multisig_wallet.getNonce(accounts[wa_1], value, data)
         transaction_hash = self.multisig_wallet.calcTransactionHash(accounts[wa_1], value, data, nonce)
         v_1, r_1, s_1 = self.sign_data(transaction_hash, wa_1)
         v_2, r_2, s_2 = self.sign_data(transaction_hash, wa_2)

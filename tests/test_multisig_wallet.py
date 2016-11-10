@@ -71,9 +71,9 @@ class TestContract(TestCase):
         self.multisig_wallet.confirmTransaction(transaction_hash, sender=keys[wa_1])
         self.assertTrue(self.multisig_wallet.confirmations(transaction_hash, accounts[wa_1]))
         self.assertEqual(self.multisig_wallet.confirmationCount(transaction_hash), 1)
-        # Other owner wa_2 confirms and executes transaction at the same time as min sig are available
+        # Other owner wa_2 confirms with submit and executes transaction at the same time as min sig are available
         self.assertFalse(self.multisig_wallet.transactions(transaction_hash)[4])
-        self.multisig_wallet.confirmTransaction(transaction_hash, sender=keys[wa_2])
+        self.multisig_wallet.submitTransaction(self.multisig_wallet.address, 0, add_owner_data, 0, sender=keys[wa_2])
         self.assertTrue(self.multisig_wallet.isOwner(accounts[wa_4]))
         self.assertEqual(self.multisig_wallet.confirmationCount(transaction_hash), 2)
         # Transaction was executed

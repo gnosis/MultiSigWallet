@@ -18,8 +18,8 @@ contract MultiSigWallet {
 
     mapping (bytes32 => Transaction) public transactions;
     mapping (bytes32 => mapping (address => bool)) public confirmations;
-    mapping (address => bool) public isOwner;
     mapping (bytes32 => uint) public nonces;
+    mapping (address => bool) public isOwner;
     address[] owners;
     bytes32[] transactionList;
     uint public required;
@@ -74,6 +74,12 @@ contract MultiSigWallet {
         _;
     }
 
+    modifier validNonce(address destination, uint value, bytes data, uint nonce) {
+        if (nonce > nonces[keccak256(destination, value, data)])
+            throw;
+        _;
+    }
+
     modifier validRequirement(uint _ownerCount, uint _required) {
         if (   _ownerCount > MAX_OWNER_COUNT
             || _required > _ownerCount
@@ -122,6 +128,7 @@ contract MultiSigWallet {
     function addTransaction(address destination, uint value, bytes data, uint nonce)
         internal
         notNull(destination)
+        validNonce(destination, value, data, nonce)
         returns (bytes32 transactionHash)
     {
         transactionHash = keccak256(destination, value, data, nonce);
@@ -216,6 +223,14 @@ contract MultiSigWallet {
         }
     }
 
+    function getNonce(address destination, uint value, bytes data)
+        external
+        constant
+        returns (uint)
+    {
+        return nonces[keccak256(destination, value, data)];
+    }
+
     function confirmationCount(bytes32 transactionHash)
         external
         constant
@@ -258,13 +273,5 @@ contract MultiSigWallet {
         returns (bytes32[])
     {
         return filterTransactions(false);
-    }
-
-    function getNonce(address destination, uint value, bytes data)
-        external
-        constant
-        returns (uint)
-    {
-        return nonces[keccak256(destination, value, data)];
     }
 }

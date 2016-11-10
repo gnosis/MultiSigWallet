@@ -20,7 +20,7 @@ contract MultiSigWallet {
     mapping (bytes32 => mapping (address => bool)) public confirmations;
     mapping (bytes32 => uint) public nonces;
     mapping (address => bool) public isOwner;
-    address[] owners;
+    address[] public owners;
     bytes32[] transactionList;
     uint public required;
 

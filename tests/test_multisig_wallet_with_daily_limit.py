@@ -59,13 +59,20 @@ class TestContract(TestCase):
         self.assertEqual(self.multisig_wallet.dailyLimit(), daily_limit_updated)
         # Withdraw daily limit
         value = 1000
-        self.multisig_wallet.withdraw(accounts[wa_1], value, sender=keys[wa_1])
-        self.multisig_wallet.withdraw(accounts[wa_1], value, sender=keys[wa_1])
+        wa_1_balance = self.s.block.get_balance(accounts[wa_1])
+        self.multisig_wallet.submitTransaction(accounts[wa_1], value, "", 0, sender=keys[wa_2])
+        self.assertEqual(self.s.block.get_balance(self.multisig_wallet.address), deposit - value)
+        self.assertEqual(self.s.block.get_balance(accounts[wa_1]), wa_1_balance + value)
+        self.multisig_wallet.submitTransaction(accounts[wa_1], value, "", 1, sender=keys[wa_2])
+        self.assertEqual(self.s.block.get_balance(self.multisig_wallet.address), deposit - value*2)
+        self.assertEqual(self.s.block.get_balance(accounts[wa_1]), wa_1_balance + value*2)
         # Third time fails, because daily limit was reached
-        self.assertRaises(TransactionFailed, self.multisig_wallet.withdraw, accounts[wa_1], value, sender=keys[wa_1])
-        self.assertEqual(self.s.block.get_balance(self.multisig_wallet.address), deposit - daily_limit_updated)
+        self.multisig_wallet.submitTransaction(accounts[wa_1], value, "", 2, sender=keys[wa_2])
+        self.assertEqual(self.s.block.get_balance(self.multisig_wallet.address), deposit - value*2)
+        self.assertEqual(self.s.block.get_balance(accounts[wa_1]), wa_1_balance + value*2)
         # Let one day pass
         self.s.block.timestamp += self.TWENTY_FOUR_HOURS + 1
         # Daily withdraw is possible again
-        self.multisig_wallet.withdraw(accounts[wa_1], value, sender=keys[wa_1])
-        self.assertEqual(self.s.block.get_balance(self.multisig_wallet.address), deposit - daily_limit_updated - value)
+        self.multisig_wallet.submitTransaction(accounts[wa_1], value, "", 3, sender=keys[wa_2])
+        self.assertEqual(self.s.block.get_balance(self.multisig_wallet.address), deposit - value*3)
+        self.assertEqual(self.s.block.get_balance(accounts[wa_1]), wa_1_balance + value*3)

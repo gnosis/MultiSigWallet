@@ -7,21 +7,23 @@ import "MultiSigWallet.sol";
 contract MultiSigWalletWithDailyLimit is MultiSigWallet {
 
     event DailyLimitChange(uint dailyLimit);
-    event Withdraw(address sender, address destination, uint amount);
 
     uint public dailyLimit;
     uint public lastDay;
     uint public spentToday;
 
-    modifier underLimit(uint amount) {
+    function underLimit(uint amount)
+        internal
+        returns (bool)
+    {
         if (now > lastDay + 24 hours) {
             lastDay = now;
             spentToday = 0;
         }
+        if (spentToday + amount > dailyLimit)
+            return false;
         spentToday += amount;
-        if (spentToday > dailyLimit)
-            throw;
-        _;
+        return true;
     }
 
     function changeDailyLimit(uint _dailyLimit)
@@ -32,14 +34,17 @@ contract MultiSigWalletWithDailyLimit is MultiSigWallet {
         DailyLimitChange(_dailyLimit);
     }
 
-    function withdraw(address destination, uint value)
-        external
-        ownerExists(msg.sender)
-        underLimit(value)
+    function executeTransaction(bytes32 transactionHash)
+        public
+        notExecuted(transactionHash)
     {
-        if (!destination.send(value))
-            throw;
-        Withdraw(msg.sender, destination, value);
+        Transaction tx = transactions[transactionHash];
+        if (isConfirmed(transactionHash) || tx.data.length == 0 && underLimit(tx.value)) {
+            tx.executed = true;
+            if (!tx.destination.call.value(tx.value)(tx.data))
+                throw;
+            Execution(transactionHash);
+        }
     }
 
     function MultiSigWalletWithDailyLimit(address[] _owners, uint _required, uint _dailyLimit)

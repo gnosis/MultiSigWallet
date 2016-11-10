@@ -13,15 +13,15 @@ contract MultiSigWalletWithPreSign is MultiSigWallet {
         _;
     }
 
-    function submitTransactionWithSignatures(address destination, uint value, bytes data, uint nonce, uint8[] v, bytes32[] rs)
+    function submitTransactionPreSigned(address destination, uint value, bytes data, uint nonce, uint8[] v, bytes32[] rs)
         external
         returns (bytes32 transactionHash)
     {
         transactionHash = addTransaction(destination, value, data, nonce);
-        confirmTransactionWithSignatures(transactionHash, v, rs);
+        confirmTransactionPreSigned(transactionHash, v, rs);
     }
 
-    function confirmTransactionWithSignatures(bytes32 transactionHash, uint8[] v, bytes32[] rs)
+    function confirmTransactionPreSigned(bytes32 transactionHash, uint8[] v, bytes32[] rs)
         public
         signaturesFromOwners(transactionHash, v, rs)
     {

@@ -60,6 +60,6 @@ class TestContract(TestCase):
         transaction_hash = self.multisig_wallet.calcTransactionHash(accounts[wa_1], value, data, nonce)
         v_1, r_1, s_1 = self.sign_data(transaction_hash, wa_1)
         v_2, r_2, s_2 = self.sign_data(transaction_hash, wa_2)
-        self.multisig_wallet.submitTransactionWithSignatures(accounts[wa_1], value, data, nonce, [v_1, v_2],
-                                                             [r_1, r_2, s_1, s_2])
+        self.multisig_wallet.submitTransactionPreSigned(accounts[wa_1], value, data, nonce, [v_1, v_2],
+                                                        [r_1, r_2, s_1, s_2])
         self.assertEqual(self.s.block.get_balance(self.multisig_wallet.address), deposit - value)

@@ -13,7 +13,7 @@ contract MultiSigWalletWithDailyLimit is MultiSigWallet {
     uint public spentToday;
 
     function underLimit(uint amount)
-        internal
+        private
         returns (bool)
     {
         if (now > lastDay + 24 hours) {

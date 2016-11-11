@@ -42,7 +42,7 @@ class TestContract(TestCase):
         )
         gas = self.s.block.gas_used
         self.multisig_wallet = self.s.abi_contract(
-            self.pp.process('MultiSigWalletWithPreSign.sol', contract_dir='contracts/', add_dev_code=True),
+            self.pp.process('MultiSigWalletWithPreSign.sol', contract_dir='solidity/', add_dev_code=True),
             language='solidity',
             constructor_parameters=constructor_parameters,
             contract_name="MultiSigWalletWithPreSign"

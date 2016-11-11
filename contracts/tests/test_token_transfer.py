@@ -7,7 +7,7 @@ from unittest import TestCase
 
 class TestContract(TestCase):
     """
-    run test with python -m unittest tests.test_token_transfer
+    run test with python -m unittest contracts.tests.test_token_transfer
     """
 
     HOMESTEAD_BLOCK = 1150000
@@ -29,13 +29,13 @@ class TestContract(TestCase):
             required_accounts
         )
         self.multisig_wallet = self.s.abi_contract(
-            open('contracts/MultiSigWallet.sol').read(),
+            open('solidity/MultiSigWallet.sol').read(),
             language='solidity',
             constructor_parameters=constructor_parameters
         )
         # Create token
         self.test_token = self.s.abi_contract(
-            open('contracts/TestToken.sol').read(),
+            open('solidity/TestToken.sol').read(),
             language='solidity'
         )
         # Create ABIs

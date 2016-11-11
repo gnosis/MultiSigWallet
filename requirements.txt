@@ -1,2 +1,7 @@
+requests==2.5.3
+click==5.1
+
 # ethereum
--e git+https://github.com/ethereum/pyethereum.git@develop#egg=pyethereum
+https://github.com/ethereum/serpent/tarball/develop
+git+https://github.com/Georgi87/pyethereum.git@develop
+git+https://github.com/Georgi87/ethjsonrpc.git@master

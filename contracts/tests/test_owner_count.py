@@ -8,7 +8,7 @@ from unittest import TestCase
 
 class TestContract(TestCase):
     """
-    run test with python -m unittest tests.test_owner_count
+    run test with python -m unittest contracts.tests.test_owner_count
     """
 
     HOMESTEAD_BLOCK = 1150000
@@ -35,11 +35,12 @@ class TestContract(TestCase):
             required_accounts
         )
         # Try to create contract with 51 owners fails
-        self.assertRaises(ContractCreationFailed, self.s.abi_contract, open('contracts/MultiSigWallet.sol').read(),
+        self.assertRaises(ContractCreationFailed, self.s.abi_contract,
+                          open('solidity/MultiSigWallet.sol').read(),
                           language='solidity', constructor_parameters=(accounts + accounts[:1], required_accounts))
         gas = self.s.block.gas_used
         self.multisig_wallet = self.s.abi_contract(
-            open('contracts/MultiSigWallet.sol').read(),
+            open('solidity/MultiSigWallet.sol').read(),
             language='solidity',
             constructor_parameters=constructor_parameters
         )

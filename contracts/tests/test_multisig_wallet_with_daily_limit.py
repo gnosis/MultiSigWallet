@@ -1,7 +1,6 @@
 # ethereum
 from ethereum import tester as t
 from ethereum.tester import keys, accounts
-from ethereum.tester import TransactionFailed
 from preprocessor import PreProcessor
 # standard libraries
 from unittest import TestCase
@@ -9,7 +8,7 @@ from unittest import TestCase
 
 class TestContract(TestCase):
     """
-    run test with python -m unittest tests.test_multisig_wallet_with_daily_limit
+    run test with python -m unittest contracts.tests.test_multisig_wallet_with_daily_limit
     """
 
     HOMESTEAD_BLOCK = 1150000
@@ -36,7 +35,7 @@ class TestContract(TestCase):
         )
         gas = self.s.block.gas_used
         self.multisig_wallet = self.s.abi_contract(
-            self.pp.process('MultiSigWalletWithDailyLimit.sol', contract_dir='contracts/', add_dev_code=True),
+            self.pp.process('MultiSigWalletWithDailyLimit.sol', contract_dir='solidity/', add_dev_code=True),
             language='solidity',
             constructor_parameters=constructor_parameters,
             contract_name="MultiSigWalletWithDailyLimit"

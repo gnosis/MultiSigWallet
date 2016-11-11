@@ -31,7 +31,7 @@ class TestContract(TestCase):
         )
         gas = self.s.block.gas_used
         self.multisig_wallet = self.s.abi_contract(
-            open('contracts/MultiSigWallet.sol').read(),
+            open('solidity/MultiSigWallet.sol').read(),
             language='solidity',
             constructor_parameters=constructor_parameters
         )

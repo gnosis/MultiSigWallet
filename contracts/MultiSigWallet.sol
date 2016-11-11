@@ -21,7 +21,7 @@ contract MultiSigWallet {
     mapping (bytes32 => uint) public nonces;
     mapping (address => bool) public isOwner;
     address[] public owners;
-    bytes32[] transactionList;
+    bytes32[] public transactionList;
     uint public required;
 
     struct Transaction {

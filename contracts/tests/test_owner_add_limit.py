@@ -2,6 +2,7 @@
 from ethereum import tester as t
 from ethereum.utils import sha3, privtoaddr, to_string
 from ethereum.tester import ContractCreationFailed
+from ethereum.tester import TransactionFailed
 # standard libraries
 from unittest import TestCase
 
@@ -51,7 +52,7 @@ class TestContract(TestCase):
         # Create ABIs
         multisig_abi = self.multisig_wallet.translator
 
-        # Breach the maximum number of owners
+        # Should not be able to breach the maximum number of owners
         key_51 = sha3(to_string(51))
         account_51 = privtoaddr(key_51)
         add_owner_data = multisig_abi.encode("addOwner", [account_51])
@@ -61,11 +62,9 @@ class TestContract(TestCase):
                                                                     nonce, sender=keys[0])
         self.assertEqual(self.multisig_wallet.getPendingTransactions(), [add_owner_tx_hash])
         self.assertEqual(self.multisig_wallet.getExecutedTransactions(), [])
-        for i in range(1, account_count):
-            profiling = self.multisig_wallet.confirmTransaction(add_owner_tx_hash, sender=keys[i], profiling=True)
-            # self.assertLess(profiling['gas'], 100000)
-        self.assertEqual(self.multisig_wallet.getPendingTransactions(), [])
+        self.assertRaises(TransactionFailed, self.multisig_wallet.confirmTransaction,
+                            add_owner_tx_hash, sender=keys[0])
+        self.assertEqual(self.multisig_wallet.getPendingTransactions(), [add_owner_tx_hash])
         self.assertEqual(self.multisig_wallet.getExecutedTransactions(),
-                         [add_owner_tx_hash])
-        # Transaction was successfully processed
-        self.assertTrue(self.multisig_wallet.isOwner(account_51))
+                         [])
+        self.assertFalse(self.multisig_wallet.isOwner(account_51))

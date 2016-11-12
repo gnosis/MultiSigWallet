@@ -93,6 +93,7 @@ contract MultiSigWallet {
         external
         onlyWallet
         ownerDoesNotExist(owner)
+        validRequirement(owners.length + 1, required)
     {
         isOwner[owner] = true;
         owners.push(owner);

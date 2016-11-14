@@ -105,6 +105,9 @@ contract MultiSigWallet {
             Deposit(msg.sender, msg.value);
     }
 
+    /*
+     * External functions
+     */
     function addOwner(address owner)
         external
         onlyWallet
@@ -133,36 +136,6 @@ contract MultiSigWallet {
         OwnerRemoval(owner);
     }
 
-    function changeRequirement(uint _required)
-        public
-        onlyWallet
-        validRequirement(owners.length, _required)
-    {
-        required = _required;
-        RequirementChange(_required);
-    }
-
-    function addTransaction(address destination, uint value, bytes data, uint nonce)
-        internal
-        notNull(destination)
-        validNonce(destination, value, data, nonce)
-        returns (bytes32 transactionHash)
-    {
-        transactionHash = keccak256(destination, value, data, nonce);
-        if (transactions[transactionHash].destination == 0) {
-            transactions[transactionHash] = Transaction({
-                destination: destination,
-                value: value,
-                data: data,
-                nonce: nonce,
-                executed: false
-            });
-            nonces[keccak256(destination, value, data)] += 1;
-            transactionList.push(transactionHash);
-            Submission(transactionHash);
-        }
-    }
-
     function submitTransaction(address destination, uint value, bytes data, uint nonce)
         external
         returns (bytes32 transactionHash)
@@ -171,12 +144,60 @@ contract MultiSigWallet {
         confirmTransaction(transactionHash);
     }
 
-    function addConfirmation(bytes32 transactionHash, address owner)
-        internal
-        notConfirmed(transactionHash, owner)
+    function revokeConfirmation(bytes32 transactionHash)
+        external
+        ownerExists(msg.sender)
+        confirmed(transactionHash, msg.sender)
+        notExecuted(transactionHash)
     {
-        confirmations[transactionHash][owner] = true;
-        Confirmation(owner, transactionHash);
+        confirmations[transactionHash][msg.sender] = false;
+        Revocation(msg.sender, transactionHash);
+    }
+
+    function getNonce(address destination, uint value, bytes data)
+        external
+        constant
+        returns (uint)
+    {
+        return nonces[keccak256(destination, value, data)];
+    }
+
+    function confirmationCount(bytes32 transactionHash)
+        external
+        constant
+        returns (uint count)
+    {
+        for (uint i=0; i<owners.length; i++)
+            if (confirmations[transactionHash][owners[i]])
+                count += 1;
+    }
+
+    function getPendingTransactions()
+        external
+        constant
+        returns (bytes32[])
+    {
+        return filterTransactions(true);
+    }
+
+    function getExecutedTransactions()
+        external
+        constant
+        returns (bytes32[])
+    {
+        return filterTransactions(false);
+    }
+
+    /*
+     * Public functions
+     */
+    function changeRequirement(uint _required)
+        public
+        onlyWallet
+        validRequirement(owners.length, _required)
+    {
+        required = _required;
+        RequirementChange(_required);
     }
 
     function confirmTransaction(bytes32 transactionHash)
@@ -200,16 +221,6 @@ contract MultiSigWallet {
         }
     }
 
-    function revokeConfirmation(bytes32 transactionHash)
-        external
-        ownerExists(msg.sender)
-        confirmed(transactionHash, msg.sender)
-        notExecuted(transactionHash)
-    {
-        confirmations[transactionHash][msg.sender] = false;
-        Revocation(msg.sender, transactionHash);
-    }
-
     function isConfirmed(bytes32 transactionHash)
         public
         constant
@@ -224,24 +235,41 @@ contract MultiSigWallet {
         }
     }
 
-    function getNonce(address destination, uint value, bytes data)
-        external
-        constant
-        returns (uint)
+    /*
+     * Internal functions
+     */
+    function addTransaction(address destination, uint value, bytes data, uint nonce)
+        internal
+        notNull(destination)
+        validNonce(destination, value, data, nonce)
+        returns (bytes32 transactionHash)
     {
-        return nonces[keccak256(destination, value, data)];
+        transactionHash = keccak256(destination, value, data, nonce);
+        if (transactions[transactionHash].destination == 0) {
+            transactions[transactionHash] = Transaction({
+                destination: destination,
+                value: value,
+                data: data,
+                nonce: nonce,
+                executed: false
+            });
+            nonces[keccak256(destination, value, data)] += 1;
+            transactionList.push(transactionHash);
+            Submission(transactionHash);
+        }
     }
 
-    function confirmationCount(bytes32 transactionHash)
-        external
-        constant
-        returns (uint count)
+    function addConfirmation(bytes32 transactionHash, address owner)
+        internal
+        notConfirmed(transactionHash, owner)
     {
-        for (uint i=0; i<owners.length; i++)
-            if (confirmations[transactionHash][owners[i]])
-                count += 1;
+        confirmations[transactionHash][owner] = true;
+        Confirmation(owner, transactionHash);
     }
 
+    /*
+     * Private functions
+     */
     function filterTransactions(bool isPending)
         private
         returns (bytes32[] _transactionList)
@@ -258,21 +286,5 @@ contract MultiSigWallet {
         _transactionList = new bytes32[](count);
         for (i=0; i<count; i++)
             _transactionList[i] = transactionListTemp[i];
-    }
-
-    function getPendingTransactions()
-        external
-        constant
-        returns (bytes32[])
-    {
-        return filterTransactions(true);
-    }
-
-    function getExecutedTransactions()
-        external
-        constant
-        returns (bytes32[])
-    {
-        return filterTransactions(false);
     }
 }

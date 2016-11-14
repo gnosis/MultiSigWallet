@@ -35,16 +35,11 @@ class TestContract(TestCase):
             accounts,
             required_accounts
         )
-        gas = self.s.block.gas_used
         self.multisig_wallet = self.s.abi_contract(
             open('solidity/MultiSigWallet.sol').read(),
             language='solidity',
             constructor_parameters=constructor_parameters
         )
-        print "Deployment costs: {}".format(self.s.block.gas_used - gas)
-        self.assertLess(self.s.block.gas_used - gas, 3500000)
-        # Validate deployment
-        self.assertEqual(self.multisig_wallet.required(), required_accounts)
         # Create ABIs
         multisig_abi = self.multisig_wallet.translator
         # Should not be able to breach the maximum number of owners

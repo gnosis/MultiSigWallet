@@ -89,6 +89,22 @@ contract MultiSigWallet {
         _;
     }
 
+    function MultiSigWallet(address[] _owners, uint _required)
+        validRequirement(_owners.length, _required)
+    {
+        for (uint i=0; i<_owners.length; i++)
+            isOwner[_owners[i]] = true;
+        owners = _owners;
+        required = _required;
+    }
+
+    function()
+        payable
+    {
+        if (msg.value > 0)
+            Deposit(msg.sender, msg.value);
+    }
+
     function addOwner(address owner)
         external
         onlyWallet
@@ -192,22 +208,6 @@ contract MultiSigWallet {
     {
         confirmations[transactionHash][msg.sender] = false;
         Revocation(msg.sender, transactionHash);
-    }
-
-    function MultiSigWallet(address[] _owners, uint _required)
-        validRequirement(_owners.length, _required)
-    {
-        for (uint i=0; i<_owners.length; i++)
-            isOwner[_owners[i]] = true;
-        owners = _owners;
-        required = _required;
-    }
-
-    function()
-        payable
-    {
-        if (msg.value > 0)
-            Deposit(msg.sender, msg.value);
     }
 
     function isConfirmed(bytes32 transactionHash)

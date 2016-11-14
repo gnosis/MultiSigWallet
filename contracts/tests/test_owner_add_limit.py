@@ -9,7 +9,7 @@ from unittest import TestCase
 
 class TestContract(TestCase):
     """
-    run test with python -m unittest contracts.tests.test_owner_add_limit
+    run test with python -m unittest tests.test_owner_add_limit
     """
 
     HOMESTEAD_BLOCK = 1150000
@@ -30,15 +30,11 @@ class TestContract(TestCase):
             accounts.append(privtoaddr(keys[-1]))
             self.s.block.set_balance(accounts[-1], 10**18)
         # Create wallet
-        required_accounts = account_count
+        required_accounts = 2
         constructor_parameters = (
             accounts,
             required_accounts
         )
-        # Try to create contract with 51 owners fails
-        self.assertRaises(ContractCreationFailed, self.s.abi_contract,
-                          open('solidity/MultiSigWallet.sol').read(),
-                          language='solidity', constructor_parameters=(accounts + accounts[:1], required_accounts))
         gas = self.s.block.gas_used
         self.multisig_wallet = self.s.abi_contract(
             open('solidity/MultiSigWallet.sol').read(),
@@ -51,7 +47,6 @@ class TestContract(TestCase):
         self.assertEqual(self.multisig_wallet.required(), required_accounts)
         # Create ABIs
         multisig_abi = self.multisig_wallet.translator
-
         # Should not be able to breach the maximum number of owners
         key_51 = sha3(to_string(51))
         account_51 = privtoaddr(key_51)
@@ -59,12 +54,10 @@ class TestContract(TestCase):
         self.assertFalse(self.multisig_wallet.isOwner(account_51))
         nonce = self.multisig_wallet.getNonce(self.multisig_wallet.address, 0, add_owner_data)
         add_owner_tx_hash = self.multisig_wallet.submitTransaction(self.multisig_wallet.address, 0, add_owner_data,
-                                                                    nonce, sender=keys[0])
+                                                                   nonce, sender=keys[0])
         self.assertEqual(self.multisig_wallet.getPendingTransactions(), [add_owner_tx_hash])
         self.assertEqual(self.multisig_wallet.getExecutedTransactions(), [])
-        self.assertRaises(TransactionFailed, self.multisig_wallet.confirmTransaction,
-                            add_owner_tx_hash, sender=keys[0])
+        # 2nd confirmation will fail, because transaction cannot be executed due to too many owners.
+        self.assertRaises(TransactionFailed, self.multisig_wallet.confirmTransaction, add_owner_tx_hash, sender=keys[1])
         self.assertEqual(self.multisig_wallet.getPendingTransactions(), [add_owner_tx_hash])
-        self.assertEqual(self.multisig_wallet.getExecutedTransactions(),
-                         [])
-        self.assertFalse(self.multisig_wallet.isOwner(account_51))
+        self.assertEqual(self.multisig_wallet.getExecutedTransactions(), [])

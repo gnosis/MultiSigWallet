@@ -186,6 +186,20 @@ contract MultiSigWallet {
         }
     }
 
+    function isConfirmed(bytes32 transactionHash)
+        public
+        constant
+        returns (bool)
+    {
+        uint count = 0;
+        for (uint i=0; i<owners.length; i++) {
+            if (confirmations[transactionHash][owners[i]])
+                count += 1;
+            if (count == required)
+                return true;
+        }
+    }
+
     function getNonce(address destination, uint value, bytes data)
         public
         constant
@@ -202,20 +216,6 @@ contract MultiSigWallet {
         for (uint i=0; i<owners.length; i++)
             if (confirmations[transactionHash][owners[i]])
                 count += 1;
-    }
-
-    function isConfirmed(bytes32 transactionHash)
-        public
-        constant
-        returns (bool)
-    {
-        uint count = 0;
-        for (uint i=0; i<owners.length; i++) {
-            if (confirmations[transactionHash][owners[i]])
-                count += 1;
-            if (count == required)
-                return true;
-        }
     }
 
     /*
@@ -251,10 +251,12 @@ contract MultiSigWallet {
     }
 
     /*
-     * Private functions
+     * These functions are not callable across contracts because they return
+     * a dynamically-sized array https://github.com/ethereum/solidity/issues/166
      */
     function filterTransactions(bool isPending)
-        private
+        public
+        constant
         returns (bytes32[] _transactionList)
     {
         bytes32[] memory transactionListTemp = new bytes32[](transactionList.length);
@@ -271,10 +273,6 @@ contract MultiSigWallet {
             _transactionList[i] = transactionListTemp[i];
     }
 
-    /*
-     * These functions are not callable across contracts because they return
-     * a dynamically-sized array https://github.com/ethereum/solidity/issues/166
-     */
     function getPendingTransactions()
         public
         constant

@@ -106,10 +106,10 @@ contract MultiSigWallet {
     }
 
     /*
-     * External functions
+     * Public functions
      */
     function addOwner(address owner)
-        external
+        public
         onlyWallet
         ownerDoesNotExist(owner)
         validRequirement(owners.length + 1, required)
@@ -120,7 +120,7 @@ contract MultiSigWallet {
     }
 
     function removeOwner(address owner)
-        external
+        public
         onlyWallet
         ownerExists(owner)
     {
@@ -137,7 +137,7 @@ contract MultiSigWallet {
     }
 
     function submitTransaction(address destination, uint value, bytes data, uint nonce)
-        external
+        public
         returns (bytes32 transactionHash)
     {
         transactionHash = addTransaction(destination, value, data, nonce);
@@ -145,7 +145,7 @@ contract MultiSigWallet {
     }
 
     function revokeConfirmation(bytes32 transactionHash)
-        external
+        public
         ownerExists(msg.sender)
         confirmed(transactionHash, msg.sender)
         notExecuted(transactionHash)
@@ -155,7 +155,7 @@ contract MultiSigWallet {
     }
 
     function getNonce(address destination, uint value, bytes data)
-        external
+        public
         constant
         returns (uint)
     {
@@ -163,7 +163,7 @@ contract MultiSigWallet {
     }
 
     function confirmationCount(bytes32 transactionHash)
-        external
+        public
         constant
         returns (uint count)
     {
@@ -172,9 +172,6 @@ contract MultiSigWallet {
                 count += 1;
     }
 
-    /*
-     * Public functions
-     */
     function changeRequirement(uint _required)
         public
         onlyWallet

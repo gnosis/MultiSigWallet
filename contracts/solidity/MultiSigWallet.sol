@@ -90,6 +90,7 @@ contract MultiSigWallet {
     }
 
     function MultiSigWallet(address[] _owners, uint _required)
+        public
         validRequirement(_owners.length, _required)
     {
         for (uint i=0; i<_owners.length; i++)
@@ -99,6 +100,7 @@ contract MultiSigWallet {
     }
 
     function()
+        external
         payable
     {
         if (msg.value > 0)

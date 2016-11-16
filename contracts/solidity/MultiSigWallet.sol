@@ -270,11 +270,11 @@ contract MultiSigWallet {
     }
 
     /*
-     * These functions are not callable within Solidity because they return
+     * These functions are not callable across contracts because they return
      * a dynamically-sized array https://github.com/ethereum/solidity/issues/166
      */
     function getPendingTransactions()
-        external
+        public
         constant
         returns (bytes32[])
     {
@@ -282,7 +282,7 @@ contract MultiSigWallet {
     }
 
     function getExecutedTransactions()
-        external
+        public
         constant
         returns (bytes32[])
     {

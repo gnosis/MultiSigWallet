@@ -89,6 +89,17 @@ contract MultiSigWallet {
         _;
     }
 
+    /// @dev Fallback function allows to deposit ether.
+    function()
+        payable
+    {
+        if (msg.value > 0)
+            Deposit(msg.sender, msg.value);
+    }
+
+    /*
+     * Public functions
+     */
     /// @dev Contract constructor sets initial owners and required number of confirmations.
     /// @param _owners List of initial owners.
     /// @param _required Number of required confirmations.
@@ -102,18 +113,6 @@ contract MultiSigWallet {
         required = _required;
     }
 
-    /// @dev Fallback function allows to deposit ether.
-    function()
-        external
-        payable
-    {
-        if (msg.value > 0)
-            Deposit(msg.sender, msg.value);
-    }
-
-    /*
-     * Public functions
-     */
     /// @dev Allows to add a new owner. Transaction has to be sent by wallet.
     /// @param owner Address of new owner.
     function addOwner(address owner)

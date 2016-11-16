@@ -172,22 +172,6 @@ contract MultiSigWallet {
                 count += 1;
     }
 
-    function getPendingTransactions()
-        external
-        constant
-        returns (bytes32[])
-    {
-        return filterTransactions(true);
-    }
-
-    function getExecutedTransactions()
-        external
-        constant
-        returns (bytes32[])
-    {
-        return filterTransactions(false);
-    }
-
     /*
      * Public functions
      */
@@ -286,5 +270,25 @@ contract MultiSigWallet {
         _transactionList = new bytes32[](count);
         for (i=0; i<count; i++)
             _transactionList[i] = transactionListTemp[i];
+    }
+
+    /*
+     * These functions are not callable within Solidity because they return
+     * a dynamically-sized array https://github.com/ethereum/solidity/issues/166
+     */
+    function getPendingTransactions()
+        external
+        constant
+        returns (bytes32[])
+    {
+        return filterTransactions(true);
+    }
+
+    function getExecutedTransactions()
+        external
+        constant
+        returns (bytes32[])
+    {
+        return filterTransactions(false);
     }
 }

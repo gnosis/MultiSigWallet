@@ -138,6 +138,15 @@ contract MultiSigWallet {
         OwnerRemoval(owner);
     }
 
+    function changeRequirement(uint _required)
+        public
+        onlyWallet
+        validRequirement(owners.length, _required)
+    {
+        required = _required;
+        RequirementChange(_required);
+    }
+
     function submitTransaction(address destination, uint value, bytes data, uint nonce)
         public
         returns (bytes32 transactionHash)
@@ -154,15 +163,6 @@ contract MultiSigWallet {
     {
         confirmations[transactionHash][msg.sender] = false;
         Revocation(msg.sender, transactionHash);
-    }
-
-    function changeRequirement(uint _required)
-        public
-        onlyWallet
-        validRequirement(owners.length, _required)
-    {
-        required = _required;
-        RequirementChange(_required);
     }
 
     function confirmTransaction(bytes32 transactionHash)

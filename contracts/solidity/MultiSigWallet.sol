@@ -154,24 +154,6 @@ contract MultiSigWallet {
         Revocation(msg.sender, transactionHash);
     }
 
-    function getNonce(address destination, uint value, bytes data)
-        public
-        constant
-        returns (uint)
-    {
-        return nonces[keccak256(destination, value, data)];
-    }
-
-    function confirmationCount(bytes32 transactionHash)
-        public
-        constant
-        returns (uint count)
-    {
-        for (uint i=0; i<owners.length; i++)
-            if (confirmations[transactionHash][owners[i]])
-                count += 1;
-    }
-
     function changeRequirement(uint _required)
         public
         onlyWallet
@@ -200,6 +182,24 @@ contract MultiSigWallet {
                 throw;
             Execution(transactionHash);
         }
+    }
+
+    function getNonce(address destination, uint value, bytes data)
+        public
+        constant
+        returns (uint)
+    {
+        return nonces[keccak256(destination, value, data)];
+    }
+
+    function confirmationCount(bytes32 transactionHash)
+        public
+        constant
+        returns (uint count)
+    {
+        for (uint i=0; i<owners.length; i++)
+            if (confirmations[transactionHash][owners[i]])
+                count += 1;
     }
 
     function isConfirmed(bytes32 transactionHash)

@@ -12,6 +12,13 @@ contract MultiSigWalletWithDailyLimit is MultiSigWallet {
     uint public lastDay;
     uint public spentToday;
 
+    /*
+     * Public functions
+     */
+    /// @dev Contract constructor sets initial owners, required number of confirmations and daily withdraw limit.
+    /// @param _owners List of initial owners.
+    /// @param _required Number of required confirmations.
+    /// @param _dailyLimit Amount in wei, which can be withdrawn without confirmations on a daily basis.
     function MultiSigWalletWithDailyLimit(address[] _owners, uint _required, uint _dailyLimit)
         public
         MultiSigWallet(_owners, _required)
@@ -19,6 +26,8 @@ contract MultiSigWalletWithDailyLimit is MultiSigWallet {
         dailyLimit = _dailyLimit;
     }
 
+    /// @dev Allows to change the daily limit. Transaction has to be sent by wallet.
+    /// @param _dailyLimit Amount in wei.
     function changeDailyLimit(uint _dailyLimit)
         public
         onlyWallet
@@ -27,6 +36,8 @@ contract MultiSigWalletWithDailyLimit is MultiSigWallet {
         DailyLimitChange(_dailyLimit);
     }
 
+    /// @dev Allows anyone to execute a confirmed transaction or ether withdraws until daily limit is reached.
+    /// @param transactionHash Hash identifying a transaction.
     function executeTransaction(bytes32 transactionHash)
         public
         notExecuted(transactionHash)
@@ -40,6 +51,11 @@ contract MultiSigWalletWithDailyLimit is MultiSigWallet {
         }
     }
 
+    /*
+     * Internal functions
+     */
+    /// @dev Returns if amount is within daily limit and updates daily spending.
+    /// @param amount Amount to withdraw.
     function underLimit(uint amount)
         internal
         returns (bool)

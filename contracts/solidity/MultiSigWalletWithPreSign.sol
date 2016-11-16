@@ -13,8 +13,15 @@ contract MultiSigWalletWithPreSign is MultiSigWallet {
         _;
     }
 
+    function MultiSigWalletWithPreSign(address[] _owners, uint _required)
+        public
+        MultiSigWallet(_owners, _required)
+    {
+        // Nothing to do here
+    }
+
     function submitTransactionPreSigned(address destination, uint value, bytes data, uint nonce, uint8[] v, bytes32[] rs)
-        external
+        public
         returns (bytes32 transactionHash)
     {
         transactionHash = addTransaction(destination, value, data, nonce);
@@ -31,16 +38,10 @@ contract MultiSigWalletWithPreSign is MultiSigWallet {
     }
 
     function calcTransactionHash(address destination, uint value, bytes data, uint nonce)
-        external
+        public
         constant
         returns (bytes32 transactionHash)
     {
         return keccak256(destination, value, data, nonce);
-    }
-
-    function MultiSigWalletWithPreSign(address[] _owners, uint _required)
-        MultiSigWallet(_owners, _required)
-    {
-        // Nothing to do here
     }
 }

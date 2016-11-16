@@ -12,22 +12,15 @@ contract MultiSigWalletWithDailyLimit is MultiSigWallet {
     uint public lastDay;
     uint public spentToday;
 
-    function underLimit(uint amount)
-        private
-        returns (bool)
+    function MultiSigWalletWithDailyLimit(address[] _owners, uint _required, uint _dailyLimit)
+        public
+        MultiSigWallet(_owners, _required)
     {
-        if (now > lastDay + 24 hours) {
-            lastDay = now;
-            spentToday = 0;
-        }
-        if (spentToday + amount > dailyLimit)
-            return false;
-        spentToday += amount;
-        return true;
+        dailyLimit = _dailyLimit;
     }
 
     function changeDailyLimit(uint _dailyLimit)
-        external
+        public
         onlyWallet
     {
         dailyLimit = _dailyLimit;
@@ -47,9 +40,17 @@ contract MultiSigWalletWithDailyLimit is MultiSigWallet {
         }
     }
 
-    function MultiSigWalletWithDailyLimit(address[] _owners, uint _required, uint _dailyLimit)
-        MultiSigWallet(_owners, _required)
+    function underLimit(uint amount)
+        internal
+        returns (bool)
     {
-        dailyLimit = _dailyLimit;
+        if (now > lastDay + 24 hours) {
+            lastDay = now;
+            spentToday = 0;
+        }
+        if (spentToday + amount > dailyLimit)
+            return false;
+        spentToday += amount;
+        return true;
     }
 }

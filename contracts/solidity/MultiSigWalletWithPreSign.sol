@@ -30,7 +30,7 @@ contract MultiSigWalletWithPreSign is MultiSigWallet {
     /// @param nonce Internal transaction nonce to identify transactions with identical arguments.
     /// @param v List of v parameters of owner signatures.
     /// @param rs List of r and s parameters of owner signatures.
-    /// @return transactionHash Returns hash identifying a transaction.
+    /// @return Returns hash identifying a transaction.
     function submitTransactionPreSigned(address destination, uint value, bytes data, uint nonce, uint8[] v, bytes32[] rs)
         public
         returns (bytes32 transactionHash)
@@ -57,11 +57,11 @@ contract MultiSigWalletWithPreSign is MultiSigWallet {
     /// @param value Transaction ether value.
     /// @param data Transaction data payload.
     /// @param nonce Internal transaction nonce to identify transactions with identical arguments.
-    /// @return transactionHash Returns hash identifying a transaction.
+    /// @return Returns hash identifying a transaction.
     function calcTransactionHash(address destination, uint value, bytes data, uint nonce)
         public
         constant
-        returns (bytes32 transactionHash)
+        returns (bytes32)
     {
         return keccak256(destination, value, data, nonce);
     }

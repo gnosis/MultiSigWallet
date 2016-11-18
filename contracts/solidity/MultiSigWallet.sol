@@ -161,7 +161,7 @@ contract MultiSigWallet {
     /// @param value Transaction ether value.
     /// @param data Transaction data payload.
     /// @param nonce Internal transaction nonce to identify transactions with identical arguments.
-    /// @return transactionHash Returns hash identifying a transaction.
+    /// @return Returns hash identifying a transaction.
     function submitTransaction(address destination, uint value, bytes data, uint nonce)
         public
         returns (bytes32 transactionHash)
@@ -209,11 +209,11 @@ contract MultiSigWallet {
 
     /// @dev Returns the confirmation status of a transaction.
     /// @param transactionHash Hash identifying a transaction.
-    /// @return confirmed Confirmation status.
+    /// @return Confirmation status.
     function isConfirmed(bytes32 transactionHash)
         public
         constant
-        returns (bool confirmed)
+        returns (bool)
     {
         uint count = 0;
         for (uint i=0; i<owners.length; i++) {
@@ -228,18 +228,18 @@ contract MultiSigWallet {
     /// @param destination Transaction target address.
     /// @param value Transaction ether value.
     /// @param data Transaction data payload.
-    /// @return nonce Internal transaction nonce to identify transactions with identical arguments.
+    /// @return Internal transaction nonce to identify transactions with identical arguments.
     function getNonce(address destination, uint value, bytes data)
         public
         constant
-        returns (uint nonce)
+        returns (uint)
     {
         return nonces[keccak256(destination, value, data)];
     }
 
     /// @dev Returns number of confirmations of a transaction.
     /// @param transactionHash Hash identifying a transaction.
-    /// @return count Number of confirmations.
+    /// @return Number of confirmations.
     function confirmationCount(bytes32 transactionHash)
         public
         constant
@@ -258,7 +258,7 @@ contract MultiSigWallet {
     /// @param value Transaction ether value.
     /// @param data Transaction data payload.
     /// @param nonce Internal transaction nonce to identify transactions with identical arguments.
-    /// @return transactionHash Returns hash identifying transaction.
+    /// @return Returns hash identifying transaction.
     function addTransaction(address destination, uint value, bytes data, uint nonce)
         internal
         notNull(destination)
@@ -297,7 +297,7 @@ contract MultiSigWallet {
      */
     /// @dev Returns transaction hashes filtered by their execution status.
     /// @param isPending Defines if pending or executed transactions are returned.
-    /// @return _transactionList List of transaction hashes.
+    /// @return List of transaction hashes.
     function filterTransactions(bool isPending)
         public
         constant
@@ -318,21 +318,21 @@ contract MultiSigWallet {
     }
 
     /// @dev Returns transaction hashes of pending transactions.
-    /// @return _transactionList List of transaction hashes.
+    /// @return List of transaction hashes.
     function getPendingTransactions()
         public
         constant
-        returns (bytes32[] _transactionList)
+        returns (bytes32[])
     {
         return filterTransactions(true);
     }
 
     /// @dev Returns transaction hashes of executed transactions.
-    /// @return _transactionList List of transaction hashes.
+    /// @return List of transaction hashes.
     function getExecutedTransactions()
         public
         constant
-        returns (bytes32[] _transactionList)
+        returns (bytes32[])
     {
         return filterTransactions(false);
     }

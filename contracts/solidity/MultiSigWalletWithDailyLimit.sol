@@ -56,9 +56,10 @@ contract MultiSigWalletWithDailyLimit is MultiSigWallet {
      */
     /// @dev Returns if amount is within daily limit and updates daily spending.
     /// @param amount Amount to withdraw.
+    /// @return isUnderLimit Returns if amount is under daily limit.
     function underLimit(uint amount)
         internal
-        returns (bool)
+        returns (bool isUnderLimit)
     {
         if (now > lastDay + 24 hours) {
             lastDay = now;

@@ -1,0 +1,20 @@
+{
+  "name": "multisigweb",
+  "version": "1.0.0",
+  "description": "Angular web app made for Multi Sig Wallet",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ethereum",
+    "web3",
+    "multisig"
+  ],
+  "author": "denis.granha@consensys.net",
+  "license": "ISC",
+  "dependencies": {
+    "grunt": "^1.0.1",
+    "grunt-http-server": "^2.0.0"
+  }
+}

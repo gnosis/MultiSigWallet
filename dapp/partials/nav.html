@@ -1,0 +1,52 @@
+<nav class="navbar navbar-default" role="navigation" ng-controller="navCtrl">
+    <div class="navbar-header">
+
+        <!-- note the ng-init and ng-click here: -->
+        <button type="button" class="navbar-toggle" ng-click="navCollapsed = !navCollapsed">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">MultiSigWeb</a>
+    </div>
+
+    <div class="collapse navbar-collapse" uib-collapse="navCollapsed">
+        <ul class="nav navbar-nav">
+          <li>
+            <a href="#/wallets">
+              Wallets
+            </a>
+          </li>
+          <li>
+            <a href="#/owners">
+              Owners
+            </a>
+          </li>
+          <li>
+            <a href="#/transactions">
+              Transactions
+            </a>
+          </li>
+        </ul>
+
+        <ul class="nav navbar-nav pull-right" ng-show="loggedIn">
+          <li uib-dropdown>
+           <a href="#" uib-dropdown-toggle>
+             <!-- <i class="fa fa-address-book-o" aria-hidden="true"></i> -->
+             Accounts <b class="caret"></b>
+           </a>
+           <ul class="dropdown-menu">
+              <li ng-repeat="account in accounts"><a href="">{{account}}</a></li>
+           </ul>
+          </li>
+          <li>
+            <p class="navbar-text"> Nonce: {{nonce}} </p>
+          </li>
+          <li>
+            <p class="navbar text-success" ng-show="connected"> Online </p>
+            <p class="text-danger" ng-hide="connected"> Offline </p>
+          </li>
+        </ul>
+    </div>
+</nav>

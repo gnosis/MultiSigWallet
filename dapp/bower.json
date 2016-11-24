@@ -1,0 +1,35 @@
+{
+  "name": "MultiSigWeb",
+  "authors": [
+    "denis.granha@consensys.net"
+  ],
+  "description": "Angular App for MultiSigWallet",
+  "main": "index.html",
+  "moduleType": [],
+  "keywords": [
+    "ethereum",
+    "multisig",
+    "web3"
+  ],
+  "license": "MIT",
+  "homepage": "https://www.gnosis.pm",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "1.5.8",
+    "angular-route": "1.5.8",
+    "angular-touch": "1.5.8",
+    "angular-animate": "1.5.8",
+    "angular-bootstrap": "2.2.0",
+    "bootstrap": "3.3.7",
+    "web3": "0.16.0",
+    "font-awesome": "fontawesome#4.7.0",
+    "bootstrap3-dialog": "bootstrap-dialog#^1.35.3"
+  }
+}

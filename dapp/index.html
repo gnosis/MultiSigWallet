@@ -1,0 +1,43 @@
+<!doctype html>
+  <html>
+    <head>
+      <!-- 3rd party Stylesheets -->
+      <link href="/bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+      <link href="/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+      <link href="/bower_components/bootstrap3-dialog/dist/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
+
+      <!-- 3rd party Script -->
+      <script src="/bower_components/angular/angular.min.js"></script>
+      <script src="/bower_components/angular-animate/angular-animate.min.js"></script>
+      <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+      <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+      <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+      <script src="/bower_components/angular-route/angular-route.min.js"></script>
+      <script src="/bower_components/angular-touch/angular-touch.min.js"></script>
+      <script src="/bower_components/web3/dist/web3.min.js"></script>
+      <script src="/bower_components/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js"></script>
+
+      <!-- Custom Stylesheets -->
+      <link href="/css/app.css" rel="stylesheet" type="text/css" />
+
+      <!-- App -->
+      <script src="/app.js"></script>
+      <script src="/filters.js"></script>
+      <script src="/routes.js"></script>
+
+      <!-- Services -->
+      <script src="/services/Wallet.js"></script>
+      <script src="/services/Utils.js"></script>
+
+      <!-- Controllers -->
+      <script src="/controllers/navCtrl.js"></script>
+      <script src="/controllers/walletCtrl.js"></script>
+
+    </head>
+    <body ng-app="multiSigWeb">
+      <div ng-include="'/partials/nav.html'"></div>
+      <div class="container">
+        <ng-view></ng-view>
+      </div>
+    </body>
+  </html>

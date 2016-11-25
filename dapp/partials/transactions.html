@@ -1,0 +1,33 @@
+<div class="page-header">
+  <h1>
+    User Transactions
+  </h1>
+</div>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <td>
+        txHash
+      </td>
+      <td>
+        # blockNumber
+      </td>
+      <td>
+        date
+      </td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="transaction in transactions">
+      <td>
+        {{transaction.txHash}}
+      </td>
+      <td>
+        {{transaction.receipt.blockNumber}}
+      </td>
+      <td>
+        {{transaction.date}}
+      </td>
+    </tr>
+  </tbody>
+</table>

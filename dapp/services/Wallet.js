@@ -158,13 +158,14 @@
           function(){
             // Get Transaction Data
             var MyContract = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi);
+            console.log(owners, requiredConfirmations);
             var data = MyContract.new.getData(owners, requiredConfirmations, {
               data: wallet.json.multiSigWallet.binHex
             });
 
             // Create transaction object
             var txInfo = {
-              to: '0x0000000000000000000000000000000000000000',
+              to: null,
               value: EthJS.Util.intToHex(0),
               gasPrice: '0x' + wallet.txParams.gasPrice.toNumber(16),
               gasLimit: EthJS.Util.intToHex(wallet.txParams.gasLimit),
@@ -185,7 +186,11 @@
               var signature = EthJS.Util.fromRpcSig(signature);
               tx.v = EthJS.Util.intToHex(signature.v);
               tx.r = EthJS.Util.bufferToHex(signature.r);
-              tx.s = EthJS.Util.bufferToHex(signature.s);              
+              tx.s = EthJS.Util.bufferToHex(signature.s);
+
+              console.log("verify", tx.verifySignature());
+
+              console.log("validates", tx.validate());
 
               // Return raw transaction as hex string
               cb(null, EthJS.Util.bufferToHex(tx.serialize()));

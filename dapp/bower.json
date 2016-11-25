@@ -30,6 +30,7 @@
     "bootstrap": "3.3.7",
     "web3": "0.16.0",
     "font-awesome": "fontawesome#4.7.0",
-    "bootstrap3-dialog": "bootstrap-dialog#^1.35.3"
+    "bootstrap3-dialog": "bootstrap-dialog#^1.35.3",
+    "ethereum-tx": "*"
   }
 }

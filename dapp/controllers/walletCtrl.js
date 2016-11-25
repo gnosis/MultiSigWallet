@@ -12,7 +12,8 @@
       $scope.view = 'list';
       $scope.new = {
         name: 'MultiSig Wallet',
-        owners: {}
+        owners: {},
+        confirmations : 1
       };
 
       // Deploy MultiSigWallet to the blockchain
@@ -43,15 +44,16 @@
 
       // Deploy Offline
       $scope.deployOfflineWallet = function(){
-        console.log("offline");
         Wallet.deployOfflineWallet(Object.keys($scope.new.owners), $scope.new.confirmations,
-        function(tx){
-          Wallet.addWallet({name: $scope.new.name, owners: $scope.new.owners});
-          $scope.wallets = Wallet.wallets;
-          $scope.totalItems = Object.keys($scope.wallets).length;
-          $scope.$apply();
+        function(e, tx){
+          if(e){
+            Utils.error(e);
+          }
+          else{
+            Utils.success('<div class="form-group"><label>Multisignature wallet '+
+            'deployed offline:</label> <textarea class="form-control" rows="5">'+ tx + '</textarea></div>');
+          }          
 
-          Utils.success("Multisignature wallet deployed offline: "+ tx);
         });
 
       }

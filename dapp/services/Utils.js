@@ -72,7 +72,7 @@
           type: BootstrapDialog.TYPE_SUCCESS,
           message: info
         });
-      }
+      }      
 
       return factory;
     });

@@ -5,8 +5,25 @@
     .controller('walletCtrl', function($scope, Wallet, Utils){
 
       // Init wallets collection
-      $scope.wallets = Wallet.wallets;
-      $scope.totalItems = Object.keys($scope.wallets).length;
+      $scope.$watch(
+        function(){
+          return Wallet.wallets;
+        },
+        function(){
+          $scope.wallets = Wallet.wallets;
+          $scope.totalItems = Object.keys($scope.wallets).length;
+
+          // Init wallet balance of each wallet address
+          Object.keys($scope.wallets).map(function(address){
+            $scope
+            .balance(address)
+            .then(function(balance){
+              $scope.wallets[address].balance = balance;
+            });
+          });
+        }
+      );
+
       $scope.currentPage = 1;
       $scope.itemsPerPage = 3;
       $scope.view = 'list';
@@ -27,9 +44,6 @@
               if(contract.address){
                 // Save wallet
                 Wallet.addWallet({name: $scope.new.name, address: contract.address, owners: $scope.new.owners});
-                $scope.wallets = Wallet.wallets;
-                $scope.totalItems = Object.keys($scope.wallets).length;
-                $scope.$apply();
 
                 Utils.success("Multisignature wallet deployed with address "+contract.address);
               }
@@ -52,7 +66,7 @@
           else{
             Utils.success('<div class="form-group"><label>Multisignature wallet '+
             'deployed offline:</label> <textarea class="form-control" rows="5">'+ tx + '</textarea></div>');
-          }          
+          }
 
         });
 
@@ -62,15 +76,6 @@
       $scope.balance = function(address){
         return Wallet.getBalance(address);
       }
-
-      // Init wallet balance of each wallet address
-      Object.keys($scope.wallets).map(function(address){
-        $scope
-        .balance(address)
-        .then(function(balance){
-          $scope.wallets[address].balance = balance;
-        });
-      });
 
       $scope.newWalletSelect = function(){
         $scope.view = 'select';
@@ -99,6 +104,10 @@
 
       $scope.removeOwner = function(address){
         delete $scope.new.owners[address]
+      }
+
+      $scope.removeWallet = function(address){
+        Wallet.removeWallet(address);
       }
 
     });

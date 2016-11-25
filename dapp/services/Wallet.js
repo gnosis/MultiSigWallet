@@ -117,6 +117,18 @@
         }
       }
 
+      wallet.removeWallet = function(address){
+        delete wallet.wallets[address];
+
+        localStorage.setItem("wallets", JSON.stringify(wallet.wallets));
+        try{
+          $rootScope.$digest();
+        }
+        catch(e){
+
+        }
+      }
+
       // Deploy wallet contract with constructor params
       wallet.deployWallet = function(owners, requiredConfirmations, cb){
         $q(function(resolve, reject){
@@ -186,11 +198,7 @@
               var signature = EthJS.Util.fromRpcSig(signature);
               tx.v = EthJS.Util.intToHex(signature.v);
               tx.r = EthJS.Util.bufferToHex(signature.r);
-              tx.s = EthJS.Util.bufferToHex(signature.s);
-
-              console.log("verify", tx.verifySignature());
-
-              console.log("validates", tx.validate());
+              tx.s = EthJS.Util.bufferToHex(signature.s);              
 
               // Return raw transaction as hex string
               cb(null, EthJS.Util.bufferToHex(tx.serialize()));

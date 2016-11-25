@@ -60,6 +60,15 @@
                   if(factory.transactions[receipt.transactionHash].callback){
                     factory.transactions[receipt.transactionHash].callback();
                   };
+
+                  // update transactions
+                  localStorage.setItem("transactions", JSON.stringify(factory.transactions));
+                  try{
+                    $rootScope.$digest();
+                  }
+                  catch(e){
+
+                  }
                 }
               })
             );

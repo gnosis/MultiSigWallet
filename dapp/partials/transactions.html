@@ -13,6 +13,9 @@
         # blockNumber
       </th>
       <th>
+        Contract
+      </th>
+      <th>
         date
       </th>
       <th>
@@ -32,6 +35,17 @@
       <td>
         <span ng-show="transaction.receipt">{{transaction.receipt.blockNumber}}<span>
           <span ng-hide="transaction.receipt" class="badge">mining<span>
+      </td>
+      <td>
+        <a
+        target="_blank"
+        ng-href="https://testnet.etherscan.io/address/{{transaction.receipt.contractAddress}}"
+        ng-show="transaction.receipt && transaction.receipt.contractAddress">
+          {{transaction.receipt.contractAddress | limitTo: 20}}...
+        </a>
+        <span ng-hide="transaction.receipt && transaction.receipt.contractAddress">
+          No
+        </span>
       </td>
       <td>
         {{transaction.date|fromNow}}

@@ -1,33 +1,38 @@
 <div class="page-header">
   <h1>
-    User Transactions
+    User Transactions history
   </h1>
 </div>
 <table class="table table-hover">
   <thead>
     <tr>
-      <td>
+      <th>
         txHash
-      </td>
-      <td>
+      </th>
+      <th>
         # blockNumber
-      </td>
-      <td>
+      </th>
+      <th>
         date
-      </td>
+      </th>
     </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="transaction in transactions">
+    <tr ng-repeat="transaction in transactions | objectToArray| limitTo:currentPage*itemsPerPage:itemsPerPage*(currentPage-1)">
       <td>
-        {{transaction.txHash}}
+        <a ng-href="https://testnet.etherscan.io/tx/{{transaction.txHash}}">
+          {{transaction.txHash|limitTo:30}}...
+        </a>
       </td>
       <td>
-        {{transaction.receipt.blockNumber}}
+        <span ng-show="transaction.receipt">{{transaction.receipt.blockNumber}}<span>
+          <span ng-hide="transaction.receipt" class="badge">mining<span>
       </td>
       <td>
-        {{transaction.date}}
+        {{transaction.date|fromNow}}
       </td>
     </tr>
   </tbody>
 </table>
+
+<ul uib-pagination total-items="totalItems" ng-model="currentPage" items-per-page="itemsPerPage"></ul>

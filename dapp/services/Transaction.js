@@ -2,7 +2,7 @@
   function(){
     angular
     .module('multiSigWeb')
-    .service('Transaction', function(Wallet){
+    .service('Transaction', function(Wallet, $rootScope){
       var factory = {
         transactions: JSON.parse(localStorage.getItem("transactions")) || {}
       };
@@ -11,6 +11,34 @@
         factory.transactions[tx.txHash] = tx;
         tx.date = new Date();
         localStorage.setItem("transactions", JSON.stringify(factory.transactions));
+        try{
+          $rootScope.$digest();
+        }
+        catch(e){
+
+        }
+      }
+
+      factory.remove = function(txHash){
+        delete factory.transactions[txHash];
+        localStorage.setItem("transactions", JSON.stringify(factory.transactions));
+        try{
+          $rootScope.$digest();
+        }
+        catch(e){
+
+        }
+      }
+
+      factory.removeAll = function(){
+        factory.transactions = {};
+        localStorage.removeItem("transactions");
+        try{
+          $rootScope.$digest();
+        }
+        catch(e){
+
+        }
       }
 
       // Transaction loop, checking transaction receipts
@@ -23,12 +51,12 @@
 
         for(var i=0; i<txHashes.length; i++){
           var tx = factory.transactions[txHashes[i]];
-          if(!tx.receipt){
+          if(tx && !tx.receipt){
             batch.add(
               Wallet.web3.eth.getTransactionReceipt.request(txHashes[i], function(e, receipt){
                 if(!e && receipt){
                   factory.transactions[receipt.transactionHash].receipt = receipt;
-                  // call callback if it has                  
+                  // call callback if it has
                   if(factory.transactions[receipt.transactionHash].callback){
                     factory.transactions[receipt.transactionHash].callback();
                   };

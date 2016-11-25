@@ -15,10 +15,15 @@
       <th>
         date
       </th>
+      <th>
+        <button class="btn btn-danger" ng-click="removeAll()">
+          Remove all
+        </button>
+      </th>
     </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="transaction in transactions | objectToArray| limitTo:currentPage*itemsPerPage:itemsPerPage*(currentPage-1)">
+    <tr ng-repeat="transaction in transactions | objectToArray| limitTo:currentPage*itemsPerPage:itemsPerPage*(currentPage-1) track by $index">
       <td>
         <a ng-href="https://testnet.etherscan.io/tx/{{transaction.txHash}}">
           {{transaction.txHash|limitTo:30}}...
@@ -31,8 +36,17 @@
       <td>
         {{transaction.date|fromNow}}
       </td>
+      <td>
+        <button class="btn btn-default" ng-click="remove(transaction.txHash)">
+          <i class="fa fa-minus text-danger">
+          </i>
+        </button>
+      </td>
     </tr>
   </tbody>
 </table>
+<div ng-hide="totalItems" class="text-center">
+  No transactions
+</div>
 
 <ul uib-pagination total-items="totalItems" ng-model="currentPage" items-per-page="itemsPerPage"></ul>

@@ -106,7 +106,7 @@
       wallet.addWallet = function(w){
         var walletCollection = JSON.parse(localStorage.getItem("wallets"));
         if (!walletCollection) walletCollection = {}
-        walletCollection[wallet.address] = w;
+        walletCollection[w.address] = w;
         localStorage.setItem("wallets", JSON.stringify(walletCollection));
         wallet.wallets = walletCollection;
         try{
@@ -170,7 +170,6 @@
           function(){
             // Get Transaction Data
             var MyContract = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi);
-            console.log(owners, requiredConfirmations);
             var data = MyContract.new.getData(owners, requiredConfirmations, {
               data: wallet.json.multiSigWallet.binHex
             });
@@ -198,7 +197,7 @@
               var signature = EthJS.Util.fromRpcSig(signature);
               tx.v = EthJS.Util.intToHex(signature.v);
               tx.r = EthJS.Util.bufferToHex(signature.r);
-              tx.s = EthJS.Util.bufferToHex(signature.s);              
+              tx.s = EthJS.Util.bufferToHex(signature.s);
 
               // Return raw transaction as hex string
               cb(null, EthJS.Util.bufferToHex(tx.serialize()));
@@ -220,6 +219,41 @@
             reject(e);
           }
         });
+      };
+
+      wallet.restore = function(info, cb){
+        $q(function(resolve, reject){
+          if(wallet.json){
+            resolve();
+          }
+          else{
+            wallet.loadJson()
+            .then(function(){
+              resolve();
+            })
+          }
+        })
+        .then(
+          function(){
+            var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(info.address);
+            // Check contract function works
+            instance.MAX_OWNER_COUNT(function(e, count){
+              if(e){
+                cb(e);
+              }
+
+              if(count.eq(0)){
+                // it is not a wallet
+                cb("Address " + info.address + " is not a MultiSigWallet contract");
+              }
+              else{
+                // Add wallet                
+                wallet.addWallet(info);
+                cb(info);
+              }
+            });
+          }
+        );
       };
 
       return wallet;

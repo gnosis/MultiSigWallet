@@ -110,6 +110,17 @@
         Wallet.removeWallet(address);
       }
 
+      $scope.restoreWallet = function(e, w){
+        Wallet.restore($scope.old, function(){
+          if(e){
+            Utils.error(e);
+          }
+          else{
+            $scope.view = 'list';
+          }
+        });
+      }
+
     });
   }
 )();

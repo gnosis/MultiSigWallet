@@ -7,7 +7,12 @@
       var wallet = {
         wallets: JSON.parse(localStorage.getItem("wallets")),
         web3 : null,
-        json : null
+        json : null,
+        txParams: {
+          nonce: null,
+          gasPrice: null,
+          gasLimit: null
+        }
       }
 
       // Set web3 provider (Metamask, mist, etc)
@@ -24,13 +29,79 @@
         });
       }
 
-      wallet.updateAccounts = function(cb){
-        web3.eth.getAccounts(function(e, accounts){
-          wallet.accounts = accounts;
-          wallet.coinbase = accounts?accounts[0]:null;
-          cb(e, accounts);
+      wallet.updateAccounts = function(){
+        return $q(function(resolve, reject){
+          web3.eth.getAccounts(function(e, accounts){
+            if(e){
+              reject(e);
+            }
+            else{
+              wallet.accounts = accounts;
+              wallet.coinbase = accounts?accounts[0]:null;
+              resolve(accounts);
+            }
+          });
         });
       }
+
+      wallet.updateNonce = function(address){
+        return $q(function(resolve, reject){
+          web3.eth.getTransactionCount(address, function(e, count){
+            if(e){
+              reject(e);
+            }
+            else{
+              wallet.txParams.nonce = count;
+              resolve(count);
+            }
+          });
+        });
+      }
+
+      wallet.updateGasPrice = function(){
+        return $q(function(resolve, reject){
+          web3.eth.getGasPrice(function(e, gasPrice){
+            if(e){
+              reject(e);
+            }
+            else{
+              wallet.txParams.gasPrice = gasPrice;
+              resolve(gasPrice);
+            }
+          });
+        });
+      }
+
+      wallet.updateGasLimit = function(){
+        return $q(function(resolve, reject){
+          web3.eth.getBlock("latest", function(e, block){
+            if(e){
+              reject(e);
+            }
+            else{
+              wallet.txParams.gasLimit = Math.floor(block.gasLimit*0.9);
+              resolve(block.gasLimit);
+            }
+          });
+        });
+      }
+
+      // Init txParams
+      wallet.initParams = $q(function(resolve, reject){
+        wallet
+        .updateAccounts()
+        .then(function(accounts){
+          resolve(accounts)
+        });
+      }).then(function(accounts){
+        return $q.all(
+          [
+            wallet.updateGasLimit(),
+            wallet.updateGasPrice(),
+            wallet.updateNonce(accounts[0])
+          ]
+        );
+      });
 
       wallet.addWallet = function(w){
         var walletCollection = JSON.parse(localStorage.getItem("wallets"));
@@ -38,6 +109,18 @@
         walletCollection[wallet.address] = w;
         localStorage.setItem("wallets", JSON.stringify(walletCollection));
         wallet.wallets = walletCollection;
+        try{
+          $rootScope.$digest();
+        }
+        catch(e){
+
+        }
+      }
+
+      wallet.removeWallet = function(address){
+        delete wallet.wallets[address];
+
+        localStorage.setItem("wallets", JSON.stringify(wallet.wallets));
         try{
           $rootScope.$digest();
         }
@@ -85,15 +168,41 @@
         })
         .then(
           function(){
+            // Get Transaction Data
             var MyContract = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi);
-            console.log("get data");
+            console.log(owners, requiredConfirmations);
             var data = MyContract.new.getData(owners, requiredConfirmations, {
               data: wallet.json.multiSigWallet.binHex
             });
 
-            console.log("data ", data);
-            wallet.web3.eth.sign(wallet.coinbase, data, cb);
+            // Create transaction object
+            var txInfo = {
+              to: null,
+              value: EthJS.Util.intToHex(0),
+              gasPrice: '0x' + wallet.txParams.gasPrice.toNumber(16),
+              gasLimit: EthJS.Util.intToHex(wallet.txParams.gasLimit),
+              nonce: EthJS.Util.intToHex(wallet.txParams.nonce),
+              data: '0x' + data
+            }
 
+            var tx = new EthJS.Tx(txInfo);
+
+            // Get transaction hash
+            var txHash = EthJS.Util.bufferToHex(tx.hash(false));
+
+            // Sign transaction hash
+            wallet.web3.eth.sign(wallet.coinbase, txHash, function(e, signature){
+              if(e){
+                cb(e);
+              }
+              var signature = EthJS.Util.fromRpcSig(signature);
+              tx.v = EthJS.Util.intToHex(signature.v);
+              tx.r = EthJS.Util.bufferToHex(signature.r);
+              tx.s = EthJS.Util.bufferToHex(signature.s);              
+
+              // Return raw transaction as hex string
+              cb(null, EthJS.Util.bufferToHex(tx.serialize()));
+            });
 
           }
         )

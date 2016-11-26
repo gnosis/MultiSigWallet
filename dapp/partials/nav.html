@@ -13,6 +13,15 @@
 
     <div class="collapse navbar-collapse" uib-collapse="navCollapsed">
         <ul class="nav navbar-nav">
+          <li uib-dropdown>
+           <a href="#" uib-dropdown-toggle>
+             <!-- <i class="fa fa-address-book-o" aria-hidden="true"></i> -->
+             Accounts <b class="caret"></b>
+           </a>
+           <ul class="dropdown-menu">
+              <li ng-repeat="account in accounts"><a href="">{{account}}</a></li>
+           </ul>
+          </li>
           <li>
             <a href="#/wallets">
               Wallets
@@ -28,24 +37,18 @@
               Transactions
             </a>
           </li>
+          <li>
+            <div class="form-group">
+              <a class="btn btn-default" href="#/send-raw-transaction">
+                Send raw transaction
+              </a>
+            </div>
+          </li>
         </ul>
 
         <ul class="nav navbar-nav pull-right" ng-show="loggedIn">
-          <li uib-dropdown>
-           <a href="#" uib-dropdown-toggle>
-             <!-- <i class="fa fa-address-book-o" aria-hidden="true"></i> -->
-             Accounts <b class="caret"></b>
-           </a>
-           <ul class="dropdown-menu">
-              <li ng-repeat="account in accounts"><a href="">{{account}}</a></li>
-           </ul>
-          </li>
           <li>
             <p class="navbar-text"> Nonce: {{nonce}} </p>
-          </li>
-          <li>
-            <p class="navbar text-success" ng-show="connected"> Online </p>
-            <p class="text-danger" ng-hide="connected"> Offline </p>
           </li>
         </ul>
     </div>

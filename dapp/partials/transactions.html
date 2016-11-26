@@ -1,0 +1,66 @@
+<div class="page-header">
+  <h1>
+    User Transactions history
+  </h1>
+</div>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>
+        txHash
+      </th>
+      <th>
+        # blockNumber
+      </th>
+      <th>
+        Contract
+      </th>
+      <th>
+        date
+      </th>
+      <th>
+        <button class="btn btn-danger" ng-click="removeAll()">
+          Remove all
+        </button>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="transaction in transactions | objectToArray| limitTo:currentPage*itemsPerPage:itemsPerPage*(currentPage-1) track by $index">
+      <td>
+        <a ng-href="https://testnet.etherscan.io/tx/{{transaction.txHash}}">
+          {{transaction.txHash|limitTo:30}}...
+        </a>
+      </td>
+      <td>
+        <span ng-show="transaction.receipt">{{transaction.receipt.blockNumber}}<span>
+          <span ng-hide="transaction.receipt" class="badge">mining<span>
+      </td>
+      <td>
+        <a
+        target="_blank"
+        ng-href="https://testnet.etherscan.io/address/{{transaction.receipt.contractAddress}}"
+        ng-show="transaction.receipt && transaction.receipt.contractAddress">
+          {{transaction.receipt.contractAddress | limitTo: 20}}...
+        </a>
+        <span ng-hide="transaction.receipt && transaction.receipt.contractAddress">
+          No
+        </span>
+      </td>
+      <td>
+        {{transaction.date|fromNow}}
+      </td>
+      <td>
+        <button class="btn btn-default" ng-click="remove(transaction.txHash)">
+          <i class="fa fa-minus text-danger">
+          </i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div ng-hide="totalItems" class="text-center">
+  No transactions
+</div>
+
+<ul uib-pagination total-items="totalItems" ng-model="currentPage" items-per-page="itemsPerPage"></ul>

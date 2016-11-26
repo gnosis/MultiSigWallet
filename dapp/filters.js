@@ -13,6 +13,14 @@
         }
         return returnedArray;
       };
-    });
+    })
+    .filter('fromNow', function(){
+      return function(dateString){
+        if(!dateString){
+          return null;
+        }
+        return moment(new Date(dateString)).fromNow();
+      };
+    })
   }
 )();

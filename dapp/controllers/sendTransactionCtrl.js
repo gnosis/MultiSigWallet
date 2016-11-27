@@ -30,6 +30,13 @@
         }
       }
 
+      $scope.signOff = function(){
+        Transaction.signOffline($scope.tx, function(e, tx){
+          Utils.success('<div class="form-group"><label>Signed transaction: '+
+          '</label> <textarea class="form-control" rows="5">'+ tx + '</textarea></div>');
+        });
+      }
+
       $scope.updateMethods = function(){
         $scope.abiArray = JSON.parse($scope.abi);
         $scope.abiArray.map(function(item, index){

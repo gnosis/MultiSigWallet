@@ -73,6 +73,7 @@ Vagrant.configure(2) do |config|
   config.ssh.forward_agent = true
   config.vm.network :forwarded_port, host: 8545, guest: 8545
   config.vm.network :forwarded_port, host: 8282, guest: 8282
+
   config.vm.provision "shell", inline: $dependencies
   config.vm.provision "shell", inline: $ethereumcpp
   config.vm.provision "shell", inline: $fucking_locale

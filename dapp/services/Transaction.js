@@ -41,6 +41,38 @@
         }
       }
 
+      factory.send = function(tx, cb){
+        Wallet.web3.eth.sendTransaction(tx, function(e, txHash){
+          if(e){
+            cb(e);
+          }
+          else{
+            factory.add({txHash: txHash});
+            cb(null, txHash);
+          }
+        });
+      }
+
+      factory.sendMethod = function(tx, abi, method, params, cb){
+        // Instance contract
+        var instance = Wallet.web3.eth.contract(abi).at(tx.to);
+        var transactionParams = params.slice();
+        // sendTransction takes (param1, param2, ..., paramN, txObject, cb)
+        transactionParams.push(tx);
+        transactionParams.push(function(e, txHash){
+          if(e){
+            cb(e);
+          }
+          else{
+              // Add transaction
+              cb(null, txHash);
+          }
+        });
+        console.log(transactionParams)
+        instance[method].sendTransaction.apply(this, transactionParams);
+
+      }
+
       // Transaction loop, checking transaction receipts
       factory.checkReceipts = function(){
         // Create batch object

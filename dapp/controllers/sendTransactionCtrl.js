@@ -2,9 +2,10 @@
   function(){
     angular
     .module("multiSigWeb")
-    .controller("sendTransactionCtrl", function($scope, Wallet, Utils){
+    .controller("sendTransactionCtrl", function($scope, Wallet, Utils, Transaction){
       $scope.methods = [];
       $scope.tx = {};
+      $scope.params = [];
 
       $scope.$watch(
         function(){
@@ -16,12 +17,16 @@
       );
 
       $scope.send = function(){
-        // if method, use contract instance method TODO
+        // if method, use contract instance method
         if($scope.method){
-
+          Transaction.sendMethod($scope.tx, $scope.abiArray, $scope.method.name, $scope.params, function(e, txHash){
+            console.log(e, txHash);
+          });
         }
         else{
-          
+          Transaction.send($scope.tx, function(e, txHash){
+            console.log(e, txHash);
+          });
         }
       }
 

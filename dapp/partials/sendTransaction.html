@@ -31,8 +31,11 @@
       <div ng-repeat="param in abiArray[method.index].inputs" >
         <div ng-switch on="param.type">
           <label>{{param.name}}</label>
+          <!--
           <input ng-switch-when="uint256" type="number" class="form-control" ng-model="params[$index]">
           <input ng-switch-when="uint8" type="number" class="form-control" ng-model="params[$index]">
+          <input ng-switch-default type="text" class="form-control" ng-model="params[$index]">
+          -->
           <input ng-switch-default type="text" class="form-control" ng-model="params[$index]">
         </div>
       </div>

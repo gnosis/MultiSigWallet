@@ -31,10 +31,17 @@
       }
 
       $scope.signOff = function(){
-        Transaction.signOffline($scope.tx, function(e, tx){
-          Utils.success('<div class="form-group"><label>Signed transaction: '+
-          '</label> <textarea class="form-control" rows="5">'+ tx + '</textarea></div>');
-        });
+        if($scope.method){
+          Transaction.signMethodOffline($scope.tx, $scope.abiArray, $scope.method.name, $scope.params, function(e, tx){
+            console.log(e, tx);
+          });
+        }
+        else{
+          Transaction.signOffline($scope.tx, function(e, tx){
+            Utils.success('<div class="form-group"><label>Signed transaction: '+
+            '</label> <textarea class="form-control" rows="5">'+ tx + '</textarea></div>');
+          });
+        }
       }
 
       $scope.updateMethods = function(){

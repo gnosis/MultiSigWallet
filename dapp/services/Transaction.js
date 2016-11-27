@@ -84,6 +84,43 @@
         });
       }
 
+      factory.signMethodOffline = function(tx, abi, method, params, cb){
+
+        // Get data
+        var instance = Wallet.web3.eth.contract(abi).at(tx.to);
+
+        var data = instance[method].getData.apply(this, params);
+
+        // Create transaction object
+        var txInfo = {
+          to: tx.to,
+          value: EthJS.Util.intToHex(tx.value||0),
+          gasPrice: '0x' + Wallet.txParams.gasPrice.toNumber(16),
+          gasLimit: EthJS.Util.intToHex(Wallet.txParams.gasLimit),
+          nonce: EthJS.Util.intToHex(tx.nonce),
+          data: data
+        }
+
+        var tx = new EthJS.Tx(txInfo);
+
+        // Get transaction hash
+        var txHash = EthJS.Util.bufferToHex(tx.hash(false));
+
+        // Sign transaction hash
+        Wallet.web3.eth.sign(Wallet.coinbase, txHash, function(e, signature){
+          if(e){
+            cb(e);
+          }
+          var signature = EthJS.Util.fromRpcSig(signature);
+          tx.v = EthJS.Util.intToHex(signature.v);
+          tx.r = EthJS.Util.bufferToHex(signature.r);
+          tx.s = EthJS.Util.bufferToHex(signature.s);
+
+          // Return raw transaction as hex string
+          cb(null, EthJS.Util.bufferToHex(tx.serialize()));
+        });
+      }
+
       factory.sendMethod = function(tx, abi, method, params, cb){
         // Instance contract
         var instance = Wallet.web3.eth.contract(abi).at(tx.to);

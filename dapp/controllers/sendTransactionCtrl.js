@@ -19,13 +19,23 @@
       $scope.send = function(){
         // if method, use contract instance method
         if($scope.method){
-          Transaction.sendMethod($scope.tx, $scope.abiArray, $scope.method.name, $scope.params, function(e, txHash){
-            console.log(e, txHash);
+          Transaction.sendMethod($scope.tx, $scope.abiArray, $scope.method.name, $scope.params, function(e, tx){
+            if(tx.blockNumber){
+              Utils.success("Transaction mined");
+            }
+            else{
+              Utils.notification("Transaction sent, will be mined in next 20s");
+            }
           });
         }
         else{
-          Transaction.send($scope.tx, function(e, txHash){
-            console.log(e, txHash);
+          Transaction.send($scope.tx, function(e, tx){
+            if(tx.blockNumber){
+              Utils.success("Transaction mined");
+            }
+            else{
+              Utils.notification("Transaction sent, will be mined in next 20s");
+            }
           });
         }
       }

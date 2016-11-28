@@ -47,7 +47,7 @@
             cb(e);
           }
           else{
-            factory.add({txHash: txHash});
+            factory.add({txHash: txHash, callback: function(receipt){cb(null, receipt)}});
             cb(null, txHash);
           }
         });
@@ -125,14 +125,21 @@
         // Instance contract
         var instance = Wallet.web3.eth.contract(abi).at(tx.to);
         var transactionParams = params.slice();
+
         // sendTransction takes (param1, param2, ..., paramN, txObject, cb)
-        transactionParams.push(tx);
+        transactionParams.push({
+          to: tx.to?tx.to:null,
+          value: tx.value?tx.value:null,
+          data: tx.data?tx.data:null,
+          nonce: tx.nonce          
+        });
         transactionParams.push(function(e, txHash){
           if(e){
             cb(e);
           }
           else{
               // Add transaction
+              factory.add({txHash: txHash, callback: function(receipt){cb(null, receipt)}});
               cb(null, txHash);
           }
         });
@@ -157,7 +164,7 @@
                   factory.transactions[receipt.transactionHash].receipt = receipt;
                   // call callback if it has
                   if(factory.transactions[receipt.transactionHash].callback){
-                    factory.transactions[receipt.transactionHash].callback();
+                    factory.transactions[receipt.transactionHash].callback(receipt);
                   };
 
                   // update transactions

@@ -22,11 +22,18 @@
 
       // ABI/HEX file, only loaded when needed
       wallet.loadJson = function(){
-        return $http
-        .get('/abi.json')
-        .then(function(json){
-          wallet.json = json.data;
-        });
+        if(!wallet.json){
+          return $http
+          .get('/abi.json')
+          .then(function(json){
+            wallet.json = json.data;
+          });
+        }
+        else{
+          return $q(function(resolve, reject){
+            resolve(wallet.json);
+          });
+        }
       }
 
       wallet.updateAccounts = function(){
@@ -131,17 +138,7 @@
 
       // Deploy wallet contract with constructor params
       wallet.deployWallet = function(owners, requiredConfirmations, cb){
-        $q(function(resolve, reject){
-          if(wallet.json){
-            resolve();
-          }
-          else{
-            wallet.loadJson()
-            .then(function(){
-              resolve();
-            })
-          }
-        })
+        wallet.loadJson()
         .then(
           function(){
             var MyContract = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi);
@@ -155,17 +152,7 @@
 
       // Sign transaction, don't send it
       wallet.deployOfflineWallet = function(owners, requiredConfirmations, cb){
-        $q(function(resolve, reject){
-          if(wallet.json){
-            resolve();
-          }
-          else{
-            wallet.loadJson()
-            .then(function(){
-              resolve();
-            })
-          }
-        })
+        wallet.loadJson()
         .then(
           function(){
             // Get Transaction Data
@@ -181,8 +168,8 @@
               gasPrice: '0x' + wallet.txParams.gasPrice.toNumber(16),
               gasLimit: EthJS.Util.intToHex(wallet.txParams.gasLimit),
               nonce: EthJS.Util.intToHex(wallet.txParams.nonce),
-              data: '0x' + data
-            }
+              data: data
+            }            
 
             var tx = new EthJS.Tx(txInfo);
 
@@ -222,17 +209,7 @@
       };
 
       wallet.restore = function(info, cb){
-        $q(function(resolve, reject){
-          if(wallet.json){
-            resolve();
-          }
-          else{
-            wallet.loadJson()
-            .then(function(){
-              resolve();
-            })
-          }
-        })
+        wallet.loadJson()
         .then(
           function(){
             var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(info.address);
@@ -247,7 +224,7 @@
                 cb("Address " + info.address + " is not a MultiSigWallet contract");
               }
               else{
-                // Add wallet                
+                // Add wallet
                 wallet.addWallet(info);
                 cb(info);
               }
@@ -255,6 +232,10 @@
           }
         );
       };
+
+      // MultiSig functions
+
+
 
       return wallet;
     });

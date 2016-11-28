@@ -20,6 +20,10 @@
         controller: 'sendTransactionCtrl',
         templateUrl: 'partials/sendTransaction.html'
       })
+      .when("/wallet/:address", {
+        controller: 'walletDetailCtrl',
+        templateUrl: 'partials/walletDetail.html'
+      })
       .otherwise({
         redirectTo: '/wallets'
       });

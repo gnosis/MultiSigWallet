@@ -2,7 +2,7 @@
   function(){
     angular
     .module('multiSigWeb')
-    .controller('walletCtrl', function($scope, Wallet, Utils){
+    .controller('walletCtrl', function($scope, Wallet, Utils, Transaction){
 
       // Init wallets collection
       $scope.$watch(
@@ -48,6 +48,7 @@
                 Utils.success("Multisignature wallet deployed with address "+contract.address);
               }
               else{
+                Transaction.add({txHash: contract.transactionHash});
                 $scope.view = 'list';
                 Utils.notification("Transaction sent, wallet will be deployed in next 20s")
               }

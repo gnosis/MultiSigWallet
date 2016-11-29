@@ -12,15 +12,20 @@
         function(){
           $scope.wallets = Wallet.wallets;
           $scope.totalItems = Object.keys($scope.wallets).length;
-
+          var batch = Wallet.web3.createBatch();
           // Init wallet balance of each wallet address
-          Object.keys($scope.wallets).map(function(address){
-            $scope
-            .balance(address)
-            .then(function(balance){
-              $scope.wallets[address].balance = balance;
-            });
+          Object.keys($scope.wallets).map(function(address){            
+            batch.add(
+              Wallet.getBalance(
+                address,
+                function(e, balance){
+                  $scope.wallets[address].balance = balance.div('1e18').toNumber();
+                  $scope.$apply();
+                }
+              )
+            );
           });
+          batch.execute();
         }
       );
 
@@ -71,11 +76,6 @@
 
         });
 
-      }
-
-      // Get ethereum balance of address
-      $scope.balance = function(address){
-        return Wallet.getBalance(address);
       }
 
       $scope.newWalletSelect = function(){

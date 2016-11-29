@@ -4,6 +4,7 @@
     .module('multiSigWeb')
     .service('Wallet', function($window, $http, $q, $rootScope){
 
+      // Init wallet factory object
       var wallet = {
         wallets: JSON.parse(localStorage.getItem("wallets")),
         web3 : null,
@@ -14,6 +15,7 @@
           gasLimit: null
         }
       }
+
 
       // Set web3 provider (Metamask, mist, etc)
       if($window.web3){
@@ -36,79 +38,155 @@
         }
       }
 
-      wallet.updateAccounts = function(){
-        return $q(function(resolve, reject){
-          web3.eth.getAccounts(function(e, accounts){
+      /**
+      * Return eth_call request object.
+      * custom method .call() for direct calling.
+      */
+      wallet.callRequest = function(method, params, cb){
+
+        // Add to params the callback
+        var methodParams = params.slice();
+        methodParams.push(cb);
+
+        // Get request object
+        var request = method.request.apply(method, methodParams);
+        // Add .call function
+        request.call = function(){
+          var batch = wallet.web3.createBatch();
+
+          batch.add(
+            method.request.apply(method, methodParams)
+          );
+          batch.execute();
+        }
+        return request;
+      }
+
+      /**
+      * Get ethereum accounts and update account list.
+      */
+      wallet.updateAccounts = function(cb){
+        return wallet.callRequest(
+          wallet.web3.eth.getAccounts,
+          [],
+          function(e, accounts){
             if(e){
-              reject(e);
+              cb(e);
             }
             else{
               wallet.accounts = accounts;
               wallet.coinbase = accounts?accounts[0]:null;
-              resolve(accounts);
+              cb(null, accounts);
             }
-          });
-        });
+          }
+        );
       }
 
-      wallet.updateNonce = function(address){
-        return $q(function(resolve, reject){
-          web3.eth.getTransactionCount(address, function(e, count){
+      wallet.updateNonce = function(address, cb){
+        return wallet.callRequest(
+          wallet.web3.eth.getTransactionCount,
+          [address],
+          function(e, count){
             if(e){
-              reject(e);
+              cb(e);
             }
             else{
               wallet.txParams.nonce = count;
-              resolve(count);
+              cb(null, count);
             }
-          });
-        });
+          }
+        );
       }
 
-      wallet.updateGasPrice = function(){
-        return $q(function(resolve, reject){
-          web3.eth.getGasPrice(function(e, gasPrice){
+      wallet.updateGasPrice = function(cb){
+        return wallet.callRequest(
+          wallet.web3.eth.getGasPrice,
+          [],
+          function(e, gasPrice){
             if(e){
-              reject(e);
+              cb(e);
             }
             else{
               wallet.txParams.gasPrice = gasPrice;
-              resolve(gasPrice);
+              cb(null, gasPrice);
             }
-          });
-        });
+          }
+        );
       }
 
-      wallet.updateGasLimit = function(){
-        return $q(function(resolve, reject){
-          web3.eth.getBlock("latest", function(e, block){
+      wallet.updateGasLimit = function(cb){
+        return wallet.callRequest(
+          wallet.web3.eth.getBlock,
+          ["latest"],
+          function(e, block){
             if(e){
-              reject(e);
+              cb(e);
             }
             else{
               wallet.txParams.gasLimit = Math.floor(block.gasLimit*0.9);
-              resolve(block.gasLimit);
+              cb(null, block.gasLimit);
             }
-          });
-        });
+          }
+        );
       }
 
       // Init txParams
-      wallet.initParams = $q(function(resolve, reject){
-        wallet
-        .updateAccounts()
-        .then(function(accounts){
-          resolve(accounts)
-        });
-      }).then(function(accounts){
-        return $q.all(
-          [
-            wallet.updateGasLimit(),
-            wallet.updateGasPrice(),
-            wallet.updateNonce(accounts[0])
-          ]
-        );
-      });
+      wallet.initParams = function(){
+        return $q(function(resolve, reject){
+          var batch = wallet.web3.createBatch();
+          wallet
+          .updateAccounts(
+            function(e, accounts){
+              var promises = $q.all(
+                [
+                  $q(function(resolve, reject){
+                    batch.add(
+                      wallet.updateGasLimit(function(e){
+                        if(e){
+                          reject(e);
+                        }
+                        else{
+                          resolve();
+                        }
+                      })
+                    );
+                  }),
+                  $q(function(resolve, reject){
+                    batch.add(
+                      wallet.updateGasPrice(function(e){
+                        if(e){
+                          reject(e);
+                        }
+                        else{
+                          resolve();
+                        }
+                      })
+                    );
+                  }),
+                  $q(function(resolve, reject){
+                    batch.add(
+                      wallet.updateNonce(accounts[0], function(e){
+                        if(e){
+                          reject(e);
+                        }
+                        else{
+                          resolve();
+                        }
+                      })
+                    );
+                  })
+                ]
+              ).then(function(){
+                resolve();
+              });
+
+              batch.execute();
+              return promises;
+            }
+
+          ).call();
+          });
+        }
 
       wallet.addWallet = function(w){
         var walletCollection = JSON.parse(localStorage.getItem("wallets"));
@@ -169,7 +247,7 @@
               gasLimit: EthJS.Util.intToHex(wallet.txParams.gasLimit),
               nonce: EthJS.Util.intToHex(wallet.txParams.nonce),
               data: data
-            }            
+            }
 
             var tx = new EthJS.Tx(txInfo);
 
@@ -195,17 +273,12 @@
 
       }
 
-      wallet.getBalance = function(address){
-        return $q(function(resolve, reject){
-          try{
-            wallet.web3.eth.getBalance(address, function(e, balance){
-              resolve(balance.div('1e18').toNumber());
-            });
-          }
-          catch(e){
-            reject(e);
-          }
-        });
+      wallet.getBalance = function(address, cb){
+        return wallet.callRequest(
+          wallet.web3.eth.getBalance,
+          [address],
+          cb
+        );
       };
 
       wallet.restore = function(info, cb){
@@ -234,6 +307,31 @@
       };
 
       // MultiSig functions
+
+      /**
+      * Get wallet owners
+      * Needs to call loadJson before
+      */
+      wallet.getOwners = function(address, cb){
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
+        return wallet.callRequest(
+          instance.owners,
+          [],
+          cb
+        )
+      }
+
+      /**
+      * Get nonces
+      */
+      wallet.getNonces = function(address, cb){
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
+        return wallet.callRequest(
+          instance.nonces,
+          [],
+          cb
+        )
+      }
 
 
 

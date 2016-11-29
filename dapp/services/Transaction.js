@@ -7,6 +7,9 @@
         transactions: JSON.parse(localStorage.getItem("transactions")) || {}
       };
 
+      /**
+      * Add transaction object to the transactions collection
+      */
       factory.add = function(tx){
         factory.transactions[tx.txHash] = tx;
         tx.date = new Date();
@@ -19,6 +22,9 @@
         }
       }
 
+      /**
+      * Remove transaction identified by transaction hash from the transactions collection
+      */
       factory.remove = function(txHash){
         delete factory.transactions[txHash];
         localStorage.setItem("transactions", JSON.stringify(factory.transactions));
@@ -30,6 +36,9 @@
         }
       }
 
+      /**
+      * Remove all transactions
+      */
       factory.removeAll = function(){
         factory.transactions = {};
         localStorage.removeItem("transactions");
@@ -41,6 +50,9 @@
         }
       }
 
+      /**
+      * Send transaction, signed by wallet service provider
+      */
       factory.send = function(tx, cb){
         Wallet.web3.eth.sendTransaction(tx, function(e, txHash){
           if(e){
@@ -53,6 +65,9 @@
         });
       }
 
+      /**
+      * Sign transaction without sending it to an ethereum node
+      */
       factory.signOffline = function(tx, cb){
 
         // Create transaction object
@@ -84,6 +99,10 @@
         });
       }
 
+      /**
+      * Sign transaction without sending it to an ethereum node. Needs abi,
+      * selected method to execute and related params.
+      */
       factory.signMethodOffline = function(tx, abi, method, params, cb){
 
         // Get data
@@ -121,6 +140,10 @@
         });
       }
 
+      /**
+      * Send transaction, signed by wallet service provider. Needs abi,
+      * selected method to execute and related params.
+      */
       factory.sendMethod = function(tx, abi, method, params, cb){
         // Instance contract
         var instance = Wallet.web3.eth.contract(abi).at(tx.to);
@@ -131,7 +154,7 @@
           to: tx.to?tx.to:null,
           value: tx.value?tx.value:null,
           data: tx.data?tx.data:null,
-          nonce: tx.nonce          
+          nonce: tx.nonce
         });
         transactionParams.push(function(e, txHash){
           if(e){
@@ -145,9 +168,12 @@
         });
         instance[method].sendTransaction.apply(this, transactionParams);
 
-      }
+      }      
 
-      // Transaction loop, checking transaction receipts
+      /**
+      * Internal loop, checking for transaction receipts.
+      * calls callback after receipt is retrieved.
+      */
       factory.checkReceipts = function(){
         // Create batch object
         var batch = Wallet.web3.createBatch();
@@ -185,6 +211,7 @@
         setTimeout(factory.checkReceipts, 15000);
       }
 
+      // init transactions loop
       factory.checkReceipts();
 
       return factory;

@@ -67,16 +67,33 @@
 
           batch.execute();
         }
-      );
-
-      $scope.updateRequired = function(){
-        Wallet.updateRequired($scope.wallet.address, $scope.required, function(e, required){
-          console.log(e, required);
-        });
-      }
+      );      
 
       $scope.getOwnerName = function(address){
         return $scope.wallet.owners[address].name;
+      }
+
+      $scope.getOwners = function(){
+        var batch = Wallet.web3.createBatch();
+        $scope.owners = [];
+        for(var i=0; i<$scope.ownersNum; i++){
+          // Get owners
+          batch.add(
+            Wallet
+            .getOwners(
+              $routeParams.address,
+              i,
+              function(e, owner){
+                if(owner){
+                  $scope.owners.push(owner);
+                  $scope.$apply();
+                }
+              }
+            )
+          );
+        }
+
+        batch.execute();
       }
 
     });

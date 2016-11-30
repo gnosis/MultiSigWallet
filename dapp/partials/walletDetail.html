@@ -21,17 +21,20 @@
   <div class="form-horizontal col-md-6">
     <label class="col-sm-4 control-label">Required confirmations:</label>
     <div class="col-sm-6">
-      <input type="number" class="form-control" ng-model="required">
+      <p class="form-control-static">{{required}}</p>
     </div>
-    <button type="button" class="btn btn-default" ng-click="updateRequired()">
-      OK
-    </button>
+    <a ng-href="#/wallet/{{wallet.address}}/update-required" class="btn btn-default col-sm-2" ng-click="updateRequired()">
+      Update
+    </a>
   </div>
   <div class="form-horizontal col-md-6">
     <label class="col-sm-4 control-label">Owners num:</label>
-    <div class="col-sm-8">
+    <div class="col-sm-6">
         <input type="number" class="form-control" ng-model="ownersNum">
     </div>
+    <button type="button" class="btn btn-default" ng-click="getOwners()">
+      Get
+    </button>
   </div>
 </div>
 

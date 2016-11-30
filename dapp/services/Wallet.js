@@ -16,7 +16,6 @@
         }
       }
 
-
       // Set web3 provider (Metamask, mist, etc)
       if($window.web3){
         wallet.web3 = new Web3($window.web3.currentProvider);
@@ -312,11 +311,11 @@
       * Get wallet owners
       * Needs to call loadJson before
       */
-      wallet.getOwners = function(address, cb){
+      wallet.getOwners = function(address, index, cb){
         var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
         return wallet.callRequest(
           instance.owners,
-          [],
+          [index],
           cb
         )
       }
@@ -333,6 +332,47 @@
         )
       }
 
+      /**
+      * Get nonce
+      */
+      wallet.getNonce = function(address, to, value, data, cb){
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
+        return wallet.callRequest(
+          instance.getNonce,
+          [to, value, data],
+          cb
+        );
+      }
+
+      /**
+      * Get required confirmations number
+      */
+      wallet.getRequired = function(address, cb){
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
+        return wallet.callRequest(
+          instance.required,
+          [],
+          cb
+        )
+      }
+
+      /**
+      * Update confirmations
+      */
+      wallet.updateRequired = function(address, required, cb){
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
+        var data = instance.changeRequirement.getData(required);
+
+        // Get nonce
+        wallet.getNonce(address, address, "0x0", data, function(e, nonce){
+          if(e){
+            cb(e);
+          }
+          else{            
+            instance.submitTransaction(address, "0x0", data, nonce, cb);
+          }
+        }).call();
+      }
 
 
       return wallet;

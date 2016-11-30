@@ -1,3 +1,62 @@
 <div class="page-header">
   <h1>MultiSig Wallet: {{wallet.name}}</h1>
 </div>
+
+<div class="row col-md-12">
+  <div class="form-horizontal col-md-6">
+    <label class="col-sm-4 control-label">Balance:</label>
+    <div class="col-sm-8">
+      <p class="form-control-static">{{balance}} ETH</p>
+    </div>
+  </div>
+  <div class="form-horizontal col-md-6">
+    <label class="col-sm-4 control-label">Address:</label>
+    <div class="col-sm-8">
+      <p class="form-control-static">{{wallet.address}}</p>
+    </div>
+  </div>
+</div>
+
+<div class="row col-md-12">
+  <div class="form-horizontal col-md-6">
+    <label class="col-sm-4 control-label">Required confirmations:</label>
+    <div class="col-sm-6">
+      <input type="number" class="form-control" ng-model="required">
+    </div>
+    <button type="button" class="btn btn-default" ng-click="updateRequired()">
+      OK
+    </button>
+  </div>
+  <div class="form-horizontal col-md-6">
+    <label class="col-sm-4 control-label">Owners num:</label>
+    <div class="col-sm-8">
+        <input type="number" class="form-control" ng-model="ownersNum">
+    </div>
+  </div>
+</div>
+
+<div class="page-header">
+  <h2> Owners </h2>
+</div>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>
+        Name
+      </th>
+      <th>
+        Address
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="owner in owners track by $index">
+      <td>
+        {{getOwnerName(owner)}}
+      </td>
+      <td>
+        {{owner}}
+      </td>
+    </tr>
+  </tbody>
+</table>

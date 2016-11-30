@@ -18,7 +18,7 @@
       $scope.update = function(){
         Wallet.updateRequired($scope.address, $scope.required, function(e, tx){
           if(e){
-            Utils.error(e);
+            Utils.dangerAlert(e);
           }
           else{
             Utils.notification("Transaction sent, will be mined in next 20s");

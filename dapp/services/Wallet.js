@@ -321,6 +321,26 @@
       }
 
       /**
+      * add owner to wallet
+      */
+      wallet.addOwner = function(address, owner, cb){
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
+        var data = instance.addOwner.getData(owner.address);
+
+        // Get nonce
+        wallet.getNonce(address, address, "0x0", data, function(e, nonce){
+          if(e){
+            cb(e);
+          }
+          else{
+            // Add owner to owners collection TODO
+            instance.submitTransaction(address, "0x0", data, nonce, cb);
+          }
+        }).call();
+
+      }
+
+      /**
       * Get nonces
       */
       wallet.getNonces = function(address, cb){
@@ -422,6 +442,53 @@
         }).call();
       }
 
+      /**
+      * Get pending transactions
+      */
+      wallet.getPendingTransactions = function(address, cb){
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
+        return wallet.callRequest(
+          instance.getPendingTransactions,
+          [address],
+          cb
+        );
+      }
+
+      /**
+      * Get executed transactions hashes
+      */
+      wallet.getExecutedTransactions = function(address, cb){
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
+        return wallet.callRequest(
+          instance.getExecutedTransactions,
+          [address],
+          cb
+        );
+      }
+
+      /**
+      * Get transaction
+      */
+      wallet.getTransaction = function(address, txHash, cb){
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
+        return wallet.callRequest(
+          instance.transactions,
+          [txHash],
+          function(e, tx){
+            // convert to object
+            cb(
+              e,
+              {
+                to: tx[0],
+                value: tx[1].toNumber(),
+                data: tx[2],
+                nonce: tx[3].toNumber(),
+                executed: tx[4]
+              }
+            );
+          }
+        );
+      }
 
       return wallet;
     });

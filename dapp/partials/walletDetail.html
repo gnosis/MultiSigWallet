@@ -50,6 +50,8 @@
       <th>
         Address
       </th>
+      <th>
+      </th>
     </tr>
   </thead>
   <tbody>
@@ -59,6 +61,91 @@
       </td>
       <td>
         {{owner}}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <input type="text" ng-model="newOwner.name" class="form-control">
+      </td>
+      <td>
+        <input type="text" ng-model="newOwner.address" class="form-control">
+      </td>
+      <td>
+        <button type="button" ng-click="addOwner()" class="btn btn-default" ng-disabled="!newOwner.address">
+          <i class="fa fa-plus"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="page-header">
+  <h2> Pending transactions </h2>
+</div>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>
+        txHash
+      </th>
+      <th>
+
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="tx in pending track by $index">
+      <td>
+        {{tx}}
+      </td>
+      <td>
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="page-header">
+  <h2> Executed transactions </h2>
+</div>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>
+        txHash
+      </th>
+      <th>
+        to
+      </th>
+      <th>
+        value
+      </th>
+      <th>
+        data
+      </th>
+      <th>
+        nonce
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="tx in executed track by $index">
+      <td>
+        <a ng-href="https://etherscan.io/tx/{{tx}}">{{tx|limitTo:30}}...</a>
+      </td>
+      <td>
+        <a ng-href="https://etherscan.io/address/{{transactions[tx].to}}">
+        {{transactions[tx].to|limitTo:30}}...
+        </a>
+      </td>
+      <td>
+        {{transactions[tx].value}}
+      </td>
+      <td>
+        {{transactions[tx].data}}
+      </td>
+      <td>
+        {{transactions[tx].nonce}}
       </td>
     </tr>
   </tbody>

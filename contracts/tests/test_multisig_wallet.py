@@ -39,8 +39,13 @@ class TestContract(TestCase):
         print "Deployment costs: {}".format(self.s.block.gas_used - gas)
         # Validate deployment
         self.assertTrue(self.multisig_wallet.isOwner(accounts[wa_1]))
+        self.assertEqual(self.multisig_wallet.owners(0), accounts[wa_1].encode('hex'))
         self.assertTrue(self.multisig_wallet.isOwner(accounts[wa_2]))
+        self.assertEqual(self.multisig_wallet.owners(1), accounts[wa_2].encode('hex'))
         self.assertTrue(self.multisig_wallet.isOwner(accounts[wa_3]))
+        self.assertEqual(self.multisig_wallet.owners(2), accounts[wa_3].encode('hex'))
+        self.assertEqual(self.multisig_wallet.getOwners(),
+                         [accounts[wa_1].encode('hex'), accounts[wa_2].encode('hex'), accounts[wa_3].encode('hex')])
         self.assertEqual(self.multisig_wallet.required(), required_accounts)
         # Create ABIs
         multisig_abi = self.multisig_wallet.translator

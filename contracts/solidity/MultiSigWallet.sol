@@ -336,4 +336,17 @@ contract MultiSigWallet {
     {
         return filterTransactions(false);
     }
+
+    /// @dev Returns list of owners.
+    /// @return List of owner addresses.
+    function getOwners()
+        public
+        constant
+        returns (address[])
+    {
+        address[] memory _owners = new address[](owners.length);
+        for (uint i=0; i<owners.length; i++)
+            _owners[i] = owners[i];
+        return _owners;
+    }
 }

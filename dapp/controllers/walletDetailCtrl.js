@@ -7,30 +7,26 @@
       // Get wallet balance, nonce, transactions, owners
       var batch = Wallet.web3.createBatch();
       $scope.owners = [];
-      $scope.ownersNum = Object.keys($scope.wallet.owners).length;
       $scope.transactions = {};
 
       $scope.updateParams = function(){
         Wallet
         .loadJson()
         .then(
-          function(){
-            var owners = [];
-            for(var i=0; i<$scope.ownersNum; i++){
-              // Get owners
-              batch.add(
-                Wallet
-                .getOwners(
-                  $routeParams.address,
-                  i,
-                  function(e, owner){
-                    owners.push(owner);
-                    $scope.owners = owners;
-                    $scope.$apply();
-                  }
-                )
-              );
-            }
+          function(){            
+
+            // Get owners
+            batch.add(
+              Wallet
+              .getOwners(
+                $routeParams.address,
+                function(e, owners){
+                  $scope.owners = owners;
+                  $scope.$apply();
+                }
+              )
+            );
+
 
             // Get balance
             batch.add(

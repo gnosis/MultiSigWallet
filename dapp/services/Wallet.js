@@ -311,11 +311,11 @@
       * Get wallet owners
       * Needs to call loadJson before
       */
-      wallet.getOwners = function(address, index, cb){
+      wallet.getOwners = function(address, cb){
         var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
         return wallet.callRequest(
-          instance.owners,
-          [index],
+          instance.getOwners,
+          [],
           cb
         )
       }

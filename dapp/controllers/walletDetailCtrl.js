@@ -82,9 +82,11 @@
                     pendingBatch.add(
                       Wallet.getTransaction($scope.wallet.address, txHash, function(e, tx){
                         $scope.transactions[txHash] = tx;
+                        $scope.$apply();
                       })
                     )
                   });
+                  pendingBatch.execute();
                 }
               )
             )
@@ -103,6 +105,7 @@
                     executedBatch.add(
                       Wallet.getTransaction($scope.wallet.address, txHash, function(e, tx){
                         $scope.transactions[txHash] = tx;
+                        $scope.$apply();
                       })
                     )
                   });

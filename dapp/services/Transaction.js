@@ -168,7 +168,7 @@
         });
         instance[method].sendTransaction.apply(this, transactionParams);
 
-      }      
+      }
 
       /**
       * Internal loop, checking for transaction receipts.

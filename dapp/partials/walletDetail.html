@@ -5,9 +5,12 @@
 <div class="row col-md-12">
   <div class="form-horizontal col-md-6">
     <label class="col-sm-4 control-label">Balance:</label>
-    <div class="col-sm-8">
+    <div class="col-sm-6">
       <p class="form-control-static">{{balance}} ETH</p>
     </div>
+    <a ng-href="#/wallet/{{wallet.address}}/deposit" class="btn btn-default col-sm-2">
+      Deposit
+    </a>
   </div>
   <div class="form-horizontal col-md-6">
     <label class="col-sm-4 control-label">Address:</label>
@@ -89,7 +92,16 @@
         txHash
       </th>
       <th>
-
+        to
+      </th>
+      <th>
+        value
+      </th>
+      <th>
+        data
+      </th>
+      <th>
+        nonce
       </th>
     </tr>
   </thead>
@@ -99,7 +111,18 @@
         {{tx}}
       </td>
       <td>
-
+        <a ng-href="https://etherscan.io/address/{{transactions[tx].to}}">
+        {{transactions[tx].to|limitTo:30}}...
+        </a>
+      </td>
+      <td>
+        {{transactions[tx].value}}
+      </td>
+      <td>
+        {{transactions[tx].data}}
+      </td>
+      <td>
+        {{transactions[tx].nonce}}
       </td>
     </tr>
   </tbody>
@@ -131,7 +154,7 @@
   <tbody>
     <tr ng-repeat="tx in executed track by $index">
       <td>
-        <a ng-href="https://etherscan.io/tx/{{tx}}">{{tx|limitTo:30}}...</a>
+        {{tx}}
       </td>
       <td>
         <a ng-href="https://etherscan.io/address/{{transactions[tx].to}}">

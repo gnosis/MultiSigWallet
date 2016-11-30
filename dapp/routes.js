@@ -28,6 +28,10 @@
         controller: 'updateRequiredCtrl',
         templateUrl: 'partials/updateRequired.html'
       })
+      .when("/wallet/:address/deposit", {
+        controller: 'depositCtrl',
+        templateUrl: 'partials/deposit.html'
+      })
       .otherwise({
         redirectTo: '/wallets'
       });

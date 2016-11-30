@@ -29,6 +29,18 @@
           }
         });
       }
+
+      $scope.signOffline = function(){
+        Wallet.signUpdateRequired($scope.address, $scope.required, function(e, tx){
+          if(e){
+            Utils.error(e);
+          }
+          else{
+            Utils.success('<div class="form-group"><label>Transaction:'+
+            '</label> <textarea class="form-control" rows="5">'+ tx + '</textarea></div>');
+          }
+        });
+      }
     });
   }
 )();

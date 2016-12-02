@@ -4,7 +4,7 @@
     .module("multiSigWeb")
     .controller("rawTransactionCtrl", function($scope, Wallet, Utils, Transaction){
       $scope.sendRawTransaction = function(){
-        Wallet.web3.eth.sendRawTransaction($scope.tx, function(e, txHash){
+        Transaction.sendRawTransaction($scope.tx, function(e, txHash){
           if(e){
             Utils.dangerAlert(e);
           }

@@ -5,15 +5,13 @@
     .controller("updateRequiredCtrl", function($scope, Wallet, Transaction, $routeParams, Utils, $location){
       $scope.address = $routeParams.address;
 
+
       Wallet
-      .loadJson()
-      .then(function(){
-        Wallet
-        .getRequired($scope.address, function(e, required){
-          $scope.required = required.toNumber();
-          $scope.$apply();
-        }).call();
-      });
+      .getRequired($scope.address, function(e, required){
+        $scope.required = required.toNumber();
+        $scope.$apply();
+      }).call();
+
 
       $scope.update = function(){
         Wallet.updateRequired($scope.address, $scope.required, function(e, tx){

@@ -115,7 +115,7 @@
           to: tx.to,
           value: EthJS.Util.intToHex(tx.value||0),
           gasPrice: '0x' + Wallet.txParams.gasPrice.toNumber(16),
-          gasLimit: EthJS.Util.intToHex(Wallet.txParams.gasLimit),
+          gas: EthJS.Util.intToHex(Wallet.txParams.gasLimit),
           nonce: EthJS.Util.intToHex(tx.nonce),
           data: data
         }
@@ -171,6 +171,16 @@
       }
 
       /**
+      * Send signed transaction
+      **/
+      factory.sendRawTransaction = function(tx, cb){
+        Wallet.web3.eth.sendRawTransaction(
+          tx,
+          cb
+        );
+      }
+
+      /**
       * Internal loop, checking for transaction receipts.
       * calls callback after receipt is retrieved.
       */
@@ -182,7 +192,7 @@
         var txHashes = Object.keys(factory.transactions);
 
         for(var i=0; i<txHashes.length; i++){
-          var tx = factory.transactions[txHashes[i]];
+          var tx = factory.transactions[txHashes[i]];          
           if(tx && !tx.receipt){
             batch.add(
               Wallet.web3.eth.getTransactionReceipt.request(txHashes[i], function(e, receipt){

@@ -8,7 +8,7 @@
       var wallet = {
         wallets: JSON.parse(localStorage.getItem("wallets")),
         web3 : null,
-        json : null,
+        json : abiJSON,
         txParams: {
           nonce: null,
           gasPrice: null,
@@ -19,22 +19,6 @@
       // Set web3 provider (Metamask, mist, etc)
       if($window.web3){
         wallet.web3 = new Web3($window.web3.currentProvider);
-      }
-
-      // ABI/HEX file, only loaded when needed
-      wallet.loadJson = function(){
-        if(!wallet.json){
-          return $http
-          .get('/abi.json')
-          .then(function(json){
-            wallet.json = json.data;
-          });
-        }
-        else{
-          return $q(function(resolve, reject){
-            resolve(wallet.json);
-          });
-        }
       }
 
       /**
@@ -215,60 +199,49 @@
 
       // Deploy wallet contract with constructor params
       wallet.deployWallet = function(owners, requiredConfirmations, cb){
-        wallet.loadJson()
-        .then(
-          function(){
-            var MyContract = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi);
-            MyContract.new(owners, requiredConfirmations, {
-              data: wallet.json.multiSigWallet.binHex
-            }, cb);
-          }
-        )
-
+        var MyContract = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi);
+        MyContract.new(owners, requiredConfirmations, {
+          data: wallet.json.multiSigWallet.binHex
+        }, cb);
       }
 
       // Sign transaction, don't send it
       wallet.deployOfflineWallet = function(owners, requiredConfirmations, cb){
-        wallet.loadJson()
-        .then(
-          function(){
-            // Get Transaction Data
-            var MyContract = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi);
-            var data = MyContract.new.getData(owners, requiredConfirmations, {
-              data: wallet.json.multiSigWallet.binHex
-            });
 
-            // Create transaction object
-            var txInfo = {
-              to: null,
-              value: EthJS.Util.intToHex(0),
-              gasPrice: '0x' + wallet.txParams.gasPrice.toNumber(16),
-              gasLimit: EthJS.Util.intToHex(wallet.txParams.gasLimit),
-              nonce: EthJS.Util.intToHex(wallet.txParams.nonce),
-              data: data
-            }
+        // Get Transaction Data
+        var MyContract = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi);
+        var data = MyContract.new.getData(owners, requiredConfirmations, {
+          data: wallet.json.multiSigWallet.binHex
+        });
 
-            var tx = new EthJS.Tx(txInfo);
+        // Create transaction object
+        var txInfo = {
+          to: null,
+          value: EthJS.Util.intToHex(0),
+          gasPrice: '0x' + wallet.txParams.gasPrice.toNumber(16),
+          gasLimit: EthJS.Util.intToHex(wallet.txParams.gasLimit),
+          nonce: EthJS.Util.intToHex(wallet.txParams.nonce),
+          data: data
+        }
 
-            // Get transaction hash
-            var txHash = EthJS.Util.bufferToHex(tx.hash(false));
+        var tx = new EthJS.Tx(txInfo);
 
-            // Sign transaction hash
-            wallet.web3.eth.sign(wallet.coinbase, txHash, function(e, signature){
-              if(e){
-                cb(e);
-              }
-              var signature = EthJS.Util.fromRpcSig(signature);
-              tx.v = EthJS.Util.intToHex(signature.v);
-              tx.r = EthJS.Util.bufferToHex(signature.r);
-              tx.s = EthJS.Util.bufferToHex(signature.s);
+        // Get transaction hash
+        var txHash = EthJS.Util.bufferToHex(tx.hash(false));
 
-              // Return raw transaction as hex string
-              cb(null, EthJS.Util.bufferToHex(tx.serialize()));
-            });
-
+        // Sign transaction hash
+        wallet.web3.eth.sign(wallet.coinbase, txHash, function(e, signature){
+          if(e){
+            cb(e);
           }
-        )
+          var signature = EthJS.Util.fromRpcSig(signature);
+          tx.v = EthJS.Util.intToHex(signature.v);
+          tx.r = EthJS.Util.bufferToHex(signature.r);
+          tx.s = EthJS.Util.bufferToHex(signature.s);
+
+          // Return raw transaction as hex string
+          cb(null, EthJS.Util.bufferToHex(tx.serialize()));
+        });
 
       }
 
@@ -281,35 +254,30 @@
       };
 
       wallet.restore = function(info, cb){
-        wallet.loadJson()
-        .then(
-          function(){
-            var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(info.address);
-            // Check contract function works
-            instance.MAX_OWNER_COUNT(function(e, count){
-              if(e){
-                cb(e);
-              }
 
-              if(count.eq(0)){
-                // it is not a wallet
-                cb("Address " + info.address + " is not a MultiSigWallet contract");
-              }
-              else{
-                // Add wallet
-                wallet.addWallet(info);
-                cb(info);
-              }
-            });
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(info.address);
+        // Check contract function works
+        instance.MAX_OWNER_COUNT(function(e, count){
+          if(e){
+            cb(e);
           }
-        );
-      };
+
+          if(count.eq(0)){
+            // it is not a wallet
+            cb("Address " + info.address + " is not a MultiSigWallet contract");
+          }
+          else{
+            // Add wallet
+            wallet.addWallet(info);
+            cb(null, info);
+          }
+        });
+      }
 
       // MultiSig functions
 
       /**
       * Get wallet owners
-      * Needs to call loadJson before
       */
       wallet.getOwners = function(address, cb){
         var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
@@ -488,6 +456,60 @@
             );
           }
         );
+      }
+
+      /**
+      * Confirm transaction by another wallet owner
+      */
+      wallet.confirmTransaction = function(address, txHash, cb){
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
+        instance.confirmTransaction(
+          txHash,
+          {
+            gasPrice: '0x' + wallet.txParams.gasPrice.toNumber(16),
+            gas: EthJS.Util.intToHex(wallet.txParams.gasLimit)
+          },
+          cb
+        );
+      }
+
+      /**
+      * Sign confirm transaction offline by another wallet owner
+      */
+      wallet.confirmTransactionOffline = function(address, txHash, cb){
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
+        var mainData = instance.confirmTransaction.getData(txHash);
+
+        // Create transaction object
+        var txInfo = {
+          to: address,
+          value: EthJS.Util.intToHex(0),
+          gasPrice: '0x' + wallet.txParams.gasPrice.toNumber(16),
+          gasLimit: EthJS.Util.intToHex(wallet.txParams.gasLimit),
+          nonce: EthJS.Util.intToHex(wallet.txParams.nonce),
+          data: mainData
+        }
+
+        var tx = new EthJS.Tx(txInfo);
+
+        // Get transaction hash
+        var txHash = EthJS.Util.bufferToHex(tx.hash(false));
+
+        // Sign transaction hash
+        wallet.web3.eth.sign(wallet.coinbase, txHash, function(e, signature){
+          if(e){
+            cb(e);
+          }
+          else{
+            var signature = EthJS.Util.fromRpcSig(signature);
+            tx.v = EthJS.Util.intToHex(signature.v);
+            tx.r = EthJS.Util.bufferToHex(signature.r);
+            tx.s = EthJS.Util.bufferToHex(signature.s);
+
+            // Return raw transaction as hex string
+            cb(null, EthJS.Util.bufferToHex(tx.serialize()));
+          }
+        });
       }
 
       return wallet;

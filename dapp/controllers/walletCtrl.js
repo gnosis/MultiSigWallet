@@ -14,7 +14,7 @@
           $scope.totalItems = Object.keys($scope.wallets).length;
           var batch = Wallet.web3.createBatch();
           // Init wallet balance of each wallet address
-          Object.keys($scope.wallets).map(function(address){            
+          Object.keys($scope.wallets).map(function(address){
             batch.add(
               Wallet.getBalance(
                 address,
@@ -67,7 +67,7 @@
         Wallet.deployOfflineWallet(Object.keys($scope.new.owners), $scope.new.confirmations,
         function(e, tx){
           if(e){
-            Utils.error(e);
+            Utils.dangerAlert(e);
           }
           else{
             Utils.success('<div class="form-group"><label>Multisignature wallet '+
@@ -111,10 +111,11 @@
         Wallet.removeWallet(address);
       }
 
-      $scope.restoreWallet = function(e, w){
-        Wallet.restore($scope.old, function(){
+      $scope.restoreWallet = function(){
+        Wallet.restore($scope.old, function(e, w){
+          console.log(e);
           if(e){
-            Utils.error(e);
+            Utils.dangerAlert(e);
           }
           else{
             $scope.view = 'list';

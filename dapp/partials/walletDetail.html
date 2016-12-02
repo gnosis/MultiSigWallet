@@ -30,7 +30,7 @@
       Update
     </a>
   </div>
-  
+
 </div>
 
 <div class="page-header">
@@ -100,21 +100,29 @@
   <tbody>
     <tr ng-repeat="tx in pending track by $index">
       <td>
-        {{tx}}
+        {{tx|limitTo:20}}...
       </td>
       <td>
-        <a ng-href="https://etherscan.io/address/{{transactions[tx].to}}">
-        {{transactions[tx].to|limitTo:30}}...
-        </a>
+        {{transactions[tx].to|limitTo:20}}...
       </td>
       <td>
         {{transactions[tx].value}}
       </td>
       <td>
-        {{transactions[tx].data}}
+        {{transactions[tx].data|limitTo:20}}...
       </td>
       <td>
         {{transactions[tx].nonce}}
+      </td>
+      <td>
+        <button type="button" class="btn btn-default" ng-click="confirmTransaction(tx)">
+          Confirm
+        </button>
+      </td>
+      <td>
+        <button type="button" class="btn btn-default" ng-click="confirmTransactionOffline(tx)">
+          Confirm offline
+        </button>
       </td>
     </tr>
   </tbody>
@@ -146,18 +154,16 @@
   <tbody>
     <tr ng-repeat="tx in executed track by $index">
       <td>
-        {{tx}}
+        {{tx|limitTo:20}}...
       </td>
       <td>
-        <a ng-href="https://etherscan.io/address/{{transactions[tx].to}}">
-        {{transactions[tx].to|limitTo:30}}...
-        </a>
+        {{transactions[tx].to|limitTo:20}}...
       </td>
       <td>
         {{transactions[tx].value}}
       </td>
       <td>
-        {{transactions[tx].data}}
+        {{transactions[tx].data|limitTo:20}}...
       </td>
       <td>
         {{transactions[tx].nonce}}

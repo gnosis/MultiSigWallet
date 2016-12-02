@@ -46,6 +46,40 @@
       }
 
       /**
+      * For a given address and data, sign a transaction offline
+      */
+      wallet.offlineTransaction = function(address, data, cb){
+        // Create transaction object
+        var txInfo = {
+          to: address,
+          value: EthJS.Util.intToHex(0),
+          gasPrice: '0x' + wallet.txParams.gasPrice.toNumber(16),
+          gasLimit: EthJS.Util.intToHex(wallet.txParams.gasLimit),
+          nonce: EthJS.Util.intToHex(wallet.txParams.nonce),
+          data: data
+        }
+
+        var tx = new EthJS.Tx(txInfo);
+
+        // Get transaction hash
+        var txHash = EthJS.Util.bufferToHex(tx.hash(false));
+
+        // Sign transaction hash
+        wallet.web3.eth.sign(wallet.coinbase, txHash, function(e, signature){
+          if(e){
+            cb(e);
+          }
+          var signature = EthJS.Util.fromRpcSig(signature);
+          tx.v = EthJS.Util.intToHex(signature.v);
+          tx.r = EthJS.Util.bufferToHex(signature.r);
+          tx.s = EthJS.Util.bufferToHex(signature.s);
+
+          // Return raw transaction as hex string
+          cb(null, EthJS.Util.bufferToHex(tx.serialize()));
+        });
+      }
+
+      /**
       * Get ethereum accounts and update account list.
       */
       wallet.updateAccounts = function(cb){
@@ -214,34 +248,7 @@
           data: wallet.json.multiSigWallet.binHex
         });
 
-        // Create transaction object
-        var txInfo = {
-          to: null,
-          value: EthJS.Util.intToHex(0),
-          gasPrice: '0x' + wallet.txParams.gasPrice.toNumber(16),
-          gasLimit: EthJS.Util.intToHex(wallet.txParams.gasLimit),
-          nonce: EthJS.Util.intToHex(wallet.txParams.nonce),
-          data: data
-        }
-
-        var tx = new EthJS.Tx(txInfo);
-
-        // Get transaction hash
-        var txHash = EthJS.Util.bufferToHex(tx.hash(false));
-
-        // Sign transaction hash
-        wallet.web3.eth.sign(wallet.coinbase, txHash, function(e, signature){
-          if(e){
-            cb(e);
-          }
-          var signature = EthJS.Util.fromRpcSig(signature);
-          tx.v = EthJS.Util.intToHex(signature.v);
-          tx.r = EthJS.Util.bufferToHex(signature.r);
-          tx.s = EthJS.Util.bufferToHex(signature.s);
-
-          // Return raw transaction as hex string
-          cb(null, EthJS.Util.bufferToHex(tx.serialize()));
-        });
+        wallet.offlineTransaction(null, data, cb);
 
       }
 
@@ -306,6 +313,24 @@
           }
         }).call();
 
+      }
+
+      /**
+      * Remove owner
+      */
+      wallet.removeOwner = function(address, owner, cb){
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
+        var data = instance.removeOwner.getData(owner.address);
+
+        // Get nonce
+        wallet.getNonce(address, address, "0x0", data, function(e, nonce){
+          if(e){
+            cb(e);
+          }
+          else{
+            instance.submitTransaction(address, "0x0", data, nonce, cb);
+          }
+        }).call();
       }
 
       /**
@@ -376,36 +401,7 @@
           }
           else{
             var mainData = instance.submitTransaction.getData(address, "0x0", data, nonce, cb);
-            // Create transaction object
-            var txInfo = {
-              to: address,
-              value: EthJS.Util.intToHex(0),
-              gasPrice: '0x' + wallet.txParams.gasPrice.toNumber(16),
-              gasLimit: EthJS.Util.intToHex(wallet.txParams.gasLimit),
-              nonce: EthJS.Util.intToHex(wallet.txParams.nonce),
-              data: mainData
-            }
-
-            var tx = new EthJS.Tx(txInfo);
-
-            // Get transaction hash
-            var txHash = EthJS.Util.bufferToHex(tx.hash(false));
-
-            // Sign transaction hash
-            wallet.web3.eth.sign(wallet.coinbase, txHash, function(e, signature){
-              if(e){
-                cb(e);
-              }
-              else{
-                var signature = EthJS.Util.fromRpcSig(signature);
-                tx.v = EthJS.Util.intToHex(signature.v);
-                tx.r = EthJS.Util.bufferToHex(signature.r);
-                tx.s = EthJS.Util.bufferToHex(signature.s);
-
-                // Return raw transaction as hex string
-                cb(null, EthJS.Util.bufferToHex(tx.serialize()));
-              }
-            });
+            wallet.offlineTransaction(address, mainData, cb);
           }
         }).call();
       }
@@ -480,36 +476,7 @@
         var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
         var mainData = instance.confirmTransaction.getData(txHash);
 
-        // Create transaction object
-        var txInfo = {
-          to: address,
-          value: EthJS.Util.intToHex(0),
-          gasPrice: '0x' + wallet.txParams.gasPrice.toNumber(16),
-          gasLimit: EthJS.Util.intToHex(wallet.txParams.gasLimit),
-          nonce: EthJS.Util.intToHex(wallet.txParams.nonce),
-          data: mainData
-        }
-
-        var tx = new EthJS.Tx(txInfo);
-
-        // Get transaction hash
-        var txHash = EthJS.Util.bufferToHex(tx.hash(false));
-
-        // Sign transaction hash
-        wallet.web3.eth.sign(wallet.coinbase, txHash, function(e, signature){
-          if(e){
-            cb(e);
-          }
-          else{
-            var signature = EthJS.Util.fromRpcSig(signature);
-            tx.v = EthJS.Util.intToHex(signature.v);
-            tx.r = EthJS.Util.bufferToHex(signature.r);
-            tx.s = EthJS.Util.bufferToHex(signature.s);
-
-            // Return raw transaction as hex string
-            cb(null, EthJS.Util.bufferToHex(tx.serialize()));
-          }
-        });
+        wallet.offlineTransaction(address, mainData, cb);
       }
 
       /**
@@ -567,36 +534,7 @@
 
         var data = instance.revokeConfirmation.getData(txHash);
 
-        // Create transaction object
-        var txInfo = {
-          to: address,
-          value: EthJS.Util.intToHex(0),
-          gasPrice: '0x' + wallet.txParams.gasPrice.toNumber(16),
-          gasLimit: EthJS.Util.intToHex(wallet.txParams.gasLimit),
-          nonce: EthJS.Util.intToHex(wallet.txParams.nonce),
-          data: data
-        }
-
-        var tx = new EthJS.Tx(txInfo);
-
-        // Get transaction hash
-        var txHash = EthJS.Util.bufferToHex(tx.hash(false));
-
-        // Sign transaction hash
-        wallet.web3.eth.sign(wallet.coinbase, txHash, function(e, signature){
-          if(e){
-            cb(e);
-          }
-          else{
-            var signature = EthJS.Util.fromRpcSig(signature);
-            tx.v = EthJS.Util.intToHex(signature.v);
-            tx.r = EthJS.Util.bufferToHex(signature.r);
-            tx.s = EthJS.Util.bufferToHex(signature.s);
-
-            // Return raw transaction as hex string
-            cb(null, EthJS.Util.bufferToHex(tx.serialize()));
-          }
-        });
+        wallet.offlineTransaction(address, data, cb);
       }
 
       return wallet;

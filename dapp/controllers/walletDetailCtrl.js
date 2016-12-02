@@ -89,7 +89,6 @@
                     if(!$scope.transactions[txHash]){
                       $scope.transactions[txHash] = {};
                     }
-                    console.log("confirmed", confirmed)
                     Object.assign($scope.transactions[txHash], {isConfirmed: confirmed});
                     $scope.$apply();
                   })
@@ -223,6 +222,18 @@
           else{
             Utils.success('<div class="form-group"><label>Transaction:'+
             '</label> <textarea class="form-control" rows="5">'+ tx + '</textarea></div>');
+          }
+        });
+      }
+
+      $scope.removeOwner = function(owner){
+        Wallet.removeOwner($scope.wallet.address, {address: owner}, function(e, tx){
+          if(e){
+            Utils.dangerAlert(e);
+          }
+          else{
+            Utils.notification("Remove owner transaction sent, will be mined in next 20s");
+            Transaction.add({txHash: tx});
           }
         });
       }

@@ -512,6 +512,93 @@
         });
       }
 
+      /**
+      * Get confirmation count
+      */
+      wallet.confirmationCount = function(txHash, cb){
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
+        return wallet.callRequest(
+          instance.transactions,
+          [txHash],
+          function(e, count){
+            if(e){
+              cb(e);
+            }
+            else{
+              cb(null, count.toNumber());
+            }
+          }
+        );
+      }
+
+      /**
+      * Get confirmations
+      */
+      wallet.isConfirmed = function(address, txHash, cb){
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
+        return wallet.callRequest(
+          instance.confirmations,
+          [txHash, wallet.coinbase],
+          cb
+        );
+      }
+
+      /**
+      * Revoke transaction confirmation
+      */
+      wallet.revokeConfirmation = function(address, txHash, cb){
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
+
+        instance.revokeConfirmation(
+          txHash,
+          {
+            gasPrice: '0x' + wallet.txParams.gasPrice.toNumber(16),
+            gas: EthJS.Util.intToHex(wallet.txParams.gasLimit)
+          },
+          cb
+        );
+      }
+
+      /**
+      * Revoke transaction confirmation offline
+      */
+      wallet.revokeConfirmationOffline = function(address, txHash, cb){
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
+
+        var data = instance.revokeConfirmation.getData(txHash);
+
+        // Create transaction object
+        var txInfo = {
+          to: address,
+          value: EthJS.Util.intToHex(0),
+          gasPrice: '0x' + wallet.txParams.gasPrice.toNumber(16),
+          gasLimit: EthJS.Util.intToHex(wallet.txParams.gasLimit),
+          nonce: EthJS.Util.intToHex(wallet.txParams.nonce),
+          data: data
+        }
+
+        var tx = new EthJS.Tx(txInfo);
+
+        // Get transaction hash
+        var txHash = EthJS.Util.bufferToHex(tx.hash(false));
+
+        // Sign transaction hash
+        wallet.web3.eth.sign(wallet.coinbase, txHash, function(e, signature){
+          if(e){
+            cb(e);
+          }
+          else{
+            var signature = EthJS.Util.fromRpcSig(signature);
+            tx.v = EthJS.Util.intToHex(signature.v);
+            tx.r = EthJS.Util.bufferToHex(signature.r);
+            tx.s = EthJS.Util.bufferToHex(signature.s);
+
+            // Return raw transaction as hex string
+            cb(null, EthJS.Util.bufferToHex(tx.serialize()));
+          }
+        });
+      }
+
       return wallet;
     });
   }

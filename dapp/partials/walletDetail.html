@@ -114,14 +114,24 @@
       <td>
         {{transactions[tx].nonce}}
       </td>
-      <td>
+      <td ng-hide="transactions[tx].isConfirmed">
         <button type="button" class="btn btn-default" ng-click="confirmTransaction(tx)">
           Confirm
         </button>
       </td>
-      <td>
+      <td ng-hide="transactions[tx].isConfirmed">
         <button type="button" class="btn btn-default" ng-click="confirmTransactionOffline(tx)">
           Confirm offline
+        </button>
+      </td>
+      <td ng-show="transactions[tx].isConfirmed">
+        <button type="button" class="btn btn-default" ng-click="revokeConfirmation(tx)">
+          Revoke Confirmation
+        </button>
+      </td>
+      <td ng-show="transactions[tx].isConfirmed">
+        <button type="button" class="btn btn-default" ng-click="revokeConfirmationOffline(tx)">
+          Revoke confirmation offline
         </button>
       </td>
     </tr>

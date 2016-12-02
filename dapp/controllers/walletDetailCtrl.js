@@ -72,12 +72,29 @@
               // Get transaction info
               var pendingBatch = Wallet.web3.createBatch();
               pending.map(function(txHash){
+                // Get transaction details
                 pendingBatch.add(
                   Wallet.getTransaction($scope.wallet.address, txHash, function(e, tx){
-                    $scope.transactions[txHash] = tx;
+                    if(!$scope.transactions[txHash]){
+                      $scope.transactions[txHash] = {};
+                    }
+                    Object.assign($scope.transactions[txHash], tx);
                     $scope.$apply();
                   })
                 )
+
+                // Get isConfirmed by user
+                pendingBatch.add(
+                  Wallet.isConfirmed($scope.wallet.address, txHash, function(e, confirmed){
+                    if(!$scope.transactions[txHash]){
+                      $scope.transactions[txHash] = {};
+                    }
+                    console.log("confirmed", confirmed)
+                    Object.assign($scope.transactions[txHash], {isConfirmed: confirmed});
+                    $scope.$apply();
+                  })
+                );
+
               });
               pendingBatch.execute();
             }
@@ -97,10 +114,13 @@
               executed.map(function(txHash){
                 executedBatch.add(
                   Wallet.getTransaction($scope.wallet.address, txHash, function(e, tx){
-                    $scope.transactions[txHash] = tx;
+                    if(!$scope.transactions[txHash]){
+                      $scope.transactions[txHash] = {};
+                    }
+                    Object.assign($scope.transactions[txHash], tx);
                     $scope.$apply();
                   })
-                )
+                );
               });
 
               executedBatch.execute();
@@ -112,7 +132,9 @@
         setTimeout($scope.updateParams, 15000);
       }
 
-      $scope.updateParams();
+      Wallet.initParams().then(function(){
+        $scope.updateParams();
+      });
 
       $scope.getOwnerName = function(address){
         if($scope.wallet.owners && $scope.wallet.owners[address]){
@@ -177,7 +199,30 @@
           else{
             Utils.success('<div class="form-group"><label>Transaction:'+
             '</label> <textarea class="form-control" rows="5">'+ tx + '</textarea></div>');
+          }
+        });
+      }
+
+      $scope.revokeConfirmation = function(txHash){
+        Wallet.revokeConfirmation($scope.wallet.address, txHash, function(e, tx){
+          if(e){
+            Utils.dangerAlert(e);
+          }
+          else{
+            Utils.notification("Revoke confirmation sent, will be mined in next 20s");
             Transaction.add({txHash: tx});
+          }
+        });
+      }
+
+      $scope.revokeConfirmationOffline = function(txHash){
+        Wallet.revokeConfirmationOffline($scope.wallet.address, txHash, function(e, tx){
+          if(e){
+            Utils.dangerAlert(e);
+          }
+          else{
+            Utils.success('<div class="form-group"><label>Transaction:'+
+            '</label> <textarea class="form-control" rows="5">'+ tx + '</textarea></div>');
           }
         });
       }

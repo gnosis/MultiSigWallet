@@ -292,8 +292,9 @@ contract MultiSigWallet {
     }
 
     /*
-     * These functions are not callable across contracts because they return
-     * a dynamically-sized array https://github.com/ethereum/solidity/issues/166
+     * Web3 functions
+     * These functions are not callable across contracts because they return a dynamically-sized array.
+     * https://github.com/ethereum/solidity/issues/166
      */
     /// @dev Returns transaction hashes filtered by their execution status.
     /// @param isPending Defines if pending or executed transactions are returned.
@@ -342,11 +343,10 @@ contract MultiSigWallet {
     function getOwners()
         public
         constant
-        returns (address[])
+        returns (address[] _owners)
     {
-        address[] memory _owners = new address[](owners.length);
+        _owners = new address[](owners.length);
         for (uint i=0; i<owners.length; i++)
             _owners[i] = owners[i];
-        return _owners;
     }
 }

@@ -32,6 +32,10 @@
         controller: 'depositCtrl',
         templateUrl: 'partials/deposit.html'
       })
+      .when("/owners", {
+        controller: 'ownerCtrl',
+        templateUrl: 'partials/owner.html'
+      })
       .otherwise({
         redirectTo: '/wallets'
       });

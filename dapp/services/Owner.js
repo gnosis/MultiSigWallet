@@ -33,6 +33,16 @@
         catch(e){}
       }
 
+      factory.removeAll = function(){
+        factory.owners = {};
+        localStorage.setItem("owners", JSON.stringify(factory.owners));
+
+        try{
+          $rootScope.$digest();
+        }
+        catch(e){}
+      }
+
       return factory;
     });
   }

@@ -2,7 +2,7 @@
   function(){
     angular
     .module("multiSigWeb")
-    .controller("walletDetailCtrl", function($scope, Wallet, $routeParams, Utils, Transaction){
+    .controller("walletDetailCtrl", function($scope, Wallet, $routeParams, Utils, Transaction, Owner){
       $scope.wallet = Wallet.wallets[$routeParams.address];
       // Get wallet balance, nonce, transactions, owners
       var batch = Wallet.web3.createBatch();
@@ -135,12 +135,9 @@
         $scope.updateParams();
       });
 
-      $scope.getOwnerName = function(address){
-        if($scope.wallet.owners && $scope.wallet.owners[address]){
-          return $scope.wallet.owners[address].name;
-        }
-        else{
-
+      $scope.getOwnerName = function(address){        
+        if(Owner.owners && Owner.owners[address]){
+          return Owner.owners[address].name;
         }
       }
 

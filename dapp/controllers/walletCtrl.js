@@ -2,7 +2,7 @@
   function(){
     angular
     .module('multiSigWeb')
-    .controller('walletCtrl', function($scope, Wallet, Utils, Transaction){
+    .controller('walletCtrl', function($scope, Wallet, Utils, Transaction, Owner){
 
       // Init wallets collection
       $scope.$watch(
@@ -48,7 +48,12 @@
             else{
               if(contract.address){
                 // Save wallet
-                Wallet.addWallet({name: $scope.new.name, address: contract.address, owners: $scope.new.owners});
+                Wallet.updateWallet({name: $scope.new.name, address: contract.address});
+
+                // Save owners
+                Object.keys($scope.new.owners).map(function(owner){
+                  Owner.update($scope.new.owners[owner]);
+                });
 
                 Utils.success("Multisignature wallet deployed with address "+contract.address);
               }

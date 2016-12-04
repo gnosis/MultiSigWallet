@@ -6,7 +6,7 @@
 
       // Init wallet factory object
       var wallet = {
-        wallets: JSON.parse(localStorage.getItem("wallets")),
+        wallets: JSON.parse(localStorage.getItem("wallets")) || {},
         web3 : null,
         json : abiJSON,
         txParams: {
@@ -205,18 +205,16 @@
           });
         }
 
-      wallet.addWallet = function(w){
-        var walletCollection = JSON.parse(localStorage.getItem("wallets"));
-        if (!walletCollection) walletCollection = {}
-        walletCollection[w.address] = w;
-        localStorage.setItem("wallets", JSON.stringify(walletCollection));
-        wallet.wallets = walletCollection;
+      wallet.updateWallet = function(w){
+        if(!wallet.wallets[w.address]){
+          wallet.wallets[w.address] = {};
+        }
+        Object.assign(wallet.wallets[w.address], {address: w.address, name: w.name});
+        localStorage.setItem("wallets", JSON.stringify(wallet.wallets));
         try{
           $rootScope.$digest();
         }
-        catch(e){
-
-        }
+        catch(e){}
       }
 
       wallet.removeWallet = function(address){
@@ -226,9 +224,7 @@
         try{
           $rootScope.$digest();
         }
-        catch(e){
-
-        }
+        catch(e){}
       }
 
       // Deploy wallet contract with constructor params
@@ -308,8 +304,16 @@
             cb(e);
           }
           else{
-            // Add owner to owners collection TODO
-            instance.submitTransaction(address, "0x0", data, nonce, cb);
+            instance.submitTransaction(address, "0x0", data, nonce, function(e, tx){
+              if(e){
+                cb(e);
+              }
+              else{
+                // Add owner to owners collection
+                Owner.update(owner);
+                cb(null, tx);
+              }
+            });
           }
         }).call();
 

@@ -23,6 +23,23 @@
           }
         )
       }
+
+      $scope.sign = function(){
+        Transaction.signOffline(
+          {
+            to: $scope.wallet.address,
+            value: $scope.amount*1000000000000000000,
+            nonce: Wallet.txParams.nonce
+          },
+          function(e, tx){
+            if(e){
+              Utils.dangerAlert(e);
+            }
+            else{
+              Utils.signed(tx);
+            }
+          });
+        }
     });
   }
 )();

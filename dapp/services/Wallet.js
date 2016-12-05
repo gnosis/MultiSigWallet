@@ -13,12 +13,17 @@
           nonce: null,
           gasPrice: null,
           gasLimit: null
-        }
+        },
+        accounts: [],
+        coinbase: null
       }
 
       // Set web3 provider (Metamask, mist, etc)
       if($window.web3){
         wallet.web3 = new Web3($window.web3.currentProvider);
+      }
+      else{
+        wallet.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
       }
 
       /**
@@ -92,11 +97,28 @@
             }
             else{
               wallet.accounts = accounts;
-              wallet.coinbase = accounts?accounts[0]:null;
+
+              if(wallet.coinbase && accounts.indexOf(wallet.coinbase) != -1){
+                // same coinbase
+              }
+              else if(accounts){
+                  wallet.coinbase = accounts[0];
+              }
+              else{
+                wallet.coinbase = null;
+              }
+
               cb(null, accounts);
             }
           }
         );
+      }
+
+      /**
+      * Select account
+      **/
+      wallet.selectAccount = function(account){
+        wallet.coinbase = account;
       }
 
       wallet.updateNonce = function(address, cb){
@@ -182,7 +204,7 @@
                   }),
                   $q(function(resolve, reject){
                     batch.add(
-                      wallet.updateNonce(accounts[0], function(e){
+                      wallet.updateNonce(wallet.coinbase, function(e){
                         if(e){
                           reject(e);
                         }

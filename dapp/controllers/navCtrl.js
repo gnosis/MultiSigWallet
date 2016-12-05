@@ -10,9 +10,14 @@
       $scope.updateInfo = function(){
         Wallet.initParams().then(function(params){
           $scope.accounts = Wallet.accounts;
-          $scope.nonce = Wallet.txParams.nonce;
+          $scope.nonce = Wallet.txParams.nonce;                              
           setTimeout($scope.updateInfo, 15000);
         });
+      }
+
+      $scope.selectAccount = function(account){
+        Wallet.selectAccount(account);
+        $scope.updateInfo();
       }
 
       $scope.updateInfo();

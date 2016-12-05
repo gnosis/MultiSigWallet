@@ -558,7 +558,7 @@
             cb(e);
           }
           else{
-            var mainData = walletInstance.submitTransaction(
+            walletInstance.submitTransaction(
               tx.to,
               tx.value,
               data,
@@ -569,6 +569,41 @@
               },
               cb
             );
+          }
+        }).call();
+      }
+
+      /**
+      * Sign offline multisig transaction
+      **/
+      wallet.signTransaction = function(address, tx, abi, method, params, cb){
+        var data = '0x0';
+        if(abi && method){
+          var instance = wallet.web3.eth.contract(abi).at(tx.to);
+          data = instance[method].getData.apply(this, params);
+        }
+        var walletInstance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
+
+        // Get nonce
+        wallet.getNonce(address, tx.to, tx.value, data, function(e, nonce){
+          if(e){
+            cb(e);
+          }
+          else{
+            var mainData = walletInstance.submitTransaction.getData(
+              tx.to,
+              tx.value,
+              data,
+              nonce,
+              {
+                gasPrice: '0x' + wallet.txParams.gasPrice.toNumber(16),
+                gas: EthJS.Util.intToHex(wallet.txParams.gasLimit)
+              }
+            );
+
+            wallet.offlineTransaction(address, mainData, cb);
+
+
           }
         }).call();
       }

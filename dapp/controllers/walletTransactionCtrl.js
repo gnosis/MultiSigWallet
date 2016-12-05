@@ -50,6 +50,24 @@
           }
         )
       };
+
+      $scope.signOff = function(){
+        Wallet.signTransaction(
+          $scope.wallet.address,
+          $scope.tx,
+          $scope.abiArray,
+          $scope.method?$scope.method.name:null,
+          $scope.params,
+          function(e, tx){
+            if(e){
+              Utils.dangerAlert(e);
+            }
+            else{
+              Utils.signed(tx);
+            }
+          }
+        )
+      }
     });
   }
 )();

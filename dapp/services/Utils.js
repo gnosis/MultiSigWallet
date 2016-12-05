@@ -72,7 +72,17 @@
           type: BootstrapDialog.TYPE_SUCCESS,
           message: info
         });
-      }      
+      }
+
+      factory.signed = function(info){
+        BootstrapDialog.show(
+          {
+            type: BootstrapDialog.TYPE_SUCCESS,
+            message: '<div class="form-group"><label>Signed transaction: '+
+            '</label> <textarea class="form-control" rows="5">'+ info + '</textarea></div>'
+          }
+        )
+      }
 
       return factory;
     });

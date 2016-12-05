@@ -24,6 +24,10 @@
         controller: 'walletDetailCtrl',
         templateUrl: 'partials/walletDetail.html'
       })
+      .when("/wallet/:address/transaction", {
+        controller: 'walletTransactionCtrl',
+        templateUrl: 'partials/walletTransaction.html'
+      })
       .when("/wallet/:address/update-required", {
         controller: 'updateRequiredCtrl',
         templateUrl: 'partials/updateRequired.html'

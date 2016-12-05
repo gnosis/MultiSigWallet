@@ -293,7 +293,7 @@
           }
           else{
             // Add wallet
-            wallet.addWallet(info);
+            wallet.updateWallet(info);
             cb(null, info);
           }
         });

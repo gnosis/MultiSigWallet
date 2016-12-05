@@ -9,7 +9,7 @@
       $scope.owners = [];
       $scope.transactions = {};
 
-      $scope.updateParams = function(){        
+      $scope.updateParams = function(){
 
         // Get owners
         batch.add(
@@ -134,7 +134,7 @@
         $scope.interval = $interval($scope.updateParams, 15000);
       });
 
-      $scope.$on('destroy', function(){
+      $scope.$on('$destroy', function(){        
         $interval.cancel($scope.interval);
       })
 

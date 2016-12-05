@@ -2,15 +2,14 @@
   function(){
     angular
     .module("multiSigWeb")
-    .controller("walletDetailCtrl", function($scope, Wallet, $routeParams, Utils, Transaction, Owner){
+    .controller("walletDetailCtrl", function($scope, Wallet, $routeParams, Utils, Transaction, Owner, $interval){
       $scope.wallet = Wallet.wallets[$routeParams.address];
       // Get wallet balance, nonce, transactions, owners
       var batch = Wallet.web3.createBatch();
       $scope.owners = [];
       $scope.transactions = {};
 
-      $scope.updateParams = function(){
-
+      $scope.updateParams = function(){        
 
         // Get owners
         batch.add(
@@ -128,14 +127,18 @@
         )
 
         batch.execute();
-        setTimeout($scope.updateParams, 15000);
       }
 
       Wallet.initParams().then(function(){
         $scope.updateParams();
+        $scope.interval = $interval($scope.updateParams, 15000);
       });
 
-      $scope.getOwnerName = function(address){        
+      $scope.$on('destroy', function(){
+        $interval.cancel($scope.interval);
+      })
+
+      $scope.getOwnerName = function(address){
         if(Owner.owners && Owner.owners[address]){
           return Owner.owners[address].name;
         }

@@ -240,7 +240,7 @@ contract MultiSigWallet {
     /// @dev Returns number of confirmations of a transaction.
     /// @param transactionHash Hash identifying a transaction.
     /// @return Number of confirmations.
-    function confirmationCount(bytes32 transactionHash)
+    function getConfirmationCount(bytes32 transactionHash)
         public
         constant
         returns (uint count)
@@ -248,6 +248,16 @@ contract MultiSigWallet {
         for (uint i=0; i<owners.length; i++)
             if (confirmations[transactionHash][owners[i]])
                 count += 1;
+    }
+
+    /// @dev Returns total number of transactions.
+    /// @return Returns total number of transactions.
+    function getTransactionCount()
+        public
+        constant
+        returns (uint)
+    {
+        return transactionList.length;
     }
 
     /*
@@ -293,8 +303,6 @@ contract MultiSigWallet {
 
     /*
      * Web3 functions
-     * These functions are not callable across contracts because they return a dynamically-sized array.
-     * https://github.com/ethereum/solidity/issues/166
      */
     /// @dev Returns transaction hashes filtered by their execution status.
     /// @param isPending Defines if pending or executed transactions are returned.
@@ -348,5 +356,39 @@ contract MultiSigWallet {
         _owners = new address[](owners.length);
         for (uint i=0; i<owners.length; i++)
             _owners[i] = owners[i];
+    }
+
+    /// @dev Returns array with owner addresses, which confirmed transaction.
+    /// @param transactionHash Hash identifying a transaction.
+    /// @return Returns array of owner addresses.
+    function getConfirmations(bytes32 transactionHash)
+        public
+        constant
+        returns (address[] _confirmations)
+    {
+        address[] memory confirmationsTemp = new address[](owners.length);
+        uint count = 0;
+        for (uint i=0; i<owners.length; i++)
+            if (confirmations[transactionHash][owners[i]]) {
+                confirmationsTemp[count] = owners[i];
+                count += 1;
+            }
+        _confirmations = new address[](count);
+        for (i=0; i<count; i++)
+            _confirmations[i] = confirmationsTemp[i];
+    }
+
+    /// @dev Returns list of transaction in defined range.
+    /// @param from Index start position of transaction array.
+    /// @param to Index end position of transaction array.
+    /// @return Returns array of transactions.
+    function getTransactions(uint from, uint to)
+        public
+        constant
+        returns (bytes32[] _transactionList)
+    {
+        _transactionList = new bytes32[](to - from);
+        for (uint i=from; i<to; i++)
+            _transactionList[i - from] = transactionList[i];
     }
 }

@@ -7,7 +7,7 @@ from unittest import TestCase
 
 class TestContract(TestCase):
     """
-    run test with python -m unittest contracts.tests.test_token_transfer
+    run test with python -m unittest tests.test_token_transfer
     """
 
     HOMESTEAD_BLOCK = 1150000
@@ -52,8 +52,8 @@ class TestContract(TestCase):
         self.assertEqual(self.multisig_wallet.getPendingTransactions(), [transaction_hash])
         self.assertEqual(self.multisig_wallet.getExecutedTransactions(), [])
         self.assertTrue(self.multisig_wallet.confirmations(transaction_hash, accounts[wa_1]))
-        self.assertEqual(self.multisig_wallet.confirmationCount(transaction_hash), 1)
+        self.assertEqual(self.multisig_wallet.getConfirmationCount(transaction_hash), 1)
         self.multisig_wallet.confirmTransaction(transaction_hash, sender=keys[wa_2])
-        self.assertEqual(self.multisig_wallet.confirmationCount(transaction_hash), 2)
+        self.assertEqual(self.multisig_wallet.getConfirmationCount(transaction_hash), 2)
         self.assertEqual(self.test_token.balanceOf(self.multisig_wallet.address), token_count/2)
         self.assertEqual(self.test_token.balanceOf(accounts[wa_1]), token_count/2)

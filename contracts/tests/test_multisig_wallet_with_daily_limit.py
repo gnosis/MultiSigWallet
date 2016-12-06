@@ -8,7 +8,7 @@ from unittest import TestCase
 
 class TestContract(TestCase):
     """
-    run test with python -m unittest contracts.tests.test_multisig_wallet_with_daily_limit
+    run test with python -m unittest tests.test_multisig_wallet_with_daily_limit
     """
 
     HOMESTEAD_BLOCK = 1150000

@@ -8,7 +8,7 @@ from unittest import TestCase
 
 class TestContract(TestCase):
     """
-    run test with python -m unittest contracts.tests.test_owner_count
+    run test with python -m unittest tests.test_owner_count
     """
 
     HOMESTEAD_BLOCK = 1150000

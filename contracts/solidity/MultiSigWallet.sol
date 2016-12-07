@@ -250,14 +250,19 @@ contract MultiSigWallet {
                 count += 1;
     }
 
-    /// @dev Returns total number of transactions.
-    /// @return Returns total number of transactions.
-    function getTransactionCount()
+    /// @dev Returns total number of transactions after filers are applied.
+    /// @param pending Include pending transactions.
+    /// @param executed Include executed transactions.
+    /// @return Total number of transactions after filters are applied.
+    function getTransactionCount(bool pending, bool executed)
         public
         constant
-        returns (uint)
+        returns (uint count)
     {
-        return transactionList.length;
+        for (uint i=0; i<transactionList.length; i++)
+            if (   pending && !transactions[transactionList[i]].executed
+                || executed && transactions[transactionList[i]].executed)
+                count += 1;
     }
 
     /*
@@ -304,48 +309,6 @@ contract MultiSigWallet {
     /*
      * Web3 functions
      */
-    /// @dev Returns transaction hashes filtered by their execution status.
-    /// @param isPending Defines if pending or executed transactions are returned.
-    /// @return List of transaction hashes.
-    function filterTransactions(bool isPending)
-        public
-        constant
-        returns (bytes32[] _transactionList)
-    {
-        bytes32[] memory transactionListTemp = new bytes32[](transactionList.length);
-        uint count = 0;
-        for (uint i=0; i<transactionList.length; i++)
-            if (   isPending && !transactions[transactionList[i]].executed
-                || !isPending && transactions[transactionList[i]].executed)
-            {
-                transactionListTemp[count] = transactionList[i];
-                count += 1;
-            }
-        _transactionList = new bytes32[](count);
-        for (i=0; i<count; i++)
-            _transactionList[i] = transactionListTemp[i];
-    }
-
-    /// @dev Returns transaction hashes of pending transactions.
-    /// @return List of transaction hashes.
-    function getPendingTransactions()
-        public
-        constant
-        returns (bytes32[])
-    {
-        return filterTransactions(true);
-    }
-
-    /// @dev Returns transaction hashes of executed transactions.
-    /// @return List of transaction hashes.
-    function getExecutedTransactions()
-        public
-        constant
-        returns (bytes32[])
-    {
-        return filterTransactions(false);
-    }
-
     /// @dev Returns list of owners.
     /// @return List of owner addresses.
     function getOwners()
@@ -381,14 +344,25 @@ contract MultiSigWallet {
     /// @dev Returns list of transaction in defined range.
     /// @param from Index start position of transaction array.
     /// @param to Index end position of transaction array.
+    /// @param pending Include pending transactions.
+    /// @param executed Include executed transactions.
     /// @return Returns array of transactions.
-    function getTransactions(uint from, uint to)
+    function getTransactions(uint from, uint to, bool pending, bool executed)
         public
         constant
         returns (bytes32[] _transactionList)
     {
+        bytes32[] memory transactionListTemp = new bytes32[](transactionList.length);
+        uint count = 0;
+        for (uint i=0; i<transactionList.length; i++)
+            if (   pending && !transactions[transactionList[i]].executed
+                || executed && transactions[transactionList[i]].executed)
+            {
+                transactionListTemp[count] = transactionList[i];
+                count += 1;
+            }
         _transactionList = new bytes32[](to - from);
-        for (uint i=from; i<to; i++)
-            _transactionList[i - from] = transactionList[i];
+        for (i=from; i<to; i++)
+            _transactionList[i - from] = transactionListTemp[i];
     }
 }

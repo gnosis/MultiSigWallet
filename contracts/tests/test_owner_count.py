@@ -52,24 +52,31 @@ class TestContract(TestCase):
         # Transfer money from wallet
         nonce = self.multisig_wallet.getNonce(accounts[0], deposit, "")
         transaction_hash = self.multisig_wallet.submitTransaction(accounts[0], deposit, "", nonce, sender=keys[0])
-        self.assertEqual(self.multisig_wallet.getPendingTransactions(), [transaction_hash])
+        include_pending = True
+        include_executed = True
+        exclude_executed = False
+        exclude_pending = False
+        self.assertEqual(self.multisig_wallet.getTransactions(0, 1, include_pending, exclude_executed),
+                         [transaction_hash])
         for i in range(1, account_count):
             self.multisig_wallet.confirmTransaction(transaction_hash, sender=keys[i])
         # Transaction was executed
         self.assertTrue(self.multisig_wallet.transactions(transaction_hash)[4])
-        self.assertEqual(self.multisig_wallet.getExecutedTransactions(), [transaction_hash])
+        self.assertEqual(self.multisig_wallet.getTransactions(0, 1, exclude_pending, include_executed),
+                         [transaction_hash])
         # Delete owner wa_3. All parties have to confirm.
         remove_owner_data = multisig_abi.encode("removeOwner", [accounts[account_count - 1]])
         nonce = self.multisig_wallet.getNonce(self.multisig_wallet.address, 0, remove_owner_data)
         transaction_hash_2 = self.multisig_wallet.submitTransaction(self.multisig_wallet.address, 0, remove_owner_data,
                                                                     nonce, sender=keys[0])
-        self.assertEqual(self.multisig_wallet.getPendingTransactions(), [transaction_hash_2])
-        self.assertEqual(self.multisig_wallet.getExecutedTransactions(), [transaction_hash])
+        self.assertEqual(self.multisig_wallet.getTransactions(0, 1, include_pending, exclude_executed),
+                         [transaction_hash_2])
+        self.assertEqual(self.multisig_wallet.getTransactions(0, 1, exclude_pending, include_executed),
+                         [transaction_hash])
         for i in range(1, account_count):
             profiling = self.multisig_wallet.confirmTransaction(transaction_hash_2, sender=keys[i], profiling=True)
             self.assertLess(profiling['gas'], 100000)
-        self.assertEqual(self.multisig_wallet.getPendingTransactions(), [])
-        self.assertEqual(self.multisig_wallet.getExecutedTransactions(),
+        self.assertEqual(self.multisig_wallet.getTransactions(0, 2, exclude_pending, include_executed),
                          [transaction_hash, transaction_hash_2])
         # Transaction was successfully processed
         self.assertEqual(self.multisig_wallet.required(), required_accounts - 1)

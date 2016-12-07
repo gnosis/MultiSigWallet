@@ -49,8 +49,10 @@ class TestContract(TestCase):
         nonce = self.multisig_wallet.getNonce(self.test_token.address, 0, transfer_data)
         transaction_hash = self.multisig_wallet.submitTransaction(self.test_token.address, 0, transfer_data, nonce,
                                                                   sender=keys[wa_1])
-        self.assertEqual(self.multisig_wallet.getPendingTransactions(), [transaction_hash])
-        self.assertEqual(self.multisig_wallet.getExecutedTransactions(), [])
+        include_pending = True
+        exclude_executed = False
+        self.assertEqual(self.multisig_wallet.getTransactions(0, 1, include_pending, exclude_executed),
+                         [transaction_hash])
         self.assertTrue(self.multisig_wallet.confirmations(transaction_hash, accounts[wa_1]))
         self.assertEqual(self.multisig_wallet.getConfirmationCount(transaction_hash), 1)
         self.multisig_wallet.confirmTransaction(transaction_hash, sender=keys[wa_2])

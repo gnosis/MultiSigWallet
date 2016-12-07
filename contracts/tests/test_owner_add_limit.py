@@ -52,10 +52,10 @@ class TestContract(TestCase):
                                                                    nonce, sender=keys[0])
         include_pending = True
         exclude_executed = False
-        self.assertEqual(self.multisig_wallet.getTransactions(0, 1, include_pending, exclude_executed),
+        self.assertEqual(self.multisig_wallet.getTransactionHashes(0, 1, include_pending, exclude_executed),
                          [add_owner_tx_hash])
         # 2nd confirmation will fail, because transaction cannot be executed due to too many owners.
         self.assertRaises(TransactionFailed, self.multisig_wallet.confirmTransaction, add_owner_tx_hash, sender=keys[1])
         # Transaction remains pending
-        self.assertEqual(self.multisig_wallet.getTransactions(0, 1, include_pending, exclude_executed),
+        self.assertEqual(self.multisig_wallet.getTransactionHashes(0, 1, include_pending, exclude_executed),
                          [add_owner_tx_hash])

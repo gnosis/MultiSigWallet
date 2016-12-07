@@ -51,7 +51,7 @@ class TestContract(TestCase):
                                                                   sender=keys[wa_1])
         include_pending = True
         exclude_executed = False
-        self.assertEqual(self.multisig_wallet.getTransactions(0, 1, include_pending, exclude_executed),
+        self.assertEqual(self.multisig_wallet.getTransactionHashes(0, 1, include_pending, exclude_executed),
                          [transaction_hash])
         self.assertTrue(self.multisig_wallet.confirmations(transaction_hash, accounts[wa_1]))
         self.assertEqual(self.multisig_wallet.getConfirmationCount(transaction_hash), 1)

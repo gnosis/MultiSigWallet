@@ -72,7 +72,7 @@ class TestContract(TestCase):
         exclude_executed = False
         include_executed = True
         self.assertEqual(
-            self.multisig_wallet.getTransactions(0, 1, include_pending, exclude_executed), [transaction_hash])
+            self.multisig_wallet.getTransactionHashes(0, 1, include_pending, exclude_executed), [transaction_hash])
         self.assertTrue(self.multisig_wallet.confirmations(transaction_hash, accounts[wa_1]))
         self.assertEqual(self.multisig_wallet.getConfirmationCount(transaction_hash), 1)
         self.assertEqual(self.multisig_wallet.getConfirmations(transaction_hash), [accounts[wa_1].encode('hex')])
@@ -96,39 +96,39 @@ class TestContract(TestCase):
         # Transaction was executed
         self.assertTrue(self.multisig_wallet.transactions(transaction_hash)[4])
         self.assertEqual(
-            self.multisig_wallet.getTransactions(0, 1, exclude_pending, include_executed), [transaction_hash])
+            self.multisig_wallet.getTransactionHashes(0, 1, exclude_pending, include_executed), [transaction_hash])
         # Update required to 4
         update_requirement_data = multisig_abi.encode('changeRequirement', [4])
         nonce = self.multisig_wallet.getNonce(self.multisig_wallet.address, 0, update_requirement_data)
         transaction_hash_2 = self.multisig_wallet.submitTransaction(self.multisig_wallet.address, 0,
                                                                     update_requirement_data, nonce, sender=keys[wa_1])
         self.assertEqual(
-            self.multisig_wallet.getTransactions(0, 1, include_pending, exclude_executed), [transaction_hash_2])
+            self.multisig_wallet.getTransactionHashes(0, 1, include_pending, exclude_executed), [transaction_hash_2])
         self.assertEqual(self.multisig_wallet.getTransactionCount(include_pending, include_executed), 2)
         # Test slicing
         self.assertEqual(
-            self.multisig_wallet.getTransactions(0, 1, include_pending, include_executed), [transaction_hash])
+            self.multisig_wallet.getTransactionHashes(0, 1, include_pending, include_executed), [transaction_hash])
         self.assertEqual(
-            self.multisig_wallet.getTransactions(0, 2, include_pending, include_executed), [transaction_hash, transaction_hash_2])
+            self.multisig_wallet.getTransactionHashes(0, 2, include_pending, include_executed), [transaction_hash, transaction_hash_2])
         self.assertEqual(
-            self.multisig_wallet.getTransactions(1, 2, include_pending, include_executed), [transaction_hash_2])
+            self.multisig_wallet.getTransactionHashes(1, 2, include_pending, include_executed), [transaction_hash_2])
         # Confirm change requirement transaction
         self.multisig_wallet.confirmTransaction(transaction_hash_2, sender=keys[wa_2])
         self.assertTrue(self.multisig_wallet.isOwner(accounts[wa_4]))
         self.assertEqual(self.multisig_wallet.required(), required_accounts + 2)
         self.assertEqual(
-            self.multisig_wallet.getTransactions(0, 2, exclude_pending, include_executed),
+            self.multisig_wallet.getTransactionHashes(0, 2, exclude_pending, include_executed),
             [transaction_hash, transaction_hash_2])
         # Delete owner wa_3. All parties have to confirm.
         remove_owner_data = multisig_abi.encode('removeOwner', [accounts[wa_3]])
         transaction_hash_3 = self.multisig_wallet.submitTransaction(self.multisig_wallet.address, 0, remove_owner_data,
                                                                     0, sender=keys[wa_1])
         self.assertEqual(
-            self.multisig_wallet.getTransactions(0, 1, include_pending, exclude_executed), [transaction_hash_3])
+            self.multisig_wallet.getTransactionHashes(0, 1, include_pending, exclude_executed), [transaction_hash_3])
         self.multisig_wallet.confirmTransaction(transaction_hash_3, sender=keys[wa_2])
         self.multisig_wallet.confirmTransaction(transaction_hash_3, sender=keys[wa_3])
         self.multisig_wallet.confirmTransaction(transaction_hash_3, sender=keys[wa_4])
-        self.assertEqual(self.multisig_wallet.getTransactions(0, 3, exclude_pending, include_executed),
+        self.assertEqual(self.multisig_wallet.getTransactionHashes(0, 3, exclude_pending, include_executed),
                          [transaction_hash, transaction_hash_2, transaction_hash_3])
         # Transaction was successfully processed
         self.assertEqual(self.multisig_wallet.required(), required_accounts + 1)

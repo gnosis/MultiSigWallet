@@ -21,7 +21,7 @@ contract MultiSigWallet {
     mapping (bytes32 => uint) public nonces;
     mapping (address => bool) public isOwner;
     address[] public owners;
-    bytes32[] public transactionList;
+    bytes32[] public transactionHashes;
     uint public required;
 
     struct Transaction {
@@ -259,9 +259,9 @@ contract MultiSigWallet {
         constant
         returns (uint count)
     {
-        for (uint i=0; i<transactionList.length; i++)
-            if (   pending && !transactions[transactionList[i]].executed
-                || executed && transactions[transactionList[i]].executed)
+        for (uint i=0; i<transactionHashes.length; i++)
+            if (   pending && !transactions[transactionHashes[i]].executed
+                || executed && transactions[transactionHashes[i]].executed)
                 count += 1;
     }
 
@@ -290,7 +290,7 @@ contract MultiSigWallet {
                 executed: false
             });
             nonces[keccak256(destination, value, data)] += 1;
-            transactionList.push(transactionHash);
+            transactionHashes.push(transactionHash);
             Submission(transactionHash);
         }
     }
@@ -341,28 +341,28 @@ contract MultiSigWallet {
             _confirmations[i] = confirmationsTemp[i];
     }
 
-    /// @dev Returns list of transaction in defined range.
+    /// @dev Returns list of transaction hashes in defined range.
     /// @param from Index start position of transaction array.
     /// @param to Index end position of transaction array.
     /// @param pending Include pending transactions.
     /// @param executed Include executed transactions.
-    /// @return Returns array of transactions.
-    function getTransactions(uint from, uint to, bool pending, bool executed)
+    /// @return Returns array of transaction hashes.
+    function getTransactionHashes(uint from, uint to, bool pending, bool executed)
         public
         constant
-        returns (bytes32[] _transactionList)
+        returns (bytes32[] _transactionHashes)
     {
-        bytes32[] memory transactionListTemp = new bytes32[](transactionList.length);
+        bytes32[] memory transactionHashesTemp = new bytes32[](transactionHashes.length);
         uint count = 0;
-        for (uint i=0; i<transactionList.length; i++)
-            if (   pending && !transactions[transactionList[i]].executed
-                || executed && transactions[transactionList[i]].executed)
+        for (uint i=0; i<transactionHashes.length; i++)
+            if (   pending && !transactions[transactionHashes[i]].executed
+                || executed && transactions[transactionHashes[i]].executed)
             {
-                transactionListTemp[count] = transactionList[i];
+                transactionHashesTemp[count] = transactionHashes[i];
                 count += 1;
             }
-        _transactionList = new bytes32[](to - from);
+        _transactionHashes = new bytes32[](to - from);
         for (i=from; i<to; i++)
-            _transactionList[i - from] = transactionListTemp[i];
+            _transactionHashes[i - from] = transactionHashesTemp[i];
     }
 }

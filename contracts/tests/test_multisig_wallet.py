@@ -100,6 +100,10 @@ class TestContract(TestCase):
         # Update required to 4
         update_requirement_data = multisig_abi.encode('changeRequirement', [4])
         nonce = self.multisig_wallet.getNonce(self.multisig_wallet.address, 0, update_requirement_data)
+        # Submit with wrong nonce fails
+        self.assertRaises(TransactionFailed, self.multisig_wallet.submitTransaction, self.multisig_wallet.address, 0,
+                          update_requirement_data, nonce + 1, sender=keys[wa_1])
+        # Submit successfully
         transaction_hash_2 = self.multisig_wallet.submitTransaction(self.multisig_wallet.address, 0,
                                                                     update_requirement_data, nonce, sender=keys[wa_1])
         self.assertEqual(
@@ -109,7 +113,8 @@ class TestContract(TestCase):
         self.assertEqual(
             self.multisig_wallet.getTransactionHashes(0, 1, include_pending, include_executed), [transaction_hash])
         self.assertEqual(
-            self.multisig_wallet.getTransactionHashes(0, 2, include_pending, include_executed), [transaction_hash, transaction_hash_2])
+            self.multisig_wallet.getTransactionHashes(0, 2, include_pending, include_executed),
+            [transaction_hash, transaction_hash_2])
         self.assertEqual(
             self.multisig_wallet.getTransactionHashes(1, 2, include_pending, include_executed), [transaction_hash_2])
         # Confirm change requirement transaction

@@ -11,6 +11,7 @@ contract MultiSigWallet {
     event Revocation(address sender, bytes32 transactionHash);
     event Submission(bytes32 transactionHash);
     event Execution(bytes32 transactionHash);
+    event ExecutionFailure(bytes32 transactionHash);
     event Deposit(address sender, uint value);
     event OwnerAddition(address owner);
     event OwnerRemoval(address owner);
@@ -201,9 +202,12 @@ contract MultiSigWallet {
         if (isConfirmed(transactionHash)) {
             Transaction tx = transactions[transactionHash];
             tx.executed = true;
-            if (!tx.destination.call.value(tx.value)(tx.data))
-                throw;
-            Execution(transactionHash);
+            if (tx.destination.call.value(tx.value)(tx.data))
+                Execution(transactionHash);
+            else {
+                ExecutionFailure(transactionHash);
+                tx.executed = false;
+            }
         }
     }
 

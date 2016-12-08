@@ -1,8 +1,6 @@
 # ethereum
 from ethereum import tester as t
 from ethereum.utils import sha3, privtoaddr, to_string
-from ethereum.tester import ContractCreationFailed
-from ethereum.tester import TransactionFailed
 # standard libraries
 from unittest import TestCase
 
@@ -54,8 +52,8 @@ class TestContract(TestCase):
         exclude_executed = False
         self.assertEqual(self.multisig_wallet.getTransactionHashes(0, 1, include_pending, exclude_executed),
                          [add_owner_tx_hash])
-        # 2nd confirmation will fail, because transaction cannot be executed due to too many owners.
-        self.assertRaises(TransactionFailed, self.multisig_wallet.confirmTransaction, add_owner_tx_hash, sender=keys[1])
+        # Transaction is confirmed but cannot be executed due to too many owners.
+        self.multisig_wallet.confirmTransaction(add_owner_tx_hash, sender=keys[1])
         # Transaction remains pending
         self.assertEqual(self.multisig_wallet.getTransactionHashes(0, 1, include_pending, exclude_executed),
                          [add_owner_tx_hash])

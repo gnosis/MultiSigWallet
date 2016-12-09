@@ -8,7 +8,7 @@ from unittest import TestCase
 
 class TestContract(TestCase):
     """
-    run test with python -m unittest contracts.tests.test_multisig_wallet_with_daily_limit
+    run test with python -m unittest tests.test_multisig_wallet_with_daily_limit
     """
 
     HOMESTEAD_BLOCK = 1150000
@@ -74,8 +74,16 @@ class TestContract(TestCase):
         self.assertEqual(self.s.block.get_balance(accounts[wa_1]), wa_1_balance + value*2)
         # Let one day pass
         self.s.block.timestamp += self.TWENTY_FOUR_HOURS + 1
+        # User wants to withdraw more than the daily limit. Withdraw is unsuccessful.
+        value_2 = 3000
+        nonce = self.multisig_wallet.getNonce(accounts[wa_1], value_2, "")
+        self.multisig_wallet.submitTransaction(accounts[wa_1], value_2, "", nonce, sender=keys[wa_2])
+        # Wallet and user balance remain the same.
+        self.assertEqual(self.s.block.get_balance(self.multisig_wallet.address), deposit - value*2)
+        self.assertEqual(self.s.block.get_balance(accounts[wa_1]), wa_1_balance + value*2)
         # Daily withdraw is possible again
         nonce = self.multisig_wallet.getNonce(accounts[wa_1], value, "")
         self.multisig_wallet.submitTransaction(accounts[wa_1], value, "", nonce, sender=keys[wa_2])
+        # Wallet balance decreases and user balance increases.
         self.assertEqual(self.s.block.get_balance(self.multisig_wallet.address), deposit - value*3)
         self.assertEqual(self.s.block.get_balance(accounts[wa_1]), wa_1_balance + value*3)

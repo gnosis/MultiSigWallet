@@ -11,6 +11,7 @@ contract MultiSigWallet {
     event Revocation(address sender, bytes32 transactionHash);
     event Submission(bytes32 transactionHash);
     event Execution(bytes32 transactionHash);
+    event ExecutionFailure(bytes32 transactionHash);
     event Deposit(address sender, uint value);
     event OwnerAddition(address owner);
     event OwnerRemoval(address owner);
@@ -21,7 +22,7 @@ contract MultiSigWallet {
     mapping (bytes32 => uint) public nonces;
     mapping (address => bool) public isOwner;
     address[] public owners;
-    bytes32[] public transactionList;
+    bytes32[] public transactionHashes;
     uint public required;
 
     struct Transaction {
@@ -201,9 +202,12 @@ contract MultiSigWallet {
         if (isConfirmed(transactionHash)) {
             Transaction tx = transactions[transactionHash];
             tx.executed = true;
-            if (!tx.destination.call.value(tx.value)(tx.data))
-                throw;
-            Execution(transactionHash);
+            if (tx.destination.call.value(tx.value)(tx.data))
+                Execution(transactionHash);
+            else {
+                ExecutionFailure(transactionHash);
+                tx.executed = false;
+            }
         }
     }
 
@@ -240,13 +244,28 @@ contract MultiSigWallet {
     /// @dev Returns number of confirmations of a transaction.
     /// @param transactionHash Hash identifying a transaction.
     /// @return Number of confirmations.
-    function confirmationCount(bytes32 transactionHash)
+    function getConfirmationCount(bytes32 transactionHash)
         public
         constant
         returns (uint count)
     {
         for (uint i=0; i<owners.length; i++)
             if (confirmations[transactionHash][owners[i]])
+                count += 1;
+    }
+
+    /// @dev Returns total number of transactions after filers are applied.
+    /// @param pending Include pending transactions.
+    /// @param executed Include executed transactions.
+    /// @return Total number of transactions after filters are applied.
+    function getTransactionCount(bool pending, bool executed)
+        public
+        constant
+        returns (uint count)
+    {
+        for (uint i=0; i<transactionHashes.length; i++)
+            if (   pending && !transactions[transactionHashes[i]].executed
+                || executed && transactions[transactionHashes[i]].executed)
                 count += 1;
     }
 
@@ -275,7 +294,7 @@ contract MultiSigWallet {
                 executed: false
             });
             nonces[keccak256(destination, value, data)] += 1;
-            transactionList.push(transactionHash);
+            transactionHashes.push(transactionHash);
             Submission(transactionHash);
         }
     }
@@ -292,48 +311,62 @@ contract MultiSigWallet {
     }
 
     /*
-     * These functions are not callable across contracts because they return
-     * a dynamically-sized array https://github.com/ethereum/solidity/issues/166
+     * Web3 functions
      */
-    /// @dev Returns transaction hashes filtered by their execution status.
-    /// @param isPending Defines if pending or executed transactions are returned.
-    /// @return List of transaction hashes.
-    function filterTransactions(bool isPending)
+    /// @dev Returns list of owners.
+    /// @return List of owner addresses.
+    function getOwners()
         public
         constant
-        returns (bytes32[] _transactionList)
+        returns (address[] _owners)
     {
-        bytes32[] memory transactionListTemp = new bytes32[](transactionList.length);
+        _owners = new address[](owners.length);
+        for (uint i=0; i<owners.length; i++)
+            _owners[i] = owners[i];
+    }
+
+    /// @dev Returns array with owner addresses, which confirmed transaction.
+    /// @param transactionHash Hash identifying a transaction.
+    /// @return Returns array of owner addresses.
+    function getConfirmations(bytes32 transactionHash)
+        public
+        constant
+        returns (address[] _confirmations)
+    {
+        address[] memory confirmationsTemp = new address[](owners.length);
         uint count = 0;
-        for (uint i=0; i<transactionList.length; i++)
-            if (   isPending && !transactions[transactionList[i]].executed
-                || !isPending && transactions[transactionList[i]].executed)
-            {
-                transactionListTemp[count] = transactionList[i];
+        for (uint i=0; i<owners.length; i++)
+            if (confirmations[transactionHash][owners[i]]) {
+                confirmationsTemp[count] = owners[i];
                 count += 1;
             }
-        _transactionList = new bytes32[](count);
+        _confirmations = new address[](count);
         for (i=0; i<count; i++)
-            _transactionList[i] = transactionListTemp[i];
+            _confirmations[i] = confirmationsTemp[i];
     }
 
-    /// @dev Returns transaction hashes of pending transactions.
-    /// @return List of transaction hashes.
-    function getPendingTransactions()
+    /// @dev Returns list of transaction hashes in defined range.
+    /// @param from Index start position of transaction array.
+    /// @param to Index end position of transaction array.
+    /// @param pending Include pending transactions.
+    /// @param executed Include executed transactions.
+    /// @return Returns array of transaction hashes.
+    function getTransactionHashes(uint from, uint to, bool pending, bool executed)
         public
         constant
-        returns (bytes32[])
+        returns (bytes32[] _transactionHashes)
     {
-        return filterTransactions(true);
-    }
-
-    /// @dev Returns transaction hashes of executed transactions.
-    /// @return List of transaction hashes.
-    function getExecutedTransactions()
-        public
-        constant
-        returns (bytes32[])
-    {
-        return filterTransactions(false);
+        bytes32[] memory transactionHashesTemp = new bytes32[](transactionHashes.length);
+        uint count = 0;
+        for (uint i=0; i<transactionHashes.length; i++)
+            if (   pending && !transactions[transactionHashes[i]].executed
+                || executed && transactions[transactionHashes[i]].executed)
+            {
+                transactionHashesTemp[count] = transactionHashes[i];
+                count += 1;
+            }
+        _transactionHashes = new bytes32[](to - from);
+        for (i=from; i<to; i++)
+            _transactionHashes[i - from] = transactionHashesTemp[i];
     }
 }

@@ -36,5 +36,10 @@ class TestContract(TestCase):
         multisig_abi = self.multisig_wallet.translator
         # Only owner wa_1 cannot be removed, because one owner always has to remain.
         remove_owner_data = multisig_abi.encode("removeOwner", [accounts[wa_1]])
-        self.assertRaises(TransactionFailed, self.multisig_wallet.submitTransaction, self.multisig_wallet.address, 0,
-                          remove_owner_data, 0, sender=keys[wa_1])
+        remove_owner_tx_hash = self.multisig_wallet.submitTransaction(
+            self.multisig_wallet.address, 0, remove_owner_data, 0, sender=keys[wa_1])
+        # Transaction cannot be executed and remains in pending pool
+        include_pending = True
+        exclude_executed = False
+        self.assertEqual(self.multisig_wallet.getTransactionHashes(0, 1, include_pending, exclude_executed),
+                         [remove_owner_tx_hash])

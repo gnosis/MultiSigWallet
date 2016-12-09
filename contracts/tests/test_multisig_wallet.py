@@ -58,12 +58,14 @@ class TestContract(TestCase):
         # Add owner wa_4
         wa_4 = 4
         add_owner_data = multisig_abi.encode('addOwner', [accounts[wa_4]])
-        # A third party cannot submit transactions
+        # A third party cannot submit transactions.
         nonce = self.multisig_wallet.getNonce(self.multisig_wallet.address, 0, add_owner_data)
         self.assertRaises(TransactionFailed, self.multisig_wallet.submitTransaction, self.multisig_wallet.address, 0,
                           add_owner_data, nonce, sender=keys[0])
+        # Wallet owner tries to submit transaction with destination address 0 but fails. 0 address is not allowed.
+        self.assertRaises(
+            TransactionFailed, self.multisig_wallet.submitTransaction, 0, 0, add_owner_data, nonce, sender=keys[wa_1])
         # Only a wallet owner (in this case wa_1) can do this. Owner confirms transaction at the same time.
-        nonce = self.multisig_wallet.getNonce(self.multisig_wallet.address, 0, add_owner_data)
         transaction_hash = self.multisig_wallet.submitTransaction(self.multisig_wallet.address, 0, add_owner_data,
                                                                   nonce, sender=keys[wa_1])
         # There is one pending transaction

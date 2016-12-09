@@ -43,6 +43,11 @@ cd /vagrant/contracts/
 python deploy.py -f deploy/MultiSigWithPreSign.json
 ```
 
+Limitations
+-------------
+This implementation does not allow the creation of smart contracts via multisignature transactions.
+Transactions to address 0 cannot be done. Any other transaction can be done.
+
 Security
 -------------
 All contracts are WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.

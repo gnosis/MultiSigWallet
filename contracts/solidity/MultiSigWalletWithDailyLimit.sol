@@ -45,9 +45,12 @@ contract MultiSigWalletWithDailyLimit is MultiSigWallet {
         Transaction tx = transactions[transactionHash];
         if (isConfirmed(transactionHash) || tx.data.length == 0 && underLimit(tx.value)) {
             tx.executed = true;
-            if (!tx.destination.call.value(tx.value)(tx.data))
-                throw;
-            Execution(transactionHash);
+            if (tx.destination.call.value(tx.value)(tx.data))
+                Execution(transactionHash);
+            else {
+                ExecutionFailure(transactionHash);
+                tx.executed = false;
+            }
         }
     }
 

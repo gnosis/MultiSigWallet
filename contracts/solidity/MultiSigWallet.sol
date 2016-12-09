@@ -335,7 +335,8 @@ contract MultiSigWallet {
     {
         address[] memory confirmationsTemp = new address[](owners.length);
         uint count = 0;
-        for (uint i=0; i<owners.length; i++)
+        uint i;
+        for (i=0; i<owners.length; i++)
             if (confirmations[transactionHash][owners[i]]) {
                 confirmationsTemp[count] = owners[i];
                 count += 1;
@@ -358,7 +359,8 @@ contract MultiSigWallet {
     {
         bytes32[] memory transactionHashesTemp = new bytes32[](transactionHashes.length);
         uint count = 0;
-        for (uint i=0; i<transactionHashes.length; i++)
+        uint i;
+        for (i=0; i<transactionHashes.length; i++)
             if (   pending && !transactions[transactionHashes[i]].executed
                 || executed && transactions[transactionHashes[i]].executed)
             {

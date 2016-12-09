@@ -1,5 +1,5 @@
-# Multisignature Wallet Website
-It offers a web UI for [MultiSigWallet](https://github.com/ConsenSys/MultiSigWallet)
+# Multisignature Wallet UI
+Web UI for [MultiSigWallet](https://github.com/ConsenSys/MultiSigWallet)
 
 # Requirements
 * Node v5+

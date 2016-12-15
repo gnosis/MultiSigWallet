@@ -68,7 +68,7 @@ contract MultiSigWalletWithDailyLimit is MultiSigWallet {
             lastDay = now;
             spentToday = 0;
         }
-        if (spentToday + amount > dailyLimit)
+        if (spentToday + amount > dailyLimit || amount > dailyLimit)
             return false;
         spentToday += amount;
         return true;

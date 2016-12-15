@@ -2,7 +2,7 @@
   function(){
     angular
     .module('multiSigWeb')
-    .controller('walletCtrl', function($scope, Wallet, Utils, Transaction, Owner){
+    .controller('walletCtrl', function($scope, Wallet, Utils, Transaction, Owner, $uibModal){
 
       // Init wallets collection
       $scope.$watch(
@@ -31,76 +31,50 @@
 
       $scope.currentPage = 1;
       $scope.itemsPerPage = 3;
-      $scope.view = 'list';
       $scope.new = {
         name: 'MultiSig Wallet',
         owners: {},
         confirmations : 1
       };
 
-      // Deploy MultiSigWallet to the blockchain
-      $scope.deployWallet = function(){
-        Wallet.deployWallet(Object.keys($scope.new.owners), $scope.new.confirmations,
-          function(e, contract){
-            if(e){
-              Utils.dangerAlert(e);
+      $scope.newWalletSelect = function(){
+        $uibModal.open({
+          templateUrl: 'partials/modals/selectNewWallet.html',
+          size: 'sm',
+          controller: function($scope, $uibModalInstance) {
+            $scope.walletOption = "create";
+
+            $scope.ok = function () {
+              $uibModalInstance.close($scope.walletOption);
+            };
+
+            $scope.cancel = function () {
+              $uibModalInstance.dismiss();
+            };
+          }
+        })
+        .result
+        .then(
+          function(option){
+            if(option == "create"){
+              // open create modal
+              $scope.newWallet();
             }
             else{
-              if(contract.address){
-                // Save wallet
-                Wallet.updateWallet({name: $scope.new.name, address: contract.address});
-
-                // Save owners
-                Object.keys($scope.new.owners).map(function(owner){
-                  Owner.update($scope.new.owners[owner]);
-                });
-
-                Utils.success("Multisignature wallet deployed with address "+contract.address);
-              }
-              else{
-                Transaction.add({txHash: contract.transactionHash});
-                $scope.view = 'list';
-                Utils.notification("Transaction sent, wallet will be deployed in next 20s")
-              }
+              // open recover modal
             }
           }
         );
-      }
 
-      // Deploy Offline
-      $scope.deployOfflineWallet = function(){
-        Wallet.deployOfflineWallet(Object.keys($scope.new.owners), $scope.new.confirmations,
-        function(e, tx){
-          if(e){
-            Utils.dangerAlert(e);
-          }
-          else{
-            Utils.success('<div class="form-group"><label>Multisignature wallet '+
-            'deployed offline:</label> <textarea class="form-control" rows="5">'+ tx + '</textarea></div>');
-          }
-
-        });
-
-      }
-
-      $scope.newWalletSelect = function(){
-        $scope.view = 'select';
-        $scope.walletOption = 'create';
-        $scope.owner = {
-          name: "My account",
-          address: Wallet.coinbase
-        };
-        $scope.new.owners[$scope.owner.address] = {};
-        angular.copy($scope.owner, $scope.new.owners[$scope.owner.address])
       }
 
       $scope.newWallet = function(){
-        if($scope.walletOption == 'create'){
-            $scope.view = 'create';
-        }
-        else{
-          $scope.view = 'restore';
-        }
+
+        $uibModal.open({
+          templateUrl: 'partials/modals/newWallet.html',
+          size: 'lg',
+          controller: 'newWalletCtrl'
+        });
       }
 
       $scope.addOwner = function(){
@@ -108,9 +82,7 @@
         angular.copy($scope.owner, $scope.new.owners[$scope.owner.address]);
       }
 
-      $scope.removeOwner = function(address){
-        delete $scope.new.owners[address]
-      }
+
 
       $scope.removeWallet = function(address){
         Wallet.removeWallet(address);

@@ -1,0 +1,95 @@
+(
+  function(){
+    angular
+    .module("multiSigWeb")
+    .controller("newWalletCtrl", function($scope, $uibModalInstance, Utils, Transaction, Wallet) {
+
+      $scope.owners = {};
+      $scope.owners[Wallet.coinbase] = {
+        name: 'My Account',
+        address: Wallet.coinbase
+      };
+
+      $scope.confirmations = 1;
+      $scope.limit = "0";
+
+      $scope.removeOwner = function(address){
+        delete $scope.owners[address]
+      }
+
+      $scope.deployWallet = function() {
+        Wallet.deployWithLimit(Object.keys($scope.owners), $scope.confirmations, $scope.limit,
+          function(e, contract){
+            if(e){
+              Utils.dangerAlert(e);
+            }
+            else{
+              if(contract.address){
+                // Save wallet
+                Wallet.updateWallet({name: $scope.name, address: contract.address});
+
+                Utils.success("Multisignature wallet deployed with address "+contract.address);
+              }
+              else{
+                $uibModalInstance.close();
+                Transaction.add({txHash: contract.transactionHash});
+                Utils.notification("Transaction sent, wallet will be deployed in next 20s")
+              }
+            }
+          }
+        );
+      };
+
+      $scope.deployOfflineWallet = function(){
+        Wallet.deployWithLimitOffline(Object.keys($scope.owners), $scope.confirmations, $scope.limit,
+        function(e, tx){
+          if(e){
+            Utils.dangerAlert(e);
+          }
+          else{
+            $uibModalInstance.close();
+            Utils.success('<div class="form-group"><label>Multisignature wallet '+
+            'deployed offline:</label> <textarea class="form-control" rows="5">'+ tx + '</textarea></div>');
+          }
+
+        });
+      }
+
+      $scope.cancel = function () {
+        $uibModalInstance.dismiss();
+      };
+
+      $scope.addOwner = function(){
+        $uibModal.open({
+          templateUrl: 'partials/modals/addOwner.html',
+          size: 'sm',
+          controller: function($scope, $uibModalInstance) {
+            $scope.owner = {
+              name: "",
+              address: ""
+            };
+
+            $scope.ok = function () {
+              $uibModalInstance.close($scope.owner);
+            };
+
+            $scope.cancel = function () {
+              $uibModalInstance.dismiss();
+            };
+          }
+        })
+        .result
+        .then(
+          function(option){
+            if("offline"){
+              deployOfflineWallet
+            }
+            else{
+
+            }
+          }
+        )
+      }
+    });
+  }
+)();

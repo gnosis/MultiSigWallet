@@ -257,6 +257,18 @@
         }, cb);
       }
 
+      wallet.deployWithLimit = function(owners, requiredConfirmations, limit, cb){
+        var MyContract = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi);
+
+        MyContract.new(owners, requiredConfirmations, new EthJS.BN(limit), {
+          data: wallet.json.multiSigDailyLimit.binHex
+        }, cb);
+      }
+
+      /**
+      * Deploy wallet with daily limit
+      **/
+
       // Sign transaction, don't send it
       wallet.deployOfflineWallet = function(owners, requiredConfirmations, cb){
 
@@ -269,6 +281,16 @@
         wallet.offlineTransaction(null, data, cb);
 
       }
+
+      wallet.deployWithLimitOffline = function(owners, requiredConfirmations, limit, cb){
+        // Get Transaction Data
+        var MyContract = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi);
+        var data = MyContract.new.getData(owners, requiredConfirmations, new EthJS.BN(limit), {
+          data: wallet.json.multiSigDailyLimit.binHex
+        });
+
+        wallet.offlineTransaction(null, data, cb);
+      };
 
       wallet.getBalance = function(address, cb){
         return wallet.callRequest(
@@ -476,6 +498,25 @@
                 executed: tx[4]
               }
             );
+          }
+        );
+      }
+
+      /**
+      * Get transaction count
+      **/
+      wallet.getTransactionCount = function(address, pending, executed, cb){
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
+        return wallet.callRequest(
+          pending,
+          executed,
+          function(e, count){
+            if(e){
+              cb(e);
+            }
+            else{
+              cb(null, count.toNumber());
+            }
           }
         );
       }

@@ -3,13 +3,13 @@
     Wallets
     <small>
       <button class="btn btn-default pull-right" ng-click="newWalletSelect()">
-        <i class="fa fa-plus"></i>
+        Add
       </button>
     </small>
   </h1>
 </div>
 
-<div ng-show="view == 'list'">
+<div>
   <div ng-repeat="(walletAddress, wallet) in wallets|objectToArray|limitTo:itemsPerPage:itemsPerPage*(currentPage-1)">
     <div class="col-xs-4">
       <h3>
@@ -43,98 +43,8 @@
   <ul uib-pagination total-items="totalItems" ng-model="currentPage" items-per-page="itemsPerPage"></ul>
 </div>
 
-<div ng-show="view == 'select'">
-  <h4> Select one option: </h4>
-  <div class="radio">
-    <label>
-      <input type="radio" value="create" ng-model="walletOption">
-      Create new Wallet
-    </label>
-  </div>
-  <div class="radio">
-    <label>
-      <input type="radio" value="restore" ng-model="walletOption">
-      Restore wallet
-    </label>
-  </div>
-
-  <div>
-    <button class="btn btn-danger" ng-click="view = 'list'">
-      Cancel
-    </button>
-    <button class="btn btn-default" ng-click="newWallet()">
-      Next
-    </button>
-  </div>
-</div>
-
 <div ng-show="view == 'create'">
-  <h3> Create new multisignature wallet </h3>
-  <form class="form">
-    <div class="form-group">
-      <label> Name </label>
-      <input type="text" class="form-control" ng-model="new.name" required\>
-    </div>
-
-    <div class="form-group">
-      <label> Required confirmations </label>
-      <input type="number" class="form-control" ng-min="1" ng-max="new.owners.length"
-      ng-model="new.confirmations" required\>
-    </div>
-
-    <h3> Owners: </h3>
-    <table class="table table-hover">
-      <thead>
-        <tr>
-          <th>
-            Name
-          </th>
-          <th>
-            Address
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>
-            <input type="text" class="form-control" ng-model="owner.name" required\>
-          </td>
-          <td>
-            <input type="text" class="form-control" ng-model="owner.address" required\>
-          </td>
-          <td>
-            <button ng-click="addOwner(owner)" type="button" class="btn btn-default">
-              <i class="fa fa-plus"></i>
-            </button>
-          </td>
-        </tr>
-        <tr ng-repeat="owner in new.owners">
-          <td>
-            {{owner.name}}
-          </td>
-          <td>
-            {{owner.address}}
-          </td>
-          <td>
-            <button type="button" class="btn btn-danger" ng-click="removeOwner(owner.address)">
-              <i class="fa fa-minus"></i>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <button class="btn btn-danger" ng-click="view = 'select'">
-      Cancel
-    </button>
-    <button class="btn btn-default" type="button" ng-click="deployOfflineWallet()">
-      Sign Offline
-    </button>
-    <button class="btn btn-default" type="button" ng-click="deployWallet()">
-      Send Transaction
-    </button>
-
-  </form>
+  
 </div>
 
 <div ng-show="view == 'restore'">

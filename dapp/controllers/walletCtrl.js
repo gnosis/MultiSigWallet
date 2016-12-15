@@ -62,6 +62,7 @@
             }
             else{
               // open recover modal
+              $scope.restoreWallet();
             }
           }
         );
@@ -89,13 +90,24 @@
       }
 
       $scope.restoreWallet = function(){
-        Wallet.restore($scope.old, function(e, w){
-          console.log(e);
-          if(e){
-            Utils.dangerAlert(e);
-          }
-          else{
-            $scope.view = 'list';
+        $uibModal.open({
+          templateUrl: 'partials/modals/restoreWallet.html',
+          size: 'lg',
+          controller: function($scope, $uibModalInstance){
+            $scope.ok = function(){
+              Wallet.restore($scope.old, function(e, w){
+                if(e){
+                  Utils.dangerAlert(e);
+                }
+                else{
+                  $uibModalInstance.close();
+                }
+              });
+            }
+
+            $scope.cancel = function(){
+              $uibModalInstance.dismiss();
+            }
           }
         });
       }

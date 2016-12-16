@@ -3,7 +3,7 @@
     angular
     .module('multiSigWeb')
     .controller('walletCtrl', function($scope, Wallet, Utils, Transaction,
-      Owner, $uibModal, $interval){
+      $uibModal, $interval){
 
       var batch = Wallet.web3.createBatch();
 

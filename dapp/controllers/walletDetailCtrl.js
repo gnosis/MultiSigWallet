@@ -2,7 +2,7 @@
   function(){
     angular
     .module("multiSigWeb")
-    .controller("walletDetailCtrl", function($scope, Wallet, $routeParams, Utils, Transaction, Owner, $interval){
+    .controller("walletDetailCtrl", function($scope, Wallet, $routeParams, Utils, Transaction, $interval){
       $scope.wallet = Wallet.wallets[$routeParams.address];
       // Get wallet balance, nonce, transactions, owners
       var batch = Wallet.web3.createBatch();
@@ -60,73 +60,73 @@
           )
         )
 
-        // Get pending transactions
-        batch.add(
-          Wallet
-          .getPendingTransactions(
-            $scope.wallet.address,
-            function(e, pending){
-              $scope.pending = pending;
-
-              // Get transaction info
-              var pendingBatch = Wallet.web3.createBatch();
-              pending.map(function(txHash){
-                // Get transaction details
-                pendingBatch.add(
-                  Wallet.getTransaction($scope.wallet.address, txHash, function(e, tx){
-                    if(!$scope.transactions[txHash]){
-                      $scope.transactions[txHash] = {};
-                    }
-                    Object.assign($scope.transactions[txHash], tx);
-                    $scope.$apply();
-                  })
-                )
-
-                // Get isConfirmed by user
-                pendingBatch.add(
-                  Wallet.isConfirmed($scope.wallet.address, txHash, function(e, confirmed){
-                    if(!$scope.transactions[txHash]){
-                      $scope.transactions[txHash] = {};
-                    }
-                    Object.assign($scope.transactions[txHash], {isConfirmed: confirmed});
-                    $scope.$apply();
-                  })
-                );
-
-              });
-              pendingBatch.execute();
-            }
-          )
-        )
-
-        // Get executed transactions
-        batch.add(
-          Wallet
-          .getExecutedTransactions(
-            $scope.wallet.address,
-            function(e, executed){
-              $scope.executed = executed;
-
-              // Get transaction info
-              var executedBatch = Wallet.web3.createBatch();
-              executed.map(function(txHash){
-                executedBatch.add(
-                  Wallet.getTransaction($scope.wallet.address, txHash, function(e, tx){
-                    if(!$scope.transactions[txHash]){
-                      $scope.transactions[txHash] = {};
-                    }
-                    Object.assign($scope.transactions[txHash], tx);
-                    $scope.$apply();
-                  })
-                );
-              });
-
-              executedBatch.execute();
-            }
-          )
-        )
-
-        batch.execute();
+        // // Get pending transactions
+        // batch.add(
+        //   Wallet
+        //   .getPendingTransactions(
+        //     $scope.wallet.address,
+        //     function(e, pending){
+        //       $scope.pending = pending;
+        //
+        //       // Get transaction info
+        //       var pendingBatch = Wallet.web3.createBatch();
+        //       pending.map(function(txHash){
+        //         // Get transaction details
+        //         pendingBatch.add(
+        //           Wallet.getTransaction($scope.wallet.address, txHash, function(e, tx){
+        //             if(!$scope.transactions[txHash]){
+        //               $scope.transactions[txHash] = {};
+        //             }
+        //             Object.assign($scope.transactions[txHash], tx);
+        //             $scope.$apply();
+        //           })
+        //         )
+        //
+        //         // Get isConfirmed by user
+        //         pendingBatch.add(
+        //           Wallet.isConfirmed($scope.wallet.address, txHash, function(e, confirmed){
+        //             if(!$scope.transactions[txHash]){
+        //               $scope.transactions[txHash] = {};
+        //             }
+        //             Object.assign($scope.transactions[txHash], {isConfirmed: confirmed});
+        //             $scope.$apply();
+        //           })
+        //         );
+        //
+        //       });
+        //       pendingBatch.execute();
+        //     }
+        //   )
+        // )
+        //
+        // // Get executed transactions
+        // batch.add(
+        //   Wallet
+        //   .getExecutedTransactions(
+        //     $scope.wallet.address,
+        //     function(e, executed){
+        //       $scope.executed = executed;
+        //
+        //       // Get transaction info
+        //       var executedBatch = Wallet.web3.createBatch();
+        //       executed.map(function(txHash){
+        //         executedBatch.add(
+        //           Wallet.getTransaction($scope.wallet.address, txHash, function(e, tx){
+        //             if(!$scope.transactions[txHash]){
+        //               $scope.transactions[txHash] = {};
+        //             }
+        //             Object.assign($scope.transactions[txHash], tx);
+        //             $scope.$apply();
+        //           })
+        //         );
+        //       });
+        //
+        //       executedBatch.execute();
+        //     }
+        //   )
+        // )
+        //
+        // batch.execute();
       }
 
       Wallet.initParams().then(function(){
@@ -134,7 +134,7 @@
         $scope.interval = $interval($scope.updateParams, 15000);
       });
 
-      $scope.$on('$destroy', function(){        
+      $scope.$on('$destroy', function(){
         $interval.cancel($scope.interval);
       })
 

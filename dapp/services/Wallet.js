@@ -213,6 +213,19 @@
                         }
                       })
                     );
+                  }),
+                  $q(function(resolve, reject){
+                    batch.add(
+                      wallet.getBalance(wallet.coinbase, function(e, balance){
+                        if(e){
+                          reject(e);
+                        }
+                        else{
+                          wallet.balance = balance;
+                          resolve();
+                        }
+                      })
+                    );
                   })
                 ]
               ).then(function(){

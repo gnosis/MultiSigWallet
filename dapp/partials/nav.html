@@ -31,10 +31,13 @@
             <a href="#/transactions">
               Transactions
             </a>
-          </li>                    
+          </li>
         </ul>
 
         <ul class="nav navbar-nav pull-right" ng-show="loggedIn">
+          <li>
+            <p class="navbar-text"> Balance: {{balance|ether}} </p>
+          </li>
           <li>
             <p class="navbar-text"> Nonce: {{nonce}} </p>
           </li>

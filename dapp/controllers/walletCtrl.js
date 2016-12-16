@@ -178,13 +178,26 @@
       $scope.deposit = function(wallet){
         $uibModal.open({
           templateUrl: 'partials/modals/deposit.html',
-          size: 'md',          
+          size: 'md',
           resolve: {
             wallet: function(){
               return wallet;
             }
           },
           controller: 'depositCtrl'
+        });
+      }
+
+      $scope.setRequired = function(wallet){
+        $uibModal.open({
+          templateUrl: 'partials/modals/updateRequired.html',
+          size: 'md',
+          resolve: {
+            wallet: function(){
+              return wallet;
+            }
+          },
+          controller: 'updateRequiredCtrl'
         });
       }
 

@@ -2,8 +2,8 @@
   function(){
     angular
     .module("multiSigWeb")
-    .controller("updateRequiredCtrl", function($scope, Wallet, Transaction, $routeParams, Utils, $location){
-      $scope.address = $routeParams.address;
+    .controller("updateRequiredCtrl", function($scope, Wallet, Transaction, $routeParams, Utils, $uibModalInstance, wallet){
+      $scope.address = wallet.address;
 
 
       Wallet
@@ -19,10 +19,10 @@
             Utils.dangerAlert(e);
           }
           else{
+            $uibModalInstance.close();
             Utils.notification("Transaction sent, will be mined in next 20s");
             Transaction.add({txHash: tx, callback: function(receipt){
               Utils.success("Required confirmations changed");
-              $location.path("/wallet/"+$scope.address);
             }});
           }
         });
@@ -34,10 +34,14 @@
             Utils.error(e);
           }
           else{
-            Utils.success('<div class="form-group"><label>Transaction:'+
-            '</label> <textarea class="form-control" rows="5">'+ tx + '</textarea></div>');
+            $uibModalInstance.close();
+            Utils.signed(tx);
           }
         });
+      }
+
+      $scope.cancel = function(){
+        $uibModalInstance.dismiss();
       }
     });
   }

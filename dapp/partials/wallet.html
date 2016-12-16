@@ -41,15 +41,18 @@
         {{wallet.address|limitTo:20}}...
       </td>
       <td>
-        {{wallet.balance}} ETH
+        {{wallet.balance|ether}}
       </td>
       <td>
-        {{wallet.confirmations}}
+        {{wallet.confirmations|bigNumber}}
       </td>
       <td>
-        {{wallet.limit}}
+        {{wallet.limit|bigNumber}}
       </td>
       <td>
+        <button type="button" class="btn btn-default" ng-click="deposit(wallet)">
+          Deposit
+        </button>
         <button type="button" class="btn btn-default" ng-click="removeWallet(wallet.address)">
           remove
         </button>

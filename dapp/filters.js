@@ -22,5 +22,19 @@
         return moment(new Date(dateString)).fromNow();
       };
     })
+    .filter('bigNumber', function(){
+      return function(big){
+        if(big){
+          return big.toNumber();
+        }
+      }
+    })
+    .filter('ether', function(){
+      return function(big){
+        if(big){
+          return new Web3().fromWei(big).toString() + " ETH";
+        }
+      }
+    })
   }
 )();

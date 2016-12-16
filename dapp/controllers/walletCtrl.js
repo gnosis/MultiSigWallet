@@ -16,7 +16,7 @@
             Wallet.getBalance(
               address,
               function(e, balance){
-                $scope.wallets[address].balance = balance.div('1e18').toNumber();
+                $scope.wallets[address].balance = balance;
                 $scope.$apply();
               }
             )
@@ -27,6 +27,16 @@
               address,
               function(e, confirmations){
                 $scope.wallets[address].confirmations = confirmations;
+                $scope.$apply();
+              }
+            )
+          );
+
+          batch.add(
+            Wallet.getLimit(
+              address,
+              function(e, limit){
+                $scope.wallets[address].limit = limit;
                 $scope.$apply();
               }
             )
@@ -162,6 +172,19 @@
               $uibModalInstance.dismiss();
             }
           }
+        });
+      }
+
+      $scope.deposit = function(wallet){
+        $uibModal.open({
+          templateUrl: 'partials/modals/deposit.html',
+          size: 'md',          
+          resolve: {
+            wallet: function(){
+              return wallet;
+            }
+          },
+          controller: 'depositCtrl'
         });
       }
 

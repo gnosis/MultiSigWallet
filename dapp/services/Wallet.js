@@ -517,6 +517,7 @@
       wallet.getTransactionCount = function(address, pending, executed, cb){
         var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
         return wallet.callRequest(
+          instance.getTransactionCount,
           pending,
           executed,
           function(e, count){
@@ -527,6 +528,18 @@
               cb(null, count.toNumber());
             }
           }
+        );
+      }
+
+      /**
+      * Get daily limit
+      **/
+      wallet.getLimit = function(address, cb){
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        return wallet.callRequest(
+          instance.dailyLimit,
+          [],
+          cb
         );
       }
 

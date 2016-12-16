@@ -53,7 +53,7 @@
       /**
       * Send transaction, signed by wallet service provider
       */
-      factory.send = function(tx, cb){
+      factory.send = function(tx, cb){        
         Wallet.web3.eth.sendTransaction(tx, function(e, txHash){
           if(e){
             cb(e);
@@ -181,7 +181,7 @@
       }
 
       /**
-      * Internal loop, checking for transaction receipts.
+      * Internal loop, checking for transaction receipts and transaction info.
       * calls callback after receipt is retrieved.
       */
       factory.checkReceipts = function(){
@@ -192,7 +192,8 @@
         var txHashes = Object.keys(factory.transactions);
 
         for(var i=0; i<txHashes.length; i++){
-          var tx = factory.transactions[txHashes[i]];          
+          var tx = factory.transactions[txHashes[i]];
+          // Get transaction receipt
           if(tx && !tx.receipt){
             batch.add(
               Wallet.web3.eth.getTransactionReceipt.request(txHashes[i], function(e, receipt){
@@ -214,6 +215,27 @@
                 }
               })
             );
+          }
+
+          // Get transaction info
+          if(tx && !tx.info){
+            batch.add(
+              Wallet.web3.eth.getTransaction.request(txHashes[i], function(e, info){
+                if(!e && info){
+                  factory.transactions[info.hash].info = info;
+
+                  // update transactions
+                  localStorage.setItem("transactions", JSON.stringify(factory.transactions));
+                  try{
+                    $rootScope.$digest();
+                  }
+                  catch(e){
+
+                  }
+                }
+              }
+            )
+          );
           }
         }
 

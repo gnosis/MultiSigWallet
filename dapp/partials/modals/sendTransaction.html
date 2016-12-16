@@ -1,0 +1,63 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Send transaction
+  </h3>
+</div>
+
+<form name="form" class="form">
+  <div class="modal-body">
+    <div class="form-group">
+      <label> Destination </label>
+      <input type="text" ng-model="tx.to" class="form-control" required>
+    </div>
+
+    <div class="form-group">
+      <label> Value </label>
+      <input type="text" class="form-control" ng-model="tx.value" ng-required="!abi">
+    </div>
+
+    <div class="form-group">
+      <label> ABI string </label>
+      <input type="text" class="form-control" ng-model="abi" ng-change="updateMethods()" ng-required="!tx.value">
+    </div>
+
+    <div class="form-group">
+      <label> Method </label>
+      <select ng-model="method" ng-options="method.name for method in methods track by method.index"
+       ng-required="tx.abi" class="form-control" ng-change="setMethod()"></select>
+    </div>
+    <div class="form-group row col-xs-12" ng-show="method">
+      <h2 class="col-xs-2"> Params </h2>
+      <div class="col-xs-10">
+        <div ng-repeat="param in abiArray[method.index].inputs" >
+          <div ng-switch on="param.type">
+            <label>{{param.name}}</label>
+            <!--
+            <input ng-switch-when="uint256" type="number" class="form-control" ng-model="params[$index]">
+            <input ng-switch-when="uint8" type="number" class="form-control" ng-model="params[$index]">
+            <input ng-switch-default type="text" class="form-control" ng-model="params[$index]">
+            -->
+            <input ng-switch-default type="text" class="form-control" ng-model="params[$index]">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label> Nonce </label>
+      <input type="number" class="form-control" ng-model="tx.nonce" required>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" ng-click="send()" class="btn btn-default" ng-disabled="form.$invalid">
+      Send transaction
+    </button>
+
+    <button type="button" ng-click="signOff()" class="btn btn-default" ng-disabled="form.$invalid">
+      Sign Offline
+    </button>
+    <button type="button" ng-click="cancel()" class="btn btn-danger">
+      Cancel
+    </button>
+  </div>
+</div>

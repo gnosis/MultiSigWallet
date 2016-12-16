@@ -2,7 +2,7 @@
   function(){
     angular
     .module('multiSigWeb')
-    .controller('transactionCtrl', function($scope, Wallet, Utils, Transaction){
+    .controller('transactionCtrl', function($scope, Wallet, Utils, Transaction, $uibModal){
 
 
       $scope.$watch(
@@ -24,6 +24,22 @@
 
       $scope.removeAll = function(){
         Transaction.removeAll();
+      }
+
+      $scope.sendSignedTransaction = function(){
+        $uibModal.open({
+          templateUrl: 'partials/modals/signedTransaction.html',
+          size: 'md',
+          controller: 'signedTransactionCtrl'
+        });
+      }
+
+      $scope.sendTransaction = function(){
+        $uibModal.open({
+          templateUrl: 'partials/modals/sendTransaction.html',
+          size: 'lg',
+          controller: 'sendTransactionCtrl'
+        });
       }
 
     });

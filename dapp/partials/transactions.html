@@ -1,27 +1,42 @@
 <div class="page-header">
   <h1>
-    User Transactions history
+    Transactions
+    <div class="pull-right">
+      <button type="button" class="btn btn-default" ng-click="sendSignedTransaction()">
+        Send signed transaction
+      </button>
+      <button type="button"  class="btn btn-default" ng-click="sendTransaction()">
+        Send transaction
+      </button>
+      <button type="button" class="btn btn-default" ng-click="getNonce()">
+        Get nonce
+      </button>
+      <button type="button" class="btn btn-danger" ng-click="removeAll()">
+        Remove all
+      </button>
+    </div>
   </h1>
 </div>
 <table class="table table-hover">
   <thead>
     <tr>
       <th>
-        txHash
+        Destination
       </th>
       <th>
-        # blockNumber
+        Value
       </th>
       <th>
-        Contract
+        Data
       </th>
       <th>
-        date
+        Nonce
       </th>
       <th>
-        <button class="btn btn-danger" ng-click="removeAll()">
-          Remove all
-        </button>
+        Mined
+      </th>
+      <th>
+        Logs
       </th>
     </tr>
   </thead>
@@ -29,26 +44,32 @@
     <tr ng-repeat="transaction in transactions | objectToArray| limitTo:currentPage*itemsPerPage:itemsPerPage*(currentPage-1) track by $index">
       <td>
         <a ng-href="https://testnet.etherscan.io/tx/{{transaction.txHash}}">
-          {{transaction.txHash|limitTo:30}}...
+          {{transaction.info.to|limitTo:20}}...
         </a>
       </td>
       <td>
-        <span ng-show="transaction.receipt">{{transaction.receipt.blockNumber}}<span>
-          <span ng-hide="transaction.receipt" class="badge">mining<span>
+        {{transaction.info.value | ether}}
       </td>
       <td>
-        <a
-        target="_blank"
-        ng-href="https://testnet.etherscan.io/address/{{transaction.receipt.contractAddress}}"
-        ng-show="transaction.receipt && transaction.receipt.contractAddress">
-          {{transaction.receipt.contractAddress | limitTo: 20}}...
-        </a>
-        <span ng-hide="transaction.receipt && transaction.receipt.contractAddress">
+          {{transaction.info.input | limitTo: 20}}...
+      </td>
+      <td>
+        {{transaction.info.nonce}}
+      </td>
+      <td>
+        <span ng-show="transaction.receipt">
+          Yes
+        </span>
+        <span ng-hide="transaction.receipt">
           No
         </span>
       </td>
       <td>
-        {{transaction.date|fromNow}}
+        <ul>
+          <li ng-repeat="log in transaction.receipt.logs">
+            {{log}}
+          </li>
+        </ul>
       </td>
       <td>
         <button class="btn btn-default" ng-click="remove(transaction.txHash)">

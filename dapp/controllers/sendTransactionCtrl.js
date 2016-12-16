@@ -2,7 +2,7 @@
   function(){
     angular
     .module("multiSigWeb")
-    .controller("sendTransactionCtrl", function($scope, Wallet, Utils, Transaction){
+    .controller("sendTransactionCtrl", function($scope, Wallet, Utils, Transaction, $uibModalInstance){
       $scope.methods = [];
       $scope.tx = {};
       $scope.params = [];
@@ -24,6 +24,7 @@
               Utils.success("Transaction mined");
             }
             else{
+              $uibModalInstance.close();
               Utils.notification("Transaction sent, will be mined in next 20s");
             }
           });
@@ -34,6 +35,7 @@
               Utils.success("Transaction mined");
             }
             else{
+              $uibModalInstance.close();
               Utils.notification("Transaction sent, will be mined in next 20s");
             }
           });
@@ -43,13 +45,14 @@
       $scope.signOff = function(){
         if($scope.method){
           Transaction.signMethodOffline($scope.tx, $scope.abiArray, $scope.method.name, $scope.params, function(e, tx){
-            console.log(e, tx);
+            $uibModalInstance.close();
+            Utils.signed(tx);
           });
         }
         else{
           Transaction.signOffline($scope.tx, function(e, tx){
-            Utils.success('<div class="form-group"><label>Signed transaction: '+
-            '</label> <textarea class="form-control" rows="5">'+ tx + '</textarea></div>');
+            $uibModalInstance.close();
+            Utils.signed(tx);
           });
         }
       }
@@ -61,6 +64,10 @@
             $scope.methods.push({name: item.name, index: index});
           }
         });
+      }
+
+      $scope.cancel = function(){
+        $uibModalInstance.dismiss();
       }
     });
   }

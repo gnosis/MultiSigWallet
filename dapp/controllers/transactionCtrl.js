@@ -42,6 +42,33 @@
         });
       }
 
+      $scope.getNonce = function(){
+        $uibModal.open({
+          templateUrl: 'partials/modals/getNonce.html',
+          size: 'md',
+          controller: function($scope, $uibModalInstance, Wallet, Utils){
+            $scope.cancel = function(){
+              $uibModalInstance.dismiss();
+            }
+
+            $scope.ok = function(){
+              Wallet.web3.eth.getTransactionCount(
+                $scope.address,
+                function(e, count){
+                  if(e){
+                    Utils.dangerAlert(e);
+                  }
+                  else{
+                    $uibModalInstance.close();
+                    Utils.success("Nonce: "+count);  
+                  }
+                }
+              );
+            }
+          }
+        });
+      }
+
     });
   }
 )();

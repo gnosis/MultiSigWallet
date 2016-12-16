@@ -2,32 +2,44 @@
   function(){
     angular
     .module('multiSigWeb')
-    .controller('walletCtrl', function($scope, Wallet, Utils, Transaction, Owner, $uibModal){
+    .controller('walletCtrl', function($scope, Wallet, Utils, Transaction,
+      Owner, $uibModal, $interval){
 
-      // Init wallets collection
-      $scope.$watch(
-        function(){
-          return Wallet.wallets;
-        },
-        function(){
-          $scope.wallets = Wallet.wallets;
-          $scope.totalItems = Object.keys($scope.wallets).length;
-          var batch = Wallet.web3.createBatch();
-          // Init wallet balance of each wallet address
-          Object.keys($scope.wallets).map(function(address){
-            batch.add(
-              Wallet.getBalance(
-                address,
-                function(e, balance){
-                  $scope.wallets[address].balance = balance.div('1e18').toNumber();
-                  $scope.$apply();
-                }
-              )
-            );
-          });
-          batch.execute();
-        }
-      );
+      $scope.updateParams = function(){
+        $scope.wallets = Wallet.wallets;
+        $scope.totalItems = Object.keys($scope.wallets).length;
+        var batch = Wallet.web3.createBatch();
+        // Init wallet balance of each wallet address
+        Object.keys($scope.wallets).map(function(address){
+          batch.add(
+            Wallet.getBalance(
+              address,
+              function(e, balance){
+                $scope.wallets[address].balance = balance.div('1e18').toNumber();
+                $scope.$apply();
+              }
+            )
+          );
+
+          batch.add(
+            Wallet.getRequired(
+              address,
+              function(e, confirmations){
+                $scope.wallets[address].confirmations = confirmations;
+                $scope.$apply();
+              }
+            )
+          );
+        });
+        batch.execute();
+      }
+      $scope.updateParams();
+      $scope.interval = $interval($scope.updateParams, 15000);
+
+
+      $scope.$on('$destroy', function(){
+        $interval.cancel($scope.interval);
+      });
 
       $scope.currentPage = 1;
       $scope.itemsPerPage = 3;
@@ -86,7 +98,26 @@
 
 
       $scope.removeWallet = function(address){
-        Wallet.removeWallet(address);
+        $uibModal.open({
+          templateUrl: 'partials/modals/removeWallet.html',
+          size: 'lg',
+          resolve: {
+            wallet: function(){
+              return $scope.wallets[address];
+            }
+          },
+          controller: function($scope, $uibModalInstance, wallet){            
+            $scope.wallet = wallet;
+            $scope.ok = function(){
+              Wallet.removeWallet($scope.wallet.address);
+              $uibModalInstance.close();
+            }
+
+            $scope.cancel = function(){
+              $uibModalInstance.dismiss();
+            }
+          }
+        });
       }
 
       $scope.restoreWallet = function(){

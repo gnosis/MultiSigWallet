@@ -1,0 +1,24 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Change daily limit
+  </h3>
+</div>
+<div class="modal-body">
+  <div class="form-group">
+    <label>
+      Limit in wei:
+    </label>
+    <input type="text" ng-model="limit" class="form-control"\>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" ng-click="setLimit()">
+    Send transaction
+  </button>
+  <button type="button" class="btn btn-default" ng-click="sign()">
+    Sign Offline
+  </button>
+  <button type="button" class="btn btn-danger" ng-click="cancel()">
+    Cancel
+  </button>
+</div>

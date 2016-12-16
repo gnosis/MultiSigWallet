@@ -201,6 +201,19 @@
         });
       }
 
+      $scope.setLimit = function(wallet){
+        $uibModal.open({
+          templateUrl: 'partials/modals/setLimit.html',
+          size: 'md',
+          resolve: {
+            wallet: function(){
+              return wallet;
+            }
+          },
+          controller: 'setLimitCtrl'
+        });
+      }
+
     });
   }
 )();

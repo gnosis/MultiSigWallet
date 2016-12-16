@@ -544,6 +544,49 @@
       }
 
       /**
+      * Change daily limit
+      **/
+      wallet.updateLimit = function(address, limit, cb){
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        var data = instance.changeDailyLimit.getData(
+          limit,
+          cb
+        );
+        // Get nonce
+        wallet.getNonce(address, address, "0x0", data, function(e, nonce){
+          if(e){
+            cb(e);
+          }
+          else{
+            instance.submitTransaction(address, "0x0", data, nonce, cb);
+          }
+        }).call();
+
+      }
+
+      /**
+      * Sign update limit transaction
+      **/
+      wallet.signLimit = function(address, limit, cb){
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        var data = instance.changeDailyLimit.getData(
+          limit,
+          cb
+        );
+
+        // Get nonce
+        wallet.getNonce(address, address, "0x0", data, function(e, nonce){
+          if(e){
+            cb(e);
+          }
+          else{
+            var mainData = instance.submitTransaction.getData(address, "0x0", data, nonce, cb);
+            wallet.offlineTransaction(address, mainData, cb);
+          }
+        }).call();
+      }
+
+      /**
       * Confirm transaction by another wallet owner
       */
       wallet.confirmTransaction = function(address, txHash, cb){

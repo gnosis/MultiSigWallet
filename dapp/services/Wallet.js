@@ -249,6 +249,15 @@
         catch(e){}
       }
 
+      wallet.update = function(address, name){
+        wallet.wallets[address].name = name;
+        localStorage.setItem("wallets", JSON.stringify(wallet.wallets));
+        try{
+          $rootScope.$digest();
+        }
+        catch(e){}
+      }
+
       // Deploy wallet contract with constructor params
       wallet.deployWallet = function(owners, requiredConfirmations, cb){
         var MyContract = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi);

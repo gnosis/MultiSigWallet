@@ -5,10 +5,11 @@
     .controller('walletCtrl', function($scope, Wallet, Utils, Transaction,
       Owner, $uibModal, $interval){
 
+      var batch = Wallet.web3.createBatch();
+
       $scope.updateParams = function(){
         $scope.wallets = Wallet.wallets;
         $scope.totalItems = Object.keys($scope.wallets).length;
-        var batch = Wallet.web3.createBatch();
         // Init wallet balance of each wallet address
         Object.keys($scope.wallets).map(function(address){
           batch.add(
@@ -43,11 +44,7 @@
 
       $scope.currentPage = 1;
       $scope.itemsPerPage = 3;
-      $scope.new = {
-        name: 'MultiSig Wallet',
-        owners: {},
-        confirmations : 1
-      };
+
 
       $scope.newWalletSelect = function(){
         $uibModal.open({
@@ -106,7 +103,7 @@
               return $scope.wallets[address];
             }
           },
-          controller: function($scope, $uibModalInstance, wallet){            
+          controller: function($scope, $uibModalInstance, wallet){
             $scope.wallet = wallet;
             $scope.ok = function(){
               Wallet.removeWallet($scope.wallet.address);
@@ -134,6 +131,31 @@
                   $uibModalInstance.close();
                 }
               });
+            }
+
+            $scope.cancel = function(){
+              $uibModalInstance.dismiss();
+            }
+          }
+        });
+      }
+
+      $scope.editWallet = function(wallet){
+        $uibModal.open({
+          templateUrl: 'partials/modals/editWallet.html',
+          size: 'sm',
+          resolve: {
+            wallet: function(){
+              return wallet;
+            }
+          },
+          controller: function($scope, $uibModalInstance, wallet){
+            $scope.name = wallet.name;
+            $scope.address = wallet.address;
+
+            $scope.ok = function(){
+              Wallet.update(wallet.address, $scope.name);
+              $uibModalInstance.close();
             }
 
             $scope.cancel = function(){

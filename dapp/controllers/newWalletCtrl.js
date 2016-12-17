@@ -26,7 +26,7 @@
             else{
               if(contract.address){
                 // Save wallet
-                Wallet.updateWallet({name: $scope.name, address: contract.address});
+                Wallet.updateWallet({name: $scope.name, address: contract.address, owners: $scope.owners});
 
                 Utils.success("Multisignature wallet deployed with address "+contract.address);
               }

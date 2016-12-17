@@ -2,7 +2,7 @@
   function(){
     angular
     .module("multiSigWeb")
-    .controller("walletDetailCtrl", function($scope, Wallet, $routeParams, Utils, Transaction, $interval){
+    .controller("walletDetailCtrl", function($scope, Wallet, $routeParams, Utils, Transaction, $interval, $uibModal){
       $scope.wallet = Wallet.wallets[$routeParams.address];
       // Get wallet balance, nonce, transactions, owners
       var batch = Wallet.web3.createBatch();
@@ -22,19 +22,6 @@
             }
           )
         );
-
-
-        // Get balance
-        batch.add(
-          Wallet
-          .getBalance(
-            $routeParams.address,
-            function(e, balance){
-              $scope.balance = balance.div('1e18').toNumber();
-              $scope.$apply();
-            }
-          )
-        )
 
         // Get nonces
         batch.add(
@@ -60,73 +47,8 @@
           )
         )
 
-        // // Get pending transactions
-        // batch.add(
-        //   Wallet
-        //   .getPendingTransactions(
-        //     $scope.wallet.address,
-        //     function(e, pending){
-        //       $scope.pending = pending;
-        //
-        //       // Get transaction info
-        //       var pendingBatch = Wallet.web3.createBatch();
-        //       pending.map(function(txHash){
-        //         // Get transaction details
-        //         pendingBatch.add(
-        //           Wallet.getTransaction($scope.wallet.address, txHash, function(e, tx){
-        //             if(!$scope.transactions[txHash]){
-        //               $scope.transactions[txHash] = {};
-        //             }
-        //             Object.assign($scope.transactions[txHash], tx);
-        //             $scope.$apply();
-        //           })
-        //         )
-        //
-        //         // Get isConfirmed by user
-        //         pendingBatch.add(
-        //           Wallet.isConfirmed($scope.wallet.address, txHash, function(e, confirmed){
-        //             if(!$scope.transactions[txHash]){
-        //               $scope.transactions[txHash] = {};
-        //             }
-        //             Object.assign($scope.transactions[txHash], {isConfirmed: confirmed});
-        //             $scope.$apply();
-        //           })
-        //         );
-        //
-        //       });
-        //       pendingBatch.execute();
-        //     }
-        //   )
-        // )
-        //
-        // // Get executed transactions
-        // batch.add(
-        //   Wallet
-        //   .getExecutedTransactions(
-        //     $scope.wallet.address,
-        //     function(e, executed){
-        //       $scope.executed = executed;
-        //
-        //       // Get transaction info
-        //       var executedBatch = Wallet.web3.createBatch();
-        //       executed.map(function(txHash){
-        //         executedBatch.add(
-        //           Wallet.getTransaction($scope.wallet.address, txHash, function(e, tx){
-        //             if(!$scope.transactions[txHash]){
-        //               $scope.transactions[txHash] = {};
-        //             }
-        //             Object.assign($scope.transactions[txHash], tx);
-        //             $scope.$apply();
-        //           })
-        //         );
-        //       });
-        //
-        //       executedBatch.execute();
-        //     }
-        //   )
-        // )
-        //
-        // batch.execute();
+        
+        batch.execute();
       }
 
       Wallet.initParams().then(function(){
@@ -139,8 +61,8 @@
       })
 
       $scope.getOwnerName = function(address){
-        if(Owner.owners && Owner.owners[address]){
-          return Owner.owners[address].name;
+        if($scope.wallet.owners && $scope.wallet.owners[address]){
+          return $scope.wallet.owners[address].name;
         }
       }
 
@@ -168,14 +90,41 @@
       }
 
       $scope.addOwner = function(){
-        Wallet.addOwner($scope.wallet.address, $scope.newOwner, function(e){
-          if(e){
-            Utils.dangerAlert(e);
+        $uibModal.open({
+          templateUrl: 'partials/modals/addOwner.html',
+          size: 'sm',
+          controller: function($scope, $uibModalInstance) {
+            $scope.owner = {
+              name: "",
+              address: ""
+            };
+
+            $scope.ok = function () {
+              $uibModalInstance.close($scope.owner);
+            };
+
+            $scope.cancel = function () {
+              $uibModalInstance.dismiss();
+            };
           }
-          else{
-            // Update owners array
+        })
+        .result
+        .then(
+          function(owner){
+            Wallet.addOwner($scope.wallet.address, owner, function(e){
+              if(e){
+                Utils.dangerAlert(e);
+              }
+              else{
+                console.log(owner);
+                $scope.wallet.owners[owner.address] = owner;
+                // Update owners array
+                Wallet.updateWallet($scope.wallet);
+                $scope.updateParams();
+              }
+            });
           }
-        });
+        )
       }
 
       $scope.confirmTransaction = function(txHash){

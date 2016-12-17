@@ -101,12 +101,6 @@
         });
       }
 
-      $scope.addOwner = function(){
-        $scope.new.owners[$scope.owner.address] = {};
-        angular.copy($scope.owner, $scope.new.owners[$scope.owner.address]);
-      }
-
-
 
       $scope.removeWallet = function(address){
         $uibModal.open({

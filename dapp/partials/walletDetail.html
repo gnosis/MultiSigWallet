@@ -1,193 +1,140 @@
 <div class="page-header">
   <h1>
-    MultiSig Wallet: {{wallet.name}}
-    <a class="btn btn-default" ng-href="#/wallet/{{wallet.address}}/transaction">
-      Send multisig transaction
-    </a>
+    {{wallet.name}}
   </h1>
 </div>
 
-<div class="row col-md-12">
-  <div class="form-horizontal col-md-6">
-    <label class="col-sm-4 control-label">Balance:</label>
-    <div class="col-sm-6">
-      <p class="form-control-static">{{balance}} ETH</p>
-    </div>
-    <a ng-href="#/wallet/{{wallet.address}}/deposit" class="btn btn-default col-sm-2">
-      Deposit
-    </a>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h2>
+      Owners
+      <div class="pull-right">
+        <button type="button" ng-click="addOwner()" class="btn btn-default">
+          Add
+        </button>
+        <button type="button" ng-click="hideOwners = !hideOwners" class="btn btn-default">
+          Hide
+        </button>
+      </div>
+    </h2>
   </div>
-  <div class="form-horizontal col-md-6">
-    <label class="col-sm-4 control-label">Address:</label>
-    <div class="col-sm-8">
-      <p class="form-control-static">{{wallet.address}}</p>
-    </div>
+  <div class="panel-body">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>
+            Name
+          </th>
+          <th>
+            Address
+          </th>
+          <th>
+            Actions
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="owner in owners track by $index">
+          <td>
+            {{getOwnerName(owner)}}
+          </td>
+          <td>
+            {{owner}}
+          </td>
+          <td>
+            <button type="button" ng-click="editOwner(owner)" class="btn btn-default">
+              Edit
+            </button>
+            <button type="button" ng-click="removeOwner(owner)" class="btn btn-danger">
+              Remove
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
 
-<div class="row col-md-12">
-  <div class="form-horizontal col-md-6">
-    <label class="col-sm-4 control-label">Required confirmations:</label>
-    <div class="col-sm-6">
-      <p class="form-control-static">{{required}}</p>
-    </div>
-    <a ng-href="#/wallet/{{wallet.address}}/update-required" class="btn btn-default col-sm-2" ng-click="updateRequired()">
-      Update
-    </a>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h2>
+      Multisig-Transactions
+      <div class="pull-right">
+        <button type="button" class="btn btn-default">
+          Add
+        </button>
+        <button type="button" class="btn btn-default">
+          Get Nonce
+        </button>
+      </div>
+    </h2>
   </div>
-
+  <div class="panel-body">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>
+            Destionation/Type
+          </th>
+          <th>
+            Value
+          </th>
+          <th>
+            Data
+          </th>
+          <th>
+            Nonce
+          </th>
+          <th>
+            # Confirmations
+          </th>
+          <th>
+            Executed
+          </th>
+          <th>
+            Actions
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="tx in pending track by $index">
+          <td>
+            {{tx|limitTo:20}}...
+          </td>
+          <td>
+            {{transactions[tx].to|limitTo:20}}...
+          </td>
+          <td>
+            {{transactions[tx].value}}
+          </td>
+          <td>
+            {{transactions[tx].data|limitTo:20}}...
+          </td>
+          <td>
+            {{transactions[tx].nonce}}
+          </td>
+          <td ng-hide="transactions[tx].isConfirmed">
+            <button type="button" class="btn btn-default" ng-click="confirmTransaction(tx)">
+              Confirm
+            </button>
+          </td>
+          <td ng-hide="transactions[tx].isConfirmed">
+            <button type="button" class="btn btn-default" ng-click="confirmTransactionOffline(tx)">
+              Confirm offline
+            </button>
+          </td>
+          <td ng-show="transactions[tx].isConfirmed">
+            <button type="button" class="btn btn-default" ng-click="revokeConfirmation(tx)">
+              Revoke Confirmation
+            </button>
+          </td>
+          <td ng-show="transactions[tx].isConfirmed">
+            <button type="button" class="btn btn-default" ng-click="revokeConfirmationOffline(tx)">
+              Revoke confirmation offline
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
-
-<div class="page-header">
-  <h2> Owners </h2>
-</div>
-<table class="table table-hover">
-  <thead>
-    <tr>
-      <th>
-        Name
-      </th>
-      <th>
-        Address
-      </th>
-      <th>
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr ng-repeat="owner in owners track by $index">
-      <td>
-        {{getOwnerName(owner)}}
-      </td>
-      <td>
-        {{owner}}
-      </td>
-      <td>
-        <button type="button" ng-click="removeOwner(owner)" class="btn btn-danger">
-          <i class="fa fa-minus"></i>
-        </button>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <input type="text" ng-model="newOwner.name" class="form-control">
-      </td>
-      <td>
-        <input type="text" ng-model="newOwner.address" class="form-control">
-      </td>
-      <td>
-        <button type="button" ng-click="addOwner()" class="btn btn-default" ng-disabled="!newOwner.address">
-          <i class="fa fa-plus"></i>
-        </button>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<div class="page-header">
-  <h2> Pending transactions </h2>
-</div>
-<table class="table table-hover">
-  <thead>
-    <tr>
-      <th>
-        txHash
-      </th>
-      <th>
-        to
-      </th>
-      <th>
-        value
-      </th>
-      <th>
-        data
-      </th>
-      <th>
-        nonce
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr ng-repeat="tx in pending track by $index">
-      <td>
-        {{tx|limitTo:20}}...
-      </td>
-      <td>
-        {{transactions[tx].to|limitTo:20}}...
-      </td>
-      <td>
-        {{transactions[tx].value}}
-      </td>
-      <td>
-        {{transactions[tx].data|limitTo:20}}...
-      </td>
-      <td>
-        {{transactions[tx].nonce}}
-      </td>
-      <td ng-hide="transactions[tx].isConfirmed">
-        <button type="button" class="btn btn-default" ng-click="confirmTransaction(tx)">
-          Confirm
-        </button>
-      </td>
-      <td ng-hide="transactions[tx].isConfirmed">
-        <button type="button" class="btn btn-default" ng-click="confirmTransactionOffline(tx)">
-          Confirm offline
-        </button>
-      </td>
-      <td ng-show="transactions[tx].isConfirmed">
-        <button type="button" class="btn btn-default" ng-click="revokeConfirmation(tx)">
-          Revoke Confirmation
-        </button>
-      </td>
-      <td ng-show="transactions[tx].isConfirmed">
-        <button type="button" class="btn btn-default" ng-click="revokeConfirmationOffline(tx)">
-          Revoke confirmation offline
-        </button>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<div class="page-header">
-  <h2> Executed transactions </h2>
-</div>
-<table class="table table-hover">
-  <thead>
-    <tr>
-      <th>
-        txHash
-      </th>
-      <th>
-        to
-      </th>
-      <th>
-        value
-      </th>
-      <th>
-        data
-      </th>
-      <th>
-        nonce
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr ng-repeat="tx in executed track by $index">
-      <td>
-        {{tx|limitTo:20}}...
-      </td>
-      <td>
-        {{transactions[tx].to|limitTo:20}}...
-      </td>
-      <td>
-        {{transactions[tx].value}}
-      </td>
-      <td>
-        {{transactions[tx].data|limitTo:20}}...
-      </td>
-      <td>
-        {{transactions[tx].nonce}}
-      </td>
-    </tr>
-  </tbody>
-</table>

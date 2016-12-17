@@ -26,6 +26,20 @@
       }
 
       /**
+      * Return tx object, with default values, overwritted by passed params
+      **/
+      wallet.txDefaults = function(tx){
+        var txParams = {
+          gasPrice: '0x' + wallet.txParams.gasPrice.toNumber(16),
+          gas: EthJS.Util.intToHex(wallet.txParams.gasLimit),
+          nonce: EthJS.Util.intToHex(wallet.txParams.nonce)
+        };
+
+        Object.assign(txParams, tx);
+        return txParams;
+      }
+
+      /**
       * Return eth_call request object.
       * custom method .call() for direct calling.
       */
@@ -243,7 +257,7 @@
         if(!wallet.wallets[w.address]){
           wallet.wallets[w.address] = {};
         }
-        Object.assign(wallet.wallets[w.address], {address: w.address, name: w.name});
+        Object.assign(wallet.wallets[w.address], {address: w.address, name: w.name, owners: w.owners});
         localStorage.setItem("wallets", JSON.stringify(wallet.wallets));
         try{
           $rootScope.$digest();
@@ -281,12 +295,15 @@
       wallet.deployWithLimit = function(owners, requiredConfirmations, limit, cb){
         var MyContract = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi);
 
-        MyContract.new(owners, requiredConfirmations, new EthJS.BN(limit), {
-          data: wallet.json.multiSigDailyLimit.binHex,
-          gasPrice: '0x' + wallet.txParams.gasPrice.toNumber(16),
-          gas: EthJS.Util.intToHex(wallet.txParams.gasLimit),
-          nonce: EthJS.Util.intToHex(wallet.txParams.nonce)
-        }, cb);
+        MyContract.new(
+          owners,
+          requiredConfirmations,
+          new EthJS.BN(limit),
+          wallet.txDefaults({
+            data: wallet.json.multiSigDailyLimit.binHex
+          }),
+          cb
+        );
       }
 
       /**
@@ -372,13 +389,11 @@
             cb(e);
           }
           else{
-            instance.submitTransaction(address, "0x0", data, nonce, function(e, tx){
+            instance.submitTransaction(address, "0x0", data, nonce, wallet.txDefaults(), function(e, tx){
               if(e){
                 cb(e);
               }
               else{
-                // Add owner to owners collection
-                Owner.update(owner);
                 cb(null, tx);
               }
             });
@@ -400,7 +415,7 @@
             cb(e);
           }
           else{
-            instance.submitTransaction(address, "0x0", data, nonce, cb);
+            instance.submitTransaction(address, "0x0", data, nonce, wallet.txDefaults(), cb);
           }
         }).call();
       }
@@ -454,7 +469,7 @@
             cb(e);
           }
           else{
-            instance.submitTransaction(address, "0x0", data, nonce, cb);
+            instance.submitTransaction(address, "0x0", data, nonce, wallet.txDefaults(), cb);
           }
         }).call();
       }
@@ -573,7 +588,7 @@
             cb(e);
           }
           else{
-            instance.submitTransaction(address, "0x0", data, nonce, cb);
+            instance.submitTransaction(address, "0x0", data, nonce, wallet.txDefaults(), cb);
           }
         }).call();
 
@@ -608,10 +623,7 @@
         var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
         instance.confirmTransaction(
           txHash,
-          {
-            gasPrice: '0x' + wallet.txParams.gasPrice.toNumber(16),
-            gas: EthJS.Util.intToHex(wallet.txParams.gasLimit)
-          },
+          wallet.txDefaults(),
           cb
         );
       }
@@ -665,10 +677,7 @@
 
         instance.revokeConfirmation(
           txHash,
-          {
-            gasPrice: '0x' + wallet.txParams.gasPrice.toNumber(16),
-            gas: EthJS.Util.intToHex(wallet.txParams.gasLimit)
-          },
+          wallet.txDefaults(),
           cb
         );
       }
@@ -706,10 +715,7 @@
               tx.value,
               data,
               nonce,
-              {
-                gasPrice: '0x' + wallet.txParams.gasPrice.toNumber(16),
-                gas: EthJS.Util.intToHex(wallet.txParams.gasLimit)
-              },
+              wallet.txDefaults(),
               cb
             );
           }
@@ -738,10 +744,7 @@
               tx.value,
               data,
               nonce,
-              {
-                gasPrice: '0x' + wallet.txParams.gasPrice.toNumber(16),
-                gas: EthJS.Util.intToHex(wallet.txParams.gasLimit)
-              }
+              wallet.txDefaults()
             );
 
             wallet.offlineTransaction(address, mainData, cb);

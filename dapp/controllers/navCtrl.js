@@ -10,6 +10,7 @@
       $scope.updateInfo = function(){
         Wallet.initParams().then(function(params){
           $scope.accounts = Wallet.accounts;
+          $scope.coinbase = Wallet.coinbase;
           $scope.nonce = Wallet.txParams.nonce;
           $scope.balance = Wallet.balance;
         });

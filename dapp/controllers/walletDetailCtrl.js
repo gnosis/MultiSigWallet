@@ -47,7 +47,7 @@
           )
         )
 
-        
+
         batch.execute();
       }
 
@@ -186,6 +186,38 @@
           }
         });
       }
+
+      $scope.editOwner = function(owner){
+        $uibModal.open({
+          templateUrl: 'partials/modals/editOwner.html',
+          size: 'sm',
+          resolve: {
+            owner: function(){
+              return $scope.wallet.owners[owner];
+            }
+          },
+          controller: function($scope, $uibModalInstance, owner) {
+            $scope.owner = {
+              address: owner.address,
+              name: owner.name
+            }
+
+            $scope.ok = function () {
+              $uibModalInstance.close($scope.owner);
+            };
+
+            $scope.cancel = function () {
+              $uibModalInstance.dismiss();
+            };
+          }
+        })
+        .result
+        .then(function(owner){
+          $scope.wallet.owners[owner.address] = owner;
+          Wallet.updateWallet($scope.wallet);
+        });
+
+      };
 
     });
   }

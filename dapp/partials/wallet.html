@@ -33,7 +33,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="(walletAddress, wallet) in wallets|objectToArray|limitTo:itemsPerPage:itemsPerPage*(currentPage-1)">
+    <tr ng-repeat="(walletAddress, wallet) in wallets|objectToArray|limitTo:itemsPerPage:itemsPerPage*(currentPage-1) track by $index">
       <td>
         <a ng-href="#/wallet/{{wallet.address}}">{{wallet.name}}</a>
       </td>

@@ -25,7 +25,7 @@
     .filter('bigNumber', function(){
       return function(big){
         if(big){
-          return big.toNumber();
+          return new Web3().toBigNumber(big).toNumber();
         }
       }
     })

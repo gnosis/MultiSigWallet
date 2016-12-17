@@ -2,7 +2,7 @@
   function(){
     angular
     .module("multiSigWeb")
-    .controller("newWalletCtrl", function($scope, $uibModalInstance, Utils, Transaction, Wallet) {
+    .controller("newWalletCtrl", function($scope, $uibModalInstance, $uibModal, Utils, Transaction, Wallet) {
 
       $scope.owners = {};
       $scope.owners[Wallet.coinbase] = {
@@ -80,13 +80,8 @@
         })
         .result
         .then(
-          function(option){
-            if("offline"){
-              deployOfflineWallet
-            }
-            else{
-
-            }
+          function(owner){
+            $scope.owners[owner.address] = owner;
           }
         )
       }

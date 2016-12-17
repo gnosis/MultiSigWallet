@@ -17,7 +17,6 @@
         accounts: [],
         coinbase: null
       }
-
       // Set web3 provider (Metamask, mist, etc)
       if($window.web3){
         wallet.web3 = new Web3($window.web3.currentProvider);
@@ -283,7 +282,10 @@
         var MyContract = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi);
 
         MyContract.new(owners, requiredConfirmations, new EthJS.BN(limit), {
-          data: wallet.json.multiSigDailyLimit.binHex
+          data: wallet.json.multiSigDailyLimit.binHex,
+          gasPrice: '0x' + wallet.txParams.gasPrice.toNumber(16),
+          gas: EthJS.Util.intToHex(wallet.txParams.gasLimit),
+          nonce: EthJS.Util.intToHex(wallet.txParams.nonce)
         }, cb);
       }
 

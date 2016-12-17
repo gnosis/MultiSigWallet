@@ -94,6 +94,10 @@
           templateUrl: 'partials/modals/newWallet.html',
           size: 'lg',
           controller: 'newWalletCtrl'
+        })
+        .result
+        .then(function(){
+          $scope.updateParams();
         });
       }
 

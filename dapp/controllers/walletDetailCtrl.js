@@ -219,6 +219,19 @@
 
       };
 
+      $scope.addTransaction = function(){
+        $uibModal.open({
+          templateUrl: 'partials/modals/walletTransaction.html',
+          size: 'lg',
+          resolve: {
+            wallet: function(){
+              return $scope.wallet;
+            }
+          },
+          controller: 'walletTransactionCtrl'
+        });
+      }
+
     });
   }
 )();

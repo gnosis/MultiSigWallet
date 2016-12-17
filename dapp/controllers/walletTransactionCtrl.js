@@ -6,9 +6,9 @@
   function(){
     angular
     .module("multiSigWeb")
-    .controller("walletTransactionCtrl", function($scope, Wallet, Transaction, Utils, $routeParams, $location){
+    .controller("walletTransactionCtrl", function($scope, Wallet, Transaction, Utils, wallet, $uibModalInstance){
 
-      $scope.wallet = Wallet.wallets[$routeParams.address];
+      $scope.wallet = wallet;
       $scope.abiArray = null;
       $scope.method = null;
       $scope.methods = [];
@@ -45,7 +45,7 @@
                   }
                 }
               );
-              $location.path("/wallet/"+$scope.wallet.address);
+              $uibModalInstance.close();
             }
           }
         )
@@ -63,10 +63,15 @@
               Utils.dangerAlert(e);
             }
             else{
+              $uibModalInstance.close();
               Utils.signed(tx);
             }
           }
         )
+      }
+
+      $scope.cancel = function(){
+        $uibModalInstance.dismiss();
       }
     });
   }

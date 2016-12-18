@@ -59,7 +59,18 @@
   <div class="panel-heading">
     <h2>
       Multisig-Transactions
-      <div class="pull-right">
+      <div class="pull-right form-inline">
+        <select class="form-control" ng-model="showTxs" ng-change="updateParams()">
+          <option value="all">
+            All
+          </option>
+          <option value="pending">
+            Pending
+          </option>
+          <option value="executed">
+            Executed
+          </option>
+        </select>
         <button type="button" class="btn btn-default" ng-click="addTransaction()">
           Add
         </button>

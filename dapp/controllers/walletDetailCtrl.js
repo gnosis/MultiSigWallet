@@ -12,10 +12,19 @@
       $scope.currentPage = 1;
       $scope.itemsPerPage = 5;
       $scope.totalItems = 0;
-      $scope.showPending = true;
-      $scope.showExecuted = true;
+      $scope.showTxs = "all";
 
       $scope.updateParams = function(){
+
+        $scope.showExecuted = true;
+        $scope.showPending = true;
+
+        if($scope.showTxs == "pending"){
+          $scope.showExecuted = false;
+        }
+        else if($scope.showTxs == "executed"){
+          $scope.showPending = false;
+        }
 
         // Get owners
         batch.add(
@@ -58,11 +67,11 @@
           Wallet
           .getTransactionCount(
             $routeParams.address,
-            true,
-            true,
+            $scope.showPending,
+            $scope.showExecuted,
             function(e, items){
               $scope.totalItems = items;
-              $scope.$apply();              
+              $scope.$apply();
               $scope.updateTransactions();
             }
           )
@@ -91,6 +100,7 @@
         // Get all transaction hashes, with filters
         var from = $scope.itemsPerPage*($scope.currentPage-1);
         var to = $scope.currentPage*$scope.itemsPerPage;
+
         Wallet.getTransactionHashes(
           $scope.wallet.address,
           from,

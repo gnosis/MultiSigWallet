@@ -110,7 +110,7 @@
       <tbody>
         <tr ng-repeat="tx in transactions track by $index">
           <td>
-            {{tx.to|limitTo:20}}...
+            {{getType(tx)}}
           </td>
           <td>
             {{tx.value|limitTo:20}}

@@ -96,6 +96,10 @@
         }
       }
 
+      $scope.getType = function(tx){
+        return Wallet.getType(tx);
+      }
+
       $scope.updateTransactions = function(){
         // Get all transaction hashes, with filters
         var from = $scope.itemsPerPage*($scope.currentPage-1);

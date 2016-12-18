@@ -519,7 +519,7 @@
               e,
               {
                 to: tx[0],
-                value: tx[1].toNumber(),
+                value: "0x" + tx[1].toString(16),
                 data: tx[2],
                 nonce: tx[3].toNumber(),
                 executed: tx[4]
@@ -751,6 +751,34 @@
 
           }
         }).call();
+      }
+
+      /**
+      * Get type of transaction or destination
+      **/
+      wallet.getType = function(tx){
+        if(tx.data && tx.data.length > 3){
+          var method = tx.data.slice(2, 10);
+
+          switch (method) {
+            case "ba51a6df":
+              return "Update conf."
+            case "7065cb48":
+              return "Add owner";
+            case "173825d9":
+              return "Remove owner";
+            case "cea08621":
+              return "Update daily limit";
+            default:
+              return "Unknown"
+          }
+        }
+        else{
+            if(tx.to){
+              return tx.to.slice(20) + "...";
+            }
+        }
+
       }
 
 

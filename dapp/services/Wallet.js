@@ -494,25 +494,13 @@
       }
 
       /**
-      * Get pending transactions
+      * Get transaction hashes
       */
-      wallet.getPendingTransactions = function(address, cb){
+      wallet.getTransactionHashes = function(address, from, to, pending, executed, cb){
         var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
         return wallet.callRequest(
-          instance.getPendingTransactions,
-          [address],
-          cb
-        );
-      }
-
-      /**
-      * Get executed transactions hashes
-      */
-      wallet.getExecutedTransactions = function(address, cb){
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
-        return wallet.callRequest(
-          instance.getExecutedTransactions,
-          [address],
+          instance.getTransactionHashes,
+          [from, to, pending, executed],
           cb
         );
       }
@@ -542,14 +530,25 @@
       }
 
       /**
+      * Get transaction
+      */
+      wallet.getConfirmations = function(address, txHash, cb){
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
+        return wallet.callRequest(
+          instance.getConfirmations,
+          [txHash],
+          cb
+        );
+      }
+
+      /**
       * Get transaction count
       **/
       wallet.getTransactionCount = function(address, pending, executed, cb){
         var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
         return wallet.callRequest(
           instance.getTransactionCount,
-          pending,
-          executed,
+          [pending, executed],
           function(e, count){
             if(e){
               cb(e);

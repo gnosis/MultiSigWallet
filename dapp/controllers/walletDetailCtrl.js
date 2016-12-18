@@ -9,6 +9,12 @@
       $scope.owners = [];
       $scope.transactions = {};
 
+      $scope.currentPage = 1;
+      $scope.itemsPerPage = 5;
+      $scope.totalItems = 0;
+      $scope.showPending = true;
+      $scope.showExecuted = true;
+
       $scope.updateParams = function(){
 
         // Get owners
@@ -47,6 +53,21 @@
           )
         )
 
+        // Get Transaction count
+        batch.add(
+          Wallet
+          .getTransactionCount(
+            $routeParams.address,
+            true,
+            true,
+            function(e, items){
+              $scope.totalItems = items;
+              $scope.$apply();              
+              $scope.updateTransactions();
+            }
+          )
+        )
+
 
         batch.execute();
       }
@@ -64,6 +85,47 @@
         if($scope.wallet.owners && $scope.wallet.owners[address]){
           return $scope.wallet.owners[address].name;
         }
+      }
+
+      $scope.updateTransactions = function(){
+        // Get all transaction hashes, with filters
+        var from = $scope.itemsPerPage*($scope.currentPage-1);
+        var to = $scope.currentPage*$scope.itemsPerPage;
+        Wallet.getTransactionHashes(
+          $scope.wallet.address,
+          from,
+          to>$scope.totalItems?$scope.totalItems:to,
+          $scope.showPending,
+          $scope.showExecuted,
+          function(e, hashes){
+            var txBatch = Wallet.web3.createBatch();
+            $scope.transactions = {};
+
+            hashes.map(function(tx){
+              $scope.transactions[tx] = {};
+              // Get transaction info
+              txBatch.add(
+                Wallet.getTransaction($scope.wallet.address, tx, function(e, info){
+                  Object.assign($scope.transactions[tx], info);
+
+                  $scope.$apply();
+                })
+              );
+              // Get transaction confirmations
+              txBatch.add(
+                Wallet.getConfirmations($scope.wallet.address, tx, function(e, confirmations){
+                  $scope.transactions[tx].confirmations = confirmations;
+                  if(confirmations.indexOf(Wallet.coinbase) != -1){
+                    $scope.transactions[tx].confirmed=true;
+                  }
+                  $scope.$apply();
+                })
+              );
+            });
+
+            txBatch.execute();
+
+        }).call();
       }
 
       $scope.getOwners = function(){
@@ -116,7 +178,6 @@
                 Utils.dangerAlert(e);
               }
               else{
-                console.log(owner);
                 $scope.wallet.owners[owner.address] = owner;
                 // Update owners array
                 Wallet.updateWallet($scope.wallet);

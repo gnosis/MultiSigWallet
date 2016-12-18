@@ -97,38 +97,50 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="tx in pending track by $index">
+        <tr ng-repeat="tx in transactions track by $index">
           <td>
-            {{tx|limitTo:20}}...
+            {{tx.to|limitTo:20}}...
           </td>
           <td>
-            {{transactions[tx].to|limitTo:20}}...
+            {{tx.value|limitTo:20}}
           </td>
           <td>
-            {{transactions[tx].value}}
+            {{tx.data | limitTo:20}}...
           </td>
           <td>
-            {{transactions[tx].data|limitTo:20}}...
+            {{tx.nonce}}
           </td>
           <td>
-            {{transactions[tx].nonce}}
+            <ul ng-repeat="owner in tx.confirmations">
+              <li>
+                {{wallet.owners[owner].name}}
+              </li>
+            </ul>
           </td>
-          <td ng-hide="transactions[tx].isConfirmed">
+          <td>
+            <span ng-show="tx.executed">
+              Yes
+            </span>
+            <span ng-hide="tx.executed">
+              No
+            </span>
+          </td>
+          <td ng-hide="tx.executed || tx.confirmed">
             <button type="button" class="btn btn-default" ng-click="confirmTransaction(tx)">
               Confirm
             </button>
           </td>
-          <td ng-hide="transactions[tx].isConfirmed">
+          <td ng-hide="tx.executed || tx.confirmed">
             <button type="button" class="btn btn-default" ng-click="confirmTransactionOffline(tx)">
               Confirm offline
             </button>
           </td>
-          <td ng-show="transactions[tx].isConfirmed">
+          <td ng-show="tx.confirmed && !tx.executed" >
             <button type="button" class="btn btn-default" ng-click="revokeConfirmation(tx)">
               Revoke Confirmation
             </button>
           </td>
-          <td ng-show="transactions[tx].isConfirmed">
+          <td ng-show="tx.confirmed && !tx.executed">
             <button type="button" class="btn btn-default" ng-click="revokeConfirmationOffline(tx)">
               Revoke confirmation offline
             </button>
@@ -136,5 +148,6 @@
         </tr>
       </tbody>
     </table>
+    <ul uib-pagination total-items="totalItems" ng-model="currentPage" ng-change="updateTransactions()" items-per-page="itemsPerPage"></ul>
   </div>
 </div>

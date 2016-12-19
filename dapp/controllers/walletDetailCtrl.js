@@ -169,39 +169,15 @@
 
       $scope.addOwner = function(){
         $uibModal.open({
-          templateUrl: 'partials/modals/addOwner.html',
-          size: 'sm',
-          controller: function($scope, $uibModalInstance) {
-            $scope.owner = {
-              name: "",
-              address: ""
-            };
-
-            $scope.ok = function () {
-              $uibModalInstance.close($scope.owner);
-            };
-
-            $scope.cancel = function () {
-              $uibModalInstance.dismiss();
-            };
+          templateUrl: 'partials/modals/addWalletOwner.html',
+          size: 'md',
+          controller: 'addOwnerCtrl',
+          resolve: {
+            wallet: function(){
+              return $scope.wallet;
+            }
           }
-        })
-        .result
-        .then(
-          function(owner){
-            Wallet.addOwner($scope.wallet.address, owner, function(e){
-              if(e){
-                Utils.dangerAlert(e);
-              }
-              else{
-                $scope.wallet.owners[owner.address] = owner;
-                // Update owners array
-                Wallet.updateWallet($scope.wallet);
-                $scope.updateParams();
-              }
-            });
-          }
-        )
+        });
       }
 
       $scope.confirmTransaction = function(txHash){
@@ -253,6 +229,9 @@
       }
 
       $scope.editOwner = function(owner){
+        if(!$scope.wallet.owners[owner]){
+          $scope.wallet.owners[owner] = {address: owner};
+        }
         $uibModal.open({
           templateUrl: 'partials/modals/editOwner.html',
           size: 'sm',

@@ -32,7 +32,8 @@
         var txParams = {
           gasPrice: '0x' + wallet.txParams.gasPrice.toNumber(16),
           gas: EthJS.Util.intToHex(wallet.txParams.gasLimit),
-          nonce: EthJS.Util.intToHex(wallet.txParams.nonce)
+          nonce: EthJS.Util.intToHex(wallet.txParams.nonce),
+          from: wallet.coinbase
         };
 
         Object.assign(txParams, tx);
@@ -672,7 +673,7 @@
       * Revoke transaction confirmation
       */
       wallet.revokeConfirmation = function(address, txHash, cb){
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);        
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
         instance.revokeConfirmation(
           txHash,
           wallet.txDefaults(),

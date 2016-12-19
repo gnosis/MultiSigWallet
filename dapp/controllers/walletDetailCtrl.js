@@ -217,15 +217,24 @@
       }
 
       $scope.removeOwner = function(owner){
-        Wallet.removeOwner($scope.wallet.address, {address: owner}, function(e, tx){
-          if(e){
-            Utils.dangerAlert(e);
+        if(!$scope.wallet.owners[owner]){
+          $scope.wallet.owners[owner] = {address: owner};
+        }
+        $uibModal.open(
+          {
+            templateUrl: 'partials/modals/removeOwner.html',
+            size: 'md',
+            resolve: {
+              wallet: function(){
+                return $scope.wallet;
+              },
+              owner: function(){
+                return $scope.wallet.owners[owner];
+              }
+            },
+            controller: 'removeOwnerCtrl'
           }
-          else{
-            Utils.notification("Remove owner transaction sent, will be mined in next 20s");
-            Transaction.add({txHash: tx});
-          }
-        });
+        );
       }
 
       $scope.editOwner = function(owner){

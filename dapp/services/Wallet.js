@@ -400,6 +400,26 @@
             });
           }
         }).call();
+      }
+
+      /**
+      * Sign offline Add owner transaction
+      */
+      wallet.addOwnerOffline = function(address, owner, cb){
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
+        var data = instance.addOwner.getData(owner.address);
+
+        // Get nonce
+        wallet.getNonce(address, address, "0x0", data, function(e, nonce){
+          if(e){
+            cb(e);
+          }
+          else{
+            var mainData = instance.submitTransaction.getData(address, "0x0", data, nonce, wallet.txDefaults());
+            wallet.offlineTransaction(address, mainData, cb);
+
+          }
+        }).call();
 
       }
 
@@ -417,6 +437,25 @@
           }
           else{
             instance.submitTransaction(address, "0x0", data, nonce, wallet.txDefaults(), cb);
+          }
+        }).call();
+      }
+
+      /**
+      * Sign offline remove owner transaction
+      **/
+      wallet.removeOwnerOffline = function(address, owner, cb){
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
+        var data = instance.removeOwner.getData(owner.address);
+
+        // Get nonce
+        wallet.getNonce(address, address, "0x0", data, function(e, nonce){
+          if(e){
+            cb(e);
+          }
+          else{
+            var mainData = instance.submitTransaction.getData(address, "0x0", data, nonce, wallet.txDefaults());
+            wallet.offlineTransaction(address, mainData, cb);
           }
         }).call();
       }

@@ -672,8 +672,7 @@
       * Revoke transaction confirmation
       */
       wallet.revokeConfirmation = function(address, txHash, cb){
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
-
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);        
         instance.revokeConfirmation(
           txHash,
           wallet.txDefaults(),

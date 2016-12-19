@@ -108,7 +108,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="tx in transactions track by $index">
+        <tr ng-repeat="(txHash, tx) in transactions track by $index">
           <td>
             {{getType(tx)}}
           </td>
@@ -137,23 +137,13 @@
             </span>
           </td>
           <td ng-hide="tx.executed || tx.confirmed">
-            <button type="button" class="btn btn-default" ng-click="confirmTransaction(tx)">
+            <button type="button" class="btn btn-default" ng-click="confirmTransaction(txHash)">
               Confirm
             </button>
           </td>
-          <td ng-hide="tx.executed || tx.confirmed">
-            <button type="button" class="btn btn-default" ng-click="confirmTransactionOffline(tx)">
-              Confirm offline
-            </button>
-          </td>
           <td ng-show="tx.confirmed && !tx.executed" >
-            <button type="button" class="btn btn-default" ng-click="revokeConfirmation(tx)">
+            <button type="button" class="btn btn-default" ng-click="revokeConfirmation(txHash)">
               Revoke Confirmation
-            </button>
-          </td>
-          <td ng-show="tx.confirmed && !tx.executed">
-            <button type="button" class="btn btn-default" ng-click="revokeConfirmationOffline(tx)">
-              Revoke confirmation offline
             </button>
           </td>
         </tr>

@@ -56,8 +56,10 @@
           .getRequired(
             $routeParams.address,
             function(e, required){
-              $scope.required = required.toNumber();
-              $scope.$apply();
+              if(required){
+                $scope.required = required.toNumber();
+                $scope.$apply();
+              }
             }
           )
         )
@@ -203,51 +205,39 @@
       }
 
       $scope.confirmTransaction = function(txHash){
-        Wallet.confirmTransaction($scope.wallet.address, txHash, function(e, tx){
-          if(e){
-            Utils.dangerAlert(e);
+        $uibModal.open(
+          {
+            templateUrl: 'partials/modals/confirmTransaction.html',
+            size: 'md',
+            resolve: {
+              address: function(){
+                return $scope.wallet.address;
+              },
+              txHash: function(){
+                return txHash;
+              }
+            },
+            controller: 'confirmTransactionCtrl'
           }
-          else{
-            Utils.notification("Confirmation sent, will be mined in next 20s");
-            Transaction.add({txHash: tx});
-          }
-        });
-      }
-
-      $scope.confirmTransactionOffline = function(txHash){
-        Wallet.confirmTransactionOffline($scope.wallet.address, txHash, function(e, tx){
-          if(e){
-            Utils.dangerAlert(e);
-          }
-          else{
-            Utils.success('<div class="form-group"><label>Transaction:'+
-            '</label> <textarea class="form-control" rows="5">'+ tx + '</textarea></div>');
-          }
-        });
+        );
       }
 
       $scope.revokeConfirmation = function(txHash){
-        Wallet.revokeConfirmation($scope.wallet.address, txHash, function(e, tx){
-          if(e){
-            Utils.dangerAlert(e);
+        $uibModal.open(
+          {
+            templateUrl: 'partials/modals/revokeConfirmation.html',
+            size: 'md',
+            resolve: {
+              address: function(){
+                return $scope.wallet.address;
+              },
+              txHash: function(){
+                return txHash;
+              }
+            },
+            controller: 'revokeCtrl'
           }
-          else{
-            Utils.notification("Revoke confirmation sent, will be mined in next 20s");
-            Transaction.add({txHash: tx});
-          }
-        });
-      }
-
-      $scope.revokeConfirmationOffline = function(txHash){
-        Wallet.revokeConfirmationOffline($scope.wallet.address, txHash, function(e, tx){
-          if(e){
-            Utils.dangerAlert(e);
-          }
-          else{
-            Utils.success('<div class="form-group"><label>Transaction:'+
-            '</label> <textarea class="form-control" rows="5">'+ tx + '</textarea></div>');
-          }
-        });
+        );
       }
 
       $scope.removeOwner = function(owner){

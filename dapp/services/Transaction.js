@@ -53,7 +53,7 @@
       /**
       * Send transaction, signed by wallet service provider
       */
-      factory.send = function(tx, cb){        
+      factory.send = function(tx, cb){
         Wallet.web3.eth.sendTransaction(tx, function(e, txHash){
           if(e){
             cb(e);
@@ -243,8 +243,14 @@
         setTimeout(factory.checkReceipts, 15000);
       }
 
-      // init transactions loop
-      factory.checkReceipts();
+      Wallet
+      .webInitialized
+      .then(
+        function(){
+          // init transactions loop
+          factory.checkReceipts();
+        }
+      )
 
       return factory;
     });

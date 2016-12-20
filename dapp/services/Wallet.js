@@ -17,13 +17,19 @@
         accounts: [],
         coinbase: null
       }
-      // Set web3 provider (Metamask, mist, etc)
-      if($window.web3){
-        wallet.web3 = new Web3($window.web3.currentProvider);
-      }
-      else{
-        wallet.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-      }
+
+      wallet.webInitialized = $q(function(resolve, reject){
+        window.addEventListener('load', function() {
+          // Set web3 provider (Metamask, mist, etc)
+          if($window.web3){
+            wallet.web3 = new Web3($window.web3.currentProvider);
+          }
+          else{
+            wallet.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+          }
+          resolve();
+        });
+      });
 
       /**
       * Return tx object, with default values, overwritted by passed params
@@ -186,73 +192,75 @@
       // Init txParams
       wallet.initParams = function(){
         return $q(function(resolve, reject){
-          var batch = wallet.web3.createBatch();
-          wallet
-          .updateAccounts(
-            function(e, accounts){
-              var promises = $q.all(
-                [
-                  $q(function(resolve, reject){
-                    batch.add(
-                      wallet.updateGasLimit(function(e){
-                        if(e){
-                          reject(e);
-                        }
-                        else{
-                          resolve();
-                        }
-                      })
-                    );
-                  }),
-                  $q(function(resolve, reject){
-                    batch.add(
-                      wallet.updateGasPrice(function(e){
-                        if(e){
-                          reject(e);
-                        }
-                        else{
-                          resolve();
-                        }
-                      })
-                    );
-                  }),
-                  $q(function(resolve, reject){
-                    batch.add(
-                      wallet.updateNonce(wallet.coinbase, function(e){
-                        if(e){
-                          reject(e);
-                        }
-                        else{
-                          resolve();
-                        }
-                      })
-                    );
-                  }),
-                  $q(function(resolve, reject){
-                    batch.add(
-                      wallet.getBalance(wallet.coinbase, function(e, balance){
-                        if(e){
-                          reject(e);
-                        }
-                        else{
-                          wallet.balance = balance;
-                          resolve();
-                        }
-                      })
-                    );
-                  })
-                ]
-              ).then(function(){
-                resolve();
-              });
+            var batch = wallet.web3.createBatch();
+            wallet
+            .updateAccounts(
+              function(e, accounts){
+                var promises = $q.all(
+                  [
+                    $q(function(resolve, reject){
+                      batch.add(
+                        wallet.updateGasLimit(function(e){
+                          if(e){
+                            reject(e);
+                          }
+                          else{
+                            resolve();
+                          }
+                        })
+                      );
+                    }),
+                    $q(function(resolve, reject){
+                      batch.add(
+                        wallet.updateGasPrice(function(e){
+                          if(e){
+                            reject(e);
+                          }
+                          else{
+                            resolve();
+                          }
+                        })
+                      );
+                    }),
+                    $q(function(resolve, reject){
+                      batch.add(
+                        wallet.updateNonce(wallet.coinbase, function(e){
+                          if(e){
+                            reject(e);
+                          }
+                          else{
+                            resolve();
+                          }
+                        })
+                      );
+                    }),
+                    $q(function(resolve, reject){
+                      batch.add(
+                        wallet.getBalance(wallet.coinbase, function(e, balance){
+                          if(e){
+                            reject(e);
+                          }
+                          else{
+                            wallet.balance = balance;
+                            resolve();
+                          }
+                        })
+                      );
+                    })
+                  ]
+                ).then(function(){
+                  resolve();
+                });
 
-              batch.execute();
-              return promises;
-            }
+                batch.execute();
+                return promises;
+              }
 
-          ).call();
-          });
-        }
+            ).call();
+          }
+        );
+
+      }
 
       wallet.updateWallet = function(w){
         if(!wallet.wallets[w.address]){

@@ -5,14 +5,23 @@
     .controller('walletCtrl', function($scope, Wallet, Utils, Transaction,
       $uibModal, $interval){
 
-      var batch = Wallet.web3.createBatch();
+      Wallet
+      .webInitialized
+      .then(
+        function(){
+            $scope.batch = Wallet.web3.createBatch();
+            $scope.updateParams();
+            $scope.interval = $interval($scope.updateParams, 15000);
+        }
+      )
+
 
       $scope.updateParams = function(){
         $scope.wallets = Wallet.wallets;
         $scope.totalItems = Object.keys($scope.wallets).length;
         // Init wallet balance of each wallet address
         Object.keys($scope.wallets).map(function(address){
-          batch.add(
+          $scope.batch.add(
             Wallet.getBalance(
               address,
               function(e, balance){
@@ -22,7 +31,7 @@
             )
           );
 
-          batch.add(
+          $scope.batch.add(
             Wallet.getRequired(
               address,
               function(e, confirmations){
@@ -32,7 +41,7 @@
             )
           );
 
-          batch.add(
+          $scope.batch.add(
             Wallet.getLimit(
               address,
               function(e, limit){
@@ -42,10 +51,9 @@
             )
           );
         });
-        batch.execute();
+        $scope.batch.execute();
       }
-      $scope.updateParams();
-      $scope.interval = $interval($scope.updateParams, 15000);
+
 
 
       $scope.$on('$destroy', function(){

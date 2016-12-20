@@ -5,18 +5,22 @@
     .controller('navCtrl', function($scope, Wallet, $interval){
       $scope.navCollapsed = true;
 
-      $scope.loggedIn = Wallet.web3;
 
       $scope.updateInfo = function(){
         Wallet.initParams().then(function(params){
+          $scope.loggedIn = Wallet.web3;
           $scope.accounts = Wallet.accounts;
           $scope.coinbase = Wallet.coinbase;
           $scope.nonce = Wallet.txParams.nonce;
           $scope.balance = Wallet.balance;
         });
       }
-
-      $scope.interval = $interval($scope.updateInfo, 15000);
+      Wallet.webInitialized.then(
+        function(){
+          $scope.interval = $interval($scope.updateInfo, 15000);
+          $scope.updateInfo();
+        }
+      )
 
 
       $scope.$on('$destroy', function(){
@@ -27,8 +31,6 @@
         Wallet.selectAccount(account);
         $scope.updateInfo();
       }
-
-      $scope.updateInfo();
 
 
 

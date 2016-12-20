@@ -74,7 +74,7 @@
         <button type="button" class="btn btn-default" ng-click="addTransaction()">
           Add
         </button>
-        <button type="button" class="btn btn-default">
+        <button type="button" class="btn btn-default" ng-click="getWalletNonce()">
           Get Nonce
         </button>
       </div>
@@ -136,13 +136,16 @@
               No
             </span>
           </td>
-          <td ng-hide="tx.executed || tx.confirmed">
-            <button type="button" class="btn btn-default" ng-click="confirmTransaction(txHash)">
+          <td>
+            <button type="button" class="btn btn-default"
+            ng-hide="tx.executed || tx.confirmed"
+            ng-click="confirmTransaction(txHash)">
               Confirm
             </button>
-          </td>
-          <td ng-show="tx.confirmed && !tx.executed" >
-            <button type="button" class="btn btn-default" ng-click="revokeConfirmation(txHash)">
+
+            <button type="button" class="btn btn-default"
+            ng-show="tx.confirmed && !tx.executed" 
+            ng-click="revokeConfirmation(txHash)">
               Revoke Confirmation
             </button>
           </td>

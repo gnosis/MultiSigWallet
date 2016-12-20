@@ -97,7 +97,7 @@
         }
       );
 
-      
+
       $scope.$on('$destroy', function(){
         $interval.cancel($scope.interval);
       })
@@ -292,6 +292,19 @@
             }
           },
           controller: 'walletTransactionCtrl'
+        });
+      }
+
+      $scope.getWalletNonce = function(){
+        $uibModal.open({
+          templateUrl: 'partials/modals/getWalletNonce.html',
+          size: 'md',
+          resolve: {
+            wallet: function(){
+              return $scope.wallet;
+            }
+          },
+          controller: 'getWalletNonceCtrl'
         });
       }
 

@@ -1,0 +1,49 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Get nonce
+  </h3>
+</div>
+
+<div class="modal-body">
+  <div class="form-group">
+    <label> Destination </label>
+    <input type="text" ng-model="tx.to" class="form-control" required>
+  </div>
+
+  <div class="form-group">
+    <label> Value </label>
+    <input type="text" class="form-control" ng-model="tx.value" ng-required="!abi">
+  </div>
+
+  <div class="form-group">
+    <label> ABI string </label>
+    <textarea rows="5" class="form-control" ng-model="abi" ng-change="updateMethods()" ng-required="!tx.value">
+    </textarea>
+  </div>
+
+  <div class="form-group">
+    <label> Method </label>
+    <select ng-model="method" ng-options="method.name for method in methods track by method.index"
+     ng-required="tx.abi" class="form-control" ng-change="setMethod()"></select>
+  </div>
+  <div class="form-group row col-xs-12" ng-show="method">
+    <h2 class="col-xs-2"> Params </h2>
+    <div class="col-xs-10">
+      <div ng-repeat="param in abiArray[method.index].inputs" >
+        <div ng-switch on="param.type">
+          <label>{{param.name}}</label>
+          <input ng-switch-default type="text" class="form-control" ng-model="params[$index]">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-default" type="button" ng-click="ok()">
+    Ok
+  </button>
+  <button class="btn btn-danger" type="button" ng-click="cancel()">
+    Cancel
+  </button>
+</div>

@@ -676,7 +676,7 @@
         );
 
         // Get nonce
-        wallet.getNonce(address, address, "0x0", data, function(e, nonce){
+        wallet.getWalletNonce(function(e, nonce){
           if(e){
             cb(e);
           }
@@ -684,7 +684,7 @@
             var mainData = instance.submitTransaction.getData(address, "0x0", data, nonce, cb);
             wallet.offlineTransaction(address, mainData, cb);
           }
-        }).call();
+        });
       }
 
       /**
@@ -804,7 +804,7 @@
         var walletInstance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
 
         // Get nonce
-        wallet.getNonce(address, tx.to, tx.value, data, function(e, nonce){
+        wallet.getWalletNonce(function(e, nonce){
           if(e){
             cb(e);
           }
@@ -821,7 +821,7 @@
 
 
           }
-        }).call();
+        });
       }
 
       /**

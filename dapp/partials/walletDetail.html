@@ -144,7 +144,7 @@
             </button>
 
             <button type="button" class="btn btn-default"
-            ng-show="tx.confirmed && !tx.executed" 
+            ng-show="tx.confirmed && !tx.executed"
             ng-click="revokeConfirmation(txHash)">
               Revoke Confirmation
             </button>
@@ -152,6 +152,20 @@
         </tr>
       </tbody>
     </table>
-    <ul uib-pagination total-items="totalItems" ng-model="currentPage" ng-change="updateTransactions()" items-per-page="itemsPerPage"></ul>
+    <div class="form-inline">
+      <ul uib-pagination total-items="totalItems" ng-model="currentPage"
+      ng-change="updateTransactions()" items-per-page="itemsPerPage"></ul>
+      <select class="form-control pull-right" ng-change="updateTransactions()" ng-model="itemsPerPage" convert-to-number>
+        <option value="2">
+          2
+        </option>
+        <option value="5">
+          5
+        </option>
+        <option value="10">
+          10
+        </option>
+      </select>
+    </div>
   </div>
 </div>

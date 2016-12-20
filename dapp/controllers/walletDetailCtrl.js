@@ -115,7 +115,7 @@
       $scope.updateTransactions = function(){
         // Get all transaction hashes, with filters
         var from = $scope.itemsPerPage*($scope.currentPage-1);
-        var to = $scope.currentPage*$scope.itemsPerPage;
+        var to = $scope.currentPage*$scope.itemsPerPage;        
 
         Wallet.getTransactionHashes(
           $scope.wallet.address,

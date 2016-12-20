@@ -5,7 +5,6 @@
     .controller("walletDetailCtrl", function($scope, Wallet, $routeParams, Utils, Transaction, $interval, $uibModal){
       $scope.wallet = Wallet.wallets[$routeParams.address];
       // Get wallet balance, nonce, transactions, owners
-      var batch = Wallet.web3.createBatch();
       $scope.owners = [];
       $scope.transactions = {};
 
@@ -15,6 +14,8 @@
       $scope.showTxs = "all";
 
       $scope.updateParams = function(){
+
+        var batch = Wallet.web3.createBatch();
 
         $scope.showExecuted = true;
         $scope.showPending = true;
@@ -83,11 +84,20 @@
         batch.execute();
       }
 
-      Wallet.initParams().then(function(){
-        $scope.updateParams();
-        $scope.interval = $interval($scope.updateParams, 15000);
-      });
+      Wallet
+      .webInitialized
+      .then(
+        function(){
+          Wallet
+          .initParams()
+          .then(function(){
+            $scope.updateParams();
+            $scope.interval = $interval($scope.updateParams, 15000);
+          });
+        }
+      );
 
+      
       $scope.$on('$destroy', function(){
         $interval.cancel($scope.interval);
       })

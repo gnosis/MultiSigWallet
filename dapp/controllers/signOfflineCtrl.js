@@ -2,7 +2,7 @@
   function(){
     angular
     .module("multiSigWeb")
-    .controller("signOfflineCtrl", function($scope, Wallet, Utils, Transaction, wallet, $uibModalInstance){
+    .controller("signOfflineCtrl", function($scope, Wallet, Utils, Transaction, $uibModalInstance){
 
       $scope.ok = function(){
         $uibModalInstance.close($scope.nonce);

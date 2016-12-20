@@ -2,7 +2,7 @@
   function(){
     angular
     .module('multiSigWeb')
-    .service('Wallet', function($window, $http, $q, $rootScope){
+    .service('Wallet', function($window, $http, $q, $rootScope, $uibModal){
 
       // Init wallet factory object
       var wallet = {
@@ -102,6 +102,29 @@
           // Return raw transaction as hex string
           cb(null, EthJS.Util.bufferToHex(tx.serialize()));
         });
+      }
+
+      /**
+      * Get multisig nonce
+      **/
+      wallet.getWalletNonce = function(cb){
+        $uibModal
+        .open(
+          {
+            templateUrl: 'partials/modals/signOffline.html',
+            size: 'md',
+            controller: "signOfflineCtrl"
+          }
+        )
+        .result
+        .then(
+          function(nonce){
+            cb(null, nonce);
+          },
+          function(e){
+            cb(e);
+          }
+        )
       }
 
       /**
@@ -418,16 +441,17 @@
         var data = instance.addOwner.getData(owner.address);
 
         // Get nonce
-        wallet.getNonce(address, address, "0x0", data, function(e, nonce){
+        wallet.getWalletNonce(function(e, nonce){
           if(e){
             cb(e);
           }
           else{
+            console.log(nonce);
             var mainData = instance.submitTransaction.getData(address, "0x0", data, nonce, wallet.txDefaults());
             wallet.offlineTransaction(address, mainData, cb);
 
           }
-        }).call();
+        });
 
       }
 
@@ -457,7 +481,7 @@
         var data = instance.removeOwner.getData(owner.address);
 
         // Get nonce
-        wallet.getNonce(address, address, "0x0", data, function(e, nonce){
+        wallet.getWalletNonce(function(e, nonce){
           if(e){
             cb(e);
           }
@@ -465,7 +489,7 @@
             var mainData = instance.submitTransaction.getData(address, "0x0", data, nonce, wallet.txDefaults());
             wallet.offlineTransaction(address, mainData, cb);
           }
-        }).call();
+        });
       }
 
       /**
@@ -530,7 +554,7 @@
         var data = instance.changeRequirement.getData(required);
 
         // Get nonce
-        wallet.getNonce(address, address, "0x0", data, function(e, nonce){
+        wallet.getWalletNonce(function(e, nonce){
           if(e){
             cb(e);
           }
@@ -538,7 +562,7 @@
             var mainData = instance.submitTransaction.getData(address, "0x0", data, nonce, cb);
             wallet.offlineTransaction(address, mainData, cb);
           }
-        }).call();
+        });
       }
 
       /**

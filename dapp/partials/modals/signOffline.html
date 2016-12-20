@@ -4,20 +4,20 @@
   </h3>
 </div>
 
-<div class="modal-body">
-  <div class="form-group">
-    <label>
-      Nonce
-    </label>
-    <input class="form-control" type="text" ng-model="nonce" \>
+<form ng-submit="ok()">
+  <div class="modal-body">
+    <div class="form-group">
+      <label>
+        Nonce
+      </label>
+      <input class="form-control" type="text" ng-model="nonce" required \>
+    </div>
   </div>
-</div>
 
-<div class="modal-footer">
-  <button class="btn btn-default" type="button" ng-click="ok()">
-    Ok
-  </button>
-  <button class="btn btn-danger" type="button" ng-click="cancel()">
-    Cancel
-  </button>
-</div>
+  <div class="modal-footer">
+    <input class="btn btn-default" type="submit" value="Ok" \>    
+    <button class="btn btn-danger" type="button" ng-click="cancel()">
+      Cancel
+    </button>
+  </div>
+</form>

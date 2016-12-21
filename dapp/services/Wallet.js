@@ -483,6 +483,14 @@
       }
 
       /**
+      * Get add owner transaction data
+      **/
+      wallet.getAddOwnerData = function(address, owner){
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
+        return instance.addOwner.getData(owner.address);
+      }
+
+      /**
       * Remove owner
       */
       wallet.removeOwner = function(address, owner, cb){
@@ -702,7 +710,7 @@
       **/
       wallet.getUpdateLimitData = function(address, limit){
         var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
-        return instance.changeDailyLimit.getData(limit);        
+        return instance.changeDailyLimit.getData(limit);
       }
 
       /**

@@ -32,6 +32,20 @@
         });
       }
 
+      $scope.getNonce = function(){
+        var data = Wallet.getAddOwnerData(wallet.address, $scope.owner);        
+        Wallet.getNonce(wallet.address, wallet.address, "0x0", data, function(e, nonce){
+          if(e){
+            Utils.dangerAlert(e);
+          }
+          else{
+            // Open modal
+            $uibModalInstance.close();
+            Utils.success("Multisig Nonce: "+nonce.toNumber());
+          }
+        }).call();
+      }
+
       $scope.cancel = function () {
         $uibModalInstance.dismiss();
       };

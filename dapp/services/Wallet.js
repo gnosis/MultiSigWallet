@@ -122,7 +122,7 @@
           function(nonce){
             cb(null, nonce);
           },
-          function(e){            
+          function(e){
             cb(e);
           }
         )
@@ -573,6 +573,11 @@
         }).call();
       }
 
+      wallet.getUpdateRequiredData = function(address, required){
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
+        return instance.changeRequirement.getData(required);
+      }
+
       /**
       * Sign transaction offline
       */
@@ -587,7 +592,7 @@
           }
           else{
             var mainData = instance.submitTransaction.getData(address, "0x0", data, nonces.multisig, cb);
-            wallet.offlineTransaction(address, mainData, cb);
+            wallet.offlineTransaction(address, mainData, nonces.account, cb);
           }
         });
       }

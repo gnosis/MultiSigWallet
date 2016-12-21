@@ -40,6 +40,15 @@
         });
       }
 
+      $scope.getNonce = function(){
+        var data = Wallet.getUpdateRequiredData($scope.address, $scope.required);
+        Wallet.getNonce($scope.address, $scope.address, "0x0", data, function(e, nonce){
+          // Open modal
+          $uibModalInstance.close();
+          Utils.success("Multisig Nonce: "+nonce.toNumber());
+        }).call();
+      }
+
       $scope.cancel = function(){
         $uibModalInstance.dismiss();
       }

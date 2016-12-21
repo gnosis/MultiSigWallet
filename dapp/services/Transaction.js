@@ -91,7 +91,7 @@
       /**
       * Sign transaction without sending it to an ethereum node
       */
-      factory.signOffline = function(txObject, cb){        
+      factory.signOffline = function(txObject, cb){
         factory.getUserNonce(function(e, nonce){
           if(e){
             cb(e);
@@ -100,11 +100,11 @@
             // Create transaction object
             var txInfo = {
               to: txObject.to,
-              value: EthJS.Util.intToHex(txObject.value),
+              value: txObject.value,
               gasPrice: '0x' + Wallet.txParams.gasPrice.toNumber(16),
               gasLimit: EthJS.Util.intToHex(Wallet.txParams.gasLimit),
               nonce: EthJS.Util.intToHex(nonce)
-            }
+            }            
 
             var tx = new EthJS.Tx(txInfo);
 

@@ -73,15 +73,14 @@
       /**
       * For a given address and data, sign a transaction offline
       */
-      // TODO add NONCE
-      wallet.offlineTransaction = function(address, data, cb){
+      wallet.offlineTransaction = function(address, data, nonce, cb){
         // Create transaction object
         var txInfo = {
           to: address,
           value: EthJS.Util.intToHex(0),
           gasPrice: '0x' + wallet.txParams.gasPrice.toNumber(16),
           gasLimit: EthJS.Util.intToHex(wallet.txParams.gasLimit),
-          // nonce: EthJS.Util.intToHex(wallet.txParams.nonce),
+          nonce: nonce?nonce:EthJS.Util.intToHex(wallet.txParams.nonce),
           data: data
         }
 
@@ -109,7 +108,7 @@
       /**
       * Get multisig nonce
       **/
-      wallet.getWalletNonce = function(cb){
+      wallet.getWalletNonces = function(cb){
         $uibModal
         .open(
           {
@@ -123,7 +122,7 @@
           function(nonce){
             cb(null, nonce);
           },
-          function(e){
+          function(e){            
             cb(e);
           }
         )
@@ -318,6 +317,29 @@
         catch(e){}
       }
 
+      /**
+      * Get ethereum account nonce with text input prompted to the user
+      **/
+      wallet.getUserNonce = function(cb){
+        $uibModal
+        .open(
+          {
+            templateUrl: 'partials/modals/signOffline.html',
+            size: 'md',
+            controller: "signOfflineCtrl"
+          }
+        )
+        .result
+        .then(
+          function(nonce){
+            cb(null, nonce);
+          },
+          function(e){
+            cb(e);
+          }
+        );
+      }
+
       // Deploy wallet contract with constructor params
       wallet.deployWallet = function(owners, requiredConfirmations, cb){
         var MyContract = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi);
@@ -353,7 +375,9 @@
           data: wallet.json.multiSigWallet.binHex
         });
 
-        wallet.offlineTransaction(null, data, cb);
+        Transaction.getUserNonce(function(e, nonce){
+          wallet.offlineTransaction(null, data, nonce, cb);
+        });
 
       }
 
@@ -364,7 +388,9 @@
           data: wallet.json.multiSigDailyLimit.binHex
         });
 
-        wallet.offlineTransaction(null, data, cb);
+        wallet.getUserNonce(function(e, nonce){
+          wallet.offlineTransaction(null, data, nonce, cb);
+        });
       };
 
       wallet.getBalance = function(address, cb){
@@ -443,14 +469,13 @@
         var data = instance.addOwner.getData(owner.address);
 
         // Get nonce
-        wallet.getWalletNonce(function(e, nonce){
+        wallet.getWalletNonces(function(e, nonces){
           if(e){
             cb(e);
           }
           else{
-            console.log(nonce);
-            var mainData = instance.submitTransaction.getData(address, "0x0", data, nonce, wallet.txDefaults());
-            wallet.offlineTransaction(address, mainData, cb);
+            var mainData = instance.submitTransaction.getData(address, "0x0", data, nonces.multisig, wallet.txDefaults());
+            wallet.offlineTransaction(address, mainData, nonces.account, cb);
 
           }
         });
@@ -483,13 +508,13 @@
         var data = instance.removeOwner.getData(owner.address);
 
         // Get nonce
-        wallet.getWalletNonce(function(e, nonce){
+        wallet.getWalletNonces(function(e, nonces){
           if(e){
             cb(e);
           }
           else{
-            var mainData = instance.submitTransaction.getData(address, "0x0", data, nonce, wallet.txDefaults());
-            wallet.offlineTransaction(address, mainData, cb);
+            var mainData = instance.submitTransaction.getData(address, "0x0", data, nonces.multisig, wallet.txDefaults());
+            wallet.offlineTransaction(address, mainData, nonces.account, cb);
           }
         });
       }
@@ -556,12 +581,12 @@
         var data = instance.changeRequirement.getData(required);
 
         // Get nonce
-        wallet.getWalletNonce(function(e, nonce){
+        wallet.getWalletNonces(function(e, nonces){
           if(e){
             cb(e);
           }
           else{
-            var mainData = instance.submitTransaction.getData(address, "0x0", data, nonce, cb);
+            var mainData = instance.submitTransaction.getData(address, "0x0", data, nonces.multisig, cb);
             wallet.offlineTransaction(address, mainData, cb);
           }
         });
@@ -678,13 +703,13 @@
         );
 
         // Get nonce
-        wallet.getWalletNonce(function(e, nonce){
+        wallet.getWalletNonces(function(e, nonces){
           if(e){
             cb(e);
           }
           else{
-            var mainData = instance.submitTransaction.getData(address, "0x0", data, nonce, cb);
-            wallet.offlineTransaction(address, mainData, cb);
+            var mainData = instance.submitTransaction.getData(address, "0x0", data, nonces.multisig, cb);
+            wallet.offlineTransaction(address, mainData, nonces.account, cb);
           }
         });
       }
@@ -806,7 +831,7 @@
         var walletInstance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
 
         // Get nonce
-        wallet.getWalletNonce(function(e, nonce){
+        wallet.getWalletNonces(function(e, nonces){
           if(e){
             cb(e);
           }
@@ -815,11 +840,11 @@
               tx.to,
               tx.value,
               data,
-              nonce,
+              nonce.multisig,
               wallet.txDefaults()
             );
 
-            wallet.offlineTransaction(address, mainData, cb);
+            wallet.offlineTransaction(address, mainData, nonces.account, cb);
 
 
           }

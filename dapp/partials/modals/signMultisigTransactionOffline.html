@@ -4,18 +4,24 @@
   </h3>
 </div>
 
-<form ng-submit="ok()">
+<form ng-submit="ok()" name="form">
   <div class="modal-body">
     <div class="form-group">
       <label>
         Multisig Nonce
       </label>
-      <input class="form-control" type="text" ng-model="nonce" required \>
+      <input class="form-control" type="text" ng-model="nonces.multisig" required \>
+    </div>
+    <div class="form-group">
+      <label>
+        Account Nonce
+      </label>
+      <input class="form-control" type="text" ng-model="nonces.account" required \>
     </div>
   </div>
 
   <div class="modal-footer">
-    <input class="btn btn-default" type="submit" value="Ok" \>
+    <input class="btn btn-default" type="submit" value="Ok" ng-disabled="form.$invalid" \>
     <button class="btn btn-danger" type="button" ng-click="cancel()">
       Cancel
     </button>

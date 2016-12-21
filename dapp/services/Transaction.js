@@ -66,33 +66,10 @@
       }
 
       /**
-      * Get ethereum account nonce with text input prompted to the user
-      **/
-      factory.getUserNonce = function(cb){
-        $uibModal
-        .open(
-          {
-            templateUrl: 'partials/modals/signOffline.html',
-            size: 'md',
-            controller: "signOfflineCtrl"
-          }
-        )
-        .result
-        .then(
-          function(nonce){
-            cb(null, nonce);
-          },
-          function(e){
-            cb(e);
-          }
-        );
-      }
-
-      /**
       * Sign transaction without sending it to an ethereum node
       */
       factory.signOffline = function(txObject, cb){
-        factory.getUserNonce(function(e, nonce){
+        Wallet.getUserNonce(function(e, nonce){
           if(e){
             cb(e);
           }
@@ -104,7 +81,7 @@
               gasPrice: '0x' + Wallet.txParams.gasPrice.toNumber(16),
               gasLimit: EthJS.Util.intToHex(Wallet.txParams.gasLimit),
               nonce: EthJS.Util.intToHex(nonce)
-            }            
+            }
 
             var tx = new EthJS.Tx(txInfo);
 

@@ -5,11 +5,11 @@
     .controller("signMultisigTransactionOfflineCtrl", function($scope, Wallet, Utils, Transaction, $uibModalInstance){
 
       $scope.ok = function(){
-        $uibModalInstance.close($scope.nonce);
+        $uibModalInstance.close($scope.nonces);
       }
 
       $scope.cancel = function () {
-        $uibModalInstance.dismiss();
+        $uibModalInstance.dismiss("User rejected to sign transaction");
       };
 
     });

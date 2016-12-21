@@ -31,7 +31,7 @@
       $scope.signOffline = function(){
         Wallet.signUpdateRequired($scope.address, $scope.required, function(e, tx){
           if(e){
-            Utils.error(e);
+            Utils.dangerAlert(e);
           }
           else{
             $uibModalInstance.close();

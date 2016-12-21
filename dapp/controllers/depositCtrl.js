@@ -29,15 +29,14 @@
           {
             to: $scope.wallet.address,
             value: new EthJS.BN(new Web3().toWei($scope.amount)),
-            nonce: Wallet.txParams.nonce
           },
-          function(e, tx){
+          function(e, signed){
             if(e){
               Utils.dangerAlert(e);
             }
             else{
               $uibModalInstance.close();
-              Utils.signed(tx);
+              Utils.signed(signed);
             }
           });
         }

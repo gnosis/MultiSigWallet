@@ -73,6 +73,7 @@
       /**
       * For a given address and data, sign a transaction offline
       */
+      // TODO add NONCE
       wallet.offlineTransaction = function(address, data, cb){
         // Create transaction object
         var txInfo = {
@@ -80,7 +81,7 @@
           value: EthJS.Util.intToHex(0),
           gasPrice: '0x' + wallet.txParams.gasPrice.toNumber(16),
           gasLimit: EthJS.Util.intToHex(wallet.txParams.gasLimit),
-          nonce: EthJS.Util.intToHex(wallet.txParams.nonce),
+          // nonce: EthJS.Util.intToHex(wallet.txParams.nonce),
           data: data
         }
 
@@ -102,6 +103,7 @@
           // Return raw transaction as hex string
           cb(null, EthJS.Util.bufferToHex(tx.serialize()));
         });
+
       }
 
       /**
@@ -111,9 +113,9 @@
         $uibModal
         .open(
           {
-            templateUrl: 'partials/modals/signOffline.html',
+            templateUrl: 'partials/modals/signMultisigTransactionOffline.html',
             size: 'md',
-            controller: "signOfflineCtrl"
+            controller: "signMultisigTransactionOfflineCtrl"
           }
         )
         .result

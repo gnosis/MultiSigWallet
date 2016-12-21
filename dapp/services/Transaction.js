@@ -2,7 +2,7 @@
   function(){
     angular
     .module('multiSigWeb')
-    .service('Transaction', function(Wallet, $rootScope){
+    .service('Transaction', function(Wallet, $rootScope, $uibModal){
       var factory = {
         transactions: JSON.parse(localStorage.getItem("transactions")) || {}
       };
@@ -66,36 +66,65 @@
       }
 
       /**
+      * Get ethereum account nonce with text input prompted to the user
+      **/
+      factory.getUserNonce = function(cb){
+        $uibModal
+        .open(
+          {
+            templateUrl: 'partials/modals/signOffline.html',
+            size: 'md',
+            controller: "signOfflineCtrl"
+          }
+        )
+        .result
+        .then(
+          function(nonce){
+            cb(null, nonce);
+          },
+          function(e){
+            cb(e);
+          }
+        );
+      }
+
+      /**
       * Sign transaction without sending it to an ethereum node
       */
-      factory.signOffline = function(tx, cb){
-
-        // Create transaction object
-        var txInfo = {
-          to: tx.to,
-          value: EthJS.Util.intToHex(tx.value),
-          gasPrice: '0x' + Wallet.txParams.gasPrice.toNumber(16),
-          gasLimit: EthJS.Util.intToHex(Wallet.txParams.gasLimit),
-          nonce: EthJS.Util.intToHex(tx.nonce)
-        }
-
-        var tx = new EthJS.Tx(txInfo);
-
-        // Get transaction hash
-        var txHash = EthJS.Util.bufferToHex(tx.hash(false));
-
-        // Sign transaction hash
-        Wallet.web3.eth.sign(Wallet.coinbase, txHash, function(e, signature){
+      factory.signOffline = function(txObject, cb){        
+        factory.getUserNonce(function(e, nonce){
           if(e){
             cb(e);
           }
-          var signature = EthJS.Util.fromRpcSig(signature);
-          tx.v = EthJS.Util.intToHex(signature.v);
-          tx.r = EthJS.Util.bufferToHex(signature.r);
-          tx.s = EthJS.Util.bufferToHex(signature.s);
+          else{
+            // Create transaction object
+            var txInfo = {
+              to: txObject.to,
+              value: EthJS.Util.intToHex(txObject.value),
+              gasPrice: '0x' + Wallet.txParams.gasPrice.toNumber(16),
+              gasLimit: EthJS.Util.intToHex(Wallet.txParams.gasLimit),
+              nonce: EthJS.Util.intToHex(nonce)
+            }
 
-          // Return raw transaction as hex string
-          cb(null, EthJS.Util.bufferToHex(tx.serialize()));
+            var tx = new EthJS.Tx(txInfo);
+
+            // Get transaction hash
+            var txHash = EthJS.Util.bufferToHex(tx.hash(false));
+
+            // Sign transaction hash
+            Wallet.web3.eth.sign(Wallet.coinbase, txHash, function(e, signature){
+              if(e){
+                cb(e);
+              }
+              var signature = EthJS.Util.fromRpcSig(signature);
+              tx.v = EthJS.Util.intToHex(signature.v);
+              tx.r = EthJS.Util.bufferToHex(signature.r);
+              tx.s = EthJS.Util.bufferToHex(signature.s);
+
+              // Return raw transaction as hex string
+              cb(null, EthJS.Util.bufferToHex(tx.serialize()));
+            });
+          }
         });
       }
 
@@ -108,36 +137,9 @@
         // Get data
         var instance = Wallet.web3.eth.contract(abi).at(tx.to);
 
-        var data = instance[method].getData.apply(this, params);
+        tx.data = instance[method].getData.apply(this, params);
 
-        // Create transaction object
-        var txInfo = {
-          to: tx.to,
-          value: EthJS.Util.intToHex(tx.value||0),
-          gasPrice: '0x' + Wallet.txParams.gasPrice.toNumber(16),
-          gas: EthJS.Util.intToHex(Wallet.txParams.gasLimit),
-          nonce: EthJS.Util.intToHex(tx.nonce),
-          data: data
-        }
-
-        var tx = new EthJS.Tx(txInfo);
-
-        // Get transaction hash
-        var txHash = EthJS.Util.bufferToHex(tx.hash(false));
-
-        // Sign transaction hash
-        Wallet.web3.eth.sign(Wallet.coinbase, txHash, function(e, signature){
-          if(e){
-            cb(e);
-          }
-          var signature = EthJS.Util.fromRpcSig(signature);
-          tx.v = EthJS.Util.intToHex(signature.v);
-          tx.r = EthJS.Util.bufferToHex(signature.r);
-          tx.s = EthJS.Util.bufferToHex(signature.s);
-
-          // Return raw transaction as hex string
-          cb(null, EthJS.Util.bufferToHex(tx.serialize()));
-        });
+        factory.signOffline(tx, cb);
       }
 
       /**

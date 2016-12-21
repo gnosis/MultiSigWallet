@@ -31,13 +31,22 @@
       $scope.sign = function(){
         Wallet.signLimit($scope.address, $scope.limit, function(e, tx){
           if(e){
-            Utils.error(e);
+            Utils.dangerAlert(e);
           }
           else{
             $uibModalInstance.close();
             Utils.signed(tx);
           }
         });
+      }
+
+      $scope.getNonce = function(){
+        var data = Wallet.getUpdateLimitData($scope.address, $scope.limit);
+        Wallet.getNonce($scope.address, $scope.address, "0x0", data, function(e, nonce){
+          // Open modal
+          $uibModalInstance.close();
+          Utils.success("Multisig Nonce: "+nonce.toNumber());
+        }).call();
       }
 
       $scope.cancel = function(){

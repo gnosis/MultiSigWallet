@@ -698,6 +698,14 @@
       }
 
       /**
+      * Get update limit transaction data
+      **/
+      wallet.getUpdateLimitData = function(address, limit){
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        return instance.changeDailyLimit.getData(limit);        
+      }
+
+      /**
       * Sign update limit transaction
       **/
       wallet.signLimit = function(address, limit, cb){

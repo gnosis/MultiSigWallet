@@ -51,6 +51,18 @@
           )
         )
 
+        // Get required confirmations
+        batch.add(
+          Wallet
+          .getRequired(
+            $routeParams.address,
+            function(e, confirmations){
+              $scope.confirmations = confirmations;
+              $scope.$apply();
+            }
+          )
+        );
+
         // Get nonces
         batch.add(
           Wallet
@@ -115,7 +127,7 @@
       $scope.updateTransactions = function(){
         // Get all transaction hashes, with filters
         var from = $scope.itemsPerPage*($scope.currentPage-1);
-        var to = $scope.currentPage*$scope.itemsPerPage;        
+        var to = $scope.currentPage*$scope.itemsPerPage;
 
         Wallet.getTransactionHashes(
           $scope.wallet.address,
@@ -222,6 +234,24 @@
               }
             },
             controller: 'revokeCtrl'
+          }
+        );
+      }
+
+      $scope.executeTransaction = function(txHash){
+        $uibModal.open(
+          {
+            templateUrl: 'partials/modals/executeTransaction.html',
+            size: 'md',
+            resolve: {
+              address: function(){
+                return $scope.wallet.address;
+              },
+              txHash: function(){
+                return txHash;
+              }
+            },
+            controller: 'executeTransactionCtrl'
           }
         );
       }

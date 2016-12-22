@@ -398,7 +398,7 @@
             cb(e);
           }
           else{
-            wallet.offlineTransaction(null, data, nonce, cb);  
+            wallet.offlineTransaction(null, data, nonce, cb);
           }
         });
       };
@@ -771,6 +771,35 @@
       wallet.confirmTransactionOffline = function(address, txHash, cb){
         var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
         var mainData = instance.confirmTransaction.getData(txHash);
+
+        wallet.getUserNonce(function(e, nonce){
+          if(e){
+            cb(e);
+          }
+          else{
+            wallet.offlineTransaction(address, mainData, nonce, cb);
+          }
+        });
+      }
+
+      /**
+      * Execute multisig transaction, must be already signed by required owners
+      */
+      wallet.executeTransaction = function(address, txHash, cb){
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
+        instance.executeTransaction(
+          txHash,
+          wallet.txDefaults(),
+          cb
+        );
+      }
+
+      /**
+      * Signs transaction for execute multisig transaction, must be already signed by required owners
+      */
+      wallet.executeTransactionOffline = function(address, txHash, cb){
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
+        var mainData = instance.executeTransaction.getData(txHash);
 
         wallet.getUserNonce(function(e, nonce){
           if(e){

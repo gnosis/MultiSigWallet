@@ -375,8 +375,13 @@
           data: wallet.json.multiSigWallet.binHex
         });
 
-        Transaction.getUserNonce(function(e, nonce){
-          wallet.offlineTransaction(null, data, nonce, cb);
+        wallet.getUserNonce(function(e, nonce){
+          if(e){
+            cb(e);
+          }
+          else{
+            wallet.offlineTransaction(null, data, nonce, cb);
+          }
         });
 
       }
@@ -389,7 +394,12 @@
         });
 
         wallet.getUserNonce(function(e, nonce){
-          wallet.offlineTransaction(null, data, nonce, cb);
+          if(e){
+            cb(e);
+          }
+          else{
+            wallet.offlineTransaction(null, data, nonce, cb);  
+          }
         });
       };
 
@@ -506,6 +516,14 @@
             instance.submitTransaction(address, "0x0", data, nonce, wallet.txDefaults(), cb);
           }
         }).call();
+      }
+
+      /**
+      * Get remove owner data
+      **/
+      wallet.getRemoveOwnerData = function(address, owner){
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
+        return instance.removeOwner.getData(owner.address);
       }
 
       /**
@@ -754,7 +772,14 @@
         var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
         var mainData = instance.confirmTransaction.getData(txHash);
 
-        wallet.offlineTransaction(address, mainData, cb);
+        wallet.getUserNonce(function(e, nonce){
+          if(e){
+            cb(e);
+          }
+          else{
+            wallet.offlineTransaction(address, mainData, nonce, cb);
+          }
+        });
       }
 
       /**
@@ -808,7 +833,14 @@
 
         var data = instance.revokeConfirmation.getData(txHash);
 
-        wallet.offlineTransaction(address, data, cb);
+        wallet.getUserNonce(function(e, nonce){
+          if(e){
+            cb(e);
+          }
+          else{
+            wallet.offlineTransaction(address, data, nonce, cb);
+          }
+        });
       }
 
       /**
@@ -861,7 +893,7 @@
               tx.to,
               tx.value,
               data,
-              nonce.multisig,
+              nonces.multisig,
               wallet.txDefaults()
             );
 

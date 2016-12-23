@@ -15,6 +15,7 @@ contract TestToken {
         public
     {
         balances[_to] += _value;
+        totalSupply += _value;
     }
 
     function transfer(address _to, uint256 _value)

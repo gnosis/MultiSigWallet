@@ -18,7 +18,8 @@
 
     <div class="form-group">
       <label> ABI string </label>
-      <input type="text" class="form-control" ng-model="abi" ng-change="updateMethods()" ng-required="!tx.value">
+      <textarea type="text" rows="3" class="form-control" ng-model="abi" ng-change="updateMethods()" ng-required="!tx.value">
+      </textarea>
     </div>
 
     <div class="form-group">
@@ -32,16 +33,11 @@
         <div ng-repeat="param in abiArray[method.index].inputs" >
           <div ng-switch on="param.type">
             <label>{{param.name}}</label>
-            <!--
-            <input ng-switch-when="uint256" type="number" class="form-control" ng-model="params[$index]">
-            <input ng-switch-when="uint8" type="number" class="form-control" ng-model="params[$index]">
-            <input ng-switch-default type="text" class="form-control" ng-model="params[$index]">
-            -->
             <input ng-switch-default type="text" class="form-control" ng-model="params[$index]">
           </div>
         </div>
       </div>
-    </div>    
+    </div>
   </div>
   <div class="modal-footer">
     <button type="button" ng-click="send()" class="btn btn-default" ng-disabled="form.$invalid">

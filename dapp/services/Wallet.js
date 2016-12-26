@@ -942,7 +942,7 @@
 
           switch (method) {
             case "ba51a6df":
-              return "Update conf."
+              return "Update # required."
             case "7065cb48":
               return "Add owner";
             case "173825d9":

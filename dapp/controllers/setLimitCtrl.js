@@ -45,7 +45,7 @@
         Wallet.getNonce($scope.address, $scope.address, "0x0", data, function(e, nonce){
           // Open modal
           $uibModalInstance.close();
-          Utils.success("Multisig Nonce: "+nonce.toNumber());
+          Utils.nonce(nonce);
         }).call();
       }
 

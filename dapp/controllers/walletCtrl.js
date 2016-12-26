@@ -11,7 +11,7 @@
         function(){
             $scope.batch = Wallet.web3.createBatch();
             $scope.updateParams();
-            $scope.interval = $interval($scope.updateParams, 15000);
+            $scope.interval = $interval($scope.updateParams, 7000);
         }
       )
 

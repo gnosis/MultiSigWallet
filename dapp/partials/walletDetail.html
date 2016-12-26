@@ -150,7 +150,7 @@
             </button>
 
             <button type="button" class="btn btn-default"
-            ng-show="tx.confirmed && !tx.executed && tx.confirmations.length == confirmations"
+            ng-show="!tx.executed && tx.confirmations.length == confirmations"
             ng-click="executeTransaction(txHash)">
               Execute
             </button>

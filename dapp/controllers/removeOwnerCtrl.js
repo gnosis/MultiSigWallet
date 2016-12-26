@@ -42,7 +42,7 @@
           else{
             // Open modal
             $uibModalInstance.close();
-            Utils.success("Multisig Nonce: "+nonce.toNumber());
+            Utils.nonce(nonce);
           }
         }).call();
       }

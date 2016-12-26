@@ -4,7 +4,8 @@
       'multiSigWeb',
       [
         'ui.bootstrap',
-        'ngRoute'
+        'ngRoute',
+        'ngclipboard'
       ]
     )
   }

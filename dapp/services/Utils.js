@@ -2,7 +2,7 @@
   function(){
     angular
     .module("multiSigWeb")
-    .service("Utils", function(){
+    .service("Utils", function($uibModal){
       var factory = {};
 
       factory.errorToHtml = function(error){
@@ -82,6 +82,29 @@
             '</label> <textarea class="form-control" rows="5">'+ info + '</textarea></div>'
           }
         )
+      }
+
+      factory.nonce = function(walletNonce){
+        $uibModal.open({
+          templateUrl: 'partials/modals/retrieveNonce.html',
+          size: 'sm',
+          resolve: {
+            nonce: function(){
+              return walletNonce;
+            }
+          },
+          controller: function($scope, $uibModalInstance, nonce) {
+            $scope.nonce = nonce.toString();
+
+            $scope.copy = function () {
+              $uibModalInstance.close();
+            };
+
+            $scope.cancel = function () {
+              $uibModalInstance.dismiss();
+            };
+          }
+        });
       }
 
       return factory;

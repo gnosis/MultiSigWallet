@@ -25,7 +25,9 @@
           }
           else{
             $uibModalInstance.close();
-            Utils.success("Multisig Nonce: "+nonce);
+            // Open new modal with nonce
+            Utils.nonce(nonce);
+            // Utils.success("Multisig Nonce: "+nonce);
           }
         }).call();
 

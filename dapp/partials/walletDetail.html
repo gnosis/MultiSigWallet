@@ -1,22 +1,25 @@
 <div class="page-header">
-  <h1>
+  <h2>
     {{wallet.name}}
-  </h1>
+  </h2>
 </div>
 
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h2>
+    <h3>
       Owners
       <div class="pull-right">
         <button type="button" ng-click="addOwner()" class="btn btn-default">
           Add
         </button>
-        <button type="button" ng-click="hideOwners = !hideOwners" class="btn btn-default">
+        <button type="button" ng-click="hideOwners = true" class="btn btn-default" ng-hide="hideOwners">
           Hide
         </button>
+        <button type="button" ng-click="hideOwners = false" class="btn btn-default" ng-show="hideOwners">
+          Show
+        </button>
       </div>
-    </h2>
+    </h3>
   </div>
   <div class="panel-body collapse" uib-collapse="hideOwners">
     <table class="table table-hover">
@@ -57,7 +60,7 @@
 
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h2>
+    <h3>
       Multisig-Transactions
       <div class="pull-right form-inline">
         <select class="form-control" ng-model="showTxs" ng-change="updateParams()">
@@ -75,7 +78,7 @@
           Add
         </button>
       </div>
-    </h2>
+    </h3>
   </div>
   <div class="panel-body">
     <table class="table table-hover">

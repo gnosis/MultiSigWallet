@@ -30,7 +30,7 @@
       }
     })
     .filter('ether', function() {
-    return function(big_number) {
+      return function(big_number) {
       if(big_number) {
         var string_split = new Web3().toBigNumber(big_number).div('1e18').toString(10).split('.');
         var new_string = "";
@@ -49,5 +49,10 @@
       return null;
     };
   })
+  .filter('reverse', function() {
+    return function(items) {
+      return items.slice().reverse();
+    };
+  });
   }
 )();

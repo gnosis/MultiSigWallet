@@ -1,5 +1,6 @@
-<div class="page-header">
-  <h1>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3>
     Transactions
     <div class="pull-right">
       <button type="button" class="btn btn-default" ng-click="sendSignedTransaction()">
@@ -15,73 +16,78 @@
         Remove all
       </button>
     </div>
-  </h1>
-</div>
-<table class="table table-hover">
-  <thead>
-    <tr>
-      <th>
-        Destination
-      </th>
-      <th>
-        Value
-      </th>
-      <th>
-        Data
-      </th>
-      <th>
-        Nonce
-      </th>
-      <th>
-        Mined
-      </th>
-      <th>
-        Logs
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr ng-repeat="transaction in transactions | objectToArray| limitTo:currentPage*itemsPerPage:itemsPerPage*(currentPage-1) track by $index">
-      <td>
-        <a ng-href="https://testnet.etherscan.io/tx/{{transaction.txHash}}">
-          {{transaction.info.to|limitTo:20}}...
-        </a>
-      </td>
-      <td>
-        {{transaction.info.value | ether}}
-      </td>
-      <td>
-          {{transaction.info.input | limitTo: 20}}...
-      </td>
-      <td>
-        {{transaction.info.nonce}}
-      </td>
-      <td>
-        <span ng-show="transaction.receipt">
-          Yes
-        </span>
-        <span ng-hide="transaction.receipt">
-          No
-        </span>
-      </td>
-      <td>
-        <ul>
-          <li ng-repeat="log in transaction.receipt.logs">
-            {{log}}
-          </li>
-        </ul>
-      </td>
-      <td>
-        <button class="btn btn-default" ng-click="remove(transaction.txHash)">
-          <i class="fa fa-minus text-danger">
-          </i>
-        </button>
-      </td>
-    </tr>
-  </tbody>
-</table>
-<div ng-hide="totalItems" class="text-center">
-  No transactions
-</div>
+  </h3>
+  </div>
+  <div class="panel-body">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>
+            Destination
+          </th>
+          <th>
+            Value
+          </th>
+          <th>
+            Data
+          </th>
+          <th>
+            Nonce
+          </th>
+          <th>
+            Mined
+          </th>
+          <th>
+            Logs
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="transaction in transactions | objectToArray| limitTo:currentPage*itemsPerPage:itemsPerPage*(currentPage-1) track by $index">
+          <td>
+            <a ng-href="https://testnet.etherscan.io/tx/{{transaction.txHash}}">
+              {{transaction.info.to|limitTo:20}}...
+            </a>
+          </td>
+          <td>
+            {{transaction.info.value | ether}}
+          </td>
+          <td>
+              {{transaction.info.input | limitTo: 20}}...
+          </td>
+          <td>
+            {{transaction.info.nonce}}
+          </td>
+          <td>
+            <span ng-show="transaction.receipt">
+              Yes
+            </span>
+            <span ng-hide="transaction.receipt">
+              No
+            </span>
+          </td>
+          <td>
+            <!--
+            <ul>
+              <li ng-repeat="log in transaction.receipt.logs">
+                {{log}}
+              </li>
+            </ul>
+          -->
+          </td>
+          <td>
+            <button class="btn btn-default" ng-click="remove(transaction.txHash)">
+              <i class="fa fa-minus text-danger">
+              </i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div ng-hide="totalItems" class="text-center">
+      No transactions
+    </div>
 
-<ul uib-pagination total-items="totalItems" ng-model="currentPage" items-per-page="itemsPerPage"></ul>
+    <ul uib-pagination total-items="totalItems" ng-model="currentPage" items-per-page="itemsPerPage"></ul>
+  </div>
+</div>

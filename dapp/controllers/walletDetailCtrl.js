@@ -12,6 +12,7 @@
       $scope.itemsPerPage = 5;
       $scope.totalItems = 0;
       $scope.showTxs = "all";
+      $scope.hideOwners = true;
 
       $scope.updateParams = function(){
 
@@ -323,7 +324,7 @@
           },
           controller: 'walletTransactionCtrl'
         });
-      }      
+      }
 
     });
   }

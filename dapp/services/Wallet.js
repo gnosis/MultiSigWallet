@@ -703,6 +703,18 @@
       }
 
       /**
+      *
+      **/
+      wallet.spentToday = function(address, cb){
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        return wallet.callRequest(
+          instance.spentToday,
+          [],
+          cb
+        );
+      }
+
+      /**
       * Change daily limit
       **/
       wallet.updateLimit = function(address, limit, cb){
@@ -954,8 +966,13 @@
           }
         }
         else{
-            if(tx.to){              
-              return tx.to.slice(0, 20) + "...";
+            if(tx.to){
+              if(wallet.wallets[tx.to] && wallet.wallets[tx.to].name){
+                return wallet.wallets[tx.to].name;
+              }
+              else{
+                return tx.to.slice(0, 20) + "...";
+              }
             }
         }
 

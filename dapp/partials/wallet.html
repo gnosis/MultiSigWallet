@@ -29,6 +29,9 @@
             Daily limit
           </th>
           <th>
+            Limit for today
+          </th>
+          <th>
             Actions
           </th>
         </tr>
@@ -49,6 +52,9 @@
           </td>
           <td>
             {{wallet.limit|ether}}
+          </td>
+          <td>
+            {{wallet.limit.minus(wallet.spent)|ether}}
           </td>
           <td>
             <button type="button" class="btn btn-default" ng-click="deposit(wallet)">

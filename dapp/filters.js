@@ -29,6 +29,18 @@
         }
       }
     })
+    .filter('txData', function(){
+      return function(data){
+        if(data){
+          if(data == "0x"){
+            return "";
+          }
+          else{
+            return data.slice(0, 20) + "...";
+          }
+        }
+      }
+    })
     .filter('ether', function() {
       return function(big_number) {
       if(big_number) {

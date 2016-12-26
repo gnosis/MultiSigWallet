@@ -50,6 +50,16 @@
               }
             )
           );
+
+          $scope.batch.add(
+            Wallet.spentToday(
+              address,
+              function(e, spent){
+                $scope.wallets[address].spent = spent;
+                $scope.$apply();
+              }
+            )
+          )
         });
         $scope.batch.execute();
       }

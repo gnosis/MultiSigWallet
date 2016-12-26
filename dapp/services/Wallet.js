@@ -954,8 +954,8 @@
           }
         }
         else{
-            if(tx.to){
-              return tx.to.slice(20) + "...";
+            if(tx.to){              
+              return tx.to.slice(0, 20) + "...";
             }
         }
 

@@ -4,7 +4,9 @@
     .module("multiSigWeb")
     .controller("sendTransactionCtrl", function($scope, Wallet, Utils, Transaction, $uibModalInstance){
       $scope.methods = [];
-      $scope.tx = {};
+      $scope.tx = {
+        value: 0
+      };
       $scope.params = [];
 
       $scope.$watch(
@@ -17,6 +19,7 @@
       );
 
       $scope.send = function(){
+        $scope.tx.value = new Web3().toBigNumber($scope.tx.value).mul('1e18');
         // if method, use contract instance method
         if($scope.method){
           Transaction.sendMethod($scope.tx, $scope.abiArray, $scope.method.name, $scope.params, function(e, tx){
@@ -43,6 +46,7 @@
       }
 
       $scope.signOff = function(){
+        $scope.tx.value = "0x" + new Web3().toBigNumber($scope.tx.value).mul('1e18').toString(16);
         if($scope.method){
           Transaction.signMethodOffline($scope.tx, $scope.abiArray, $scope.method.name, $scope.params, function(e, tx){
             $uibModalInstance.close();

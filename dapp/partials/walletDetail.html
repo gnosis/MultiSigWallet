@@ -73,7 +73,7 @@
         </select>
         <button type="button" class="btn btn-default" ng-click="addTransaction()">
           Add
-        </button>        
+        </button>
       </div>
     </h2>
   </div>
@@ -110,7 +110,7 @@
             {{getType(tx)}}
           </td>
           <td>
-            {{tx.value|limitTo:20}}
+            {{tx.value|ether}}
           </td>
           <td>
             {{tx.data | limitTo:20}}...

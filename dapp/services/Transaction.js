@@ -82,7 +82,7 @@
               gasLimit: EthJS.Util.intToHex(Wallet.txParams.gasLimit),
               nonce: EthJS.Util.intToHex(nonce)
             }
-
+            console.log(txInfo);
             var tx = new EthJS.Tx(txInfo);
 
             // Get transaction hash

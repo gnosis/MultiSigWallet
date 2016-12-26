@@ -13,6 +13,9 @@
       $scope.method = null;
       $scope.methods = [];
       $scope.params = [];
+      $scope.tx = {
+        value: 0
+      };
 
       // Parse abi
       $scope.updateMethods = function(){
@@ -25,6 +28,7 @@
       }
 
       $scope.send = function(){
+        $scope.tx.value = new Web3().toBigNumber($scope.tx.value).mul('1e18');
         Wallet.submitTransaction(
           $scope.wallet.address,
           $scope.tx,
@@ -52,6 +56,7 @@
       };
 
       $scope.signOff = function(){
+        $scope.tx.value = "0x" + new Web3().toBigNumber($scope.tx.value).mul('1e18').toString(16);
         Wallet.signTransaction(
           $scope.wallet.address,
           $scope.tx,
@@ -71,6 +76,7 @@
       }
 
       $scope.getNonce = function(){
+        $scope.tx.value = "0x" + new Web3().toBigNumber($scope.tx.value).mul('1e18').toString(16);
         if($scope.abiArray){
           var instance = Wallet.web3.eth.contract($scope.abiArray).at($scope.tx.to);
           $scope.data = instance[$scope.method.name].getData.apply(this, $scope.params);

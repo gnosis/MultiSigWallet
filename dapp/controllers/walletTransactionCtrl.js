@@ -70,6 +70,29 @@
         )
       }
 
+      $scope.getNonce = function(){
+        if($scope.abiArray){
+          var instance = Wallet.web3.eth.contract($scope.abiArray).at($scope.tx.to);
+          $scope.data = instance[$scope.method.name].getData.apply(this, $scope.params);
+        }
+        else{
+          $scope.data = "0x0";
+        }
+
+        Wallet.getNonce(wallet.address, $scope.tx.to, $scope.tx.value, $scope.data, function(e, nonce){
+          if(e){
+            Utils.dangerAlert(e);
+          }
+          else{
+            $uibModalInstance.close();
+            // Open new modal with nonce
+            Utils.nonce(nonce);
+            // Utils.success("Multisig Nonce: "+nonce);
+          }
+        }).call();
+
+      }
+
       $scope.cancel = function(){
         $uibModalInstance.dismiss();
       }

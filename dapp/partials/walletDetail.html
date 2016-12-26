@@ -45,7 +45,7 @@
             <button type="button" ng-click="editOwner(owner)" class="btn btn-default">
               Edit
             </button>
-            <button type="button" ng-click="removeOwner(owner)" class="btn btn-danger">
+            <button type="button" ng-click="removeOwner(owner)" class="btn btn-danger" ng-hide="owners.length == 1">
               Remove
             </button>
           </td>

@@ -2,64 +2,110 @@
   <html>
     <head>
       <!-- 3rd party Stylesheets -->
-      <link href="/bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
-      <link href="/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-      <link href="/bower_components/bootstrap3-dialog/dist/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
+      <link href="./bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+      <link href="./bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+      <link href="./bower_components/bootstrap3-dialog/dist/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
 
       <!-- 3rd party Script -->
-      <script src="/bower_components/angular/angular.min.js"></script>
-      <script src="/bower_components/angular-animate/angular-animate.min.js"></script>
-      <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-      <script src="/bower_components/jquery/dist/jquery.min.js"></script>
-      <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-      <script src="/bower_components/angular-route/angular-route.min.js"></script>
-      <script src="/bower_components/angular-touch/angular-touch.min.js"></script>
-      <script src="/bower_components/web3/dist/web3.min.js"></script>
-      <script src="/bower_components/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js"></script>
-      <script src="/bower_components/ethereum-tx/dist/ethereumjs-tx.js"></script>
-      <script src="/bower_components/moment/min/moment-with-locales.min.js"></script>
+      <script src="./bower_components/angular/angular.min.js"></script>
+      <script src="./bower_components/angular-animate/angular-animate.min.js"></script>
+      <script src="./bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+      <script src="./bower_components/jquery/dist/jquery.min.js"></script>
+      <script src="./bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+      <script src="./bower_components/angular-route/angular-route.min.js"></script>
+      <script src="./bower_components/angular-touch/angular-touch.min.js"></script>
+      <script src="./bower_components/web3/dist/web3.min.js"></script>
+      <script src="./bower_components/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js"></script>
+      <script src="./bower_components/ethereum-tx/dist/ethereumjs-tx.js"></script>
+      <script src="./bower_components/moment/min/moment-with-locales.min.js"></script>
       <script src="https://cdn.rawgit.com/zenorocha/clipboard.js/master/dist/clipboard.min.js"></script>
-      <script src="/bower_components/ngclipboard/dist/ngclipboard.min.js"></script>
+      <script src="./bower_components/ngclipboard/dist/ngclipboard.min.js"></script>
 
       <!-- Custom Stylesheets -->
-      <link href="/css/app.css" rel="stylesheet" type="text/css" />
+      <link href="./css/app.css" rel="stylesheet" type="text/css" />
 
       <!-- App -->
-      <script src="/config.js"></script>
-      <script src="/app.js"></script>
-      <script src="/filters.js"></script>
-      <script src="/routes.js"></script>
-      <script src="/abi.json"></script>
-      <script src="/directives.js"></script>
+      <script src="./config.js"></script>
+      <script src="./app.js"></script>
+      <script src="./filters.js"></script>
+      <script src="./routes.js"></script>
+      <script src="./abi.json"></script>
+      <script src="./directives.js"></script>
 
       <!-- Services -->
-      <script src="/services/Wallet.js"></script>
-      <script src="/services/Utils.js"></script>
-      <script src="/services/Transaction.js"></script>
+      <script src="./services/Wallet.js"></script>
+      <script src="./services/Utils.js"></script>
+      <script src="./services/Transaction.js"></script>
 
       <!-- Controllers -->
-      <script src="/controllers/navCtrl.js"></script>
-      <script src="/controllers/walletCtrl.js"></script>
-      <script src="/controllers/transactionCtrl.js"></script>
-      <script src="/controllers/signedTransactionCtrl.js"></script>
-      <script src="/controllers/sendTransactionCtrl.js"></script>
-      <script src="/controllers/walletDetailCtrl.js"></script>
-      <script src="/controllers/updateRequiredCtrl.js"></script>
-      <script src="/controllers/depositCtrl.js"></script>
-      <script src="/controllers/walletTransactionCtrl.js"></script>
-      <script src="/controllers/newWalletCtrl.js"></script>
-      <script src="/controllers/setLimitCtrl.js"></script>
-      <script src="/controllers/revokeCtrl.js"></script>
-      <script src="/controllers/confirmTransactionCtrl.js"></script>
-      <script src="/controllers/addOwnerCtrl.js"></script>
-      <script src="/controllers/removeOwnerCtrl.js"></script>
-      <script src="/controllers/signOfflineCtrl.js"></script>
-      <script src="/controllers/signMultisigTransactionOfflineCtrl.js"></script>
-      <script src="/controllers/executeTransactionCtrl.js"></script>
+      <script src="./controllers/navCtrl.js"></script>
+      <script src="./controllers/walletCtrl.js"></script>
+      <script src="./controllers/transactionCtrl.js"></script>
+      <script src="./controllers/signedTransactionCtrl.js"></script>
+      <script src="./controllers/sendTransactionCtrl.js"></script>
+      <script src="./controllers/walletDetailCtrl.js"></script>
+      <script src="./controllers/updateRequiredCtrl.js"></script>
+      <script src="./controllers/depositCtrl.js"></script>
+      <script src="./controllers/walletTransactionCtrl.js"></script>
+      <script src="./controllers/newWalletCtrl.js"></script>
+      <script src="./controllers/setLimitCtrl.js"></script>
+      <script src="./controllers/revokeCtrl.js"></script>
+      <script src="./controllers/confirmTransactionCtrl.js"></script>
+      <script src="./controllers/addOwnerCtrl.js"></script>
+      <script src="./controllers/removeOwnerCtrl.js"></script>
+      <script src="./controllers/signOfflineCtrl.js"></script>
+      <script src="./controllers/signMultisigTransactionOfflineCtrl.js"></script>
+      <script src="./controllers/executeTransactionCtrl.js"></script>
 
     </head>
     <body ng-app="multiSigWeb">
-      <div ng-include="'/partials/nav.html'"></div>
+      <nav class="navbar navbar-default" role="navigation" ng-controller="navCtrl">
+          <div class="navbar-header">
+
+              <!-- note the ng-init and ng-click here: -->
+              <button type="button" class="navbar-toggle" ng-click="navCollapsed = !navCollapsed">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="#">MultiSigWeb</a>
+          </div>
+
+          <div class="collapse navbar-collapse" uib-collapse="navCollapsed">
+              <ul class="nav navbar-nav">
+                <li>
+                  <a href="#/wallets">
+                    Wallets
+                  </a>
+                </li>
+                <li>
+                  <a href="#/transactions">
+                    Transactions
+                  </a>
+                </li>
+              </ul>
+
+              <ul class="nav navbar-nav pull-right" ng-show="loggedIn">
+                <li uib-dropdown>
+                 <a href="#" uib-dropdown-toggle>
+                   <!-- <i class="fa fa-address-book-o" aria-hidden="true"></i> -->
+                   Account {{coinbase|limitTo:20}}... <b class="caret"></b>
+                 </a>
+                 <ul class="dropdown-menu">
+                    <li ng-repeat="account in accounts"><a href="" ng-click="selectAccount(account)">{{account}}</a></li>
+                 </ul>
+                </li>
+                <li>
+                  <p class="navbar-text"> Balance: {{balance|ether}} </p>
+                </li>
+                <li>
+                  <p class="navbar-text"> Nonce: {{nonce}} </p>
+                </li>
+              </ul>
+          </div>
+      </nav>
+
       <div class="container">
         <ng-view></ng-view>
       </div>

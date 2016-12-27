@@ -10,6 +10,7 @@
           }
           else{
             // Update owners array
+            wallet.owners[$scope.owner.address] = $scope.owner;
             Wallet.updateWallet(wallet);
             Utils.notification("Transaction sent, will be mined in next 20s");
             Transaction.add({txHash: tx, callback: function(){

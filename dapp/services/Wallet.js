@@ -969,7 +969,7 @@
             if(tx.to){
               if(wallet.wallets[tx.to] && wallet.wallets[tx.to].name){
                 return wallet.wallets[tx.to].name;
-              }
+              }              
               else{
                 return tx.to.slice(0, 20) + "...";
               }

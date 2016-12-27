@@ -60,13 +60,22 @@
                   }
                   else{
                     $uibModalInstance.close();
-                    Utils.success("Nonce: "+count);  
+                    Utils.success("Nonce: "+count);
                   }
                 }
               );
             }
           }
         });
+      }
+
+      $scope.getTo = function(to){
+        if(Wallet.wallets[to] && Wallet.wallets[to].name){
+          return Wallet.wallets[to].name;
+        }
+        else{
+          return to.slice(0, 20) + "...";
+        }
       }
 
     });

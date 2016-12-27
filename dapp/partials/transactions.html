@@ -46,7 +46,7 @@
         <tr ng-repeat="transaction in transactions | objectToArray| limitTo:currentPage*itemsPerPage:itemsPerPage*(currentPage-1) track by $index">
           <td>
             <a ng-href="https://testnet.etherscan.io/tx/{{transaction.txHash}}">
-              {{transaction.info.to|limitTo:20}}...
+              {{getTo(transaction.info.to)}}
             </a>
           </td>
           <td>

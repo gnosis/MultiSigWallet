@@ -125,6 +125,37 @@
         return Wallet.getType(tx);
       }
 
+      $scope.getParam = function(tx){
+        if(tx.data && tx.data.length > 3){
+          var method = tx.data.slice(2, 10);
+
+          switch (method) {
+            case "ba51a6df":
+              return new Web3().toBigNumber("0x" + tx.data.slice(11)).toString();
+            case "7065cb48":
+              var owner = '0x' + new Web3().toBigNumber("0x" + tx.data.slice(11)).toString(16);
+              if($scope.wallet.owners && $scope.wallet.owners[owner] && $scope.wallet.owners[owner].name){
+                return $scope.wallet.owners[owner].name;
+              }
+              else{
+                return owner;
+              }
+            case "173825d9":
+              var owner = '0x' + new Web3().toBigNumber("0x" + tx.data.slice(11)).toString(16);
+              return owner;
+            case "cea08621":
+              return new Web3().toBigNumber("0x" + tx.data.slice(11)).div('1e18').toString() + " ETH"
+            default:
+              return tx.data.slice(0,20);
+          }
+        }
+        else{
+          if( tx.data && tx.data.length> 3){
+            return tx.data.slice(0, 20) + "...";
+          }
+        }
+      }
+
       $scope.updateTransactions = function(){
         // Get all transaction hashes, with filters
         var from = $scope.itemsPerPage*($scope.currentPage-1);

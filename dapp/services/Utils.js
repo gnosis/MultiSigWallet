@@ -74,14 +74,27 @@
         });
       }
 
-      factory.signed = function(info){
-        BootstrapDialog.show(
-          {
-            type: BootstrapDialog.TYPE_SUCCESS,
-            message: '<div class="form-group"><label>Signed transaction: '+
-            '</label> <textarea class="form-control" rows="5">'+ info + '</textarea></div>'
+      factory.signed = function(tx){
+        $uibModal.open({
+          templateUrl: 'partials/modals/showSignedTransaction.html',
+          size: 'lg',
+          resolve: {
+            signed: function(){
+              return tx;
+            }
+          },
+          controller: function($scope, $uibModalInstance, signed) {
+            $scope.signed = signed;
+
+            $scope.copy = function () {
+              $uibModalInstance.close();
+            };
+
+            $scope.cancel = function () {
+              $uibModalInstance.dismiss();
+            };
           }
-        )
+        });
       }
 
       factory.nonce = function(walletNonce){

@@ -27,16 +27,18 @@
       <select ng-model="method" ng-options="method.name for method in methods track by method.index"
        ng-required="tx.abi" class="form-control" ng-change="setMethod()"></select>
     </div>
-    <div class="form-group row col-xs-12" ng-show="method">
-      <h2 class="col-xs-2"> Params </h2>
-      <div class="col-xs-10">
-        <div ng-repeat="param in abiArray[method.index].inputs" >
-          <div ng-switch on="param.type">
-            <label>{{param.name}}</label>
-            <input ng-switch-default type="text" class="form-control" ng-model="params[$index]">
-          </div>
+    <div class="form-group" ng-show="method">
+      <h3>
+        Params
+      </h3>
+
+      <div ng-repeat="param in abiArray[method.index].inputs" >
+        <div ng-switch on="param.type">
+          <label>{{param.name}}</label>
+          <input ng-switch-default type="text" class="form-control" ng-model="params[$index]">
         </div>
       </div>
+
     </div>
   </div>
   <div class="modal-footer">

@@ -16,5 +16,8 @@
   "dependencies": {
     "grunt": "^1.0.1",
     "grunt-http-server": "^2.0.0"
+  },
+  "devDependencies": {
+    "grunt-angular-templates": "^1.1.0"
   }
 }

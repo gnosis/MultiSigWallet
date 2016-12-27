@@ -56,12 +56,18 @@ module.exports = function(grunt) {
             // }
 
         }
+    },
+    ngtemplates:  {
+      multiSigWeb:        {
+        src:      'partials/**.html',
+        dest:     'partials.js'
+      }
     }
   });
 
   // Load the plugin that provides the http server.
   grunt.loadNpmTasks('grunt-http-server');
+  grunt.loadNpmTasks('grunt-angular-templates');
 
-  grunt.registerTask('default', ['http-server']);
-
+  grunt.registerTask('default', ['ngtemplates', 'http-server']);
 };

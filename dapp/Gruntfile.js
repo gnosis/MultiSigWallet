@@ -59,7 +59,7 @@ module.exports = function(grunt) {
     },
     ngtemplates:  {
       multiSigWeb:        {
-        src:      'partials/**.html',
+        src:      ['partials/**.html', 'partials/modals/**.html'],
         dest:     'partials.js'
       }
     }

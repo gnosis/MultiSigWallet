@@ -78,7 +78,7 @@
             var txInfo = {
               to: txObject.to,
               value: txObject.value,
-              gasPrice: '0x' + Wallet.txParams.gasPrice.toNumber(16),
+              gasPrice: EthJS.Util.intToHex(Wallet.txParams.gasPrice),
               gasLimit: EthJS.Util.intToHex(Wallet.txParams.gasLimit),
               nonce: EthJS.Util.intToHex(nonce)
             }

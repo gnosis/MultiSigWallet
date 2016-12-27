@@ -11,8 +11,8 @@
         json : abiJSON,
         txParams: {
           nonce: null,
-          gasPrice: null,
-          gasLimit: null
+          gasPrice: txDefault.gasPrice,
+          gasLimit: txDefault.gasLimit
         },
         accounts: [],
         coinbase: null
@@ -36,7 +36,7 @@
       **/
       wallet.txDefaults = function(tx){
         var txParams = {
-          gasPrice: '0x' + wallet.txParams.gasPrice.toNumber(16),
+          gasPrice: EthJS.Util.intToHex(wallet.txParams.gasPrice),
           gas: EthJS.Util.intToHex(wallet.txParams.gasLimit),
           nonce: EthJS.Util.intToHex(wallet.txParams.nonce),
           from: wallet.coinbase
@@ -78,7 +78,7 @@
         var txInfo = {
           to: address,
           value: EthJS.Util.intToHex(0),
-          gasPrice: '0x' + wallet.txParams.gasPrice.toNumber(16),
+          gasPrice: EthJS.Util.intToHex(wallet.txParams.gasPrice),
           gasLimit: EthJS.Util.intToHex(wallet.txParams.gasLimit),
           nonce: nonce?nonce:EthJS.Util.intToHex(wallet.txParams.nonce),
           data: data
@@ -190,7 +190,7 @@
               cb(e);
             }
             else{
-              wallet.txParams.gasPrice = gasPrice;
+              wallet.txParams.gasPrice = gasPrice.toNumber();
               cb(null, gasPrice);
             }
           }
@@ -969,7 +969,7 @@
             if(tx.to){
               if(wallet.wallets[tx.to] && wallet.wallets[tx.to].name){
                 return wallet.wallets[tx.to].name;
-              }              
+              }
               else{
                 return tx.to.slice(0, 20) + "...";
               }

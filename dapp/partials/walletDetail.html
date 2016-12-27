@@ -108,49 +108,49 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="(txHash, tx) in transactions track by $index">
+        <tr ng-repeat="txHash in txHashes track by $index">
           <td>
-            {{getType(tx)}}
+            {{getType(transactions[txHash])}}
           </td>
           <td>
-            {{tx.value|ether}}
+            {{transactions[txHash].value|ether}}
           </td>
           <td>
-            {{getParam(tx)}}
+            {{getParam(transactions[txHash])}}
           </td>
           <td>
-            {{tx.nonce}}
+            {{transactions[txHash].nonce}}
           </td>
           <td>
-            <ul ng-repeat="owner in tx.confirmations">
+            <ul ng-repeat="owner in transactions[txHash].confirmations">
               <li>
                 {{wallet.owners[owner].name}}
               </li>
             </ul>
           </td>
           <td>
-            <span ng-show="tx.executed">
+            <span ng-show="transactions[txHash].executed">
               Yes
             </span>
-            <span ng-hide="tx.executed">
+            <span ng-hide="transactions[txHash].executed">
               No
             </span>
           </td>
           <td>
             <button type="button" class="btn btn-default"
-            ng-hide="tx.executed || tx.confirmed"
+            ng-hide="transactions[txHash].executed || transactions[txHash].confirmed"
             ng-click="confirmTransaction(txHash)">
               Confirm
             </button>
 
             <button type="button" class="btn btn-default"
-            ng-show="tx.confirmed && !tx.executed"
+            ng-show="transactions[txHash].confirmed && !transactions[txHash].executed"
             ng-click="revokeConfirmation(txHash)">
               Revoke Confirmation
             </button>
 
             <button type="button" class="btn btn-default"
-            ng-show="!tx.executed && tx.confirmations.length == confirmations"
+            ng-show="!transactions[txHash].executed && transactions[txHash].confirmations.length == confirmations"
             ng-click="executeTransaction(txHash)">
               Execute
             </button>

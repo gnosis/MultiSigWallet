@@ -158,19 +158,19 @@
 
       $scope.updateTransactions = function(){
         // Get all transaction hashes, with filters
-        var from = $scope.itemsPerPage*($scope.currentPage-1);
-        var to = $scope.currentPage*$scope.itemsPerPage;
+        var from = $scope.totalItems-$scope.itemsPerPage*($scope.currentPage);
+        var to = $scope.totalItems-($scope.currentPage-1)*$scope.itemsPerPage;        
 
         Wallet.getTransactionHashes(
           $scope.wallet.address,
-          from,
-          to>$scope.totalItems?$scope.totalItems:to,
+          from>0?from:0,
+          to,
           $scope.showPending,
           $scope.showExecuted,
           function(e, hashes){
             var txBatch = Wallet.web3.createBatch();
             $scope.transactions = {};
-
+            $scope.txHashes = hashes.slice(0).reverse();
             hashes.map(function(tx){
               $scope.transactions[tx] = {};
               // Get transaction info

@@ -1,6 +1,34 @@
 angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
   'use strict';
 
+  $templateCache.put('partials/settings.html',
+    "<div class=\"panel panel-default\">\n" +
+    "  <div class=\"panel-heading\">\n" +
+    "    <h3>\n" +
+    "    Settings\n" +
+    "  </h3>\n" +
+    "  </div>\n" +
+    "  <div class=\"panel-body\">\n" +
+    "    <form ng-submit=\"update()\">\n" +
+    "      <div class=\"form-group\">\n" +
+    "        <label>Ethereum node</label>\n" +
+    "        <input type=\"url\" ng-model=\"config.ethereumNode\" class=\"form-control\" />\n" +
+    "      </div>\n" +
+    "      <div class=\"form-group\">\n" +
+    "        <label>Gas limit</label>\n" +
+    "        <input type=\"number\" ng-model=\"config.gasLimit\" class=\"form-control\" />\n" +
+    "      </div>\n" +
+    "      <div class=\"form-group\">\n" +
+    "        <label>Gas price</label>\n" +
+    "        <input type=\"number\" ng-model=\"config.gasPrice\" class=\"form-control\" />\n" +
+    "      </div>\n" +
+    "      <input type=\"submit\" class=\"btn btn-default\" value=\"Update\" />\n" +
+    "    </form>\n" +
+    "  </div>\n" +
+    "</div>\n"
+  );
+
+
   $templateCache.put('partials/transactions.html',
     "<div class=\"panel panel-default\">\n" +
     "  <div class=\"panel-heading\">\n" +

@@ -23,7 +23,11 @@
       .when("/wallet/:address/transaction", {
         controller: 'walletTransactionCtrl',
         templateUrl: 'partials/walletTransaction.html'
-      })      
+      })
+      .when("/settings", {
+        controller: 'settingsCtrl',
+        templateUrl: 'partials/settings.html'
+      })
       .otherwise({
         redirectTo: '/wallets'
       });

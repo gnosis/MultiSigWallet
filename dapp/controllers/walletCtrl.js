@@ -244,7 +244,7 @@
       }
 
       $scope.getLimitToday = function(wallet){
-        if(wallet.limit && wallet.spent){
+        if(wallet && wallet.limit && wallet.spent && wallet.limit.minus){          
           return wallet.limit.minus(wallet.spent);
         }
       }

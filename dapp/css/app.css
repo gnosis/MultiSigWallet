@@ -1,6 +1,6 @@
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
 .footer {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   width: 100%;
   /* Set the fixed height of the footer here */

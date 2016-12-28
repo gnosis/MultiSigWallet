@@ -426,6 +426,7 @@
           }
           else{
             // Add wallet
+            info.owners = {};
             wallet.updateWallet(info);
             cb(null, info);
           }
@@ -705,10 +706,10 @@
       /**
       *
       **/
-      wallet.spentToday = function(address, cb){
+      wallet.calcMaxWithdraw = function(address, cb){
         var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         return wallet.callRequest(
-          instance.spentToday,
+          instance.calcMaxWithdraw,
           [],
           cb
         );

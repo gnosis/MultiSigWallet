@@ -52,10 +52,10 @@
           );
 
           $scope.batch.add(
-            Wallet.spentToday(
+            Wallet.calcMaxWithdraw(
               address,
-              function(e, spent){
-                $scope.wallets[address].spent = spent;
+              function(e, max){
+                $scope.wallets[address].maxWithdraw = max;
                 $scope.$apply();
               }
             )
@@ -241,12 +241,6 @@
           },
           controller: 'withdrawLimitCtrl'
         });
-      }
-
-      $scope.getLimitToday = function(wallet){
-        if(wallet && wallet.limit && wallet.spent && wallet.limit.minus){          
-          return wallet.limit.minus(wallet.spent);
-        }
       }
 
     });

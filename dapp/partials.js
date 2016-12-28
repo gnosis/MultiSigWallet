@@ -155,7 +155,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "            {{wallet.limit|ether}}\n" +
     "          </td>\n" +
     "          <td>\n" +
-    "            {{getLimitToday(wallet)|ether}}\n" +
+    "            {{wallet.maxWithdraw|ether}}\n" +
     "          </td>\n" +
     "          <td>\n" +
     "            <button type=\"button\" class=\"btn btn-default\" ng-click=\"deposit(wallet)\">\n" +

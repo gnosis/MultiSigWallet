@@ -155,7 +155,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "            {{wallet.limit|ether}}\n" +
     "          </td>\n" +
     "          <td>\n" +
-    "            {{wallet.limit.minus(wallet.spent)|ether}}\n" +
+    "            {{getLimitToday(wallet)|ether}}\n" +
     "          </td>\n" +
     "          <td>\n" +
     "            <button type=\"button\" class=\"btn btn-default\" ng-click=\"deposit(wallet)\">\n" +
@@ -172,6 +172,9 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "            </button>\n" +
     "            <button type=\"button\" class=\"btn btn-default\" ng-click=\"setLimit(wallet)\">\n" +
     "              Set daily\n" +
+    "            </button>\n" +
+    "            <button type=\"button\" class=\"btn btn-default\" ng-click=\"withdrawLimit(wallet)\">\n" +
+    "              Withdraw limit\n" +
     "            </button>\n" +
     "          </td>\n" +
     "        </tr>\n" +
@@ -605,8 +608,8 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    </div>\n" +
     "\n" +
     "    <div class=\"form-group\">\n" +
-    "      <label> Daily limit in wei </label>\n" +
-    "      <input type=\"string\" class=\"form-control\"\n" +
+    "      <label> Daily limit (ETH) </label>\n" +
+    "      <input type=\"number\" class=\"form-control\"\n" +
     "      ng-model=\"limit\" required\\>\n" +
     "    </div>\n" +
     "\n" +
@@ -1147,6 +1150,36 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "      Get nonce\n" +
     "    </button>\n" +
     "\n" +
+    "    <button type=\"button\" ng-click=\"cancel()\" class=\"btn btn-danger\">\n" +
+    "      Cancel\n" +
+    "    </button>\n" +
+    "  </div>\n" +
+    "</form>\n"
+  );
+
+
+  $templateCache.put('partials/modals/withdrawLimit.html',
+    "<div class=\"modal-header\">\n" +
+    "  <h3 class=\"modal-title\">\n" +
+    "    Withdraw limit\n" +
+    "  </h3>\n" +
+    "</div>\n" +
+    "\n" +
+    "<form name=\"form\" class=\"form\">\n" +
+    "  <div class=\"modal-body\">\n" +
+    "    <div class=\"form-group\">\n" +
+    "      <label> Value (ETH) </label>\n" +
+    "      <input type=\"number\" class=\"form-control\" ng-model=\"tx.value\" required>\n" +
+    "    </div>\n" +
+    "  </div>\n" +
+    "  <div class=\"modal-footer\">\n" +
+    "    <button type=\"button\" ng-click=\"send()\" class=\"btn btn-default\" ng-disabled=\"form.$invalid\">\n" +
+    "      Send transaction\n" +
+    "    </button>\n" +
+    "\n" +
+    "    <button type=\"button\" ng-click=\"signOff()\" class=\"btn btn-default\" ng-disabled=\"form.$invalid\">\n" +
+    "      Sign Offline\n" +
+    "    </button>\n" +
     "    <button type=\"button\" ng-click=\"cancel()\" class=\"btn btn-danger\">\n" +
     "      Cancel\n" +
     "    </button>\n" +

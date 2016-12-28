@@ -230,6 +230,25 @@
         });
       }
 
+      $scope.withdrawLimit = function(wallet){
+        $uibModal.open({
+          templateUrl: 'partials/modals/withdrawLimit.html',
+          size: 'md',
+          resolve: {
+            wallet: function(){
+              return wallet;
+            }
+          },
+          controller: 'withdrawLimitCtrl'
+        });
+      }
+
+      $scope.getLimitToday = function(wallet){
+        if(wallet.limit && wallet.spent){
+          return wallet.limit.minus(wallet.spent);
+        }
+      }
+
     });
   }
 )();

@@ -11,14 +11,14 @@
       };
 
       $scope.confirmations = 1;
-      $scope.limit = "0";
+      $scope.limit = 0;
 
       $scope.removeOwner = function(address){
         delete $scope.owners[address]
       }
 
       $scope.deployWallet = function() {
-        Wallet.deployWithLimit(Object.keys($scope.owners), $scope.confirmations, $scope.limit,
+        Wallet.deployWithLimit(Object.keys($scope.owners), $scope.confirmations, new Web3().toBigNumber($scope.limit).mul('1e18').toString(),
           function(e, contract){
             if(e){
               Utils.dangerAlert(e);
@@ -41,7 +41,7 @@
       };
 
       $scope.deployOfflineWallet = function(){
-        Wallet.deployWithLimitOffline(Object.keys($scope.owners), $scope.confirmations, $scope.limit,
+        Wallet.deployWithLimitOffline(Object.keys($scope.owners), $scope.confirmations, new Web3().toBigNumber($scope.limit).mul('1e18').toString(),
         function(e, tx){
           if(e){
             Utils.dangerAlert(e);

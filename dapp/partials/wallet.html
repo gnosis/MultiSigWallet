@@ -41,45 +41,50 @@
         <tr ng-repeat="(walletAddress, wallet) in wallets|objectToArray|limitTo:itemsPerPage:itemsPerPage*(currentPage-1) track by $index">
           <td>
             <a ng-href="#/wallet/{{wallet.address}}">{{wallet.name}}</a>
-          </td>
-          <td>
-            {{wallet.address|limitTo:20}}...
-          </td>
-          <td>
-            {{wallet.balance|ether}}
-          </td>
-          <td>
-            {{wallet.confirmations|bigNumber}}
-          </td>
-          <td>
-            {{wallet.limit|ether}}
-          </td>
-          <td>
-            {{wallet.maxWithdraw|ether}}
-          </td>
-          <td>
-            <button type="button" class="btn btn-default" ng-click="deposit(wallet)">
-              Deposit
-            </button>
-            <button type="button" class="btn btn-default" ng-click="removeWallet(wallet.address)">
-              Remove
-            </button>
             <button type="button" class="btn btn-default" ng-click="editWallet(wallet)">
               Edit
             </button>
+          </td>
+          <td>
+            {{wallet.address|address}}
+          </td>
+          <td>
+            {{wallet.balance|ether}}
+            <button type="button" class="btn btn-default" ng-click="deposit(wallet)">
+              Deposit
+            </button>
+          </td>
+          <td>
+            {{wallet.confirmations|bigNumber}}
             <button type="button" class="btn btn-default" ng-click="setRequired(wallet)">
-              Set required
+              Edit
             </button>
+          </td>
+          <td>
+            {{wallet.limit|ether}}
             <button type="button" class="btn btn-default" ng-click="setLimit(wallet)">
-              Set daily
+              Edit
             </button>
+          </td>
+          <td>
+            {{wallet.maxWithdraw|ether}}
             <button type="button" class="btn btn-default" ng-click="withdrawLimit(wallet)">
-              Withdraw limit
+              Withdraw
+            </button>
+          </td>
+          <td>
+            <button type="button" class="btn btn-default" ng-click="removeWallet(wallet.address)">
+              Remove
             </button>
           </td>
         </tr>
       </tbody>
     </table>
+    <div ng-hide="totalItems" class="text-center">
+      No wallets
+    </div>
+  </div>
+  <div class="panel-footer">
     <ul uib-pagination total-items="totalItems" ng-model="currentPage" items-per-page="itemsPerPage"></ul>
   </div>
 </div>

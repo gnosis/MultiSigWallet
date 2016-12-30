@@ -8,8 +8,8 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "      Settings\n" +
     "    </h3>\n" +
     "  </div>\n" +
+    "  <form ng-submit=\"update()\">\n" +
     "  <div class=\"panel-body\">\n" +
-    "    <form ng-submit=\"update()\">\n" +
     "      <div class=\"form-group\">\n" +
     "        <label>Ethereum node</label>\n" +
     "        <input type=\"url\" ng-model=\"config.ethereumNode\" class=\"form-control\" />\n" +
@@ -22,9 +22,11 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "        <label>Gas price</label>\n" +
     "        <input type=\"number\" ng-model=\"config.gasPrice\" class=\"form-control\" />\n" +
     "      </div>\n" +
-    "      <input type=\"submit\" class=\"btn btn-default\" value=\"Update\" />\n" +
-    "    </form>\n" +
     "  </div>\n" +
+    "  <div class=\"panel-footer\">\n" +
+    "    <input type=\"submit\" class=\"btn btn-default\" value=\"Update\" />\n" +
+    "  </div>\n" +
+    "  </form>\n" +
     "</div>\n"
   );
 
@@ -51,7 +53,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    </h3>\n" +
     "  </div>\n" +
     "  <div class=\"panel-body\">\n" +
-    "    <table class=\"table table-hover\">\n" +
+    "    <table class=\"table table-hover table-bordered table-striped\">\n" +
     "      <thead>\n" +
     "        <tr>\n" +
     "          <th>\n" +
@@ -71,6 +73,9 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "          </th>\n" +
     "          <th>\n" +
     "            Logs\n" +
+    "          </th>\n" +
+    "          <th>\n" +
+    "\n" +
     "          </th>\n" +
     "        </tr>\n" +
     "      </thead>\n" +
@@ -119,7 +124,8 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    <div ng-hide=\"totalItems\" class=\"text-center\">\n" +
     "      No transactions\n" +
     "    </div>\n" +
-    "\n" +
+    "  </div>\n" +
+    "  <div class=\"panel-footer\">\n" +
     "    <ul uib-pagination total-items=\"totalItems\" ng-model=\"currentPage\" items-per-page=\"itemsPerPage\"></ul>\n" +
     "  </div>\n" +
     "</div>\n"
@@ -170,45 +176,50 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "        <tr ng-repeat=\"(walletAddress, wallet) in wallets|objectToArray|limitTo:itemsPerPage:itemsPerPage*(currentPage-1) track by $index\">\n" +
     "          <td>\n" +
     "            <a ng-href=\"#/wallet/{{wallet.address}}\">{{wallet.name}}</a>\n" +
-    "          </td>\n" +
-    "          <td>\n" +
-    "            {{wallet.address|limitTo:20}}...\n" +
-    "          </td>\n" +
-    "          <td>\n" +
-    "            {{wallet.balance|ether}}\n" +
-    "          </td>\n" +
-    "          <td>\n" +
-    "            {{wallet.confirmations|bigNumber}}\n" +
-    "          </td>\n" +
-    "          <td>\n" +
-    "            {{wallet.limit|ether}}\n" +
-    "          </td>\n" +
-    "          <td>\n" +
-    "            {{wallet.maxWithdraw|ether}}\n" +
-    "          </td>\n" +
-    "          <td>\n" +
-    "            <button type=\"button\" class=\"btn btn-default\" ng-click=\"deposit(wallet)\">\n" +
-    "              Deposit\n" +
-    "            </button>\n" +
-    "            <button type=\"button\" class=\"btn btn-default\" ng-click=\"removeWallet(wallet.address)\">\n" +
-    "              Remove\n" +
-    "            </button>\n" +
     "            <button type=\"button\" class=\"btn btn-default\" ng-click=\"editWallet(wallet)\">\n" +
     "              Edit\n" +
     "            </button>\n" +
+    "          </td>\n" +
+    "          <td>\n" +
+    "            {{wallet.address|address}}\n" +
+    "          </td>\n" +
+    "          <td>\n" +
+    "            {{wallet.balance|ether}}\n" +
+    "            <button type=\"button\" class=\"btn btn-default\" ng-click=\"deposit(wallet)\">\n" +
+    "              Deposit\n" +
+    "            </button>\n" +
+    "          </td>\n" +
+    "          <td>\n" +
+    "            {{wallet.confirmations|bigNumber}}\n" +
     "            <button type=\"button\" class=\"btn btn-default\" ng-click=\"setRequired(wallet)\">\n" +
-    "              Set required\n" +
+    "              Edit\n" +
     "            </button>\n" +
+    "          </td>\n" +
+    "          <td>\n" +
+    "            {{wallet.limit|ether}}\n" +
     "            <button type=\"button\" class=\"btn btn-default\" ng-click=\"setLimit(wallet)\">\n" +
-    "              Set daily\n" +
+    "              Edit\n" +
     "            </button>\n" +
+    "          </td>\n" +
+    "          <td>\n" +
+    "            {{wallet.maxWithdraw|ether}}\n" +
     "            <button type=\"button\" class=\"btn btn-default\" ng-click=\"withdrawLimit(wallet)\">\n" +
-    "              Withdraw limit\n" +
+    "              Withdraw\n" +
+    "            </button>\n" +
+    "          </td>\n" +
+    "          <td>\n" +
+    "            <button type=\"button\" class=\"btn btn-default\" ng-click=\"removeWallet(wallet.address)\">\n" +
+    "              Remove\n" +
     "            </button>\n" +
     "          </td>\n" +
     "        </tr>\n" +
     "      </tbody>\n" +
     "    </table>\n" +
+    "    <div ng-hide=\"totalItems\" class=\"text-center\">\n" +
+    "      No wallets\n" +
+    "    </div>\n" +
+    "  </div>\n" +
+    "  <div class=\"panel-footer\">\n" +
     "    <ul uib-pagination total-items=\"totalItems\" ng-model=\"currentPage\" items-per-page=\"itemsPerPage\"></ul>\n" +
     "  </div>\n" +
     "</div>\n"
@@ -240,7 +251,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    </h3>\n" +
     "  </div>\n" +
     "  <div class=\"panel-body collapse\" uib-collapse=\"hideOwners\">\n" +
-    "    <table class=\"table table-hover\">\n" +
+    "    <table class=\"table table-hover table-bordered table-striped\">\n" +
     "      <thead>\n" +
     "        <tr>\n" +
     "          <th>\n" +
@@ -299,11 +310,11 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    </h3>\n" +
     "  </div>\n" +
     "  <div class=\"panel-body\">\n" +
-    "    <table class=\"table table-hover\">\n" +
+    "    <table class=\"table table-hover table-bordered table-striped\">\n" +
     "      <thead>\n" +
     "        <tr>\n" +
     "          <th>\n" +
-    "            Destionation/Type\n" +
+    "            Destination/Type\n" +
     "          </th>\n" +
     "          <th>\n" +
     "            Value\n" +
@@ -376,21 +387,24 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "        </tr>\n" +
     "      </tbody>\n" +
     "    </table>\n" +
-    "    <div class=\"form-inline\">\n" +
-    "      <ul uib-pagination total-items=\"totalItems\" ng-model=\"currentPage\"\n" +
-    "      ng-change=\"updateTransactions()\" items-per-page=\"itemsPerPage\"></ul>\n" +
-    "      <select class=\"form-control pull-right\" ng-change=\"updateTransactions()\" ng-model=\"itemsPerPage\" convert-to-number>\n" +
-    "        <option value=\"2\">\n" +
-    "          2\n" +
-    "        </option>\n" +
-    "        <option value=\"5\">\n" +
-    "          5\n" +
-    "        </option>\n" +
-    "        <option value=\"10\">\n" +
-    "          10\n" +
-    "        </option>\n" +
-    "      </select>\n" +
+    "    <div ng-hide=\"totalItems\" class=\"text-center\">\n" +
+    "      No wallets\n" +
     "    </div>\n" +
+    "  </div>\n" +
+    "  <div class=\"form-inline panel-footer\">\n" +
+    "    <ul uib-pagination total-items=\"totalItems\" ng-model=\"currentPage\"\n" +
+    "    ng-change=\"updateTransactions()\" items-per-page=\"itemsPerPage\"></ul>\n" +
+    "    <select class=\"form-control pull-right\" ng-change=\"updateTransactions()\" ng-model=\"itemsPerPage\" convert-to-number>\n" +
+    "      <option value=\"2\">\n" +
+    "        2\n" +
+    "      </option>\n" +
+    "      <option value=\"5\">\n" +
+    "        5\n" +
+    "      </option>\n" +
+    "      <option value=\"10\">\n" +
+    "        10\n" +
+    "      </option>\n" +
+    "    </select>\n" +
     "  </div>\n" +
     "</div>\n"
   );

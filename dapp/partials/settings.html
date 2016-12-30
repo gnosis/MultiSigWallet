@@ -4,8 +4,8 @@
       Settings
     </h3>
   </div>
+  <form ng-submit="update()">
   <div class="panel-body">
-    <form ng-submit="update()">
       <div class="form-group">
         <label>Ethereum node</label>
         <input type="url" ng-model="config.ethereumNode" class="form-control" />
@@ -18,7 +18,9 @@
         <label>Gas price</label>
         <input type="number" ng-model="config.gasPrice" class="form-control" />
       </div>
-      <input type="submit" class="btn btn-default" value="Update" />
-    </form>
   </div>
+  <div class="panel-footer">
+    <input type="submit" class="btn btn-default" value="Update" />
+  </div>
+  </form>
 </div>

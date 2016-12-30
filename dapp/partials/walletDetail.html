@@ -22,7 +22,7 @@
     </h3>
   </div>
   <div class="panel-body collapse" uib-collapse="hideOwners">
-    <table class="table table-hover">
+    <table class="table table-hover table-bordered table-striped">
       <thead>
         <tr>
           <th>
@@ -81,11 +81,11 @@
     </h3>
   </div>
   <div class="panel-body">
-    <table class="table table-hover">
+    <table class="table table-hover table-bordered table-striped">
       <thead>
         <tr>
           <th>
-            Destionation/Type
+            Destination/Type
           </th>
           <th>
             Value
@@ -158,20 +158,23 @@
         </tr>
       </tbody>
     </table>
-    <div class="form-inline">
-      <ul uib-pagination total-items="totalItems" ng-model="currentPage"
-      ng-change="updateTransactions()" items-per-page="itemsPerPage"></ul>
-      <select class="form-control pull-right" ng-change="updateTransactions()" ng-model="itemsPerPage" convert-to-number>
-        <option value="2">
-          2
-        </option>
-        <option value="5">
-          5
-        </option>
-        <option value="10">
-          10
-        </option>
-      </select>
+    <div ng-hide="totalItems" class="text-center">
+      No wallets
     </div>
+  </div>
+  <div class="form-inline panel-footer">
+    <ul uib-pagination total-items="totalItems" ng-model="currentPage"
+    ng-change="updateTransactions()" items-per-page="itemsPerPage"></ul>
+    <select class="form-control pull-right" ng-change="updateTransactions()" ng-model="itemsPerPage" convert-to-number>
+      <option value="2">
+        2
+      </option>
+      <option value="5">
+        5
+      </option>
+      <option value="10">
+        10
+      </option>
+    </select>
   </div>
 </div>

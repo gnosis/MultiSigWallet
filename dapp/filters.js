@@ -22,6 +22,13 @@
         return moment(new Date(dateString)).fromNow();
       };
     })
+    .filter('address', function () {
+      return function(address) {
+        if(address){
+          return address.slice(2, 12) + "...";
+        }
+      };
+    })
     .filter('bigNumber', function () {
       return function (big) {
         if (big) {

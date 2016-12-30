@@ -183,29 +183,46 @@
         // Add transactions without receipt to batch request
         var txHashes = Object.keys(factory.transactions);
 
+        function processReceipt(e, receipt) {
+          if(!e && receipt){
+            factory.transactions[receipt.transactionHash].receipt = receipt;
+            // call callback if it has
+            if(factory.transactions[receipt.transactionHash].callback){
+              factory.transactions[receipt.transactionHash].callback(receipt);
+            }
+
+            // update transactions
+            localStorage.setItem("transactions", JSON.stringify(factory.transactions));
+            try{
+              $rootScope.$digest();
+            }
+            catch(error){
+
+            }
+          }
+        }
+
+        function getTransactionInfo(e, info) {
+          if(!e && info){
+            factory.transactions[info.hash].info = info;
+
+            // update transactions
+            localStorage.setItem("transactions", JSON.stringify(factory.transactions));
+            try{
+              $rootScope.$digest();
+            }
+            catch(error){
+
+            }
+          }
+        }
+
         for(var i=0; i<txHashes.length; i++){
           var tx = factory.transactions[txHashes[i]];
           // Get transaction receipt
           if(tx && !tx.receipt){
             batch.add(
-              Wallet.web3.eth.getTransactionReceipt.request(txHashes[i], function(e, receipt){
-                if(!e && receipt){
-                  factory.transactions[receipt.transactionHash].receipt = receipt;
-                  // call callback if it has
-                  if(factory.transactions[receipt.transactionHash].callback){
-                    factory.transactions[receipt.transactionHash].callback(receipt);
-                  }
-
-                  // update transactions
-                  localStorage.setItem("transactions", JSON.stringify(factory.transactions));
-                  try{
-                    $rootScope.$digest();
-                  }
-                  catch(error){
-
-                  }
-                }
-              })
+              Wallet.web3.eth.getTransactionReceipt.request(txHashes[i], processReceipt)
             );
           }
 
@@ -214,20 +231,7 @@
             batch.add(
               Wallet.web3.eth.getTransaction.request(
                 txHashes[i],
-                function(e, info){
-                  if(!e && info){
-                    factory.transactions[info.hash].info = info;
-
-                    // update transactions
-                    localStorage.setItem("transactions", JSON.stringify(factory.transactions));
-                    try{
-                      $rootScope.$digest();
-                    }
-                    catch(e){
-
-                    }
-                  }
-                }
+                getTransactionInfo
               )
             );
           }
@@ -244,7 +248,7 @@
           // init transactions loop
           factory.checkReceipts();
         }
-      )
+      );
 
       return factory;
     });

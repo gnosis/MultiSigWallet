@@ -203,7 +203,7 @@
             $scope.owners.push(owner);
             $scope.$apply();
           }
-        };
+        }
 
         for(var i=0; i<$scope.ownersNum; i++){
           // Get owners

@@ -44,7 +44,7 @@
               Transaction.add(
                 {
                   txHash: tx,
-                  function () {
+                  callback: function () {
                     Utils.success("Multisig transaction was mined.");
                   }
                 }

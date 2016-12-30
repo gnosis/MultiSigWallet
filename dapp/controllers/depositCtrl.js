@@ -9,6 +9,7 @@
         Transaction.send(
           {
             to: $scope.wallet.address,
+            from: Wallet.coinbase,
             value: new EthJS.BN(new Web3().toWei($scope.amount)),
             nonce: Wallet.txParams.nonce
           },

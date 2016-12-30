@@ -3,10 +3,10 @@
 * using submitTransaction function.
 */
 (
-  function(){
+  function () {
     angular
     .module("multiSigWeb")
-    .controller("walletTransactionCtrl", function($scope, Wallet, Transaction, Utils, wallet, $uibModalInstance){
+    .controller("walletTransactionCtrl", function ($scope, Wallet, Transaction, Utils, wallet, $uibModalInstance) {
 
       $scope.wallet = wallet;
       $scope.abiArray = null;
@@ -18,16 +18,16 @@
       };
 
       // Parse abi
-      $scope.updateMethods = function(){
+      $scope.updateMethods = function () {
         $scope.abiArray = JSON.parse($scope.abi);
-        $scope.abiArray.map(function(item, index){
-          if(!item.constant && item.name && item.type == "function"){
+        $scope.abiArray.map(function (item, index) {
+          if (!item.constant && item.name && item.type == "function") {
             $scope.methods.push({name: item.name, index: index});
           }
         });
-      }
+      };
 
-      $scope.send = function(){
+      $scope.send = function () {
         $scope.tx.value = new Web3().toBigNumber($scope.tx.value).mul('1e18');
         Wallet.submitTransaction(
           $scope.wallet.address,
@@ -35,17 +35,17 @@
           $scope.abiArray,
           $scope.method?$scope.method.name:null,
           $scope.params,
-          function(e, tx){
-            if(e){
+          function (e, tx) {
+            if (e) {
               Utils.dangerAlert(e);
             }
-            else{
-              Utils.notification("Multisig transaction sent, will be mined in next 20s");
+            else {
+              Utils.notification("Multisig transaction was sent.");
               Transaction.add(
                 {
                   txHash: tx,
-                  function(e, receipt){
-                    Utils.success("Multisig transaction mined");
+                  function () {
+                    Utils.success("Multisig transaction was mined.");
                   }
                 }
               );
@@ -55,7 +55,7 @@
         )
       };
 
-      $scope.signOff = function(){
+      $scope.signOff = function () {
         $scope.tx.value = "0x" + new Web3().toBigNumber($scope.tx.value).mul('1e18').toString(16);
         Wallet.signTransaction(
           $scope.wallet.address,
@@ -63,43 +63,42 @@
           $scope.abiArray,
           $scope.method?$scope.method.name:null,
           $scope.params,
-          function(e, tx){
-            if(e){
+          function (e, tx) {
+            if (e) {
               Utils.dangerAlert(e);
             }
-            else{
+            else {
               $uibModalInstance.close();
               Utils.signed(tx);
             }
           }
         )
-      }
+      };
 
-      $scope.getNonce = function(){
+      $scope.getNonce = function () {
         $scope.tx.value = "0x" + new Web3().toBigNumber($scope.tx.value).mul('1e18').toString(16);
-        if($scope.abiArray){
+        if ($scope.abiArray) {
           var instance = Wallet.web3.eth.contract($scope.abiArray).at($scope.tx.to);
           $scope.data = instance[$scope.method.name].getData.apply(this, $scope.params);
         }
-        else{
+        else {
           $scope.data = "0x0";
         }
 
-        Wallet.getNonce(wallet.address, $scope.tx.to, $scope.tx.value, $scope.data, function(e, nonce){
-          if(e){
+        Wallet.getNonce(wallet.address, $scope.tx.to, $scope.tx.value, $scope.data, function (e, nonce) {
+          if (e) {
             Utils.dangerAlert(e);
           }
-          else{
+          else {
             $uibModalInstance.close();
             // Open new modal with nonce
             Utils.nonce(nonce);
             // Utils.success("Multisig Nonce: "+nonce);
           }
         }).call();
+      };
 
-      }
-
-      $scope.cancel = function(){
+      $scope.cancel = function () {
         $uibModalInstance.dismiss();
       }
     });

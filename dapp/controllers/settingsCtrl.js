@@ -1,14 +1,14 @@
 (
-  function(){
+  function () {
     angular
     .module("multiSigWeb")
-    .controller("settingsCtrl", function($scope, Wallet, Utils, $window){
+    .controller("settingsCtrl", function ($scope, Wallet, Utils, $window) {
       $scope.config = Object.assign({}, txDefault);
 
-      $scope.update = function(){
+      $scope.update = function () {
         localStorage.setItem("config", JSON.stringify($scope.config));
 
-        if(!$window.web3){
+        if (!$window.web3) {
           Wallet.web3 = new Web3($scope.config.ethereumNode);
         }
 

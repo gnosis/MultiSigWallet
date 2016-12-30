@@ -1,5 +1,5 @@
 (
-  function(){
+  function () {
     angular
     .module('multiSigWeb')
     .config(function($routeProvider){

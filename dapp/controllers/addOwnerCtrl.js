@@ -1,51 +1,51 @@
 (
-  function(){
+  function () {
     angular
     .module("multiSigWeb")
-    .controller("addOwnerCtrl", function($scope, Wallet, Utils, Transaction, wallet, $uibModalInstance){
+    .controller("addOwnerCtrl", function ($scope, Wallet, Utils, Transaction, wallet, $uibModalInstance) {
       $scope.send = function () {
-        Wallet.addOwner(wallet.address, $scope.owner, function(e, tx){
-          if(e){
+        Wallet.addOwner(wallet.address, $scope.owner, function (e, tx) {
+          if (e) {
             Utils.dangerAlert(e);
           }
-          else{
+          else {
             // Update owners array
             wallet.owners[$scope.owner.address] = $scope.owner;
             Wallet.updateWallet(wallet);
-            Utils.notification("Transaction sent, will be mined in next 20s");
-            Transaction.add({txHash: tx, callback: function(){
-              Utils.success("Add owner transaction mined, might require more wallet owner's confirmations");
+            Utils.notification("Add owner transaction was sent.");
+            Transaction.add({txHash: tx, callback: function () {
+              Utils.success("Add owner transaction was mined. It might require more confirmations by other owners to add the new owner.");
             }});
             $uibModalInstance.close();
           }
         });
       };
 
-      $scope.sign = function(){
-        Wallet.addOwnerOffline(wallet.address, $scope.owner, function(e, tx){
-          if(e){
+      $scope.sign = function () {
+        Wallet.addOwnerOffline(wallet.address, $scope.owner, function (e, tx) {
+          if (e) {
             Utils.dangerAlert(e);
           }
-          else{
+          else {
             $uibModalInstance.close();
             Utils.signed(tx);
           }
         });
-      }
+      };
 
-      $scope.getNonce = function(){
+      $scope.getNonce = function () {
         var data = Wallet.getAddOwnerData(wallet.address, $scope.owner);
-        Wallet.getNonce(wallet.address, wallet.address, "0x0", data, function(e, nonce){
-          if(e){
+        Wallet.getNonce(wallet.address, wallet.address, "0x0", data, function (e, nonce) {
+          if (e) {
             Utils.dangerAlert(e);
           }
-          else{
+          else {
             // Open modal
             $uibModalInstance.close();
             Utils.nonce(nonce);
           }
         }).call();
-      }
+      };
 
       $scope.cancel = function () {
         $uibModalInstance.dismiss();

@@ -3,10 +3,10 @@
 * using submitTransaction function.
 */
 (
-  function(){
+  function () {
     angular
     .module("multiSigWeb")
-    .controller("withdrawLimitCtrl", function($scope, Wallet, Transaction, Utils, wallet, $uibModalInstance){
+    .controller("withdrawLimitCtrl", function ($scope, Wallet, Transaction, Utils, wallet, $uibModalInstance) {
 
       $scope.wallet = wallet;
       $scope.tx = {
@@ -15,7 +15,7 @@
         data: '0x0'
       };
 
-      $scope.send = function(){
+      $scope.send = function () {
         $scope.tx.value = new Web3().toBigNumber($scope.tx.value).mul('1e18');
         Wallet.submitTransaction(
           $scope.wallet.address,
@@ -23,16 +23,16 @@
           null,
           null,
           null,
-          function(e, tx){
-            if(e){
+          function (e, tx) {
+            if (e) {
               Utils.dangerAlert(e);
             }
-            else{
+            else {
               Utils.notification("Multisig transaction sent, will be mined in next 20s");
               Transaction.add(
                 {
                   txHash: tx,
-                  function(e, receipt){
+                  function () {
                     Utils.success("Multisig transaction mined");
                   }
                 }
@@ -43,7 +43,7 @@
         )
       };
 
-      $scope.signOff = function(){
+      $scope.signOff = function () {
         $scope.tx.value = "0x" + new Web3().toBigNumber($scope.tx.value).mul('1e18').toString(16);
         Wallet.signTransaction(
           $scope.wallet.address,
@@ -51,8 +51,8 @@
           null,
           null,
           null,
-          function(e, tx){
-            if(e){
+          function (e, tx) {
+            if (e) {
               Utils.dangerAlert(e);
             }
             else{
@@ -61,13 +61,13 @@
             }
           }
         )
-      }
+      };
 
-      $scope.getNonce = function(){
+      $scope.getNonce = function () {
         $scope.tx.value = "0x" + new Web3().toBigNumber($scope.tx.value).mul('1e18').toString(16);
 
-        Wallet.getNonce(wallet.address, $scope.tx.to, $scope.tx.value, "0x0", function(e, nonce){
-          if(e){
+        Wallet.getNonce(wallet.address, $scope.tx.to, $scope.tx.value, "0x0", function (e, nonce) {
+          if (e) {
             Utils.dangerAlert(e);
           }
           else{
@@ -78,9 +78,9 @@
           }
         }).call();
 
-      }
+      };
 
-      $scope.cancel = function(){
+      $scope.cancel = function () {
         $uibModalInstance.dismiss();
       }
     });

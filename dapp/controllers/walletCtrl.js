@@ -1,30 +1,27 @@
 (
-  function(){
+  function () {
     angular
     .module('multiSigWeb')
-    .controller('walletCtrl', function($scope, Wallet, Utils, Transaction,
-      $uibModal, $interval){
-
+    .controller('walletCtrl', function ($scope, Wallet, Utils, Transaction, $uibModal, $interval) {
       Wallet
       .webInitialized
       .then(
-        function(){
+        function () {
             $scope.batch = Wallet.web3.createBatch();
             $scope.updateParams();
             $scope.interval = $interval($scope.updateParams, 7000);
         }
-      )
+      );
 
-
-      $scope.updateParams = function(){
+      $scope.updateParams = function () {
         $scope.wallets = Wallet.wallets;
         $scope.totalItems = Object.keys($scope.wallets).length;
         // Init wallet balance of each wallet address
-        Object.keys($scope.wallets).map(function(address){
+        Object.keys($scope.wallets).map(function (address) {
           $scope.batch.add(
             Wallet.getBalance(
               address,
-              function(e, balance){
+              function (e, balance) {
                 $scope.wallets[address].balance = balance;
                 $scope.$apply();
               }
@@ -34,7 +31,7 @@
           $scope.batch.add(
             Wallet.getRequired(
               address,
-              function(e, confirmations){
+              function (e, confirmations) {
                 $scope.wallets[address].confirmations = confirmations;
                 $scope.$apply();
               }
@@ -44,7 +41,7 @@
           $scope.batch.add(
             Wallet.getLimit(
               address,
-              function(e, limit){
+              function (e, limit) {
                 $scope.wallets[address].limit = limit;
                 $scope.$apply();
               }
@@ -54,7 +51,7 @@
           $scope.batch.add(
             Wallet.calcMaxWithdraw(
               address,
-              function(e, max){
+              function (e, max) {
                 $scope.wallets[address].maxWithdraw = max;
                 $scope.$apply();
               }
@@ -62,11 +59,11 @@
           )
         });
         $scope.batch.execute();
-      }
+      };
 
 
 
-      $scope.$on('$destroy', function(){
+      $scope.$on('$destroy', function () {
         $interval.cancel($scope.interval);
       });
 
@@ -74,11 +71,11 @@
       $scope.itemsPerPage = 3;
 
 
-      $scope.newWalletSelect = function(){
+      $scope.newWalletSelect = function () {
         $uibModal.open({
           templateUrl: 'partials/modals/selectNewWallet.html',
           size: 'sm',
-          controller: function($scope, $uibModalInstance) {
+          controller: function ($scope, $uibModalInstance) {
             $scope.walletOption = "create";
 
             $scope.ok = function () {
@@ -92,157 +89,152 @@
         })
         .result
         .then(
-          function(option){
-            if(option == "create"){
+          function (option) {
+            if (option == "create") {
               // open create modal
               $scope.newWallet();
             }
-            else{
+            else {
               // open recover modal
               $scope.restoreWallet();
             }
           }
         );
+      };
 
-      }
-
-      $scope.newWallet = function(){
-
+      $scope.newWallet = function () {
         $uibModal.open({
           templateUrl: 'partials/modals/newWallet.html',
           size: 'lg',
           controller: 'newWalletCtrl'
         })
         .result
-        .then(function(){
+        .then(function () {
           $scope.updateParams();
         });
-      }
+      };
 
 
-      $scope.removeWallet = function(address){
+      $scope.removeWallet = function (address) {
         $uibModal.open({
           templateUrl: 'partials/modals/removeWallet.html',
           size: 'lg',
           resolve: {
-            wallet: function(){
+            wallet: function () {
               return $scope.wallets[address];
             }
           },
-          controller: function($scope, $uibModalInstance, wallet){
+          controller: function ($scope, $uibModalInstance, wallet) {
             $scope.wallet = wallet;
-            $scope.ok = function(){
+            $scope.ok = function () {
               Wallet.removeWallet($scope.wallet.address);
               $uibModalInstance.close();
-            }
-
-            $scope.cancel = function(){
+            };
+            $scope.cancel = function () {
               $uibModalInstance.dismiss();
             }
           }
         });
-      }
+      };
 
-      $scope.restoreWallet = function(){
+      $scope.restoreWallet = function () {
         $uibModal.open({
           templateUrl: 'partials/modals/restoreWallet.html',
           size: 'lg',
-          controller: function($scope, $uibModalInstance){
-            $scope.ok = function(){
-              Wallet.restore($scope.old, function(e, w){
-                if(e){
+          controller: function ($scope, $uibModalInstance) {
+            $scope.ok = function () {
+              Wallet.restore($scope.old, function (e) {
+                if (e) {
                   Utils.dangerAlert(e);
                 }
-                else{
+                else {
                   $uibModalInstance.close();
                 }
               });
-            }
-
-            $scope.cancel = function(){
+            };
+            $scope.cancel = function () {
               $uibModalInstance.dismiss();
             }
           }
         });
-      }
+      };
 
-      $scope.editWallet = function(wallet){
+      $scope.editWallet = function (wallet) {
         $uibModal.open({
           templateUrl: 'partials/modals/editWallet.html',
           size: 'sm',
           resolve: {
-            wallet: function(){
+            wallet: function () {
               return wallet;
             }
           },
-          controller: function($scope, $uibModalInstance, wallet){
+          controller: function ($scope, $uibModalInstance, wallet) {
             $scope.name = wallet.name;
             $scope.address = wallet.address;
 
-            $scope.ok = function(){
+            $scope.ok = function () {
               Wallet.update(wallet.address, $scope.name);
               $uibModalInstance.close();
-            }
+            };
 
-            $scope.cancel = function(){
+            $scope.cancel = function () {
               $uibModalInstance.dismiss();
-            }
+            };
           }
         });
-      }
+      };
 
-      $scope.deposit = function(wallet){
+      $scope.deposit = function (wallet) {
         $uibModal.open({
           templateUrl: 'partials/modals/deposit.html',
           size: 'md',
           resolve: {
-            wallet: function(){
+            wallet: function () {
               return wallet;
             }
           },
           controller: 'depositCtrl'
         });
-      }
+      };
 
-      $scope.setRequired = function(wallet){
+      $scope.setRequired = function (wallet) {
         $uibModal.open({
           templateUrl: 'partials/modals/updateRequired.html',
           size: 'md',
           resolve: {
-            wallet: function(){
+            wallet: function () {
               return wallet;
             }
           },
           controller: 'updateRequiredCtrl'
         });
-      }
+      };
 
-      $scope.setLimit = function(wallet){
+      $scope.setLimit = function (wallet) {
         $uibModal.open({
           templateUrl: 'partials/modals/setLimit.html',
           size: 'md',
           resolve: {
-            wallet: function(){
+            wallet: function () {
               return wallet;
             }
           },
           controller: 'setLimitCtrl'
         });
-      }
+      };
 
-      $scope.withdrawLimit = function(wallet){
+      $scope.withdrawLimit = function (wallet) {
         $uibModal.open({
           templateUrl: 'partials/modals/withdrawLimit.html',
           size: 'md',
           resolve: {
-            wallet: function(){
+            wallet: function () {
               return wallet;
             }
           },
           controller: 'withdrawLimitCtrl'
         });
       }
-
     });
   }
 )();

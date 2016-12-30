@@ -1,8 +1,8 @@
 (
-  function(){
+  function () {
     angular
     .module("multiSigWeb")
-    .controller("newWalletCtrl", function($scope, $uibModalInstance, $uibModal, Utils, Transaction, Wallet) {
+    .controller("newWalletCtrl", function ($scope, $uibModalInstance, $uibModal, Utils, Transaction, Wallet) {
 
       $scope.owners = {};
       $scope.owners[Wallet.coinbase] = {
@@ -13,57 +13,55 @@
       $scope.confirmations = 1;
       $scope.limit = 0;
 
-      $scope.removeOwner = function(address){
+      $scope.removeOwner = function (address) {
         delete $scope.owners[address]
-      }
+      };
 
-      $scope.deployWallet = function() {
+      $scope.deployWallet = function () {
         Wallet.deployWithLimit(Object.keys($scope.owners), $scope.confirmations, new Web3().toBigNumber($scope.limit).mul('1e18').toString(),
-          function(e, contract){
-            if(e){
+          function (e, contract) {
+            if (e) {
               Utils.dangerAlert(e);
             }
-            else{
-              if(contract.address){
+            else {
+              if (contract.address) {
                 // Save wallet
                 Wallet.updateWallet({name: $scope.name, address: contract.address, owners: $scope.owners});
-
-                Utils.success("Multisignature wallet deployed with address "+contract.address);
+                Utils.success("Wallet deployed at address " + contract.address);
               }
-              else{
+              else {
                 $uibModalInstance.close();
                 Transaction.add({txHash: contract.transactionHash});
-                Utils.notification("Transaction sent, wallet will be deployed in next 20s")
+                Utils.notification("Deployment transaction was sent.")
               }
             }
           }
         );
       };
 
-      $scope.deployOfflineWallet = function(){
+      $scope.deployOfflineWallet = function () {
         Wallet.deployWithLimitOffline(Object.keys($scope.owners), $scope.confirmations, new Web3().toBigNumber($scope.limit).mul('1e18').toString(),
-        function(e, tx){
-          if(e){
+        function (e, tx) {
+          if (e) {
             Utils.dangerAlert(e);
           }
-          else{
+          else {
             $uibModalInstance.close();
             Utils.success('<div class="form-group"><label>Multisignature wallet '+
             'deployed offline:</label> <textarea class="form-control" rows="5">'+ tx + '</textarea></div>');
           }
-
         });
-      }
+      };
 
       $scope.cancel = function () {
         $uibModalInstance.dismiss();
       };
 
-      $scope.addOwner = function(){
+      $scope.addOwner = function () {
         $uibModal.open({
           templateUrl: 'partials/modals/addOwner.html',
           size: 'sm',
-          controller: function($scope, $uibModalInstance) {
+          controller: function ($scope, $uibModalInstance) {
             $scope.owner = {
               name: "",
               address: ""
@@ -80,7 +78,7 @@
         })
         .result
         .then(
-          function(owner){
+          function (owner) {
             $scope.owners[owner.address] = owner;
           }
         )

@@ -1,76 +1,75 @@
 (
-  function(){
+  function () {
     angular
     .module("multiSigWeb")
-    .controller("sendTransactionCtrl", function($scope, Wallet, Utils, Transaction, $uibModalInstance){
+    .controller("sendTransactionCtrl", function ($scope, Wallet, Utils, Transaction, $uibModalInstance) {
       $scope.methods = [];
       $scope.tx = {
         value: 0
       };
       $scope.params = [];
-
       $scope.$watch(
-        function(){
+        function () {
           return Wallet.txParams.nonce;
         },
-        function(){
+        function () {
           $scope.tx.nonce = Wallet.txParams.nonce;
         }
       );
 
-      $scope.send = function(){
+      $scope.send = function () {
         $scope.tx.value = new Web3().toBigNumber($scope.tx.value).mul('1e18');
         // if method, use contract instance method
-        if($scope.method){
-          Transaction.sendMethod($scope.tx, $scope.abiArray, $scope.method.name, $scope.params, function(e, tx){
-            if(tx.blockNumber){
-              Utils.success("Transaction mined");
+        if ($scope.method) {
+          Transaction.sendMethod($scope.tx, $scope.abiArray, $scope.method.name, $scope.params, function (e, tx) {
+            if (tx.blockNumber) {
+              Utils.success("Transaction was mined.");
             }
-            else{
+            else {
               $uibModalInstance.close();
-              Utils.notification("Transaction sent, will be mined in next 20s");
+              Utils.notification("Transaction was sent.");
             }
           });
         }
-        else{
-          Transaction.send($scope.tx, function(e, tx){
-            if(tx.blockNumber){
-              Utils.success("Transaction mined");
+        else {
+          Transaction.send($scope.tx, function (e, tx) {
+            if (tx.blockNumber) {
+              Utils.success("Transaction was mined.");
             }
-            else{
+            else {
               $uibModalInstance.close();
-              Utils.notification("Transaction sent, will be mined in next 20s");
+              Utils.notification("Transaction was sent.");
             }
           });
         }
-      }
+      };
 
-      $scope.signOff = function(){
+      $scope.signOff = function () {
         $scope.tx.value = "0x" + new Web3().toBigNumber($scope.tx.value).mul('1e18').toString(16);
-        if($scope.method){
-          Transaction.signMethodOffline($scope.tx, $scope.abiArray, $scope.method.name, $scope.params, function(e, tx){
+        if ($scope.method) {
+          Transaction.signMethodOffline($scope.tx, $scope.abiArray, $scope.method.name, $scope.params, function (e, tx) {
             $uibModalInstance.close();
             Utils.signed(tx);
           });
         }
         else{
-          Transaction.signOffline($scope.tx, function(e, tx){
+          Transaction.signOffline($scope.tx, function (e, tx) {
             $uibModalInstance.close();
             Utils.signed(tx);
           });
         }
-      }
+      };
 
-      $scope.updateMethods = function(){
+      $scope.updateMethods = function () {
         $scope.abiArray = JSON.parse($scope.abi);
-        $scope.abiArray.map(function(item, index){
-          if(!item.constant && item.name && item.type == "function"){
+        $scope.abiArray.map(function (item, index) {
+          if (!item.constant && item.name && item.type == "function") {
             $scope.methods.push({name: item.name, index: index});
           }
         });
-      }
+      };
 
-      $scope.cancel = function(){
+      $scope.cancel = function () {
         $uibModalInstance.dismiss();
       }
     });

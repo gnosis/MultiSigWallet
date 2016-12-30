@@ -1,15 +1,15 @@
 (
-  function(){
+  function () {
     angular
     .module('multiSigWeb')
-    .controller('transactionCtrl', function($scope, Wallet, Utils, Transaction, $uibModal){
+    .controller('transactionCtrl', function ($scope, Wallet, Utils, Transaction, $uibModal) {
 
 
       $scope.$watch(
-        function(){
+        function () {
           return Transaction.transactions;
         },
-        function(){
+        function () {
           $scope.transactions = Transaction.transactions;
           $scope.totalItems = Object.keys($scope.transactions).length;
         }
@@ -18,62 +18,62 @@
       $scope.currentPage = 1;
       $scope.itemsPerPage = 10;
 
-      $scope.remove = function(txHash){
+      $scope.remove = function (txHash) {
         Transaction.remove(txHash);
-      }
+      };
 
-      $scope.removeAll = function(){
+      $scope.removeAll = function () {
         Transaction.removeAll();
-      }
+      };
 
-      $scope.sendRawTransaction = function(){
+      $scope.sendRawTransaction = function () {
         $uibModal.open({
           templateUrl: 'partials/modals/signedTransaction.html',
           size: 'md',
           controller: 'signedTransactionCtrl'
         });
-      }
+      };
 
-      $scope.sendTransaction = function(){
+      $scope.sendTransaction = function () {
         $uibModal.open({
           templateUrl: 'partials/modals/sendTransaction.html',
           size: 'lg',
           controller: 'sendTransactionCtrl'
         });
-      }
+      };
 
-      $scope.getNonce = function(){
+      $scope.getNonce = function () {
         $uibModal.open({
           templateUrl: 'partials/modals/getNonce.html',
           size: 'md',
-          controller: function($scope, $uibModalInstance, Wallet, Utils){
-            $scope.cancel = function(){
+          controller: function ($scope, $uibModalInstance, Wallet, Utils) {
+            $scope.cancel = function () {
               $uibModalInstance.dismiss();
-            }
+            };
 
-            $scope.ok = function(){
+            $scope.ok = function () {
               Wallet.web3.eth.getTransactionCount(
                 $scope.address,
-                function(e, count){
-                  if(e){
+                function (e, count) {
+                  if (e) {
                     Utils.dangerAlert(e);
                   }
-                  else{
+                  else {
                     $uibModalInstance.close();
-                    Utils.success("Nonce: "+count);
+                    Utils.success("Nonce: " + count);
                   }
                 }
               );
             }
           }
         });
-      }
+      };
 
-      $scope.getTo = function(to){
-        if(Wallet.wallets[to] && Wallet.wallets[to].name){
+      $scope.getTo = function (to) {
+        if (Wallet.wallets[to] && Wallet.wallets[to].name) {
           return Wallet.wallets[to].name;
         }
-        else{
+        else {
           return to.slice(0, 20) + "...";
         }
       }

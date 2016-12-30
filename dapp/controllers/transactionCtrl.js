@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .controller('transactionCtrl', function ($scope, Wallet, Utils, Transaction, $uibModal) {
+    .controller('transactionCtrl', function ($scope, Wallet, Utils, Transaction, $uibModal, $filter) {
 
 
       $scope.$watch(
@@ -74,7 +74,7 @@
           return Wallet.wallets[to].name;
         }
         else {
-          return to.slice(0, 20) + "...";
+          return $filter("address")(to);
         }
       };
 

@@ -24,7 +24,7 @@
             Balance
           </th>
           <th>
-            # Conf.
+            Number of required Conf.
           </th>
           <th>
             Daily limit
@@ -46,7 +46,9 @@
             </button>
           </td>
           <td>
-            {{wallet.address|address}}
+            <div uib-popover="{{wallet.address}}" popover-trigger="'mouseenter'">
+              {{wallet.address|address}}
+            </div>
           </td>
           <td>
             {{wallet.balance|ether}}

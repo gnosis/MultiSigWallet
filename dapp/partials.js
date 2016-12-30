@@ -82,15 +82,16 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "      <tbody>\n" +
     "        <tr ng-repeat=\"transaction in transactions | objectToArray| limitTo:currentPage*itemsPerPage:itemsPerPage*(currentPage-1) track by $index\">\n" +
     "          <td>\n" +
-    "            <a ng-href=\"https://testnet.etherscan.io/tx/{{transaction.txHash}}\">\n" +
+    "            <a uib-popover=\"{{transaction.info.to}}\" popover-trigger=\"'mouseenter'\"\n" +
+    "            ng-href=\"https://testnet.etherscan.io/tx/{{transaction.txHash}}\">\n" +
     "              {{getTo(transaction.info.to)}}\n" +
     "            </a>\n" +
     "          </td>\n" +
     "          <td>\n" +
     "            {{transaction.info.value | ether}}\n" +
     "          </td>\n" +
-    "          <td>\n" +
-    "              {{transaction.info.input | limitTo: 20}}...\n" +
+    "          <td popover-trigger=\"'mouseenter'\" uib-popover-template=\"'partials/txData.html'\" popover-placement=\"right\" popover-append-to-body=\"true\">\n" +
+    "              {{transaction.info.input | txData}}\n" +
     "          </td>\n" +
     "          <td>\n" +
     "            {{transaction.info.nonce}}\n" +
@@ -132,6 +133,15 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
   );
 
 
+  $templateCache.put('partials/txData.html',
+    "\n" +
+    "<div class=\"tx-data\">\n" +
+    "  {{transaction.info.input|limitTo:1000}}\n" +
+    "  <span ng-show=\"transaction.info.input.length > 1000\">...</span>\n" +
+    "</div>\n"
+  );
+
+
   $templateCache.put('partials/wallet.html',
     "<div class=\"panel panel-default\">\n" +
     "  <div class=\"panel-heading\">\n" +
@@ -159,7 +169,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "            Balance\n" +
     "          </th>\n" +
     "          <th>\n" +
-    "            # Conf.\n" +
+    "            Number of required Conf.\n" +
     "          </th>\n" +
     "          <th>\n" +
     "            Daily limit\n" +
@@ -181,7 +191,9 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "            </button>\n" +
     "          </td>\n" +
     "          <td>\n" +
-    "            {{wallet.address|address}}\n" +
+    "            <div uib-popover=\"{{wallet.address}}\" popover-trigger=\"'mouseenter'\">\n" +
+    "              {{wallet.address|address}}\n" +
+    "            </div>\n" +
     "          </td>\n" +
     "          <td>\n" +
     "            {{wallet.balance|ether}}\n" +

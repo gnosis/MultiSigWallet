@@ -24,7 +24,7 @@
     })
     .filter('address', function () {
       return function(address) {
-        if(address){
+        if(address && address.length > 3){
           return address.slice(2, 12) + "...";
         }
       };
@@ -42,8 +42,8 @@
           if (data == "0x") {
             return "";
           }
-          else {
-            return data.slice(0, 20) + "...";
+          else if(data.length > 3){
+            return data.slice(2, 12) + "...";
           }
         }
       };

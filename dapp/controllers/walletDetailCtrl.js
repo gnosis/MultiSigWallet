@@ -197,7 +197,7 @@
       $scope.getOwners = function () {
         var batch = Wallet.web3.createBatch();
         $scope.owners = [];
-        for(var i=0; i<$scope.ownersNum; i++){
+        for (var i=0; i<$scope.ownersNum; i++) {
           // Get owners
           batch.add(
             Wallet

@@ -52,7 +52,7 @@
               $uibModalInstance.close();
             }
           }
-        )
+        );
       };
 
       $scope.signOff = function () {
@@ -72,7 +72,7 @@
               Utils.signed(tx);
             }
           }
-        )
+        );
       };
 
       $scope.getNonce = function () {
@@ -100,7 +100,7 @@
 
       $scope.cancel = function () {
         $uibModalInstance.dismiss();
-      }
+      };
     });
   }
 )();

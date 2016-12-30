@@ -27,7 +27,7 @@
         if (big) {
           return new Web3().toBigNumber(big).toNumber();
         }
-      }
+      };
     })
     .filter('txData', function () {
       return function (data) {
@@ -39,7 +39,7 @@
             return data.slice(0, 20) + "...";
           }
         }
-      }
+      };
     })
     .filter('ether', function () {
       return function (big_number) {
@@ -49,7 +49,7 @@
         var places = string_split[0].length - 1;
         for (var i=places; i>=0; i--) {
           new_string = string_split[0][i] + new_string;
-          if (i > 0 && (places - i + 1) % 3 == 0) {
+          if (i > 0 && (places - i + 1) % 3 === 0) {
             new_string = ',' + new_string;
           }
         }

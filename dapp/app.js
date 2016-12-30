@@ -7,6 +7,6 @@
         'ngRoute',
         'ngclipboard'
       ]
-    )
+    );
   }
 )();

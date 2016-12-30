@@ -90,11 +90,11 @@
         var txHash = EthJS.Util.bufferToHex(tx.hash(false));
 
         // Sign transaction hash
-        wallet.web3.eth.sign(wallet.coinbase, txHash, function(e, signature){
+        wallet.web3.eth.sign(wallet.coinbase, txHash, function(e, sig){
           if(e){
             cb(e);
           }
-          var signature = EthJS.Util.fromRpcSig(signature);
+          var signature = EthJS.Util.fromRpcSig(sig);
           tx.v = EthJS.Util.intToHex(signature.v);
           tx.r = EthJS.Util.bufferToHex(signature.r);
           tx.s = EthJS.Util.bufferToHex(signature.s);
@@ -108,7 +108,7 @@
       /**
       * Get multisig nonce
       **/
-      wallet.getWalletNonces = function (cb {
+      wallet.getWalletNonces = function (cb) {
         $uibModal
         .open(
           {
@@ -125,7 +125,7 @@
           function (e) {
             cb(e);
           }
-        )
+        );
       };
 
       /**
@@ -284,7 +284,7 @@
           }
         );
 
-      }
+      };
 
       wallet.updateWallet = function(w){
         if(!wallet.wallets[w.address]){
@@ -296,7 +296,7 @@
           $rootScope.$digest();
         }
         catch(e){}
-      }
+      };
 
       wallet.removeWallet = function(address){
         delete wallet.wallets[address];
@@ -306,7 +306,7 @@
           $rootScope.$digest();
         }
         catch(e){}
-      }
+      };
 
       wallet.update = function(address, name){
         wallet.wallets[address].name = name;
@@ -315,7 +315,7 @@
           $rootScope.$digest();
         }
         catch(e){}
-      }
+      };
 
       /**
       * Get ethereum account nonce with text input prompted to the user
@@ -338,7 +338,7 @@
             cb(e);
           }
         );
-      }
+      };
 
       // Deploy wallet contract with constructor params
       wallet.deployWallet = function(owners, requiredConfirmations, cb){
@@ -346,7 +346,7 @@
         MyContract.new(owners, requiredConfirmations, {
           data: wallet.json.multiSigWallet.binHex
         }, cb);
-      }
+      };
 
       wallet.deployWithLimit = function(owners, requiredConfirmations, limit, cb){
         var MyContract = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi);
@@ -360,7 +360,7 @@
           }),
           cb
         );
-      }
+      };
 
       /**
       * Deploy wallet with daily limit
@@ -384,7 +384,7 @@
           }
         });
 
-      }
+      };
 
       wallet.deployWithLimitOffline = function(owners, requiredConfirmations, limit, cb){
         // Get Transaction Data
@@ -431,7 +431,7 @@
             cb(null, info);
           }
         });
-      }
+      };
 
       // MultiSig functions
 
@@ -444,8 +444,8 @@
           instance.getOwners,
           [],
           cb
-        )
-      }
+        );
+      };
 
       /**
       * add owner to wallet
@@ -470,7 +470,7 @@
             });
           }
         }).call();
-      }
+      };
 
       /**
       * Sign offline Add owner transaction
@@ -491,7 +491,7 @@
           }
         });
 
-      }
+      };
 
       /**
       * Get add owner transaction data
@@ -499,7 +499,7 @@
       wallet.getAddOwnerData = function(address, owner){
         var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
         return instance.addOwner.getData(owner.address);
-      }
+      };
 
       /**
       * Remove owner
@@ -517,7 +517,7 @@
             instance.submitTransaction(address, "0x0", data, nonce, wallet.txDefaults(), cb);
           }
         }).call();
-      }
+      };
 
       /**
       * Get remove owner data
@@ -525,7 +525,7 @@
       wallet.getRemoveOwnerData = function(address, owner){
         var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
         return instance.removeOwner.getData(owner.address);
-      }
+      };
 
       /**
       * Sign offline remove owner transaction
@@ -544,7 +544,7 @@
             wallet.offlineTransaction(address, mainData, nonces.account, cb);
           }
         });
-      }
+      };
 
       /**
       * Get nonces
@@ -555,8 +555,8 @@
           instance.nonces,
           [],
           cb
-        )
-      }
+        );
+      };
 
       /**
       * Get nonce
@@ -568,7 +568,7 @@
           [to, value, data],
           cb
         );
-      }
+      };
 
       /**
       * Get required confirmations number
@@ -579,8 +579,8 @@
           instance.required,
           [],
           cb
-        )
-      }
+        );
+      };
 
       /**
       * Update confirmations
@@ -598,12 +598,12 @@
             instance.submitTransaction(address, "0x0", data, nonce, wallet.txDefaults(), cb);
           }
         }).call();
-      }
+      };
 
       wallet.getUpdateRequiredData = function(address, required){
         var instance = wallet.web3.eth.contract(wallet.json.multiSigWallet.abi).at(address);
         return instance.changeRequirement.getData(required);
-      }
+      };
 
       /**
       * Sign transaction offline
@@ -622,7 +622,7 @@
             wallet.offlineTransaction(address, mainData, nonces.account, cb);
           }
         });
-      }
+      };
 
       /**
       * Get transaction hashes
@@ -634,7 +634,7 @@
           [from, to, pending, executed],
           cb
         );
-      }
+      };
 
       /**
       * Get transaction
@@ -658,7 +658,7 @@
             );
           }
         );
-      }
+      };
 
       /**
       * Get transaction
@@ -670,7 +670,7 @@
           [txHash],
           cb
         );
-      }
+      };
 
       /**
       * Get transaction count
@@ -689,7 +689,7 @@
             }
           }
         );
-      }
+      };
 
       /**
       * Get daily limit
@@ -701,7 +701,7 @@
           [],
           cb
         );
-      }
+      };
 
       /**
       *
@@ -713,7 +713,7 @@
           [],
           cb
         );
-      }
+      };
 
       /**
       * Change daily limit
@@ -734,7 +734,7 @@
           }
         }).call();
 
-      }
+      };
 
       /**
       * Get update limit transaction data
@@ -742,7 +742,7 @@
       wallet.getUpdateLimitData = function(address, limit){
         var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         return instance.changeDailyLimit.getData(limit);
-      }
+      };
 
       /**
       * Sign update limit transaction
@@ -764,7 +764,7 @@
             wallet.offlineTransaction(address, mainData, nonces.account, cb);
           }
         });
-      }
+      };
 
       /**
       * Confirm transaction by another wallet owner
@@ -776,7 +776,7 @@
           wallet.txDefaults(),
           cb
         );
-      }
+      };
 
       /**
       * Sign confirm transaction offline by another wallet owner
@@ -793,7 +793,7 @@
             wallet.offlineTransaction(address, mainData, nonce, cb);
           }
         });
-      }
+      };
 
       /**
       * Execute multisig transaction, must be already signed by required owners
@@ -805,7 +805,7 @@
           wallet.txDefaults(),
           cb
         );
-      }
+      };
 
       /**
       * Signs transaction for execute multisig transaction, must be already signed by required owners
@@ -822,7 +822,7 @@
             wallet.offlineTransaction(address, mainData, nonce, cb);
           }
         });
-      }
+      };
 
       /**
       * Get confirmation count
@@ -841,7 +841,7 @@
             }
           }
         );
-      }
+      };
 
       /**
       * Get confirmations
@@ -853,7 +853,7 @@
           [txHash, wallet.coinbase],
           cb
         );
-      }
+      };
 
       /**
       * Revoke transaction confirmation
@@ -865,7 +865,7 @@
           wallet.txDefaults(),
           cb
         );
-      }
+      };
 
       /**
       * Revoke transaction confirmation offline
@@ -883,7 +883,7 @@
             wallet.offlineTransaction(address, data, nonce, cb);
           }
         });
-      }
+      };
 
       /**
       * Submit transaction
@@ -912,7 +912,7 @@
             );
           }
         }).call();
-      }
+      };
 
       /**
       * Sign offline multisig transaction
@@ -944,7 +944,7 @@
 
           }
         });
-      }
+      };
 
       /**
       * Get type of transaction or destination
@@ -955,7 +955,7 @@
 
           switch (method) {
             case "ba51a6df":
-              return "Update # required."
+              return "Update # required.";
             case "7065cb48":
               return "Add owner";
             case "173825d9":
@@ -963,7 +963,7 @@
             case "cea08621":
               return "Update daily limit";
             default:
-              return "Unknown"
+              return "Unknown";
           }
         }
         else{
@@ -977,7 +977,7 @@
             }
         }
 
-      }
+      };
 
 
 

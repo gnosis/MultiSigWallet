@@ -54,7 +54,7 @@
           title: 'Error',
           message: factory.errorToHtml(error),
         });
-      }
+      };
 
       factory.notification = function(info){
         BootstrapDialog.show({
@@ -65,14 +65,14 @@
               }, 5000);
             }
           });
-      }
+      };
 
       factory.success = function(info){
         BootstrapDialog.show({
           type: BootstrapDialog.TYPE_SUCCESS,
           message: info
         });
-      }
+      };
 
       factory.signed = function(tx){
         $uibModal.open({
@@ -95,7 +95,7 @@
             };
           }
         });
-      }
+      };
 
       factory.nonce = function(walletNonce){
         $uibModal.open({
@@ -118,7 +118,7 @@
             };
           }
         });
-      }
+      };
 
       return factory;
     });

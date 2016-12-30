@@ -71,13 +71,17 @@ module.exports = function(grunt) {
           livereload: true,
         }
       }
-    }
+    },
+    jshint: {
+     all: ['Gruntfile.js', 'controllers/**.js', 'services/**.js', '**.js']
+   }
   });
 
   // Load the plugin that provides the http server.
   grunt.loadNpmTasks('grunt-http-server');
   grunt.loadNpmTasks('grunt-angular-templates');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
 
   grunt.registerTask('default', ['ngtemplates', 'http-server']);
 };

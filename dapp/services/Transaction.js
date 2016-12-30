@@ -20,7 +20,7 @@
         catch(e){
 
         }
-      }
+      };
 
       /**
       * Remove transaction identified by transaction hash from the transactions collection
@@ -34,7 +34,7 @@
         catch(e){
 
         }
-      }
+      };
 
       /**
       * Remove all transactions
@@ -48,7 +48,7 @@
         catch(e){
 
         }
-      }
+      };
 
       /**
       * Send transaction, signed by wallet service provider
@@ -59,11 +59,18 @@
             cb(e);
           }
           else{
-            factory.add({txHash: txHash, callback: function(receipt){cb(null, receipt)}});
+            factory.add(
+              {
+                txHash: txHash,
+                callback: function(receipt) {
+                  cb(null, receipt);
+                }
+              }
+            );
             cb(null, txHash);
           }
         });
-      }
+      };
 
       /**
       * Sign transaction without sending it to an ethereum node
@@ -81,19 +88,18 @@
               gasPrice: EthJS.Util.intToHex(Wallet.txParams.gasPrice),
               gasLimit: EthJS.Util.intToHex(Wallet.txParams.gasLimit),
               nonce: EthJS.Util.intToHex(nonce)
-            }
-            console.log(txInfo);
+            };
             var tx = new EthJS.Tx(txInfo);
 
             // Get transaction hash
             var txHash = EthJS.Util.bufferToHex(tx.hash(false));
 
             // Sign transaction hash
-            Wallet.web3.eth.sign(Wallet.coinbase, txHash, function(e, signature){
+            Wallet.web3.eth.sign(Wallet.coinbase, txHash, function(e, sig){
               if(e){
                 cb(e);
               }
-              var signature = EthJS.Util.fromRpcSig(signature);
+              var signature = EthJS.Util.fromRpcSig(sig);
               tx.v = EthJS.Util.intToHex(signature.v);
               tx.r = EthJS.Util.bufferToHex(signature.r);
               tx.s = EthJS.Util.bufferToHex(signature.s);
@@ -103,7 +109,7 @@
             });
           }
         });
-      }
+      };
 
       /**
       * Sign transaction without sending it to an ethereum node. Needs abi,
@@ -117,7 +123,7 @@
         tx.data = instance[method].getData.apply(this, params);
 
         factory.signOffline(tx, cb);
-      }
+      };
 
       /**
       * Send transaction, signed by wallet service provider. Needs abi,
@@ -141,13 +147,20 @@
           }
           else{
               // Add transaction
-              factory.add({txHash: txHash, callback: function(receipt){cb(null, receipt)}});
+              factory.add(
+                {
+                  txHash: txHash,
+                  callback: function(receipt){
+                    cb(null, receipt);
+                  }
+                }
+              );
               cb(null, txHash);
           }
         });
         instance[method].sendTransaction.apply(this, transactionParams);
 
-      }
+      };
 
       /**
       * Send signed transaction
@@ -157,7 +170,7 @@
           tx,
           cb
         );
-      }
+      };
 
       /**
       * Internal loop, checking for transaction receipts and transaction info.
@@ -181,14 +194,14 @@
                   // call callback if it has
                   if(factory.transactions[receipt.transactionHash].callback){
                     factory.transactions[receipt.transactionHash].callback(receipt);
-                  };
+                  }
 
                   // update transactions
                   localStorage.setItem("transactions", JSON.stringify(factory.transactions));
                   try{
                     $rootScope.$digest();
                   }
-                  catch(e){
+                  catch(error){
 
                   }
                 }
@@ -199,28 +212,30 @@
           // Get transaction info
           if(tx && !tx.info){
             batch.add(
-              Wallet.web3.eth.getTransaction.request(txHashes[i], function(e, info){
-                if(!e && info){
-                  factory.transactions[info.hash].info = info;
+              Wallet.web3.eth.getTransaction.request(
+                txHashes[i],
+                function(e, info){
+                  if(!e && info){
+                    factory.transactions[info.hash].info = info;
 
-                  // update transactions
-                  localStorage.setItem("transactions", JSON.stringify(factory.transactions));
-                  try{
-                    $rootScope.$digest();
-                  }
-                  catch(e){
+                    // update transactions
+                    localStorage.setItem("transactions", JSON.stringify(factory.transactions));
+                    try{
+                      $rootScope.$digest();
+                    }
+                    catch(e){
 
+                    }
                   }
                 }
-              }
-            )
-          );
+              )
+            );
           }
         }
 
         batch.execute();
         setTimeout(factory.checkReceipts, 15000);
-      }
+      };
 
       Wallet
       .webInitialized

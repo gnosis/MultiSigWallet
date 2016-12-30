@@ -62,12 +62,22 @@ module.exports = function(grunt) {
         src:      ['partials/**.html', 'partials/modals/**.html'],
         dest:     'partials.js'
       }
+    },
+    watch: {
+      scripts: {
+        files: ['partials/*.html', 'partials/modals/*.html'],
+        tasks: ['ngtemplates'],
+        options: {
+          livereload: true,
+        }
+      }
     }
   });
 
   // Load the plugin that provides the http server.
   grunt.loadNpmTasks('grunt-http-server');
   grunt.loadNpmTasks('grunt-angular-templates');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
   grunt.registerTask('default', ['ngtemplates', 'http-server']);
 };

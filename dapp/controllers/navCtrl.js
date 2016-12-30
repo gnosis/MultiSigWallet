@@ -29,7 +29,7 @@
       $scope.selectAccount = function (account) {
         Wallet.selectAccount(account);
         $scope.updateInfo();
-      }
+      };
     });
   }
 )();

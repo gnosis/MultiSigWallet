@@ -13,7 +13,7 @@
         }
 
         Utils.success("Updated");
-      }
+      };
     });
   }
 )();

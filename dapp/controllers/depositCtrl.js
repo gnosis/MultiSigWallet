@@ -21,7 +21,7 @@
               $uibModalInstance.close();
             }
           }
-        )
+        );
       };
 
       $scope.sign = function () {
@@ -43,7 +43,7 @@
 
         $scope.cancel = function () {
           $uibModalInstance.dismiss();
-        }
+        };
     });
   }
 )();

@@ -14,7 +14,7 @@
       $scope.limit = 0;
 
       $scope.removeOwner = function (address) {
-        delete $scope.owners[address]
+        delete $scope.owners[address];
       };
 
       $scope.deployWallet = function () {
@@ -32,7 +32,7 @@
               else {
                 $uibModalInstance.close();
                 Transaction.add({txHash: contract.transactionHash});
-                Utils.notification("Deployment transaction was sent.")
+                Utils.notification("Deployment transaction was sent.");
               }
             }
           }
@@ -81,8 +81,8 @@
           function (owner) {
             $scope.owners[owner.address] = owner;
           }
-        )
-      }
+        );
+      };
     });
   }
 )();

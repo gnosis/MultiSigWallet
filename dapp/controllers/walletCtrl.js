@@ -56,7 +56,7 @@
                 $scope.$apply();
               }
             )
-          )
+          );
         });
         $scope.batch.execute();
       };
@@ -132,7 +132,7 @@
             };
             $scope.cancel = function () {
               $uibModalInstance.dismiss();
-            }
+            };
           }
         });
       };
@@ -154,7 +154,7 @@
             };
             $scope.cancel = function () {
               $uibModalInstance.dismiss();
-            }
+            };
           }
         });
       };
@@ -234,7 +234,7 @@
           },
           controller: 'withdrawLimitCtrl'
         });
-      }
+      };
     });
   }
 )();

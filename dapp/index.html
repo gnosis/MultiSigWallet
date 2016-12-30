@@ -98,7 +98,7 @@
                 <li uib-dropdown>
                  <a href="#" uib-dropdown-toggle>
                    <!-- <i class="fa fa-address-book-o" aria-hidden="true"></i> -->
-                   Account {{coinbase|limitTo:20}}... <b class="caret"></b>
+                   Account: {{coinbase|limitTo:20}}... <b class="caret"></b>
                  </a>
                  <ul class="dropdown-menu">
                     <li ng-repeat="account in accounts"><a href="" ng-click="selectAccount(account)">{{account}}</a></li>

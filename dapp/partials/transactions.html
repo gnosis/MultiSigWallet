@@ -1,22 +1,22 @@
 <div class="panel panel-default">
   <div class="panel-heading">
     <h3>
-    Transactions
-    <div class="pull-right">
-      <button type="button" class="btn btn-default" ng-click="sendSignedTransaction()">
-        Send signed transaction
-      </button>
-      <button type="button"  class="btn btn-default" ng-click="sendTransaction()">
-        Send transaction
-      </button>
-      <button type="button" class="btn btn-default" ng-click="getNonce()">
-        Get nonce
-      </button>
-      <button type="button" class="btn btn-danger" ng-click="removeAll()">
-        Remove all
-      </button>
-    </div>
-  </h3>
+      Transactions
+      <div class="pull-right">
+        <button type="button" class="btn btn-default" ng-click="sendTransaction()">
+          Send transaction
+        </button>
+        <button type="button" class="btn btn-default" ng-click="sendRawTransaction()">
+          Send raw transaction
+        </button>
+        <button type="button" class="btn btn-default" ng-click="getNonce()">
+          Get nonce
+        </button>
+        <button type="button" class="btn btn-danger" ng-click="removeAll()">
+          Remove all
+        </button>
+      </div>
+    </h3>
   </div>
   <div class="panel-body">
     <table class="table table-hover">

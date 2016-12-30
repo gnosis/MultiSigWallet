@@ -26,7 +26,7 @@
         Transaction.removeAll();
       }
 
-      $scope.sendSignedTransaction = function(){
+      $scope.sendRawTransaction = function(){
         $uibModal.open({
           templateUrl: 'partials/modals/signedTransaction.html',
           size: 'md',

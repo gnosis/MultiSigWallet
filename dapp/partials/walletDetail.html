@@ -3,178 +3,166 @@
     {{wallet.name}}
   </h2>
 </div>
-
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3>
+    <div class="pull-right">
+      <button type="button" ng-click="addOwner()" class="btn btn-default">
+        Add
+      </button>
+      <button type="button" ng-click="hideOwners=true" class="btn btn-default" ng-hide="hideOwners">
+        <span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span>
+      </button>
+      <button type="button" ng-click="hideOwners=false" class="btn btn-default" ng-show="hideOwners">
+        <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
+      </button>
+    </div>
+    <h4>
       Owners
-      <div class="pull-right">
-        <button type="button" ng-click="addOwner()" class="btn btn-default">
-          Add
-        </button>
-        <button type="button" ng-click="hideOwners = true" class="btn btn-default" ng-hide="hideOwners">
-          Hide
-        </button>
-        <button type="button" ng-click="hideOwners = false" class="btn btn-default" ng-show="hideOwners">
-          Show
-        </button>
-      </div>
-    </h3>
+    </h4>
   </div>
-  <div class="panel-body collapse" uib-collapse="hideOwners">
-    <table class="table table-hover table-bordered table-striped">
-      <thead>
-        <tr>
-          <th>
-            Name
-          </th>
-          <th>
-            Address
-          </th>
-          <th>
-            Actions
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat="owner in owners track by $index">
-          <td>
-            {{getOwnerName(owner)}}
-          </td>
-          <td>
-            {{owner}}
-          </td>
-          <td>
-            <button type="button" ng-click="editOwner(owner)" class="btn btn-default">
+  <table class="table table-hover table-bordered table-striped" uib-collapse="hideOwners">
+    <thead>
+      <tr>
+        <th>
+          Name
+        </th>
+        <th>
+          Address
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="owner in owners track by $index">
+        <td>
+          {{getOwnerName(owner)}}
+          <div class="pull-right">
+            <button type="button" ng-click="editOwner(owner)" class="btn btn-default btn-sm">
               Edit
             </button>
-            <button type="button" ng-click="removeOwner(owner)" class="btn btn-danger" ng-hide="owners.length == 1">
+            <button type="button" ng-click="removeOwner(owner)" class="btn btn-danger btn-sm" ng-hide="owners.length == 1">
               Remove
             </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+          </div>
+        </td>
+        <td>
+          {{owner}}
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
-
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3>
-      Multisig-Transactions
-      <div class="pull-right form-inline">
-        <select class="form-control" ng-model="showTxs" ng-change="updateParams()">
-          <option value="all">
-            All
-          </option>
-          <option value="pending">
-            Pending
-          </option>
-          <option value="executed">
-            Executed
-          </option>
-        </select>
-        <button type="button" class="btn btn-default" ng-click="addTransaction()">
-          Add
-        </button>
-      </div>
-    </h3>
-  </div>
-  <div class="panel-body">
-    <table class="table table-hover table-bordered table-striped">
-      <thead>
-        <tr>
-          <th>
-            Destination/Type
-          </th>
-          <th>
-            Value
-          </th>
-          <th>
-            Data
-          </th>
-          <th>
-            Nonce
-          </th>
-          <th>
-            # Confirmations
-          </th>
-          <th>
-            Executed
-          </th>
-          <th>
-            Actions
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat="txHash in txHashes track by $index">
-          <td>
-            {{getType(transactions[txHash])}}
-          </td>
-          <td>
-            {{transactions[txHash].value|ether}}
-          </td>
-          <td>
-            {{getParam(transactions[txHash])}}
-          </td>
-          <td>
-            {{transactions[txHash].nonce}}
-          </td>
-          <td>
-            <ul ng-repeat="owner in transactions[txHash].confirmations">
-              <li>
-                {{wallet.owners[owner].name}}
-              </li>
-            </ul>
-          </td>
-          <td>
-            <span ng-show="transactions[txHash].executed">
-              Yes
-            </span>
-            <span ng-hide="transactions[txHash].executed">
-              No
-            </span>
-          </td>
-          <td>
-            <button type="button" class="btn btn-default"
-            ng-hide="transactions[txHash].executed || transactions[txHash].confirmed"
-            ng-click="confirmTransaction(txHash)">
-              Confirm
-            </button>
-
-            <button type="button" class="btn btn-default"
-            ng-show="transactions[txHash].confirmed && !transactions[txHash].executed"
-            ng-click="revokeConfirmation(txHash)">
-              Revoke Confirmation
-            </button>
-
-            <button type="button" class="btn btn-default"
-            ng-show="!transactions[txHash].executed && transactions[txHash].confirmations.length == confirmations"
-            ng-click="executeTransaction(txHash)">
-              Execute
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <div ng-hide="totalItems" class="text-center">
-      No wallets
+    <div class="pull-right form-inline">
+      <button type="button" class="btn btn-default" ng-click="addTransaction()">
+        Add
+      </button>
+      <select class="form-control" ng-model="showTxs" ng-change="updateParams()">
+        <option value="all">
+          All
+        </option>
+        <option value="pending">
+          Pending
+        </option>
+        <option value="executed">
+          Executed
+        </option>
+      </select>
+      <select class="form-control" ng-change="updateTransactions()" ng-model="itemsPerPage" convert-to-number>
+        <option value="5">
+          5/p
+        </option>
+        <option value="10">
+          10/p
+        </option>
+        <option value="20">
+          20/p
+        </option>
+      </select>
     </div>
+    <h4>
+      Multisig transactions
+    </h4>
   </div>
-  <div class="form-inline panel-footer">
-    <ul uib-pagination total-items="totalItems" ng-model="currentPage"
-    ng-change="updateTransactions()" items-per-page="itemsPerPage"></ul>
-    <select class="form-control pull-right" ng-change="updateTransactions()" ng-model="itemsPerPage" convert-to-number>
-      <option value="2">
-        2
-      </option>
-      <option value="5">
-        5
-      </option>
-      <option value="10">
-        10
-      </option>
-    </select>
+  <table class="table table-hover table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>
+          Destination/Type
+        </th>
+        <th>
+          Value
+        </th>
+        <th>
+          Data
+        </th>
+        <th>
+          Nonce
+        </th>
+        <th>
+          # Confirmations
+        </th>
+        <th>
+          Executed
+        </th>
+        <th>
+          Actions
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="txHash in txHashes track by $index">
+        <td>
+          {{getType(transactions[txHash])}}
+        </td>
+        <td>
+          {{transactions[txHash].value|ether}}
+        </td>
+        <td>
+          {{getParam(transactions[txHash])}}
+        </td>
+        <td>
+          {{transactions[txHash].nonce}}
+        </td>
+        <td>
+          <ul ng-repeat="owner in transactions[txHash].confirmations">
+            <li>
+              {{wallet.owners[owner].name}}
+            </li>
+          </ul>
+        </td>
+        <td>
+          <span ng-show="transactions[txHash].executed">
+            Yes
+          </span>
+          <span ng-hide="transactions[txHash].executed">
+            No
+          </span>
+        </td>
+        <td>
+          <button type="button" class="btn btn-default btn-sm"
+          ng-hide="transactions[txHash].executed || transactions[txHash].confirmed"
+          ng-click="confirmTransaction(txHash)">
+            Confirm
+          </button>
+          <button type="button" class="btn btn-default btn-sm"
+          ng-show="transactions[txHash].confirmed && !transactions[txHash].executed"
+          ng-click="revokeConfirmation(txHash)">
+            Revoke confirmation
+          </button>
+          <button type="button" class="btn btn-default btn-sm"
+          ng-show="!transactions[txHash].executed && transactions[txHash].confirmations.length == confirmations"
+          ng-click="executeTransaction(txHash)">
+            Execute
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div ng-hide="totalItems" class="panel-body text-center">
+    No multisig transactions. Send a multisig transaction <a href="" ng-click="addTransaction()">now</a>.
+  </div>
+  <div class="panel-footer">
+    <ul uib-pagination total-items="totalItems" ng-model="currentPage" ng-change="updateTransactions()" items-per-page="itemsPerPage"></ul>
   </div>
 </div>

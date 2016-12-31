@@ -1,19 +1,16 @@
 <div class="modal-header">
-    <h3 class="modal-title" id="modal-title">
-      Remove owner
-    </h3>
+  <h3 class="modal-title">
+    Remove owner
+  </h3>
 </div>
-<div class="modal-body" id="modal-body">
-
+<div class="modal-body">
   <div class="form-group">
-    <label> Name </label>
-    <input type="text" class="form-control" ng-model="owner.name" readonly \>
+    <label for="name">Name</label>
+    <input id="name" type="text" class="form-control" ng-model="owner.name" readonly />
   </div>
-
   <div class="form-group">
-    <label> Address </label>
-    <input type="text" class="form-control"
-    ng-model="owner.address" readonly \>
+    <label for="address"> Address </label>
+    <input id="address" type="text" class="form-control" ng-model="owner.address" readonly />
   </div>
 </div>
 <div class="modal-footer">

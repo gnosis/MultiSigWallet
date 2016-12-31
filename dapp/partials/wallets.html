@@ -1,0 +1,86 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="pull-right">
+      <button type="button" class="btn btn-default" ng-click="newWalletSelect()">
+        Add
+      </button>
+    </div>
+    <h4>
+      Wallets
+    </h4>
+  </div>
+  <table class="table table-hover table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>
+          Name
+        </th>
+        <th>
+          Address
+        </th>
+        <th>
+          Balance
+        </th>
+        <th>
+          Required confirmations
+        </th>
+        <th>
+          Daily limit
+        </th>
+        <th>
+          Limit for today
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="(walletAddress, wallet) in wallets|objectToArray|limitTo:itemsPerPage:itemsPerPage*(currentPage-1) track by $index">
+        <td>
+          <a ng-href="#/wallet/{{wallet.address}}">{{wallet.name}}</a>
+          <div class="pull-right form-inline">
+            <button type="button" class="btn btn-default btn-sm" ng-click="editWallet(wallet)">
+              Edit
+            </button>
+            <button type="button" class="btn btn-danger btn-sm" ng-click="removeWallet(wallet.address)">
+              Remove
+            </button>
+          </div>
+        </td>
+        <td>
+          <div uib-popover="{{wallet.address}}" popover-trigger="'mouseenter'">
+            {{wallet.address|address}}
+          </div>
+        </td>
+        <td>
+          {{wallet.balance|ether}}
+          <button type="button" class="btn btn-default btn-sm pull-right" ng-click="deposit(wallet)">
+            Deposit
+          </button>
+        </td>
+        <td>
+          {{wallet.confirmations|bigNumber}}
+          <button type="button" class="btn btn-default btn-sm pull-right" ng-click="setRequired(wallet)">
+            Edit
+          </button>
+        </td>
+        <td>
+          {{wallet.limit|ether}}
+          <button type="button" class="btn btn-default btn-sm pull-right" ng-click="setLimit(wallet)">
+            Edit
+          </button>
+        </td>
+        <td>
+          {{wallet.maxWithdraw|ether}}
+          <button type="button" class="btn btn-default btn-sm pull-right" ng-click="withdrawLimit(wallet)">
+            Withdraw
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div ng-hide="totalItems" class="panel-body text-center">
+    No wallets. Add wallet <a href="" ng-click="newWalletSelect()">now</a>.
+  </div>
+  <div class="panel-footer">
+    <ul uib-pagination total-items="totalItems" ng-model="currentPage" items-per-page="itemsPerPage"></ul>
+  </div>
+</div>

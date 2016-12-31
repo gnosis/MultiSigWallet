@@ -1,96 +1,93 @@
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3>
-      Transactions
-      <div class="pull-right">
-        <button type="button" class="btn btn-default" ng-click="sendTransaction()">
-          Send transaction
-        </button>
-        <button type="button" class="btn btn-default" ng-click="sendRawTransaction()">
-          Send raw transaction
-        </button>
-        <button type="button" class="btn btn-default" ng-click="getNonce()">
-          Get nonce
-        </button>
-        <button type="button" class="btn btn-danger" ng-click="removeAll()">
-          Remove all
-        </button>
-      </div>
-    </h3>
-  </div>
-  <div class="panel-body">
-    <table class="table table-hover table-bordered table-striped">
-      <thead>
-        <tr>
-          <th>
-            Destination
-          </th>
-          <th>
-            Value
-          </th>
-          <th>
-            Data
-          </th>
-          <th>
-            Nonce
-          </th>
-          <th>
-            Mined
-          </th>
-          <th>
-            Logs
-          </th>
-          <th>
-
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat="transaction in transactions | objectToArray| limitTo:currentPage*itemsPerPage:itemsPerPage*(currentPage-1) track by $index">
-          <td>
-            <a uib-popover="{{transaction.info.to}}" popover-trigger="'mouseenter'"
-            ng-href="https://testnet.etherscan.io/tx/{{transaction.txHash}}">
-              {{getTo(transaction.info.to)}}
-            </a>
-          </td>
-          <td>
-            {{transaction.info.value | ether}}
-          </td>
-          <td popover-trigger="'mouseenter'" uib-popover-template="'partials/txData.html'" popover-placement="right" popover-append-to-body="true">
-              {{transaction.info.input | txData}}
-          </td>
-          <td>
-            {{transaction.info.nonce}}
-          </td>
-          <td>
-            <span ng-show="transaction.receipt">
-              Yes
-            </span>
-            <span ng-hide="transaction.receipt">
-              No
-            </span>
-          </td>
-          <td>
-            <!--
-            <ul>
-              <li ng-repeat="log in transaction.receipt.logs">
-                {{log}}
-              </li>
-            </ul>
-          -->
-          </td>
-          <td>
-            <button class="btn btn-default" ng-click="remove(transaction.txHash)">
-              <i class="fa fa-minus text-danger">
-              </i>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <div ng-hide="totalItems" class="text-center">
-      No transactions
+    <div class="pull-right">
+      <button type="button" class="btn btn-default" ng-click="sendTransaction()">
+        Send transaction
+      </button>
+      <button type="button" class="btn btn-default" ng-click="sendRawTransaction()">
+        Send raw transaction
+      </button>
+      <button type="button" class="btn btn-default" ng-click="getNonce()">
+        Get nonce
+      </button>
+      <button type="button" class="btn btn-danger" ng-click="removeAll()">
+        Remove all
+      </button>
     </div>
+    <h4>
+      Transactions
+    </h4>
+  </div>
+  <table class="table table-hover table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>
+          Destination
+        </th>
+        <th>
+          Value
+        </th>
+        <th>
+          Data
+        </th>
+        <th>
+          Nonce
+        </th>
+        <th>
+          Mined
+        </th>
+        <th>
+          Logs
+        </th>
+        <th>
+          Remove
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="transaction in transactions | objectToArray| limitTo:currentPage*itemsPerPage:itemsPerPage*(currentPage-1) track by $index">
+        <td>
+          <a uib-popover="{{transaction.info.to}}" popover-trigger="'mouseenter'"
+          ng-href="https://testnet.etherscan.io/tx/{{transaction.txHash}}">
+            {{getTo(transaction.info.to)}}
+          </a>
+        </td>
+        <td>
+          {{transaction.info.value | ether}}
+        </td>
+        <td popover-trigger="'mouseenter'" uib-popover-template="'partials/txData.html'" popover-placement="bottom" popover-append-to-body="true">
+            {{transaction.info.input | txData}}
+        </td>
+        <td>
+          {{transaction.info.nonce}}
+        </td>
+        <td>
+          <span ng-show="transaction.receipt">
+            Yes
+          </span>
+          <span ng-hide="transaction.receipt">
+            No
+          </span>
+        </td>
+        <td>
+          <!--
+          <ul>
+            <li ng-repeat="log in transaction.receipt.logs">
+              {{log}}
+            </li>
+          </ul>
+        -->
+        </td>
+        <td>
+          <button class="btn btn-danger btn-sm" ng-click="remove(transaction.txHash)">
+            Remove
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div ng-hide="totalItems" class="text-center panel-body">
+    No transactions. Send a transaction <a href="" ng-click="sendTransaction()">now</a>.
   </div>
   <div class="panel-footer">
     <ul uib-pagination total-items="totalItems" ng-model="currentPage" items-per-page="itemsPerPage"></ul>

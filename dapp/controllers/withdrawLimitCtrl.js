@@ -28,12 +28,12 @@
               Utils.dangerAlert(e);
             }
             else {
-              Utils.notification("Multisig transaction sent, will be mined in next 20s");
+              Utils.notification("Multisig transaction was sent.");
               Transaction.add(
                 {
                   txHash: tx,
                   callback: function () {
-                    Utils.success("Multisig transaction mined");
+                    Utils.success("Multisig transaction was mined");
                   }
                 }
               );

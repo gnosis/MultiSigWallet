@@ -1,20 +1,16 @@
 <div class="modal-header">
   <h3 class="modal-title">
-    Change # required conf.
+    Change required confirmations
   </h3>
 </div>
-
-
 <div class="modal-body">
   <div class="form-group">
-    <label class="control-label">
-      Required confirmations:
-    </label>
-    <input type="number" class="form-control" ng-model="required">
+    <label for="confirmations">Required confirmations</label>
+    <input id="confirmations" type="number" class="form-control" ng-model="required">
   </div>
 </div>
 <div class="modal-footer">
-  <button type="bytton" class="btn btn-default" ng-click="update()">
+  <button type="button" class="btn btn-default" ng-click="update()">
     Send transaction
   </button>
   <button type="button" class="btn btn-default" ng-click="signOffline()">
@@ -26,4 +22,4 @@
   <button type="button" class="btn btn-danger" ng-click="cancel()">
     Cancel
   </button>
-</form>
+</div>

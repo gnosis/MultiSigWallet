@@ -1,15 +1,25 @@
-.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
-
+.nav, .pagination, .carousel, .panel-title a {
+    cursor: pointer;
+}
 
 .popover {
     max-width: 450px;
 }
 
-body { padding-top: 70px; padding-bottom: 70px;}
-.navbar-brand>img {
-  height: 100%;
+body {
+    padding-top: 70px;
+    padding-bottom: 70px;
+}
+
+.navbar-brand > img {
+    height: 32px;
+    margin-top: -6px;
 }
 
 .tx-data{
-  word-wrap: break-word;
+    word-wrap: break-word;
+}
+
+table.collapse.in {
+   display: table;
 }

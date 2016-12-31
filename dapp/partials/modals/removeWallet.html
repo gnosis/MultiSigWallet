@@ -1,34 +1,29 @@
 <div class="modal-header">
-    <h3 class="modal-title" id="modal-title">
-      Remove wallet
-    </h3>
+  <h3 class="modal-title">
+    Remove wallet
+  </h3>
 </div>
 <form class="form" name="removeWallet">
   <div class="modal-body" id="modal-body">
     <div class="form-group">
-      <label> Name </label>
-      <input type="text" class="form-control" ng-model="wallet.name" disabled \>
+      <label for="name">Name</label>
+      <input id="name" type="text" class="form-control" ng-model="wallet.name" disabled />
     </div>
-
     <div class="form-group">
-      <label> Address </label>
-      <input type="text" class="form-control" disabled
-      ng-model="wallet.address"\>
+      <label for="address">Address</label>
+      <input id="address" type="text" class="form-control" disabled ng-model="wallet.address" />
     </div>
-
     <div class="form-group">
-      <label> Enter name for confirmation </label>
-      <input type="text" class="form-control"
-      ng-model="confirmation"\>
+      <label for="confirmation">Enter name for confirmation</label>
+      <input id="confirmation" type="text" class="form-control" ng-model="confirmation" />
     </div>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-default" type="button" ng-click="ok()"
-    ng-disabled="confirmation != wallet.name">
+    <button class="btn btn-default" type="button" ng-click="ok()" ng-disabled="confirmation != wallet.name">
       Ok
     </button>
     <button class="btn btn-danger" type="button" ng-click="cancel()">
       Cancel
     </button>
   </div>
-</div>
+</form>

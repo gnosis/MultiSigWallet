@@ -1,15 +1,12 @@
 <div class="modal-header">
   <h3 class="modal-title">
     Deposit
-  <h3>
+  </h3>
 </div>
-
 <div class="modal-body">
   <div class="form-group">
-    <label class="control-label">
-      Amount (ETH):
-    </label>
-    <input type="number" class="form-control" ng-model="amount" step="any">
+    <label for="value">Amount (ETH):</label>
+    <input id="value" type="number" class="form-control" ng-model="amount" step="any">
   </div>
 </div>
 <div class="modal-footer">
@@ -21,5 +18,5 @@
   </button>
   <button type="button" class="btn btn-danger" ng-click="cancel()">
     Cancel
-  </a>
-</form>
+  </button>
+</div>

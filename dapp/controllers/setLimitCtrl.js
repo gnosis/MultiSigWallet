@@ -18,9 +18,9 @@
           }
           else {
             $uibModalInstance.close();
-            Utils.notification("Transaction sent, will be mined in next 20s");
+            Utils.notification("Update daily limit transaction was sent.");
             Transaction.add({txHash: tx, callback: function () {
-              Utils.success("Required confirmations changed");
+              Utils.success("Update daily limit transaction was minded.");
             }});
           }
         });

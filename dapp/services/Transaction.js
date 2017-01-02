@@ -1,8 +1,8 @@
 (
-  function(){
+  function () {
     angular
     .module('multiSigWeb')
-    .service('Transaction', function(Wallet, $rootScope, $uibModal){
+    .service('Transaction', function(Wallet, $rootScope, $uibModal) {
       var factory = {
         transactions: JSON.parse(localStorage.getItem("transactions")) || {}
       };
@@ -10,59 +10,53 @@
       /**
       * Add transaction object to the transactions collection
       */
-      factory.add = function(tx){
+      factory.add = function (tx) {
         factory.transactions[tx.txHash] = tx;
         tx.date = new Date();
         localStorage.setItem("transactions", JSON.stringify(factory.transactions));
-        try{
+        try {
           $rootScope.$digest();
         }
-        catch(e){
-
-        }
+        catch (e) {}
       };
 
       /**
       * Remove transaction identified by transaction hash from the transactions collection
       */
-      factory.remove = function(txHash){
+      factory.remove = function (txHash) {
         delete factory.transactions[txHash];
         localStorage.setItem("transactions", JSON.stringify(factory.transactions));
         try{
           $rootScope.$digest();
         }
-        catch(e){
-
-        }
+        catch (e) {}
       };
 
       /**
       * Remove all transactions
       */
-      factory.removeAll = function(){
+      factory.removeAll = function () {
         factory.transactions = {};
         localStorage.removeItem("transactions");
         try{
           $rootScope.$digest();
         }
-        catch(e){
-
-        }
+        catch (e) {}
       };
 
       /**
       * Send transaction, signed by wallet service provider
       */
-      factory.send = function(tx, cb){
-        Wallet.web3.eth.sendTransaction(tx, function(e, txHash){
-          if(e){
+      factory.send = function (tx, cb) {
+        Wallet.web3.eth.sendTransaction(tx, function (e, txHash) {
+          if (e) {
             cb(e);
           }
-          else{
+          else {
             factory.add(
               {
                 txHash: txHash,
-                callback: function(receipt) {
+                callback: function (receipt) {
                   cb(null, receipt);
                 }
               }
@@ -75,12 +69,12 @@
       /**
       * Sign transaction without sending it to an ethereum node
       */
-      factory.signOffline = function(txObject, cb){
-        Wallet.getUserNonce(function(e, nonce){
-          if(e){
+      factory.signOffline = function (txObject, cb) {
+        Wallet.getUserNonce(function (e, nonce) {
+          if (e) {
             cb(e);
           }
-          else{
+          else {
             // Create transaction object
             var txInfo = {
               to: txObject.to,
@@ -95,8 +89,8 @@
             var txHash = EthJS.Util.bufferToHex(tx.hash(false));
 
             // Sign transaction hash
-            Wallet.web3.eth.sign(Wallet.coinbase, txHash, function(e, sig){
-              if(e){
+            Wallet.web3.eth.sign(Wallet.coinbase, txHash, function (e, sig) {
+              if (e) {
                 cb(e);
               }
               var signature = EthJS.Util.fromRpcSig(sig);
@@ -115,7 +109,7 @@
       * Sign transaction without sending it to an ethereum node. Needs abi,
       * selected method to execute and related params.
       */
-      factory.signMethodOffline = function(tx, abi, method, params, cb){
+      factory.signMethodOffline = function (tx, abi, method, params, cb) {
 
         // Get data
         var instance = Wallet.web3.eth.contract(abi).at(tx.to);
@@ -129,7 +123,7 @@
       * Send transaction, signed by wallet service provider. Needs abi,
       * selected method to execute and related params.
       */
-      factory.sendMethod = function(tx, abi, method, params, cb){
+      factory.sendMethod = function (tx, abi, method, params, cb) {
         // Instance contract
         var instance = Wallet.web3.eth.contract(abi).at(tx.to);
         var transactionParams = params.slice();
@@ -141,16 +135,16 @@
           data: tx.data?tx.data:null,
           nonce: tx.nonce
         });
-        transactionParams.push(function(e, txHash){
-          if(e){
+        transactionParams.push(function (e, txHash) {
+          if (e) {
             cb(e);
           }
-          else{
+          else {
               // Add transaction
               factory.add(
                 {
                   txHash: txHash,
-                  callback: function(receipt){
+                  callback: function (receipt) {
                     cb(null, receipt);
                   }
                 }
@@ -165,7 +159,7 @@
       /**
       * Send signed transaction
       **/
-      factory.sendRawTransaction = function(tx, cb){
+      factory.sendRawTransaction = function (tx, cb) {
         Wallet.web3.eth.sendRawTransaction(
           tx,
           cb
@@ -176,7 +170,7 @@
       * Internal loop, checking for transaction receipts and transaction info.
       * calls callback after receipt is retrieved.
       */
-      factory.checkReceipts = function(){
+      factory.checkReceipts = function () {
         // Create batch object
         var batch = Wallet.web3.createBatch();
 
@@ -184,10 +178,10 @@
         var txHashes = Object.keys(factory.transactions);
 
         function processReceipt(e, receipt) {
-          if(!e && receipt){
+          if (!e && receipt) {
             factory.transactions[receipt.transactionHash].receipt = receipt;
             // call callback if it has
-            if(factory.transactions[receipt.transactionHash].callback){
+            if (factory.transactions[receipt.transactionHash].callback) {
               factory.transactions[receipt.transactionHash].callback(receipt);
             }
 
@@ -196,14 +190,12 @@
             try{
               $rootScope.$digest();
             }
-            catch(error){
-
-            }
+            catch (error) {}
           }
         }
 
         function getTransactionInfo(e, info) {
-          if(!e && info){
+          if (!e && info) {
             factory.transactions[info.hash].info = info;
 
             // update transactions
@@ -211,23 +203,19 @@
             try{
               $rootScope.$digest();
             }
-            catch(error){
-
-            }
+            catch (error) {}
           }
         }
-
-        for(var i=0; i<txHashes.length; i++){
+        for (var i=0; i<txHashes.length; i++) {
           var tx = factory.transactions[txHashes[i]];
           // Get transaction receipt
-          if(tx && !tx.receipt){
+          if (tx && !tx.receipt) {
             batch.add(
               Wallet.web3.eth.getTransactionReceipt.request(txHashes[i], processReceipt)
             );
           }
-
           // Get transaction info
-          if(tx && !tx.info){
+          if (tx && !tx.info) {
             batch.add(
               Wallet.web3.eth.getTransaction.request(
                 txHashes[i],
@@ -244,7 +232,7 @@
       Wallet
       .webInitialized
       .then(
-        function(){
+        function () {
           // init transactions loop
           factory.checkReceipts();
         }

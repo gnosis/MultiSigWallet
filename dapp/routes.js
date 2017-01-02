@@ -14,7 +14,7 @@
       })
       .when("/wallet/:address", {
         controller: 'walletDetailCtrl',
-        templateUrl: 'partials/walletDetail.html'
+        templateUrl: 'partials/wallet.html'
       })
       .when("/settings", {
         controller: 'settingsCtrl',

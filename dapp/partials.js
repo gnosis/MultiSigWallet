@@ -263,7 +263,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
   );
 
 
-  $templateCache.put('partials/walletDetail.html',
+  $templateCache.put('partials/wallet.html',
     "<div class=\"page-header\">\r" +
     "\n" +
     "  <h2>\r" +

@@ -20,7 +20,7 @@
     <div class="form-group">
       <label for="method">Method</label>
       <select id="method" ng-model="method" ng-options="method.name for method in methods track by method.index"
-       ng-required="tx.abi" class="form-control" ng-change="setMethod()"></select>
+       ng-required="tx.abi" class="form-control" ng-change="setMethod()" ng-disabled="!abiArray" ></select>
     </div>
     <div class="form-group" ng-show="method">
       <h3>

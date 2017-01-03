@@ -378,7 +378,7 @@
         MyContract.new(
           owners,
           requiredConfirmations,
-          new EthJS.BN(limit),
+          limit,
           wallet.txDefaults({
             data: wallet.json.multiSigDailyLimit.binHex
           }),
@@ -413,7 +413,7 @@
       wallet.deployWithLimitOffline = function (owners, requiredConfirmations, limit, cb) {
         // Get Transaction Data
         var MyContract = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi);
-        var data = MyContract.new.getData(owners, requiredConfirmations, new EthJS.BN(limit), {
+        var data = MyContract.new.getData(owners, requiredConfirmations, limit, {
           data: wallet.json.multiSigDailyLimit.binHex
         });
 

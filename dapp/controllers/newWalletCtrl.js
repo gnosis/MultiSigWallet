@@ -18,7 +18,7 @@
       };
 
       $scope.deployWallet = function () {
-        Wallet.deployWithLimit(Object.keys($scope.owners), $scope.confirmations, new Web3().toBigNumber($scope.limit).mul('1e18').toString(),
+        Wallet.deployWithLimit(Object.keys($scope.owners), $scope.confirmations, new Web3().toBigNumber($scope.limit).mul('1e18'),
           function (e, contract) {
             if (e) {
               Utils.dangerAlert(e);
@@ -40,7 +40,7 @@
       };
 
       $scope.deployOfflineWallet = function () {
-        Wallet.deployWithLimitOffline(Object.keys($scope.owners), $scope.confirmations, new Web3().toBigNumber($scope.limit).mul('1e18').toString(),
+        Wallet.deployWithLimitOffline(Object.keys($scope.owners), $scope.confirmations, new Web3().toBigNumber($scope.limit).mul('1e18'),
         function (e, tx) {
           if (e) {
             Utils.dangerAlert(e);

@@ -22,7 +22,7 @@
         // if method, use contract instance method
         if ($scope.method) {
           Transaction.sendMethod($scope.tx, $scope.abiArray, $scope.method.name, $scope.params, function (e, tx) {
-            if (tx.blockNumber) {
+            if (tx.info && tx.info.blockNumber) {
               Utils.success("Transaction was mined.");
             }
             else {

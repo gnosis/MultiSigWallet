@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .controller('walletCtrl', function ($scope, Wallet, Utils, Transaction, $uibModal, $interval) {
+    .controller('walletCtrl', function ($rootScope, $scope, Wallet, Utils, Transaction, $uibModal, $interval) {
       Wallet
       .webInitialized
       .then(
@@ -14,7 +14,7 @@
       );
 
       $scope.updateParams = function () {
-        $scope.wallets = Wallet.wallets;
+        $rootScope.wallets = Wallet.getAllWallets(); //Wallet.wallets;
         $scope.totalItems = Object.keys($scope.wallets).length;
         // Init wallet balance of each wallet address
         Object.keys($scope.wallets).map(function (address) {
@@ -22,8 +22,10 @@
             Wallet.getBalance(
               address,
               function (e, balance) {
-                $scope.wallets[address].balance = balance;
-                $scope.$apply();
+                if($scope.wallets[address]){
+                  $scope.wallets[address].balance = balance;
+                  $scope.$apply();
+                }
               }
             )
           );
@@ -32,8 +34,10 @@
             Wallet.getRequired(
               address,
               function (e, confirmations) {
-                $scope.wallets[address].confirmations = confirmations;
-                $scope.$apply();
+                if($scope.wallets[address]){
+                  $scope.wallets[address].confirmations = confirmations;
+                  $scope.$apply();
+                }
               }
             )
           );
@@ -42,8 +46,10 @@
             Wallet.getLimit(
               address,
               function (e, limit) {
-                $scope.wallets[address].limit = limit;
-                $scope.$apply();
+                if($scope.wallets[address]){
+                  $scope.wallets[address].limit = limit;
+                  $scope.$apply();
+                }
               }
             )
           );
@@ -52,8 +58,10 @@
             Wallet.calcMaxWithdraw(
               address,
               function (e, max) {
-                $scope.wallets[address].maxWithdraw = max;
-                $scope.$apply();
+                if($scope.wallets[address]){
+                  $scope.wallets[address].maxWithdraw = max;
+                  $scope.$apply();
+                }
               }
             )
           );
@@ -119,21 +127,33 @@
         $uibModal.open({
           templateUrl: 'partials/modals/removeWallet.html',
           size: 'lg',
+          scope: $scope,
+          controller: 'removeWalletCtrl',
           resolve: {
             wallet: function () {
               return $scope.wallets[address];
             }
           },
-          controller: function ($scope, $uibModalInstance, wallet) {
+          /*controller: function ($scope, $uibModalInstance, wallet, Utils) {
             $scope.wallet = wallet;
             $scope.ok = function () {
               Wallet.removeWallet($scope.wallet.address);
+              try{
+                //$scope.$apply(function(){
+                  //$scope.wallets = Wallet.getAllWallets();
+                //});
+                $scope.wallets = Wallet.getAllWallets();
+                //$scope.$digest();
+              }catch(err){
+                console.log(err);
+              }
               $uibModalInstance.close();
+              Utils.success("The wallet has been removed successfully.");
             };
             $scope.cancel = function () {
               $uibModalInstance.dismiss();
             };
-          }
+          }*/
         });
       };
 

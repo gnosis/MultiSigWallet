@@ -2,7 +2,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("settingsCtrl", function ($scope, Wallet, Utils, $window) {
+    .controller("settingsCtrl", function ($scope, Wallet, Utils, $window, $uibModal) {
       $scope.config = Object.assign({}, txDefault);
 
       $scope.update = function () {
@@ -14,6 +14,28 @@
 
         Utils.success("Updated");
       };
+
+      /**
+      * Shows the wallets configuration export dialog
+      */
+      $scope.showExportWalletDialog = function(){
+        $uibModal.open({
+          templateUrl: 'partials/modals/exportWalletConfiguration.html',
+          size: 'md',
+          controller: 'exportWalletConfigCtrl'
+        });
+      };
+      /**
+      * Shows the wallets configuration import dialog
+      */
+      $scope.showImportWalletDialog = function(){
+        $uibModal.open({
+          templateUrl: 'partials/modals/importWalletConfiguration.html',
+          size: 'md',
+          controller: 'importWalletConfigCtrl'
+        });
+      };
+
     });
   }
 )();

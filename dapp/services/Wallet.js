@@ -18,6 +18,14 @@
         coinbase: null
       };
 
+      /**
+      * Returns all the wallets saved in the
+      * Browser localStorage
+      */
+      wallet.getAllWallets = function getWallets (){
+        return JSON.parse(localStorage.getItem("wallets") || {});
+      };
+
       wallet.webInitialized = $q(function (resolve) {
         window.addEventListener('load', function () {
           // Set web3 provider (Metamask, mist, etc)
@@ -298,9 +306,25 @@
         catch (e) {}
       };
 
+      /**
+      * Imports a JSON configuration script containing
+      * the wallet or wallets declarations
+      */
+      wallet.import = function (jsonConfig){
+        // Setting up new configuration
+        // No data validation at the moment
+        var walletsData = JSON.parse(localStorage.getItem("wallets")) || {};
+        // Object.assign doesn't create a new key => value pair if
+        // the key already exists, so at the moment we execute the
+        // entire JSON object returning OK to the user.
+        Object.assign(walletsData, JSON.parse(jsonConfig));
+        localStorage.setItem("wallets", JSON.stringify(walletsData));
+
+        wallet.wallets = walletsData;
+      };
+
       wallet.removeWallet = function (address) {
         delete wallet.wallets[address];
-
         localStorage.setItem("wallets", JSON.stringify(wallet.wallets));
         try {
           $rootScope.$digest();

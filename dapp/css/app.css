@@ -23,3 +23,7 @@ body {
 table.collapse.in {
    display: table;
 }
+
+textarea.json-config {
+  min-height: 100px !important;
+}

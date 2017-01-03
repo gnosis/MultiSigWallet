@@ -27,6 +27,18 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "      <input type=\"submit\" class=\"btn btn-default\" value=\"Update\" />\n" +
     "    </div>\n" +
     "  </form>\n" +
+    "</div>\n" +
+    "\n" +
+    "<div class=\"panel panel-default\">\n" +
+    "  <div class=\"panel-heading\">\n" +
+    "    <h4>\n" +
+    "      Import/Export\n" +
+    "    </h4>\n" +
+    "  </div>\n" +
+    "  <div class=\"panel-footer\">\n" +
+    "    <input type=\"button\" class=\"btn btn-default\" value=\"Import\" ng-click=\"showImportWalletDialog()\" />\n" +
+    "    <input type=\"button\" class=\"btn btn-default\" value=\"Export\" ng-click=\"showExportWalletDialog()\" />\n" +
+    "  </div>\n" +
     "</div>\n"
   );
 
@@ -345,7 +357,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "        </th>\n" +
     "      </tr>\n" +
     "    </thead>\n" +
-    "    <tbody>\n" +
+    "    <tbody>      \n" +
     "      <tr ng-repeat=\"(walletAddress, wallet) in wallets|objectToArray|limitTo:itemsPerPage:itemsPerPage*(currentPage-1) track by $index\">\n" +
     "        <td>\n" +
     "          <a ng-href=\"#/wallet/{{wallet.address}}\">{{wallet.name}}</a>\n" +
@@ -576,6 +588,28 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
   );
 
 
+  $templateCache.put('partials/modals/exportWalletConfiguration.html',
+    "<div class=\"modal-header\">\n" +
+    "  <h3 class=\"modal-title\">\n" +
+    "    Export wallets Configuration\n" +
+    "  </h3>\n" +
+    "</div>\n" +
+    "<div class=\"modal-body\">\n" +
+    "  <div class=\"form-group\">\n" +
+    "    <textarea ng-model=\"configuration\" id=\"configuration\" class=\"form-control json-config\"></textarea>\n" +
+    "  </div>\n" +
+    "</div>\n" +
+    "<div class=\"modal-footer\">\n" +
+    "  <button class=\"btn btn-default\" type=\"button\" ngclipboard-success=\"copy()\" ngclipboard data-clipboard-target=\"#configuration\">\n" +
+    "    Copy\n" +
+    "  </button>\n" +
+    "  <button type=\"button\" class=\"btn btn-danger\" ng-click=\"close()\">\n" +
+    "    Close\n" +
+    "  </button>\n" +
+    "</div>\n"
+  );
+
+
   $templateCache.put('partials/modals/getNonce.html',
     "<div class=\"modal-header\">\n" +
     "  <h3 class=\"modal-title\">\n" +
@@ -594,6 +628,28 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "  </button>\n" +
     "  <button class=\"btn btn-danger\" type=\"button\" ng-click=\"cancel()\">\n" +
     "    Cancel\n" +
+    "  </button>\n" +
+    "</div>\n"
+  );
+
+
+  $templateCache.put('partials/modals/importWalletConfiguration.html',
+    "<div class=\"modal-header\">\n" +
+    "  <h3 class=\"modal-title\">\n" +
+    "    Import wallets Configuration\n" +
+    "  </h3>\n" +
+    "</div>\n" +
+    "<div class=\"modal-body\">\n" +
+    "  <div class=\"form-group\">\n" +
+    "    <textarea ng-model=\"configuration\" class=\"form-control json-config\"></textarea>\n" +
+    "  </div>\n" +
+    "</div>\n" +
+    "<div class=\"modal-footer\">\n" +
+    "  <button type=\"button\" class=\"btn btn-default\" ng-click=\"load()\">\n" +
+    "    Save\n" +
+    "  </button>\n" +
+    "  <button type=\"button\" class=\"btn btn-danger\" ng-click=\"close()\">\n" +
+    "    Close\n" +
     "  </button>\n" +
     "</div>\n"
   );

@@ -14,7 +14,7 @@
       );
 
       $scope.updateParams = function () {
-        $rootScope.wallets = Wallet.getAllWallets(); //Wallet.wallets;
+        $rootScope.wallets = Wallet.getAllWallets();
         $scope.totalItems = Object.keys($scope.wallets).length;
         // Init wallet balance of each wallet address
         Object.keys($scope.wallets).map(function (address) {
@@ -114,11 +114,14 @@
         $uibModal.open({
           templateUrl: 'partials/modals/newWallet.html',
           size: 'lg',
-          controller: 'newWalletCtrl'
-        })
-        .result
-        .then(function () {
-          $scope.updateParams();
+          controller: 'newWalletCtrl',
+          resolve: {
+            callback: function () {
+              return function () {
+                $scope.updateParams()
+              }
+            }
+          }
         });
       };
 

@@ -2,7 +2,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("newWalletCtrl", function ($scope, $uibModalInstance, $uibModal, Utils, Transaction, Wallet) {
+    .controller("newWalletCtrl", function ($scope, $uibModalInstance, $uibModal, Utils, Transaction, Wallet, callback) {
 
       $scope.owners = {};
       $scope.owners[Wallet.coinbase] = {
@@ -28,6 +28,7 @@
                 // Save wallet
                 Wallet.updateWallet({name: $scope.name, address: contract.address, owners: $scope.owners});
                 Utils.success("Wallet deployed at address " + contract.address);
+                callback();
               }
               else {
                 $uibModalInstance.close();

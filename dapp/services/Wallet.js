@@ -15,15 +15,8 @@
           gasLimit: txDefault.gasLimit
         },
         accounts: [],
-        coinbase: null
-      };
-
-      /**
-      * Returns all the wallets saved in the
-      * Browser localStorage
-      */
-      wallet.getAllWallets = function () {
-        return JSON.parse(localStorage.getItem("wallets") || {});
+        coinbase: null,
+        updates: 0
       };
 
       wallet.webInitialized = $q(function (resolve) {
@@ -300,6 +293,7 @@
         }
         Object.assign(wallet.wallets[w.address], {address: w.address, name: w.name, owners: w.owners});
         localStorage.setItem("wallets", JSON.stringify(wallet.wallets));
+        wallet.updates++;
         try{
           $rootScope.$digest();
         }
@@ -321,11 +315,17 @@
         localStorage.setItem("wallets", JSON.stringify(walletsData));
 
         wallet.wallets = walletsData;
+        wallet.updates++;
+        try {
+          $rootScope.$digest();
+        }
+        catch (e) {}
       };
 
       wallet.removeWallet = function (address) {
         delete wallet.wallets[address];
         localStorage.setItem("wallets", JSON.stringify(wallet.wallets));
+        wallet.updates++;
         try {
           $rootScope.$digest();
         }
@@ -335,6 +335,7 @@
       wallet.update = function (address, name) {
         wallet.wallets[address].name = name;
         localStorage.setItem("wallets", JSON.stringify(wallet.wallets));
+        wallet.updates++;
         try{
           $rootScope.$digest();
         }

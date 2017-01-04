@@ -113,16 +113,16 @@
     <tbody>
       <tr ng-repeat="txHash in txHashes track by $index">
         <td>
-          {{getType(transactions[txHash])}}
+          {{::getType(transactions[txHash])}}
         </td>
         <td>
-          {{transactions[txHash].value|ether}}
+          {{::transactions[txHash].value|ether}}
         </td>
         <td>
-          {{getParam(transactions[txHash])}}
+          {{::getParam(transactions[txHash])}}
         </td>
         <td>
-          {{transactions[txHash].nonce}}
+          {{::transactions[txHash].nonce}}
         </td>
         <td>
           <ul ng-repeat="owner in transactions[txHash].confirmations">

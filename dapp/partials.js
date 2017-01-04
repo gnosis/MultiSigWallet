@@ -266,16 +266,16 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    <tbody>\n" +
     "      <tr ng-repeat=\"txHash in txHashes track by $index\">\n" +
     "        <td>\n" +
-    "          {{getType(transactions[txHash])}}\n" +
+    "          {{::getType(transactions[txHash])}}\n" +
     "        </td>\n" +
     "        <td>\n" +
-    "          {{transactions[txHash].value|ether}}\n" +
+    "          {{::transactions[txHash].value|ether}}\n" +
     "        </td>\n" +
     "        <td>\n" +
-    "          {{getParam(transactions[txHash])}}\n" +
+    "          {{::getParam(transactions[txHash])}}\n" +
     "        </td>\n" +
     "        <td>\n" +
-    "          {{transactions[txHash].nonce}}\n" +
+    "          {{::transactions[txHash].nonce}}\n" +
     "        </td>\n" +
     "        <td>\n" +
     "          <ul ng-repeat=\"owner in transactions[txHash].confirmations\">\n" +
@@ -357,7 +357,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "        </th>\n" +
     "      </tr>\n" +
     "    </thead>\n" +
-    "    <tbody>      \n" +
+    "    <tbody>\n" +
     "      <tr ng-repeat=\"(walletAddress, wallet) in wallets|objectToArray|limitTo:itemsPerPage:itemsPerPage*(currentPage-1) track by $index\">\n" +
     "        <td>\n" +
     "          <a ng-href=\"#/wallet/{{wallet.address}}\">{{wallet.name}}</a>\n" +
@@ -372,7 +372,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "        </td>\n" +
     "        <td>\n" +
     "          <div uib-popover=\"{{wallet.address}}\" popover-trigger=\"'mouseenter'\">\n" +
-    "            {{wallet.address|address}}\n" +
+    "            {{::wallet.address|address}}\n" +
     "          </div>\n" +
     "        </td>\n" +
     "        <td>\n" +

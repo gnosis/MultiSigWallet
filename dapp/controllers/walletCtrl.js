@@ -2,19 +2,28 @@
   function () {
     angular
     .module('multiSigWeb')
-    .controller('walletCtrl', function ($rootScope, $scope, Wallet, Utils, Transaction, $uibModal, $interval) {
+    .controller('walletCtrl', function ($scope, Wallet, Utils, Transaction, $uibModal, $interval) {
       Wallet
       .webInitialized
       .then(
         function () {
             $scope.batch = Wallet.web3.createBatch();
             $scope.updateParams();
-            $scope.interval = $interval($scope.updateParams, 7000);
+            $scope.interval = $interval($scope.updateParams, 10000);
+        }
+      );
+
+      $scope.$watch(
+        function(){
+          return Wallet.updates;
+        },
+        function(){
+          $scope.wallets = Wallet.wallets;
         }
       );
 
       $scope.updateParams = function () {
-        $rootScope.wallets = Wallet.getAllWallets();
+
         $scope.totalItems = Object.keys($scope.wallets).length;
         // Init wallet balance of each wallet address
         Object.keys($scope.wallets).map(function (address) {
@@ -23,8 +32,9 @@
               address,
               function (e, balance) {
                 if($scope.wallets[address]){
-                  $scope.wallets[address].balance = balance;
-                  $scope.$apply();
+                  $scope.$apply(function () {
+                    $scope.wallets[address].balance = balance;
+                  });
                 }
               }
             )
@@ -35,8 +45,9 @@
               address,
               function (e, confirmations) {
                 if($scope.wallets[address]){
-                  $scope.wallets[address].confirmations = confirmations;
-                  $scope.$apply();
+                  $scope.$apply(function () {
+                    $scope.wallets[address].confirmations = confirmations;
+                  });
                 }
               }
             )
@@ -47,8 +58,9 @@
               address,
               function (e, limit) {
                 if($scope.wallets[address]){
-                  $scope.wallets[address].limit = limit;
-                  $scope.$apply();
+                  $scope.$apply(function () {
+                    $scope.wallets[address].limit = limit;
+                  });
                 }
               }
             )
@@ -59,8 +71,9 @@
               address,
               function (e, max) {
                 if($scope.wallets[address]){
-                  $scope.wallets[address].maxWithdraw = max;
-                  $scope.$apply();
+                  $scope.$apply(function () {
+                    $scope.wallets[address].maxWithdraw = max;
+                  });
                 }
               }
             )

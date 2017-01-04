@@ -4,21 +4,26 @@
     .module("multiSigWeb")
     .controller("addOwnerCtrl", function ($scope, Wallet, Utils, Transaction, wallet, $uibModalInstance) {
       $scope.send = function () {
-        Wallet.addOwner(wallet.address, $scope.owner, function (e, tx) {
-          if (e) {
-            Utils.dangerAlert(e);
-          }
-          else {
-            // Update owners array
-            wallet.owners[$scope.owner.address] = $scope.owner;
-            Wallet.updateWallet(wallet);
-            Utils.notification("Add owner transaction was sent.");
-            Transaction.add({txHash: tx, callback: function () {
-              Utils.success("Add owner transaction was mined. It might require more confirmations by other owners to add the new owner.");
-            }});
-            $uibModalInstance.close();
-          }
-        });
+        try{
+          Wallet.addOwner(wallet.address, $scope.owner, function (e, tx) {
+            if (e) {
+              // Utils.dangerAlert(e);
+              // Don't show anything, it could be a Tx Signature Rejected
+            }
+            else {
+              // Update owners array
+              wallet.owners[$scope.owner.address] = $scope.owner;
+              Wallet.updateWallet(wallet);
+              Utils.notification("Add owner transaction was sent.");
+              Transaction.add({txHash: tx, callback: function () {
+                Utils.success("Add owner transaction was mined. It might require more confirmations by other owners to add the new owner.");
+              }});
+              $uibModalInstance.close();
+            }
+          });
+        } catch (error) {
+          Utils.dangerAlert(error);
+        }
       };
 
       $scope.sign = function () {

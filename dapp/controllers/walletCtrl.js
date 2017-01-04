@@ -127,6 +127,7 @@
 
       $scope.newWallet = function () {
         $uibModal.open({
+          animation: false,
           templateUrl: 'partials/modals/newWallet.html',
           size: 'lg',
           controller: 'newWalletCtrl',
@@ -157,6 +158,7 @@
 
       $scope.restoreWallet = function () {
         $uibModal.open({
+          animation: false,
           templateUrl: 'partials/modals/restoreWallet.html',
           size: 'lg',
           controller: function ($scope, $uibModalInstance) {

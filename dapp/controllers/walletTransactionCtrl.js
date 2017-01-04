@@ -37,7 +37,8 @@
           $scope.params,
           function (e, tx) {
             if (e) {
-              Utils.dangerAlert(e);
+              // Don't show anything
+              // Utils.dangerAlert(e);
             }
             else {
               Utils.notification("Multisig transaction was sent.");

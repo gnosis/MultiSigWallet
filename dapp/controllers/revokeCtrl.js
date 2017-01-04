@@ -6,7 +6,8 @@
       $scope.send = function () {
         Wallet.revokeConfirmation(address, txHash, function (e, tx) {
           if (e) {
-            Utils.dangerAlert(e);
+            // Utils.dangerAlert(e);
+            // Don't show anything, it could be a Tx Signature Rejected
           }
           else {
             Utils.notification("Revoke confirmation transaction was sent.");

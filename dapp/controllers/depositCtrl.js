@@ -14,7 +14,12 @@
             nonce: Wallet.txParams.nonce
           },
           function (e, tx) {
-            if (tx.blockNumber) {
+            if (e) {
+              // Don't show anything, it could be a Tx Signature Rejected
+              // Other errors are not managed by callback error 'e'
+              // but thrown by Transaction.send() method
+            }
+            else if (tx.blockNumber) {
               Utils.success("Deposit transaction was mined.");
             }
             else {

@@ -78,6 +78,11 @@
         }
       };
 
+      $scope.decodeLogs = function (logs) {
+
+        return Wallet.decodeLogs(logs);
+      }
+
     });
   }
 )();

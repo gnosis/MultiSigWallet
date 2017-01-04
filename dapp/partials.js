@@ -116,13 +116,17 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "          </span>\n" +
     "        </td>\n" +
     "        <td>\n" +
-    "          <!--\n" +
     "          <ul>\n" +
-    "            <li ng-repeat=\"log in transaction.receipt.logs\">\n" +
-    "              {{log}}\n" +
+    "            <li ng-repeat=\"log in ::transaction.receipt.decodedLogs\">\n" +
+    "              {{::log.name}}\n" +
+    "              <ul>\n" +
+    "                <li ng-repeat=\"(paramKey, param) in ::log.info\">\n" +
+    "                  {{paramKey}} : {{param|logParam}}\n" +
+    "                </li>\n" +
+    "              </ul>\n" +
     "            </li>\n" +
     "          </ul>\n" +
-    "        -->\n" +
+    "\n" +
     "        </td>\n" +
     "        <td>\n" +
     "          <button class=\"btn btn-danger btn-sm\" ng-click=\"remove(transaction.txHash)\">\n" +

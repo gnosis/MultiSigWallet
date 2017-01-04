@@ -180,6 +180,7 @@
         function processReceipt(e, receipt) {
           if (!e && receipt) {
             factory.transactions[receipt.transactionHash].receipt = receipt;
+            factory.transactions[receipt.transactionHash].receipt.decodedLogs = Wallet.decodeLogs(receipt.logs)
 
             // update transactions
             localStorage.setItem("transactions", JSON.stringify(factory.transactions));

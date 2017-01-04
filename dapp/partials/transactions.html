@@ -70,13 +70,17 @@
           </span>
         </td>
         <td>
-          <!--
           <ul>
-            <li ng-repeat="log in transaction.receipt.logs">
-              {{log}}
+            <li ng-repeat="log in ::transaction.receipt.decodedLogs">
+              {{::log.name}}
+              <ul>
+                <li ng-repeat="(paramKey, param) in ::log.info">
+                  {{paramKey}} : {{param|logParam}}
+                </li>
+              </ul>
             </li>
           </ul>
-        -->
+
         </td>
         <td>
           <button class="btn btn-danger btn-sm" ng-click="remove(transaction.txHash)">

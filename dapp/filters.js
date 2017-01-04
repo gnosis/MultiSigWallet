@@ -24,7 +24,7 @@
     })
     .filter('address', function () {
       return function(address) {
-        if(address && address.length > 3){          
+        if(address && address.length > 3){
           return address.slice(0, 12) + "...";
         }
       };
@@ -47,6 +47,16 @@
           }
         }
       };
+    })
+    .filter('logParam', function () {
+      return function (log) {
+        if(log.indexOf("0x") == -1){
+          return log;
+        }
+        else{
+          return log.slice(0, 12) + "...";
+        }
+      }
     })
     .filter('ether', function () {
       return function (big_number) {

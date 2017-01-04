@@ -8,78 +8,80 @@
       .then(
         function () {
             $scope.batch = Wallet.web3.createBatch();
-            $scope.updateParams();
             $scope.interval = $interval($scope.updateParams, 10000);
+            $scope.wallets = Wallet.wallets;
+            $scope.updateParams();
         }
       );
 
       $scope.$watch(
-        function(){
+        function () {
           return Wallet.updates;
         },
-        function(){
+        function () {
           $scope.wallets = Wallet.wallets;
         }
       );
 
       $scope.updateParams = function () {
-
-        $scope.totalItems = Object.keys($scope.wallets).length;
-        // Init wallet balance of each wallet address
-        Object.keys($scope.wallets).map(function (address) {
-          $scope.batch.add(
-            Wallet.getBalance(
-              address,
-              function (e, balance) {
-                if($scope.wallets[address]){
-                  $scope.$apply(function () {
-                    $scope.wallets[address].balance = balance;
-                  });
+        if($scope.wallets){
+          $scope.totalItems = Object.keys($scope.wallets).length;
+          // Init wallet balance of each wallet address
+          Object.keys($scope.wallets).map(function (address) {
+            $scope.batch.add(
+              Wallet.getBalance(
+                address,
+                function (e, balance) {
+                  if($scope.wallets[address]){
+                    $scope.$apply(function () {
+                      $scope.wallets[address].balance = balance;
+                    });
+                  }
                 }
-              }
-            )
-          );
+              )
+            );
 
-          $scope.batch.add(
-            Wallet.getRequired(
-              address,
-              function (e, confirmations) {
-                if($scope.wallets[address]){
-                  $scope.$apply(function () {
-                    $scope.wallets[address].confirmations = confirmations;
-                  });
+            $scope.batch.add(
+              Wallet.getRequired(
+                address,
+                function (e, confirmations) {
+                  if($scope.wallets[address]){
+                    $scope.$apply(function () {
+                      $scope.wallets[address].confirmations = confirmations;
+                    });
+                  }
                 }
-              }
-            )
-          );
+              )
+            );
 
-          $scope.batch.add(
-            Wallet.getLimit(
-              address,
-              function (e, limit) {
-                if($scope.wallets[address]){
-                  $scope.$apply(function () {
-                    $scope.wallets[address].limit = limit;
-                  });
+            $scope.batch.add(
+              Wallet.getLimit(
+                address,
+                function (e, limit) {
+                  if($scope.wallets[address]){
+                    $scope.$apply(function () {
+                      $scope.wallets[address].limit = limit;
+                    });
+                  }
                 }
-              }
-            )
-          );
+              )
+            );
 
-          $scope.batch.add(
-            Wallet.calcMaxWithdraw(
-              address,
-              function (e, max) {
-                if($scope.wallets[address]){
-                  $scope.$apply(function () {
-                    $scope.wallets[address].maxWithdraw = max;
-                  });
+            $scope.batch.add(
+              Wallet.calcMaxWithdraw(
+                address,
+                function (e, max) {
+                  if($scope.wallets[address]){
+                    $scope.$apply(function () {
+                      $scope.wallets[address].maxWithdraw = max;
+                    });
+                  }
                 }
-              }
-            )
-          );
-        });
-        $scope.batch.execute();
+              )
+            );
+          });
+          $scope.batch.execute();
+        }
       };
 
 

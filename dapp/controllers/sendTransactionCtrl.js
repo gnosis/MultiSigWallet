@@ -33,15 +33,24 @@
           });
         }
         else {
-          Transaction.send($scope.tx, function (e, tx) {
-            if (tx.blockNumber) {
-              Utils.success("Transaction was mined.");
-            }
-            else {
-              $uibModalInstance.close();
-              Utils.notification("Transaction was sent.");
-            }
-          });
+          try {
+            Transaction.send($scope.tx, function (e, tx) {
+              if (e) {
+                // Don't show anything, it could be a Tx Signature Rejected
+                // Other errors are not managed by callback error 'e'
+                // but thrown by Transaction.send() method
+              }
+              else if (tx.blockNumber) {
+                Utils.success("Transaction was mined.");
+              }
+              else {
+                $uibModalInstance.close();
+                Utils.notification("Transaction was sent.");
+              }
+            });
+          } catch (error) {
+            Utils.dangerAlert(error);
+          }
         }
       };
 

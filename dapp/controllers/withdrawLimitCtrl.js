@@ -17,6 +17,7 @@
 
       $scope.send = function () {
         $scope.tx.value = new Web3().toBigNumber($scope.tx.value).mul('1e18');
+
         Wallet.submitTransaction(
           $scope.wallet.address,
           $scope.tx,
@@ -25,7 +26,8 @@
           null,
           function (e, tx) {
             if (e) {
-              Utils.dangerAlert(e);
+              // Utils.dangerAlert(e);
+              // Don't show anything, it could be a Tx Signature Rejected
             }
             else {
               Utils.notification("Multisig transaction was sent.");

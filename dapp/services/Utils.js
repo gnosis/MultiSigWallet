@@ -7,7 +7,7 @@
 
       factory.errorToHtml = function (error) {
         if (error.status == 500) {
-          return $translate.instant('InternalServerError');
+          return 'Internal Server Error';
         }
         else {
           if (error.data) {
@@ -99,6 +99,7 @@
 
       factory.nonce = function (walletNonce) {
         $uibModal.open({
+          animation: false,
           templateUrl: 'partials/modals/retrieveNonce.html',
           size: 'sm',
           resolve: {

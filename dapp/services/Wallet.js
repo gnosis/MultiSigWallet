@@ -120,6 +120,7 @@
         $uibModal
         .open(
           {
+            animation: false,
             templateUrl: 'partials/modals/signMultisigTransactionOffline.html',
             size: 'md',
             controller: "signMultisigTransactionOfflineCtrl"
@@ -348,6 +349,7 @@
         $uibModal
         .open(
           {
+            animation: false,
             templateUrl: 'partials/modals/signOffline.html',
             size: 'md',
             controller: "signOfflineCtrl"
@@ -915,7 +917,7 @@
           }
           else {
             walletInstance.submitTransaction(
-              tx.to,
+              tx.destination, //tx.to,
               tx.value,
               data,
               nonce,

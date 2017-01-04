@@ -14,7 +14,8 @@
       $scope.setLimit = function () {
         Wallet.updateLimit($scope.address, new Web3().toBigNumber($scope.limit).mul('1e18'), function (e, tx){
           if (e) {
-            Utils.dangerAlert(e);
+            //Utils.dangerAlert(e);
+            // Don't show anything
           }
           else {
             $uibModalInstance.close();

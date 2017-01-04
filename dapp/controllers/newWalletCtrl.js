@@ -2,7 +2,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("newWalletCtrl", function ($scope, $uibModalInstance, $uibModal, Utils, Transaction, Wallet) {
+    .controller("newWalletCtrl", function ($scope, $uibModalInstance, $uibModal, Utils, Transaction, Wallet, callback) {
 
       $scope.owners = {};
       $scope.owners[Wallet.coinbase] = {
@@ -18,7 +18,7 @@
       };
 
       $scope.deployWallet = function () {
-        Wallet.deployWithLimit(Object.keys($scope.owners), $scope.confirmations, new Web3().toBigNumber($scope.limit).mul('1e18').toString(),
+        Wallet.deployWithLimit(Object.keys($scope.owners), $scope.confirmations, new Web3().toBigNumber($scope.limit).mul('1e18'),
           function (e, contract) {
             if (e) {
               Utils.dangerAlert(e);
@@ -28,6 +28,7 @@
                 // Save wallet
                 Wallet.updateWallet({name: $scope.name, address: contract.address, owners: $scope.owners});
                 Utils.success("Wallet deployed at address " + contract.address);
+                callback();
               }
               else {
                 $uibModalInstance.close();
@@ -40,7 +41,7 @@
       };
 
       $scope.deployOfflineWallet = function () {
-        Wallet.deployWithLimitOffline(Object.keys($scope.owners), $scope.confirmations, new Web3().toBigNumber($scope.limit).mul('1e18').toString(),
+        Wallet.deployWithLimitOffline(Object.keys($scope.owners), $scope.confirmations, new Web3().toBigNumber($scope.limit).mul('1e18'),
         function (e, tx) {
           if (e) {
             Utils.dangerAlert(e);

@@ -5,7 +5,8 @@
     .controller("sendTransactionCtrl", function ($scope, Wallet, Utils, Transaction, $uibModalInstance) {
       $scope.methods = [];
       $scope.tx = {
-        value: 0
+        value: 0,
+        from: Wallet.coinbase
       };
       $scope.params = [];
       $scope.$watch(

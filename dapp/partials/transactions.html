@@ -81,7 +81,10 @@
               {{::log.name}}
               <ul>
                 <li ng-repeat="(paramKey, param) in ::log.info">
-                  {{paramKey}} : {{param|logParam}}
+                  {{paramKey}} :
+                  <div uib-popover="{{param}}" popover-trigger="'mouseenter'">
+                    {{param|logParam}}
+                  </div>
                 </li>
               </ul>
             </li>

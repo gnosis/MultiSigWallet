@@ -27,3 +27,8 @@ table.collapse.in {
 textarea.json-config {
   min-height: 100px !important;
 }
+
+.centered-dash {
+  text-align: center;
+  display: block;
+}

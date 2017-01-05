@@ -13,6 +13,9 @@ contract MultiSigWalletWithPreSign is MultiSigWallet {
         _;
     }
 
+    /*
+     * Public functions
+     */
     /// @dev Contract constructor sets initial owners and required number of confirmations.
     /// @param _owners List of initial owners.
     /// @param _required Number of required confirmations.

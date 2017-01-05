@@ -19,6 +19,9 @@ body {
 .tx-data{
     word-wrap: break-word;
 }
+.popover{
+  word-wrap: break-word;
+}
 
 table.collapse.in {
    display: table;

@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .service('Transaction', function(Wallet, $rootScope, $uibModal) {
+    .service('Transaction', function(Wallet, $rootScope, $uibModal, $interval) {
       var factory = {
         transactions: JSON.parse(localStorage.getItem("transactions")) || {}
       };
@@ -180,13 +180,15 @@
         function processReceipt(e, receipt) {
           if (!e && receipt) {
             factory.transactions[receipt.transactionHash].receipt = receipt;
+            factory.transactions[receipt.transactionHash].receipt.decodedLogs = Wallet.decodeLogs(receipt.logs)
+
+            // update transactions
+            localStorage.setItem("transactions", JSON.stringify(factory.transactions));
+
             // call callback if it has
             if (factory.transactions[receipt.transactionHash].callback) {
               factory.transactions[receipt.transactionHash].callback(receipt);
             }
-
-            // update transactions
-            localStorage.setItem("transactions", JSON.stringify(factory.transactions));
             try{
               $rootScope.$digest();
             }
@@ -209,13 +211,15 @@
         for (var i=0; i<txHashes.length; i++) {
           var tx = factory.transactions[txHashes[i]];
           // Get transaction receipt
-          if (tx && !tx.receipt) {
+          if (tx && !tx.receipt && !tx.askedReceipt) {
+            tx.askedReceipt = true;
             batch.add(
               Wallet.web3.eth.getTransactionReceipt.request(txHashes[i], processReceipt)
             );
           }
           // Get transaction info
-          if (tx && !tx.info) {
+          if (tx && !tx.info && !tx.askedInfo) {
+            tx.askedInfo = true;
             batch.add(
               Wallet.web3.eth.getTransaction.request(
                 txHashes[i],
@@ -226,7 +230,6 @@
         }
 
         batch.execute();
-        setTimeout(factory.checkReceipts, 15000);
       };
 
       Wallet
@@ -235,6 +238,8 @@
         function () {
           // init transactions loop
           factory.checkReceipts();
+          console.log("initialized");
+          $interval(factory.checkReceipts, 15000);
         }
       );
 

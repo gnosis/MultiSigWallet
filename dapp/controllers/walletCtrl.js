@@ -2,71 +2,86 @@
   function () {
     angular
     .module('multiSigWeb')
-    .controller('walletCtrl', function ($rootScope, $scope, Wallet, Utils, Transaction, $uibModal, $interval) {
+    .controller('walletCtrl', function ($scope, Wallet, Utils, Transaction, $uibModal, $interval) {
       Wallet
       .webInitialized
       .then(
         function () {
             $scope.batch = Wallet.web3.createBatch();
+            $scope.interval = $interval($scope.updateParams, 10000);
+            $scope.wallets = Wallet.wallets;
             $scope.updateParams();
-            $scope.interval = $interval($scope.updateParams, 7000);
+        }
+      );
+
+      $scope.$watch(
+        function () {
+          return Wallet.updates;
+        },
+        function () {
+          $scope.wallets = Wallet.wallets;
         }
       );
 
       $scope.updateParams = function () {
-        $rootScope.wallets = Wallet.getAllWallets();
-        $scope.totalItems = Object.keys($scope.wallets).length;
-        // Init wallet balance of each wallet address
-        Object.keys($scope.wallets).map(function (address) {
-          $scope.batch.add(
-            Wallet.getBalance(
-              address,
-              function (e, balance) {
-                if($scope.wallets[address]){
-                  $scope.wallets[address].balance = balance;
-                  $scope.$apply();
+        if($scope.wallets){
+          $scope.totalItems = Object.keys($scope.wallets).length;
+          // Init wallet balance of each wallet address
+          Object.keys($scope.wallets).map(function (address) {
+            $scope.batch.add(
+              Wallet.getBalance(
+                address,
+                function (e, balance) {
+                  if($scope.wallets[address]){
+                    $scope.$apply(function () {
+                      $scope.wallets[address].balance = balance;
+                    });
+                  }
                 }
-              }
-            )
-          );
+              )
+            );
 
-          $scope.batch.add(
-            Wallet.getRequired(
-              address,
-              function (e, confirmations) {
-                if($scope.wallets[address]){
-                  $scope.wallets[address].confirmations = confirmations;
-                  $scope.$apply();
+            $scope.batch.add(
+              Wallet.getRequired(
+                address,
+                function (e, confirmations) {
+                  if($scope.wallets[address]){
+                    $scope.$apply(function () {
+                      $scope.wallets[address].confirmations = confirmations;
+                    });
+                  }
                 }
-              }
-            )
-          );
+              )
+            );
 
-          $scope.batch.add(
-            Wallet.getLimit(
-              address,
-              function (e, limit) {
-                if($scope.wallets[address]){
-                  $scope.wallets[address].limit = limit;
-                  $scope.$apply();
+            $scope.batch.add(
+              Wallet.getLimit(
+                address,
+                function (e, limit) {
+                  if($scope.wallets[address]){
+                    $scope.$apply(function () {
+                      $scope.wallets[address].limit = limit;
+                    });
+                  }
                 }
-              }
-            )
-          );
+              )
+            );
 
-          $scope.batch.add(
-            Wallet.calcMaxWithdraw(
-              address,
-              function (e, max) {
-                if($scope.wallets[address]){
-                  $scope.wallets[address].maxWithdraw = max;
-                  $scope.$apply();
+            $scope.batch.add(
+              Wallet.calcMaxWithdraw(
+                address,
+                function (e, max) {
+                  if($scope.wallets[address]){
+                    $scope.$apply(function () {
+                      $scope.wallets[address].maxWithdraw = max;
+                    });
+                  }
                 }
-              }
-            )
-          );
-        });
-        $scope.batch.execute();
+              )
+            );
+          });
+          $scope.batch.execute();
+        }
       };
 
 

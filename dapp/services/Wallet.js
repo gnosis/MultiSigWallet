@@ -15,15 +15,9 @@
           gasLimit: txDefault.gasLimit
         },
         accounts: [],
-        coinbase: null
-      };
-
-      /**
-      * Returns all the wallets saved in the
-      * Browser localStorage
-      */
-      wallet.getAllWallets = function () {
-        return JSON.parse(localStorage.getItem("wallets") || {});
+        coinbase: null,
+        methodIds: {},
+        updates: 0
       };
 
       wallet.webInitialized = $q(function (resolve) {
@@ -37,6 +31,19 @@
           }
           resolve();
         });
+      });
+
+      // Generate event id's
+      wallet.json.multiSigDailyLimit.abi.map(function(item){
+        if(item.name){
+          var signature = new Web3().sha3(item.name + "(" + item.inputs.map(function(input) {return input.type;}).join(",") + ")");
+          if(item.type == "event"){
+            wallet.methodIds[signature.slice(2)] = item;
+          }
+          else{
+            wallet.methodIds[signature.slice(2, 6)] = item;
+          }
+        }
       });
 
       /**
@@ -301,6 +308,7 @@
         }
         Object.assign(wallet.wallets[w.address], {address: w.address, name: w.name, owners: w.owners});
         localStorage.setItem("wallets", JSON.stringify(wallet.wallets));
+        wallet.updates++;
         try{
           $rootScope.$digest();
         }
@@ -322,11 +330,17 @@
         localStorage.setItem("wallets", JSON.stringify(walletsData));
 
         wallet.wallets = walletsData;
+        wallet.updates++;
+        try {
+          $rootScope.$digest();
+        }
+        catch (e) {}
       };
 
       wallet.removeWallet = function (address) {
         delete wallet.wallets[address];
         localStorage.setItem("wallets", JSON.stringify(wallet.wallets));
+        wallet.updates++;
         try {
           $rootScope.$digest();
         }
@@ -336,6 +350,7 @@
       wallet.update = function (address, name) {
         wallet.wallets[address].name = name;
         localStorage.setItem("wallets", JSON.stringify(wallet.wallets));
+        wallet.updates++;
         try{
           $rootScope.$digest();
         }
@@ -986,6 +1001,34 @@
           }
         }
       };
+
+      /**
+      * Returns a list of comprehensive logs, decoded from a list of encoded logs
+      * Needs the abi to decode them
+      **/
+      wallet.decodeLogs = function (logs) {
+        var i = 0;
+        var decoded = [];
+        while(i<logs.length && logs.length > 1){
+          // Event hash matches
+          var id = logs[i].topics[0].slice(2);
+          var method = wallet.methodIds[id];
+          if(method){
+            var params = logs[i].data;
+            decoded.push(
+              {
+                name: method.name,
+                info: ethAbi.decodeEvent(method, params)
+              }
+            );
+          }
+          // Doesn't match, we move i
+          i++;
+        }
+
+        return decoded;
+      }
+
       return wallet;
     });
   }

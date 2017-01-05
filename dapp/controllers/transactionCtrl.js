@@ -80,7 +80,7 @@
       // };
 
       /**
-      * Returns the transaction or contract address 
+      * Returns the transaction or contract address
       */
       $scope.getDestinationOrContract = function (tx) {
         if (Wallet.wallets[tx.info.to] && Wallet.wallets[tx.info.to].name) {
@@ -93,6 +93,12 @@
           return $filter("address")(tx.info.to);
         }
       };
+
+      $scope.decodeLogs = function (logs) {
+
+        return Wallet.decodeLogs(logs);
+      }
+
     });
   }
 )();

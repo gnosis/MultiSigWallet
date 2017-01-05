@@ -48,6 +48,16 @@
         }
       };
     })
+    .filter('logParam', function () {
+      return function (log) {
+        if(log.indexOf("0x") == -1){
+          return log;
+        }
+        else{
+          return log.slice(0, 12) + "...";
+        }
+      }
+    })
     .filter('ether', function () {
       return function (big_number) {
       if (big_number) {

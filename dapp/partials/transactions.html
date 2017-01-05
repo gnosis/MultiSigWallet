@@ -25,6 +25,9 @@
           Destination
         </th>
         <th>
+          Contract address
+        </th>
+        <th>
           Value
         </th>
         <th>
@@ -49,14 +52,17 @@
         <td>
           <a uib-popover="{{transaction.info.to}}" popover-trigger="'mouseenter'"
           ng-href="https://testnet.etherscan.io/tx/{{transaction.txHash}}">
-            {{getTo(transaction.info.to)}}
+            {{getTo(transaction.info.to) | dashIfEmpty}}
           </a>
+        </td>
+        <td>
+          {{transaction.receipt.contractAddress | dashIfEmpty}}
         </td>
         <td>
           {{transaction.info.value | ether}}
         </td>
         <td popover-trigger="'mouseenter'" uib-popover-template="'partials/txData.html'" popover-placement="bottom" popover-append-to-body="true">
-            {{transaction.info.input | txData}}
+            {{transaction.info.input | txData | dashIfEmpty}}
         </td>
         <td>
           {{transaction.info.nonce}}
@@ -75,7 +81,10 @@
               {{::log.name}}
               <ul>
                 <li ng-repeat="(paramKey, param) in ::log.info">
-                  {{paramKey}} : {{param|logParam}}
+                  {{paramKey}} :
+                  <div uib-popover="{{param}}" popover-trigger="'mouseenter'">
+                    {{param|logParam}}
+                  </div>
                 </li>
               </ul>
             </li>

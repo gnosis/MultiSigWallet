@@ -82,6 +82,11 @@
     return function (items) {
       return items.slice().reverse();
     };
+  })
+  .filter('dashIfEmpty', function(){
+    return function (text){
+      return (text && text.trim() !== '') ? text : '-';
+    }
   });
   }
 )();

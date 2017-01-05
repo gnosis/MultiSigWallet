@@ -35,7 +35,7 @@
     <tbody>
       <tr ng-repeat="(walletAddress, wallet) in wallets|objectToArray|limitTo:itemsPerPage:itemsPerPage*(currentPage-1) track by $index">
         <td>
-          <a ng-href="#/wallet/{{wallet.address}}">{{wallet.name}}</a>
+          <a ng-href="#/wallet/{{wallet.address}}">{{wallet.name | dashIfEmpty}}</a>
           <div class="pull-right form-inline">
             <button type="button" class="btn btn-default btn-sm" ng-click="editWallet(wallet)">
               Edit
@@ -57,7 +57,7 @@
           </button>
         </td>
         <td>
-          {{wallet.confirmations|bigNumber}}
+          {{wallet.confirmations|bigNumber|dashIfEmpty}}
           <button type="button" class="btn btn-default btn-sm pull-right" ng-click="setRequired(wallet)">
             Edit
           </button>

@@ -24,7 +24,7 @@
     })
     .filter('address', function () {
       return function(address) {
-        if(address && address.length > 3){          
+        if(address && address.length > 3){
           return address.slice(0, 12) + "...";
         }
       };
@@ -72,6 +72,11 @@
     return function (items) {
       return items.slice().reverse();
     };
+  })
+  .filter('dashIfEmpty', function(){
+    return function (text){
+      return (text && text.trim() !== '') ? text : '-';
+    }
   });
   }
 )();

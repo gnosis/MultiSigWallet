@@ -83,9 +83,9 @@
       return items.slice().reverse();
     };
   })
-  .filter('dashIfEmpty', function(){
+  .filter('dashIfEmpty', function($sce){
     return function (text){
-      return (text && text.trim() !== '') ? text : '-';
+      return (text && text.trim() !== '') ? $sce.trustAsHtml(text) : $sce.trustAsHtml('<span class=\'centered-dash\'>-</span>');
     }
   });
   }

@@ -22,10 +22,7 @@
     <thead>
       <tr>
         <th>
-          Destination
-        </th>
-        <th>
-          Contract address
+          Destination / Contract Address
         </th>
         <th>
           Value
@@ -51,18 +48,15 @@
       <tr ng-repeat="transaction in transactions | objectToArray| limitTo:currentPage*itemsPerPage:itemsPerPage*(currentPage-1) track by $index">
         <td>
           <a uib-popover="{{transaction.info.to}}" popover-trigger="'mouseenter'"
-          ng-href="https://testnet.etherscan.io/tx/{{transaction.txHash}}">
-            {{getTo(transaction.info.to) | dashIfEmpty}}
+          ng-href="https://testnet.etherscan.io/tx/{{transaction.txHash}}"
+          ng-bind-html="getDestinationOrContract(transaction) | dashIfEmpty">            
           </a>
-        </td>
-        <td>
-          {{transaction.receipt.contractAddress | dashIfEmpty}}
         </td>
         <td>
           {{transaction.info.value | ether}}
         </td>
-        <td popover-trigger="'mouseenter'" uib-popover-template="'partials/txData.html'" popover-placement="bottom" popover-append-to-body="true">
-            {{transaction.info.input | txData | dashIfEmpty}}
+        <td popover-trigger="'mouseenter'" uib-popover-template="'partials/txData.html'" popover-placement="bottom" popover-append-to-body="true"
+          ng-bind-html="transaction.info.input | txData | dashIfEmpty">
         </td>
         <td>
           {{transaction.info.nonce}}

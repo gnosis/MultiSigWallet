@@ -69,12 +69,28 @@
         });
       };
 
-      $scope.getTo = function (to) {
-        if (Wallet.wallets[to] && Wallet.wallets[to].name) {
-          return Wallet.wallets[to].name;
+      // @Deprecated, use getDestinationOrContract() instead
+      // $scope.getTo = function (to) {
+      //   if (Wallet.wallets[to] && Wallet.wallets[to].name) {
+      //     return Wallet.wallets[to].name;
+      //   }
+      //   else {
+      //     return $filter("address")(to);
+      //   }
+      // };
+
+      /**
+      * Returns the transaction or contract address
+      */
+      $scope.getDestinationOrContract = function (tx) {
+        if (Wallet.wallets[tx.info.to] && Wallet.wallets[tx.info.to].name) {
+          return Wallet.wallets[tx.info.to].name;
+        }
+        else if (tx.receipt.contractAddress) {
+          return 'Contract ' + $filter("address")(tx.receipt.contractAddress);
         }
         else {
-          return $filter("address")(to);
+          return $filter("address")(tx.info.to);
         }
       };
 

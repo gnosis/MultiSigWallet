@@ -68,10 +68,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    <thead>\n" +
     "      <tr>\n" +
     "        <th>\n" +
-    "          Destination\n" +
-    "        </th>\n" +
-    "        <th>\n" +
-    "          Contract address\n" +
+    "          Destination / Contract Address\n" +
     "        </th>\n" +
     "        <th>\n" +
     "          Value\n" +
@@ -97,18 +94,15 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "      <tr ng-repeat=\"transaction in transactions | objectToArray| limitTo:currentPage*itemsPerPage:itemsPerPage*(currentPage-1) track by $index\">\n" +
     "        <td>\n" +
     "          <a uib-popover=\"{{transaction.info.to}}\" popover-trigger=\"'mouseenter'\"\n" +
-    "          ng-href=\"https://testnet.etherscan.io/tx/{{transaction.txHash}}\">\n" +
-    "            {{getTo(transaction.info.to) | dashIfEmpty}}\n" +
+    "          ng-href=\"https://testnet.etherscan.io/tx/{{transaction.txHash}}\"\n" +
+    "          ng-bind-html=\"getDestinationOrContract(transaction) | dashIfEmpty\">            \n" +
     "          </a>\n" +
-    "        </td>\n" +
-    "        <td>\n" +
-    "          {{transaction.receipt.contractAddress | dashIfEmpty}}\n" +
     "        </td>\n" +
     "        <td>\n" +
     "          {{transaction.info.value | ether}}\n" +
     "        </td>\n" +
-    "        <td popover-trigger=\"'mouseenter'\" uib-popover-template=\"'partials/txData.html'\" popover-placement=\"bottom\" popover-append-to-body=\"true\">\n" +
-    "            {{transaction.info.input | txData | dashIfEmpty}}\n" +
+    "        <td popover-trigger=\"'mouseenter'\" uib-popover-template=\"'partials/txData.html'\" popover-placement=\"bottom\" popover-append-to-body=\"true\"\n" +
+    "          ng-bind-html=\"transaction.info.input | txData | dashIfEmpty\">\n" +
     "        </td>\n" +
     "        <td>\n" +
     "          {{transaction.info.nonce}}\n" +
@@ -373,7 +367,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    <tbody>\n" +
     "      <tr ng-repeat=\"(walletAddress, wallet) in wallets|objectToArray|limitTo:itemsPerPage:itemsPerPage*(currentPage-1) track by $index\">\n" +
     "        <td>\n" +
-    "          <a ng-href=\"#/wallet/{{wallet.address}}\">{{wallet.name | dashIfEmpty}}</a>\n" +
+    "          <a ng-href=\"#/wallet/{{wallet.address}}\" ng-bind-html=\"wallet.name | dashIfEmpty\"></a>\n" +
     "          <div class=\"pull-right form-inline\">\n" +
     "            <button type=\"button\" class=\"btn btn-default btn-sm\" ng-click=\"editWallet(wallet)\">\n" +
     "              Edit\n" +
@@ -394,8 +388,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "            Deposit\n" +
     "          </button>\n" +
     "        </td>\n" +
-    "        <td>\n" +
-    "          {{wallet.confirmations|bigNumber|dashIfEmpty}}\n" +
+    "        <td ng-bind-html=\"wallet.confirmations|bigNumber|dashIfEmpty\">          \n" +
     "          <button type=\"button\" class=\"btn btn-default btn-sm pull-right\" ng-click=\"setRequired(wallet)\">\n" +
     "            Edit\n" +
     "          </button>\n" +

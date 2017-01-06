@@ -85,7 +85,7 @@
   })
   .filter('dashIfEmpty', function($sce){
     return function (text){
-      return (text && text.trim() !== '') ? $sce.trustAsHtml(text) : $sce.trustAsHtml('<span class=\'centered-dash\'>-</span>');
+      return text ? $sce.trustAsHtml(text.toString()) : $sce.trustAsHtml('<span class=\'centered-dash\'>-</span>');
     }
   });
   }

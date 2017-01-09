@@ -44,7 +44,7 @@
             wallet.methodIds[signature.slice(2, 6)] = item;
           }
         }
-      });
+      });      
 
       /**
       * Return tx object, with default values, overwritted by passed params
@@ -1009,7 +1009,7 @@
       wallet.decodeLogs = function (logs) {
         var i = 0;
         var decoded = [];
-        while(i<logs.length && logs.length > 1){
+        while(i<logs.length){
           // Event hash matches
           var id = logs[i].topics[0].slice(2);
           var method = wallet.methodIds[id];

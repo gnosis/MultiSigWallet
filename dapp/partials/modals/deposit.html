@@ -10,10 +10,10 @@
   </div>
 </div>
 <div class="modal-footer">
-  <button type="button" ng-click="deposit()" class="btn btn-default">
+  <button type="button" ng-click="deposit()" class="btn btn-default" show-hide-by-connectivity="online">
     Send transaction
   </button>
-  <button type="button" ng-click="sign()" class="btn btn-default">
+  <button type="button" ng-click="sign()" class="btn btn-default" show-hide-by-connectivity="offline">
     Sign offline
   </button>
   <button type="button" class="btn btn-danger" ng-click="cancel()">

@@ -178,7 +178,7 @@
         var txHashes = Object.keys(factory.transactions);
 
         function processReceipt(e, receipt) {
-          if (!e && receipt) {
+          if (!e && receipt) {            
             factory.transactions[receipt.transactionHash].receipt = receipt;
             factory.transactions[receipt.transactionHash].receipt.decodedLogs = Wallet.decodeLogs(receipt.logs)
 
@@ -238,7 +238,6 @@
         function () {
           // init transactions loop
           factory.checkReceipts();
-          console.log("initialized");
           $interval(factory.checkReceipts, 15000);
         }
       );

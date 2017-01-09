@@ -1,13 +1,13 @@
 <div class="panel panel-default">
   <div class="panel-heading">
     <div class="pull-right">
-      <button type="button" class="btn btn-default" ng-click="sendTransaction()">
+      <button type="button" class="btn btn-default" ng-click="sendTransaction()" show-hide-by-connectivity="online">
         Send transaction
       </button>
-      <button type="button" class="btn btn-default" ng-click="sendRawTransaction()">
+      <button type="button" class="btn btn-default" ng-click="sendRawTransaction()" show-hide-by-connectivity="online">
         Send raw transaction
       </button>
-      <button type="button" class="btn btn-default" ng-click="getNonce()">
+      <button type="button" class="btn btn-default" ng-click="getNonce()" show-hide-by-connectivity="online">
         Get nonce
       </button>
       <button type="button" class="btn btn-danger" ng-click="removeAll()">
@@ -49,7 +49,7 @@
         <td>
           <a uib-popover="{{transaction.info.to}}" popover-trigger="'mouseenter'"
           ng-href="https://testnet.etherscan.io/tx/{{transaction.txHash}}"
-          ng-bind-html="getDestinationOrContract(transaction) | dashIfEmpty">            
+          ng-bind-html="getDestinationOrContract(transaction) | dashIfEmpty">
           </a>
         </td>
         <td>

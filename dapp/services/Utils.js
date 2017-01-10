@@ -76,6 +76,7 @@
 
       factory.signed = function (tx) {
         $uibModal.open({
+          animation: false,
           templateUrl: 'partials/modals/showSignedTransaction.html',
           size: 'lg',
           resolve: {
@@ -87,6 +88,7 @@
             $scope.signed = signed;
 
             $scope.copy = function () {
+              factory.success("Hex code has been copied to clipboard.");
               $uibModalInstance.close();
             };
 

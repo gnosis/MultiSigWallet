@@ -2,31 +2,43 @@
   function () {
     angular
     .module('multiSigWeb')
-    .service('Connection', function ($http, $interval) {
+    .service('Connection', function ($rootScope, $http, $interval) {
 
       var factory = {};
       var isConnected = false;
+
+      var setup = function() {
+        // Call it at startup
+        factory.checkConnection();
+        // Setup interval
+        $interval(factory.checkConnection, txDefault.connectionChecker.checkInterval);
+      }
 
       /**
       * Connection lookup against a defined endpoint
       * Check config.js for the endpoint configuration
       */
-      var checkConnection = function() {
+      factory.checkConnection = function() {
         $http({
           method : txDefault.connectionChecker.method,
           url : txDefault.connectionChecker.url,
-        }).then(function successCallBack (response) {
-          isConnected = true;
-        }, function errorCallBack (response) {
-          isConnected = false;
-        });
+        })
+        .then(function successCallBack (response) {
+            isConnected = true;
+          }, function errorCallBack (response) {
+            isConnected = false;
+          }
+        );
 
         factory.isConnected = isConnected;
 
+        try{
+          $rootScope.$digest();
+        }catch(error){}
+
       };
 
-      // Setup interval
-      $interval(checkConnection, txDefault.connectionChecker.checkInterval);
+      setup();
 
       return factory;
     });

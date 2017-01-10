@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .controller('navCtrl', function ($scope, Wallet, Connection, $interval) {
+    .controller('navCtrl', function ($scope, Wallet, Connection, $interval, $sce) {
       $scope.navCollapsed = true;
 
       $scope.updateInfo = function (){
@@ -20,6 +20,7 @@
       */
       $scope.updateConnectionStatus = function (){
         $scope.connectionStatus = Connection.isConnected;
+        $scope.statusIcon = Connection.isConnected ? $sce.trustAsHtml('Status: <i class=\'fa fa-circle online-status\' aria-hidden=\'true\'></i>') : $sce.trustAsHtml('Status: <i class=\'fa fa-circle offline-status\' aria-hidden=\'true\'></i>');
       };
 
       Wallet.webInitialized.then(
@@ -29,7 +30,10 @@
 
           /**
           * Lookup connection status
+          * Check connectivity first on page loading
+          * and then at time interval
           */
+          Connection.checkConnection();
           $scope.updateConnectionStatus();
           $scope.connectionInterval = $interval($scope.updateConnectionStatus, txDefault.connectionChecker.checkInterval);
         }

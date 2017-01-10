@@ -57,6 +57,7 @@
     <script src="./controllers/removeOwnerCtrl.js"></script>
     <script src="./controllers/signOfflineCtrl.js"></script>
     <script src="./controllers/signMultisigTransactionOfflineCtrl.js"></script>
+    <script src="./controllers/confirmMultisigTransactionOfflineCtrl.js"></script>
     <script src="./controllers/executeTransactionCtrl.js"></script>
     <script src="./controllers/withdrawLimitCtrl.js"></script>
     <script src="./controllers/settingsCtrl.js"></script>
@@ -113,7 +114,7 @@
                 <p class="navbar-text"> Nonce: {{nonce}} </p>
               </li>
               <li>
-                <p class="navbar-text"> Status: {{connectionStatus ? 'Online' : 'Offline'}} </p>
+                <p class="navbar-text" ng-bind-html="statusIcon"></p>
               </li>
             </ul>
         </div>

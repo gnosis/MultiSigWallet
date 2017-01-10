@@ -968,7 +968,7 @@
           }
           else if (nonces == undefined){
             // Don's show anything, user closed the modal
-          }          
+          }
           else {
             var mainData = walletInstance.submitTransaction.getData(
               tx.to,
@@ -1017,7 +1017,7 @@
       * Returns a list of comprehensive logs, decoded from a list of encoded logs
       * Needs the abi to decode them
       **/
-      wallet.decodeLogs = function (logs) {
+      wallet.decodeLogs = function (logs) {
         var i = 0;
         var decoded = [];
         while(i<logs.length){

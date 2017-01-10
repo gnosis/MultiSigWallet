@@ -54,6 +54,12 @@
 <div class="panel panel-default">
   <div class="panel-heading">
     <div class="pull-right form-inline">
+      <button type="button" class="btn btn-default" ng-click="confirmMultisigTransactionOffline()" show-hide-by-connectivity="offline">
+        Confirm offline
+      </button>
+      <button type="button" class="btn btn-default" ng-click="revokeMultisigTransactionOffline()" show-hide-by-connectivity="offline">
+        Revoke offline
+      </button>
       <button type="button" class="btn btn-default" ng-click="addTransaction()">
         Add
       </button>
@@ -140,19 +146,25 @@
           </span>
         </td>
         <td>
+          <button class="btn btn-default btn-sm" ngclipboard data-clipboard-text="{{txHash}}">
+            Copy hash
+          </button>
           <button type="button" class="btn btn-default btn-sm"
           ng-hide="transactions[txHash].executed || transactions[txHash].confirmed"
-          ng-click="confirmTransaction(txHash)">
+          ng-click="confirmTransaction(txHash)"
+          show-hide-by-connectivity="online">
             Confirm
           </button>
           <button type="button" class="btn btn-default btn-sm"
           ng-show="transactions[txHash].confirmed && !transactions[txHash].executed"
-          ng-click="revokeConfirmation(txHash)">
+          ng-click="revokeConfirmation(txHash)"
+          show-hide-by-connectivity="online">
             Revoke confirmation
           </button>
           <button type="button" class="btn btn-default btn-sm"
           ng-show="!transactions[txHash].executed && transactions[txHash].confirmations.length == confirmations"
-          ng-click="executeTransaction(txHash)">
+          ng-click="executeTransaction(txHash)"
+          show-hide-by-connectivity="online">
             Execute
           </button>
         </td>

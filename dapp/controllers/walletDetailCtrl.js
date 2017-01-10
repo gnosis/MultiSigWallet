@@ -102,7 +102,7 @@
               batch.add(
                 Token.balanceOf(
                   token,
-                  Wallet.coinbase,
+                  $scope.wallet.address,
                   function (e, balance) {
                     $scope.wallet.tokens[token].balance = balance;
                     $scope.$apply();
@@ -436,6 +436,22 @@
               $uibModalInstance.dismiss();
             };
           }
+        });
+      };
+
+      $scope.depositToken = function (token) {
+        $uibModal.open({
+          templateUrl: 'partials/modals/depositToken.html',
+          size: 'md',
+          resolve: {
+            wallet: function () {
+              return $scope.wallet;
+            },
+            token: function () {
+              return token;
+            }
+          },
+          controller: 'depositTokenCtrl'
         });
       };
 

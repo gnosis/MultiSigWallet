@@ -11,7 +11,7 @@
       * Connection lookup against a defined endpoint
       * Check config.js for the endpoint configuration
       */
-      var checkConnection = function() {
+      function checkConnection() {
         $http({
           method : txDefault.connectionChecker.method,
           url : txDefault.connectionChecker.url,

@@ -86,7 +86,7 @@
         if (Wallet.wallets[tx.info.to] && Wallet.wallets[tx.info.to].name) {
           return Wallet.wallets[tx.info.to].name;
         }
-        else if (tx.receipt.contractAddress) {
+        else if (tx.receipt && tx.receipt.contractAddress) {
           return 'Contract ' + $filter("address")(tx.receipt.contractAddress);
         }
         else {

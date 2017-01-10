@@ -90,7 +90,7 @@
           {{token.name}}
         </td>
         <td>
-          {{token.balance|ether}}
+          {{token|token}}
         </td>
         <td>
           <button type="button" class="btn btn-default btn-sm"
@@ -100,6 +100,14 @@
           <button type="button" class="btn btn-default btn-sm"
           ng-click="removeToken(token)">
             Remove
+          </button>
+          <button type="button" class="btn btn-default btn-sm"
+          ng-click="depositToken(token)">
+            Deposit
+          </button>
+          <button type="button" class="btn btn-default btn-sm"
+          ng-click="withdrawToken(token)">
+            Withdraw
           </button>
         </td>
       </tr>

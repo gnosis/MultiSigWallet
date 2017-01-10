@@ -250,7 +250,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "          {{token.name}}\n" +
     "        </td>\n" +
     "        <td>\n" +
-    "          {{token.balance|ether}}\n" +
+    "          {{token|token}}\n" +
     "        </td>\n" +
     "        <td>\n" +
     "          <button type=\"button\" class=\"btn btn-default btn-sm\"\n" +
@@ -260,6 +260,14 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "          <button type=\"button\" class=\"btn btn-default btn-sm\"\n" +
     "          ng-click=\"removeToken(token)\">\n" +
     "            Remove\n" +
+    "          </button>\n" +
+    "          <button type=\"button\" class=\"btn btn-default btn-sm\"\n" +
+    "          ng-click=\"depositToken(token)\">\n" +
+    "            Deposit\n" +
+    "          </button>\n" +
+    "          <button type=\"button\" class=\"btn btn-default btn-sm\"\n" +
+    "          ng-click=\"withdrawToken(token)\">\n" +
+    "            Withdraw\n" +
     "          </button>\n" +
     "        </td>\n" +
     "      </tr>\n" +
@@ -566,6 +574,32 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "<div class=\"modal-body\">\n" +
     "  <div class=\"form-group\">\n" +
     "    <label for=\"value\">Amount (ETH):</label>\n" +
+    "    <input id=\"value\" type=\"number\" class=\"form-control\" ng-model=\"amount\" step=\"any\">\n" +
+    "  </div>\n" +
+    "</div>\n" +
+    "<div class=\"modal-footer\">\n" +
+    "  <button type=\"button\" ng-click=\"deposit()\" class=\"btn btn-default\" show-hide-by-connectivity=\"online\">\n" +
+    "    Send transaction\n" +
+    "  </button>\n" +
+    "  <button type=\"button\" ng-click=\"sign()\" class=\"btn btn-default\" show-hide-by-connectivity=\"offline\">\n" +
+    "    Sign offline\n" +
+    "  </button>\n" +
+    "  <button type=\"button\" class=\"btn btn-danger\" ng-click=\"cancel()\">\n" +
+    "    Cancel\n" +
+    "  </button>\n" +
+    "</div>\n"
+  );
+
+
+  $templateCache.put('partials/modals/depositToken.html',
+    "<div class=\"modal-header\">\n" +
+    "  <h3 class=\"modal-title\">\n" +
+    "    Deposit token\n" +
+    "  </h3>\n" +
+    "</div>\n" +
+    "<div class=\"modal-body\">\n" +
+    "  <div class=\"form-group\">\n" +
+    "    <label for=\"value\">Amount ({{token.symbol}}):</label>\n" +
     "    <input id=\"value\" type=\"number\" class=\"form-control\" ng-model=\"amount\" step=\"any\">\n" +
     "  </div>\n" +
     "</div>\n" +

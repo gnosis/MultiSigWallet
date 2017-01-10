@@ -162,9 +162,9 @@
             case "173825d9":
               return owner;
             case "cea08621":
-              return new Web3().toBigNumber("0x" + tx.data.slice(11)).div('1e18').toString() + " ETH";
+              return new Web3().toBigNumber("0x" + tx.data.slice(11)).div('1e18').toString() + " ETH";            
             default:
-              return tx.data.slice(0, 20);
+              return tx.data.slice(0, 20) + "...";
           }
         }
         else {

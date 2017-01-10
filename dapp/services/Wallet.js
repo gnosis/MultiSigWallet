@@ -1000,7 +1000,7 @@
             case "cea08621":
               return "Update daily limit";
             default:
-              return "Unknown";
+              return tx.to.slice(0, 20) + "...";
           }
         }
         else {

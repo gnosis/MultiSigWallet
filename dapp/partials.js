@@ -1438,8 +1438,8 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "<form name=\"form\" class=\"form\">\n" +
     "  <div class=\"modal-body\">\n" +
     "    <div class=\"form-group\">\n" +
-    "      <label for=\"value\">Amount ({{token.symbol}})</label>\n" +
-    "      <input id=\"value\" type=\"number\" class=\"form-control\" ng-model=\"value\" required>\n" +
+    "      <label for=\"amount\">Amount ({{token.symbol}})</label>\n" +
+    "      <input id=\"amount\" type=\"number\" class=\"form-control\" ng-model=\"amount\" required>\n" +
     "    </div>\n" +
     "    <div class=\"form-group\">\n" +
     "      <label for=\"address\">Destination Address</label>\n" +

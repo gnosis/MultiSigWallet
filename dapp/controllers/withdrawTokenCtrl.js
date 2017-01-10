@@ -6,7 +6,7 @@
 
       $scope.wallet = wallet;
       $scope.token = token;
-      $scope.value = 0;
+      $scope.amount = 10;
       $scope.to = Wallet.coinbase;
 
       $scope.send = function () {
@@ -14,7 +14,7 @@
           $scope.token.address,
           $scope.wallet.address,
           $scope.to,
-          new Web3().toBigNumber($scope.value).mul('1e' + $scope.token.decimals),
+          new Web3().toBigNumber($scope.amount).mul('1e' + $scope.token.decimals),
           function (e, tx) {
             Utils.notification("Withdraw token transaction was sent.");
             $uibModalInstance.close();
@@ -33,7 +33,7 @@
           $scope.token.address,
           $scope.wallet.address,
           $scope.to,
-          new Web3().toBigNumber($scope.value).mul('1e' + $scope.token.decimals),
+          new Web3().toBigNumber($scope.amount).mul('1e' + $scope.token.decimals),
           function (e, signed) {
             $uibModalInstance.close();
             Utils.signed(signed);
@@ -42,14 +42,13 @@
       };
 
       $scope.getNonce = function () {
-        var value = new Web3().toBigNumber($scope.value).mul('1e' + $scope.token.decimals);
+        var value = new Web3().toBigNumber($scope.amount).mul('1e' + $scope.token.decimals);
         var data = Token.withdrawData(
           $scope.token.address,
           $scope.to,
-          new Web3().toBigNumber($scope.value).mul('1e' + $scope.token.decimals)
+          new Web3().toBigNumber($scope.amount).mul('1e' + $scope.token.decimals)
         );
-        console.log(data);
-        Wallet.getNonce($scope.wallet.address, $scope.to, "0x0", data, function (e, nonce) {
+        Wallet.getNonce($scope.wallet.address, $scope.token.address, "0x0", data, function (e, nonce) {
           if (e) {
             Utils.dangerAlert(e);
           }

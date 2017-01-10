@@ -71,6 +71,7 @@
         );
         // Get nonce
         Wallet.getNonce(wallet, tokenAddress, "0x0", data, function (e, nonce) {
+          console.log("nonce", nonce);
           if (e) {
             cb(e);
           }

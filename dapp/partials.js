@@ -47,13 +47,13 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "<div class=\"panel panel-default\">\n" +
     "  <div class=\"panel-heading\">\n" +
     "    <div class=\"pull-right\">\n" +
-    "      <button type=\"button\" class=\"btn btn-default\" ng-click=\"sendTransaction()\">\n" +
+    "      <button type=\"button\" class=\"btn btn-default\" ng-click=\"sendTransaction()\" show-hide-by-connectivity=\"online\">\n" +
     "        Send transaction\n" +
     "      </button>\n" +
-    "      <button type=\"button\" class=\"btn btn-default\" ng-click=\"sendRawTransaction()\">\n" +
+    "      <button type=\"button\" class=\"btn btn-default\" ng-click=\"sendRawTransaction()\" show-hide-by-connectivity=\"online\">\n" +
     "        Send raw transaction\n" +
     "      </button>\n" +
-    "      <button type=\"button\" class=\"btn btn-default\" ng-click=\"getNonce()\">\n" +
+    "      <button type=\"button\" class=\"btn btn-default\" ng-click=\"getNonce()\" show-hide-by-connectivity=\"online\">\n" +
     "        Get nonce\n" +
     "      </button>\n" +
     "      <button type=\"button\" class=\"btn btn-danger\" ng-click=\"removeAll()\">\n" +
@@ -95,7 +95,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "        <td>\n" +
     "          <a uib-popover=\"{{transaction.info.to}}\" popover-trigger=\"'mouseenter'\"\n" +
     "          ng-href=\"https://testnet.etherscan.io/tx/{{transaction.txHash}}\"\n" +
-    "          ng-bind-html=\"getDestinationOrContract(transaction) | dashIfEmpty\">            \n" +
+    "          ng-bind-html=\"getDestinationOrContract(transaction) | dashIfEmpty\">\n" +
     "          </a>\n" +
     "        </td>\n" +
     "        <td>\n" +
@@ -521,13 +521,13 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "  </div>\n" +
     "</div>\n" +
     "<div class=\"modal-footer\">\n" +
-    "  <button class=\"btn btn-default\" type=\"button\" ng-click=\"send()\">\n" +
+    "  <button class=\"btn btn-default\" type=\"button\" ng-click=\"send()\" show-hide-by-connectivity=\"online\">\n" +
     "    Send transaction\n" +
     "  </button>\n" +
-    "  <button class=\"btn btn-default\" type=\"button\" ng-click=\"sign()\">\n" +
+    "  <button class=\"btn btn-default\" type=\"button\" ng-click=\"sign()\" show-hide-by-connectivity=\"offline\">\n" +
     "    Sign offline\n" +
     "  </button>\n" +
-    "  <button class=\"btn btn-default\" type=\"button\" ng-click=\"getNonce()\">\n" +
+    "  <button class=\"btn btn-default\" type=\"button\" ng-click=\"getNonce()\" show-hide-by-connectivity=\"online\">\n" +
     "    Get nonce\n" +
     "  </button>\n" +
     "  <button class=\"btn btn-danger\" type=\"button\" ng-click=\"cancel()\">\n" +
@@ -570,10 +570,10 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "  </div>\n" +
     "</div>\n" +
     "<div class=\"modal-footer\">\n" +
-    "  <button type=\"button\" ng-click=\"deposit()\" class=\"btn btn-default\">\n" +
+    "  <button type=\"button\" ng-click=\"deposit()\" class=\"btn btn-default\" show-hide-by-connectivity=\"online\">\n" +
     "    Send transaction\n" +
     "  </button>\n" +
-    "  <button type=\"button\" ng-click=\"sign()\" class=\"btn btn-default\">\n" +
+    "  <button type=\"button\" ng-click=\"sign()\" class=\"btn btn-default\" show-hide-by-connectivity=\"offline\">\n" +
     "    Sign offline\n" +
     "  </button>\n" +
     "  <button type=\"button\" class=\"btn btn-danger\" ng-click=\"cancel()\">\n" +
@@ -824,10 +824,10 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    </div>\n" +
     "  </div>\n" +
     "  <div class=\"modal-footer\">\n" +
-    "    <button class=\"btn btn-default\" type=\"button\" ng-click=\"deployWallet()\" ng-disabled=\"newWallet.$invalid\">\n" +
+    "    <button class=\"btn btn-default\" type=\"button\" ng-click=\"deployWallet()\" ng-disabled=\"newWallet.$invalid\" show-hide-by-connectivity=\"online\">\n" +
     "      Send Transaction\n" +
     "    </button>\n" +
-    "    <button class=\"btn btn-default\" type=\"button\" ng-click=\"deployOfflineWallet()\" ng-disabled=\"newWallet.$invalid\">\n" +
+    "    <button class=\"btn btn-default\" type=\"button\" ng-click=\"deployOfflineWallet()\" ng-disabled=\"newWallet.$invalid\" show-hide-by-connectivity=\"offline\">\n" +
     "      Sign Offline\n" +
     "    </button>\n" +
     "    <button class=\"btn btn-danger\" type=\"button\" ng-click=\"cancel()\">\n" +
@@ -1107,13 +1107,13 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "  </div>\n" +
     "</div>\n" +
     "<div class=\"modal-footer\">\n" +
-    "  <button type=\"button\" class=\"btn btn-default\" ng-click=\"setLimit()\">\n" +
+    "  <button type=\"button\" class=\"btn btn-default\" ng-click=\"setLimit()\" show-hide-by-connectivity=\"online\">\n" +
     "    Send transaction\n" +
     "  </button>\n" +
-    "  <button type=\"button\" class=\"btn btn-default\" ng-click=\"sign()\">\n" +
+    "  <button type=\"button\" class=\"btn btn-default\" ng-click=\"sign()\" show-hide-by-connectivity=\"offline\">\n" +
     "    Sign Offline\n" +
     "  </button>\n" +
-    "  <button type=\"button\" class=\"btn btn-default\" ng-click=\"getNonce()\">\n" +
+    "  <button type=\"button\" class=\"btn btn-default\" ng-click=\"getNonce()\" show-hide-by-connectivity=\"online\">\n" +
     "    Get nonce\n" +
     "  </button>\n" +
     "  <button type=\"button\" class=\"btn btn-danger\" ng-click=\"cancel()\">\n" +
@@ -1286,13 +1286,13 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    </div>\n" +
     "  </div>\n" +
     "  <div class=\"panel-footer\">\n" +
-    "    <button type=\"button\" ng-click=\"send()\" class=\"btn btn-default\" ng-disabled=\"form.$invalid\">\n" +
+    "    <button type=\"button\" ng-click=\"send()\" class=\"btn btn-default\" ng-disabled=\"form.$invalid\" show-hide-by-connectivity=\"online\">\n" +
     "      Send transaction\n" +
     "    </button>\n" +
-    "    <button type=\"button\" ng-click=\"signOff()\" class=\"btn btn-default\" ng-disabled=\"form.$invalid\">\n" +
+    "    <button type=\"button\" ng-click=\"signOff()\" class=\"btn btn-default\" ng-disabled=\"form.$invalid\" show-hide-by-connectivity=\"offline\">\n" +
     "      Sign Off\n" +
     "    </button>\n" +
-    "    <button type=\"button\" ng-click=\"getNonce()\" class=\"btn btn-default\" ng-disabled=\"form.$invalid\">\n" +
+    "    <button type=\"button\" ng-click=\"getNonce()\" class=\"btn btn-default\" ng-disabled=\"form.$invalid\" show-hide-by-connectivity=\"online\">\n" +
     "      Get nonce\n" +
     "    </button>\n" +
     "    <button type=\"button\" ng-click=\"cancel()\" class=\"btn btn-danger\">\n" +
@@ -1317,14 +1317,14 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    </div>\n" +
     "    <div class=\"form-group\">\n" +
     "      <label for=\"address\">Destination Address</label>\n" +
-    "      <input id=\"address\" type=\"text\" class=\"form-control\" ng-model=\"tx.destination\" required>\n" +
+    "      <input id=\"address\" type=\"text\" class=\"form-control\" ng-model=\"tx.to\" required>\n" +
     "    </div>\n" +
     "  </div>\n" +
     "  <div class=\"modal-footer\">\n" +
-    "    <button type=\"button\" ng-click=\"send()\" class=\"btn btn-default\" ng-disabled=\"form.$invalid\">\n" +
+    "    <button type=\"button\" ng-click=\"send()\" class=\"btn btn-default\" ng-disabled=\"form.$invalid\" show-hide-by-connectivity=\"online\">\n" +
     "      Send transaction\n" +
     "    </button>\n" +
-    "    <button type=\"button\" ng-click=\"signOff()\" class=\"btn btn-default\" ng-disabled=\"form.$invalid\">\n" +
+    "    <button type=\"button\" ng-click=\"signOff()\" class=\"btn btn-default\" ng-disabled=\"form.$invalid\" show-hide-by-connectivity=\"offline\">\n" +
     "      Sign Offline\n" +
     "    </button>\n" +
     "    <button type=\"button\" ng-click=\"cancel()\" class=\"btn btn-danger\">\n" +

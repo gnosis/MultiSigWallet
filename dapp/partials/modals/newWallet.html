@@ -65,10 +65,10 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-default" type="button" ng-click="deployWallet()" ng-disabled="newWallet.$invalid">
+    <button class="btn btn-default" type="button" ng-click="deployWallet()" ng-disabled="newWallet.$invalid" show-hide-by-connectivity="online">
       Send Transaction
     </button>
-    <button class="btn btn-default" type="button" ng-click="deployOfflineWallet()" ng-disabled="newWallet.$invalid">
+    <button class="btn btn-default" type="button" ng-click="deployOfflineWallet()" ng-disabled="newWallet.$invalid" show-hide-by-connectivity="offline">
       Sign Offline
     </button>
     <button class="btn btn-danger" type="button" ng-click="cancel()">

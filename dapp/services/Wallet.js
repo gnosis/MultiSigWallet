@@ -46,6 +46,16 @@
         }
       });
 
+
+      /**
+      * Returns all the wallets saved in the
+      * Browser localStorage
+      */
+      wallet.getAllWallets = function () {
+        return JSON.parse(localStorage.getItem("wallets") || {});
+      };
+
+
       /**
       * Return tx object, with default values, overwritted by passed params
       **/
@@ -932,7 +942,7 @@
           }
           else {
             walletInstance.submitTransaction(
-              tx.destination, //tx.to,
+              tx.to,
               tx.value,
               data,
               nonce,
@@ -957,6 +967,9 @@
         wallet.getWalletNonces(function (e, nonces) {
           if (e) {
             cb(e);
+          }
+          else if (nonces == undefined){
+            // Don's show anything, user closed the modal
           }
           else {
             var mainData = walletInstance.submitTransaction.getData(

@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .controller('navCtrl', function ($scope, Wallet, $interval) {
+    .controller('navCtrl', function ($scope, Wallet, Connection, $interval) {
       $scope.navCollapsed = true;
 
       $scope.updateInfo = function (){
@@ -15,10 +15,23 @@
         });
       };
 
+      /**
+      * Updates connection status
+      */
+      $scope.updateConnectionStatus = function (){
+        $scope.connectionStatus = Connection.isConnected;
+      };
+
       Wallet.webInitialized.then(
         function () {
           $scope.interval = $interval($scope.updateInfo, 15000);
           $scope.updateInfo();
+
+          /**
+          * Lookup connection status
+          */
+          $scope.updateConnectionStatus();
+          $scope.connectionInterval = $interval($scope.updateConnectionStatus, txDefault.connectionChecker.checkInterval);
         }
       );
 

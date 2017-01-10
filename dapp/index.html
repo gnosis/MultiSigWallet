@@ -39,6 +39,7 @@
     <script src="./services/Utils.js"></script>
     <script src="./services/Transaction.js"></script>
     <script src="./services/Token.js"></script>
+    <script src="./services/Connection.js"></script>
     <!-- Controllers -->
     <script src="./controllers/addTokenCtrl.js"></script>
     <script src="./controllers/navCtrl.js"></script>
@@ -112,6 +113,9 @@
               </li>
               <li>
                 <p class="navbar-text"> Nonce: {{nonce}} </p>
+              </li>
+              <li>
+                <p class="navbar-text"> Status: {{connectionStatus ? 'Online' : 'Offline'}} </p>
               </li>
             </ul>
         </div>

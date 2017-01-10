@@ -2,7 +2,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("walletDetailCtrl", function ($scope, Wallet, $routeParams, Utils, Transaction, $interval, $uibModal) {
+    .controller("walletDetailCtrl", function ($scope, Wallet, $routeParams, Utils, Transaction, $interval, $uibModal, Token) {
       $scope.wallet = Wallet.wallets[$routeParams.address];
       // Get wallet balance, nonce, transactions, owners
       $scope.owners = [];
@@ -13,6 +13,7 @@
       $scope.totalItems = 0;
       $scope.showTxs = "all";
       $scope.hideOwners = true;
+      $scope.hideTokens = true;
 
       $scope.updateParams = function () {
 
@@ -92,6 +93,26 @@
             }
           )
         );
+
+        // Get token info
+        if ($scope.wallet.tokens) {
+          Object.keys($scope.wallet.tokens)
+          .map(
+            function (token) {
+              batch.add(
+                Token.balanceOf(
+                  token,
+                  Wallet.coinbase,
+                  function (e, balance) {
+                    $scope.wallet.tokens[token].balance = balance;
+                    $scope.$apply();
+                  }
+                )
+              );
+            }
+          );
+        }
+
         batch.execute();
       };
 
@@ -351,6 +372,70 @@
             }
           },
           controller: 'walletTransactionCtrl'
+        });
+      };
+
+      $scope.addToken = function () {
+        $uibModal.open({
+          templateUrl: 'partials/modals/editToken.html',
+          size: 'md',
+          resolve: {
+            wallet: function () {
+              return $scope.wallet;
+            },
+            token: function () {
+              return {};
+            }
+          },
+          controller: 'addTokenCtrl'
+        });
+      };
+
+      $scope.editToken = function (token) {
+        $uibModal.open({
+          templateUrl: 'partials/modals/editToken.html',
+          size: 'md',
+          resolve: {
+            wallet: function () {
+              return $scope.wallet;
+            },
+            token: function () {
+              return token;
+            }
+          },
+          controller: 'addTokenCtrl'
+        });
+      };
+
+      $scope.removeToken = function (token) {
+        $uibModal.open({
+          templateUrl: 'partials/modals/removeToken.html',
+          size: 'md',
+          resolve: {
+            wallet: function () {
+              return $scope.wallet;
+            },
+            token: function () {
+              return token;
+            }
+          },
+          controller: function ($scope, token, wallet, Wallet, $uibModalInstance) {
+            $scope.token = token;
+            $scope.wallet = wallet;
+
+            $scope.ok = function () {
+              delete $scope.wallet.tokens[token.address];
+              if( !Object.keys($scope.wallet.tokens).length) {
+                $scope.wallet.tokens = null;
+              }
+              Wallet.updateWallet($scope.wallet);
+              $uibModalInstance.close();
+            };
+
+            $scope.cancel = function () {
+              $uibModalInstance.dismiss();
+            };
+          }
         });
       };
 

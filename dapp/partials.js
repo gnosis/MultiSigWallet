@@ -163,6 +163,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    {{wallet.name}}\n" +
     "  </h2>\n" +
     "</div>\n" +
+    "<!-- Owners panel -->\n" +
     "<div class=\"panel panel-default\">\n" +
     "  <div class=\"panel-heading\">\n" +
     "    <div class=\"pull-right\">\n" +
@@ -211,6 +212,64 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    </tbody>\n" +
     "  </table>\n" +
     "</div>\n" +
+    "<!-- Tokens panel -->\n" +
+    "<div class=\"panel panel-default\">\n" +
+    "  <div class=\"panel-heading\">\n" +
+    "    <div class=\"pull-right\">\n" +
+    "      <button type=\"button\" ng-click=\"addToken()\" class=\"btn btn-default\">\n" +
+    "        Add\n" +
+    "      </button>\n" +
+    "      <button type=\"button\" ng-click=\"hideTokens=true\" class=\"btn btn-default\" ng-hide=\"hideTokens\">\n" +
+    "        <span class=\"glyphicon glyphicon-menu-up\" aria-hidden=\"true\"></span>\n" +
+    "      </button>\n" +
+    "      <button type=\"button\" ng-click=\"hideTokens=false\" class=\"btn btn-default\" ng-show=\"hideTokens\">\n" +
+    "        <span class=\"glyphicon glyphicon-menu-down\" aria-hidden=\"true\"></span>\n" +
+    "      </button>\n" +
+    "    </div>\n" +
+    "    <h4>\n" +
+    "      Tokens\n" +
+    "    </h4>\n" +
+    "  </div>\n" +
+    "  <table class=\"table table-hover table-bordered table-striped\" uib-collapse=\"hideTokens\">\n" +
+    "    <thead>\n" +
+    "      <tr>\n" +
+    "        <th>\n" +
+    "          Name\n" +
+    "        </th>\n" +
+    "        <th>\n" +
+    "          Balance\n" +
+    "        </th>\n" +
+    "        <th>\n" +
+    "          Actions\n" +
+    "        </th>\n" +
+    "      </tr>\n" +
+    "    </thead>\n" +
+    "    <tbody>\n" +
+    "      <tr ng-repeat=\"token in wallet.tokens track by $index\">\n" +
+    "        <td>\n" +
+    "          {{token.name}}\n" +
+    "        </td>\n" +
+    "        <td>\n" +
+    "          {{token.balance|ether}}\n" +
+    "        </td>\n" +
+    "        <td>\n" +
+    "          <button type=\"button\" class=\"btn btn-default btn-sm\"\n" +
+    "          ng-click=\"editToken(token)\">\n" +
+    "            Edit\n" +
+    "          </button>\n" +
+    "          <button type=\"button\" class=\"btn btn-default btn-sm\"\n" +
+    "          ng-click=\"removeToken(token)\">\n" +
+    "            Remove\n" +
+    "          </button>\n" +
+    "        </td>\n" +
+    "      </tr>\n" +
+    "    </tbody>\n" +
+    "  </table>\n" +
+    "  <div ng-show=\"!wallet.tokens\" class=\"panel-body text-center\" uib-collapse=\"hideTokens\">\n" +
+    "    No tokens. Add an ERC20 token <a href=\"\" ng-click=\"addToken()\">now</a>.\n" +
+    "  </div>\n" +
+    "</div>\n" +
+    "<!-- Multisig transactions panel -->\n" +
     "<div class=\"panel panel-default\">\n" +
     "  <div class=\"panel-heading\">\n" +
     "    <div class=\"pull-right form-inline\">\n" +
@@ -547,6 +606,42 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
   );
 
 
+  $templateCache.put('partials/modals/editToken.html',
+    "<div class=\"modal-header\">\n" +
+    "  <h3 class=\"modal-title\">\n" +
+    "    Add/edit token\n" +
+    "  </h3>\n" +
+    "</div>\n" +
+    "<div class=\"modal-body\" id=\"modal-body\">\n" +
+    "  <div class=\"form-group\">\n" +
+    "    <label for=\"address\">Address</label>\n" +
+    "    <input id=\"address\" type=\"text\" class=\"form-control\" ng-min=\"40\" ng-change=\"updateInfo()\"\n" +
+    "    ng-model=\"token.address\" required />\n" +
+    "  </div>\n" +
+    "  <div class=\"form-group\">\n" +
+    "    <label for=\"name\">Name</label>\n" +
+    "    <input id=\"name\" type=\"text\" class=\"form-control\" ng-disabled=\"!token.address\" ng-model=\"token.name\" required />\n" +
+    "  </div>\n" +
+    "  <div class=\"form-group\">\n" +
+    "    <label for=\"symbol\">Symbol</label>\n" +
+    "    <input id=\"symbol\" type=\"text\" class=\"form-control\" ng-disabled=\"!token.address\" ng-model=\"token.symbol\" required />\n" +
+    "  </div>\n" +
+    "  <div class=\"form-group\">\n" +
+    "    <label for=\"decimals\">Decimals</label>\n" +
+    "    <input id=\"decimals\" type=\"number\" class=\"form-control\" ng-disabled=\"!token.address\" ng-model=\"token.decimals\" required />\n" +
+    "  </div>\n" +
+    "</div>\n" +
+    "<div class=\"modal-footer\">\n" +
+    "  <button class=\"btn btn-default\" type=\"button\" ng-click=\"ok()\">\n" +
+    "    Ok\n" +
+    "  </button>\n" +
+    "  <button class=\"btn btn-danger\" type=\"button\" ng-click=\"cancel()\">\n" +
+    "    Cancel\n" +
+    "  </button>\n" +
+    "</div>\n"
+  );
+
+
   $templateCache.put('partials/modals/editWallet.html',
     "<div class=\"modal-header\">\n" +
     "  <h3 class=\"modal-title\">\n" +
@@ -769,6 +864,41 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "  <button class=\"btn btn-default\" type=\"button\" ng-click=\"getNonce()\">\n" +
     "    Get nonce\n" +
     "  </button>\n" +
+    "  <button class=\"btn btn-danger\" type=\"button\" ng-click=\"cancel()\">\n" +
+    "    Cancel\n" +
+    "  </button>\n" +
+    "</div>\n"
+  );
+
+
+  $templateCache.put('partials/modals/removeToken.html',
+    "<div class=\"modal-header\">\n" +
+    "  <h3 class=\"modal-title\">\n" +
+    "    Remove token\n" +
+    "  </h3>\n" +
+    "</div>\n" +
+    "<div class=\"modal-body\">\n" +
+    "  <div class=\"form-group\">\n" +
+    "    <label for=\"name\">Name</label>\n" +
+    "    <input id=\"name\" type=\"text\" class=\"form-control\" ng-model=\"token.name\" readonly />\n" +
+    "  </div>\n" +
+    "  <div class=\"form-group\">\n" +
+    "    <label for=\"address\"> Address </label>\n" +
+    "    <input id=\"address\" type=\"text\" class=\"form-control\" ng-model=\"token.address\" readonly />\n" +
+    "  </div>\n" +
+    "  <div class=\"form-group\">\n" +
+    "    <label for=\"symbol\"> Symbol </label>\n" +
+    "    <input id=\"symbol\" type=\"text\" class=\"form-control\" ng-model=\"token.symbol\" readonly />\n" +
+    "  </div>\n" +
+    "  <div class=\"form-group\">\n" +
+    "    <label for=\"decimals\"> Decimals </label>\n" +
+    "    <input id=\"decimals\" type=\"text\" class=\"form-control\" ng-model=\"token.decimals\" readonly />\n" +
+    "  </div>\n" +
+    "</div>\n" +
+    "<div class=\"modal-footer\">\n" +
+    "  <button class=\"btn btn-default\" type=\"button\" ng-click=\"ok()\">\n" +
+    "    Ok\n" +
+    "  </button>  \n" +
     "  <button class=\"btn btn-danger\" type=\"button\" ng-click=\"cancel()\">\n" +
     "    Cancel\n" +
     "  </button>\n" +

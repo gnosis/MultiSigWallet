@@ -3,6 +3,7 @@
     {{wallet.name}}
   </h2>
 </div>
+<!-- Owners panel -->
 <div class="panel panel-default">
   <div class="panel-heading">
     <div class="pull-right">
@@ -51,6 +52,64 @@
     </tbody>
   </table>
 </div>
+<!-- Tokens panel -->
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="pull-right">
+      <button type="button" ng-click="addToken()" class="btn btn-default">
+        Add
+      </button>
+      <button type="button" ng-click="hideTokens=true" class="btn btn-default" ng-hide="hideTokens">
+        <span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span>
+      </button>
+      <button type="button" ng-click="hideTokens=false" class="btn btn-default" ng-show="hideTokens">
+        <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
+      </button>
+    </div>
+    <h4>
+      Tokens
+    </h4>
+  </div>
+  <table class="table table-hover table-bordered table-striped" uib-collapse="hideTokens">
+    <thead>
+      <tr>
+        <th>
+          Name
+        </th>
+        <th>
+          Balance
+        </th>
+        <th>
+          Actions
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="token in wallet.tokens track by $index">
+        <td>
+          {{token.name}}
+        </td>
+        <td>
+          {{token.balance|ether}}
+        </td>
+        <td>
+          <button type="button" class="btn btn-default btn-sm"
+          ng-click="editToken(token)">
+            Edit
+          </button>
+          <button type="button" class="btn btn-default btn-sm"
+          ng-click="removeToken(token)">
+            Remove
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div ng-show="!wallet.tokens" class="panel-body text-center" uib-collapse="hideTokens">
+    No tokens. Add an ERC20 token <a href="" ng-click="addToken()">now</a>.
+  </div>
+</div>
+<!-- Multisig transactions panel -->
 <div class="panel panel-default">
   <div class="panel-heading">
     <div class="pull-right form-inline">

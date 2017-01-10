@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .controller('walletCtrl', function ($scope, Wallet, Utils, Transaction, $uibModal, $interval) {
+    .controller('walletCtrl', function ($scope, Wallet, Utils, Token, Transaction, $uibModal, $interval) {
       Wallet
       .webInitialized
       .then(
@@ -134,8 +134,8 @@
           resolve: {
             callback: function () {
               return function () {
-                $scope.updateParams()
-              }
+                $scope.updateParams();
+              };
             }
           }
         });

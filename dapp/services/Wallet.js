@@ -44,7 +44,7 @@
             wallet.methodIds[signature.slice(2, 6)] = item;
           }
         }
-      });      
+      });
 
       /**
       * Return tx object, with default values, overwritted by passed params
@@ -306,7 +306,7 @@
         if (!wallet.wallets[w.address]) {
           wallet.wallets[w.address] = {};
         }
-        Object.assign(wallet.wallets[w.address], {address: w.address, name: w.name, owners: w.owners});
+        Object.assign(wallet.wallets[w.address], {address: w.address, name: w.name, owners: w.owners, tokens: w.tokens});
         localStorage.setItem("wallets", JSON.stringify(wallet.wallets));
         wallet.updates++;
         try{
@@ -1027,7 +1027,7 @@
         }
 
         return decoded;
-      }
+      };
 
       return wallet;
     });

@@ -10,7 +10,7 @@
       * Loads a JSON script containing the wallets configuration
       */
       $scope.load = function () {
-        if($scope.configuration && $scope.configuration.trim() != ""){
+        if($scope.configuration && $scope.configuration.trim() !== ""){
             // Setting up new configuration
             try{
               Wallet.import($scope.configuration);
@@ -29,7 +29,7 @@
             catch (e) {}
 
         }else{
-          Utils.dangerAlert("Please provide a valid configuration script.")
+          Utils.dangerAlert("Please provide a valid configuration script.");
         }
       };
 

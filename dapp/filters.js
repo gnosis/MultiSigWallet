@@ -56,7 +56,7 @@
         else{
           return log.slice(0, 12) + "...";
         }
-      }
+      };
     })
     .filter('ether', function () {
       return function (big_number) {
@@ -86,7 +86,7 @@
   .filter('dashIfEmpty', function($sce){
     return function (text){
       return text ? $sce.trustAsHtml(text.toString()) : $sce.trustAsHtml('<span class=\'centered-dash\'>-</span>');
-    }
+    };
   });
   }
 )();

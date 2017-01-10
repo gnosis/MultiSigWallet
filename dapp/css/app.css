@@ -35,3 +35,10 @@ textarea.json-config {
   text-align: center;
   display: block;
 }
+
+.online-status{
+  color: #008000; /* green */
+}
+.offline-status{
+  color: #f5231c; /* red */
+}

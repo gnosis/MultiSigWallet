@@ -281,6 +281,12 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "<div class=\"panel panel-default\">\n" +
     "  <div class=\"panel-heading\">\n" +
     "    <div class=\"pull-right form-inline\">\n" +
+    "      <button type=\"button\" class=\"btn btn-default\" ng-click=\"confirmMultisigTransactionOffline()\" show-hide-by-connectivity=\"offline\">\n" +
+    "        Confirm offline\n" +
+    "      </button>\n" +
+    "      <button type=\"button\" class=\"btn btn-default\" ng-click=\"revokeMultisigTransactionOffline()\" show-hide-by-connectivity=\"offline\">\n" +
+    "        Revoke offline\n" +
+    "      </button>\n" +
     "      <button type=\"button\" class=\"btn btn-default\" ng-click=\"addTransaction()\">\n" +
     "        Add\n" +
     "      </button>\n" +
@@ -367,19 +373,25 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "          </span>\n" +
     "        </td>\n" +
     "        <td>\n" +
+    "          <button class=\"btn btn-default btn-sm\" ngclipboard data-clipboard-text=\"{{txHash}}\">\n" +
+    "            Copy hash\n" +
+    "          </button>\n" +
     "          <button type=\"button\" class=\"btn btn-default btn-sm\"\n" +
     "          ng-hide=\"transactions[txHash].executed || transactions[txHash].confirmed\"\n" +
-    "          ng-click=\"confirmTransaction(txHash)\">\n" +
+    "          ng-click=\"confirmTransaction(txHash)\"\n" +
+    "          show-hide-by-connectivity=\"online\">\n" +
     "            Confirm\n" +
     "          </button>\n" +
     "          <button type=\"button\" class=\"btn btn-default btn-sm\"\n" +
     "          ng-show=\"transactions[txHash].confirmed && !transactions[txHash].executed\"\n" +
-    "          ng-click=\"revokeConfirmation(txHash)\">\n" +
+    "          ng-click=\"revokeConfirmation(txHash)\"\n" +
+    "          show-hide-by-connectivity=\"online\">\n" +
     "            Revoke confirmation\n" +
     "          </button>\n" +
     "          <button type=\"button\" class=\"btn btn-default btn-sm\"\n" +
     "          ng-show=\"!transactions[txHash].executed && transactions[txHash].confirmations.length == confirmations\"\n" +
-    "          ng-click=\"executeTransaction(txHash)\">\n" +
+    "          ng-click=\"executeTransaction(txHash)\"\n" +
+    "          show-hide-by-connectivity=\"online\">\n" +
     "            Execute\n" +
     "          </button>\n" +
     "        </td>\n" +
@@ -542,6 +554,29 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    Cancel\n" +
     "  </button>\n" +
     "</div>\n"
+  );
+
+
+  $templateCache.put('partials/modals/confirmMultisigTransactionOffline.html',
+    "<div class=\"modal-header\">\n" +
+    "  <h3 class=\"modal-title\">\n" +
+    "    Confirm transaction offline\n" +
+    "  </h3>\n" +
+    "</div>\n" +
+    "<form ng-submit=\"ok()\">\n" +
+    "  <div class=\"modal-body\">\n" +
+    "    <div class=\"form-group\">\n" +
+    "      <label for=\"nonce\">Transaction Hash</label>\n" +
+    "      <textarea class=\"form-control\" ng-model=\"transactionHash\"></textarea>\n" +
+    "    </div>\n" +
+    "  </div>\n" +
+    "  <div class=\"modal-footer\">\n" +
+    "    <input class=\"btn btn-default\" type=\"submit\" value=\"Sign offline\" ng-click=\"signOffline()\" />\n" +
+    "    <button class=\"btn btn-danger\" type=\"button\" ng-click=\"cancel()\">\n" +
+    "      Cancel\n" +
+    "    </button>\n" +
+    "  </div>\n" +
+    "</form>\n"
   );
 
 
@@ -1042,6 +1077,29 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    Cancel\n" +
     "  </button>\n" +
     "</div>\n"
+  );
+
+
+  $templateCache.put('partials/modals/revokeMultisigConfirmationOffline.html',
+    "<div class=\"modal-header\">\n" +
+    "  <h3 class=\"modal-title\">\n" +
+    "    Revoke transaction confirmation offline\n" +
+    "  </h3>\n" +
+    "</div>\n" +
+    "<form ng-submit=\"ok()\">\n" +
+    "  <div class=\"modal-body\">\n" +
+    "    <div class=\"form-group\">\n" +
+    "      <label for=\"nonce\">Transaction Hash</label>\n" +
+    "      <textarea class=\"form-control\" ng-model=\"transactionHash\"></textarea>\n" +
+    "    </div>\n" +
+    "  </div>\n" +
+    "  <div class=\"modal-footer\">\n" +
+    "    <input class=\"btn btn-default\" type=\"submit\" value=\"Revoke offline\" ng-click=\"revokeOffline()\" />\n" +
+    "    <button class=\"btn btn-danger\" type=\"button\" ng-click=\"cancel()\">\n" +
+    "      Cancel\n" +
+    "    </button>\n" +
+    "  </div>\n" +
+    "</form>\n"
   );
 
 

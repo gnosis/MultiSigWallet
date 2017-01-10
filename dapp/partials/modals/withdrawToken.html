@@ -1,0 +1,31 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Withdraw token
+  </h3>
+</div>
+<form name="form" class="form">
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="value">Amount ({{token.symbol}})</label>
+      <input id="value" type="number" class="form-control" ng-model="value" required>
+    </div>
+    <div class="form-group">
+      <label for="address">Destination Address</label>
+      <input id="address" type="text" class="form-control" ng-model="to" required>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" ng-click="send()" class="btn btn-default" ng-disabled="form.$invalid" show-hide-by-connectivity="online">
+      Send transaction
+    </button>
+    <button type="button" ng-click="signOff()" class="btn btn-default" ng-disabled="form.$invalid" show-hide-by-connectivity="offline">
+      Sign Offline
+    </button>
+    <button type="button" class="btn btn-default" ng-click="getNonce()" ng-disabled="form.$invalid" show-hide-by-connectivity="online">
+      Get nonce
+    </button>
+    <button type="button" ng-click="cancel()" class="btn btn-danger">
+      Cancel
+    </button>
+  </div>
+</form>

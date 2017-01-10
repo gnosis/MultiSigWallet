@@ -3,30 +3,32 @@
     Add/edit token
   </h3>
 </div>
-<div class="modal-body" id="modal-body">
-  <div class="form-group">
-    <label for="address">Address</label>
-    <input id="address" type="text" class="form-control" ng-min="40" ng-change="updateInfo()"
-    ng-model="token.address" required />
+<form name="form" class="form">
+  <div class="modal-body" id="modal-body">
+    <div class="form-group">
+      <label for="address">Address</label>
+      <input id="address" type="text" class="form-control" ng-min="40" ng-change="updateInfo()"
+      ng-model="token.address" required />
+    </div>
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input id="name" type="text" class="form-control" ng-disabled="!token.address" ng-model="token.name" required />
+    </div>
+    <div class="form-group">
+      <label for="symbol">Symbol</label>
+      <input id="symbol" type="text" class="form-control" ng-disabled="!token.address" ng-model="token.symbol" required />
+    </div>
+    <div class="form-group">
+      <label for="decimals">Decimals</label>
+      <input id="decimals" type="number" class="form-control" ng-disabled="!token.address" ng-model="token.decimals" required />
+    </div>
   </div>
-  <div class="form-group">
-    <label for="name">Name</label>
-    <input id="name" type="text" class="form-control" ng-disabled="!token.address" ng-model="token.name" required />
+  <div class="modal-footer">
+    <button class="btn btn-default" type="button" ng-click="ok()" ng-disabled="form.$invalid">
+      Ok
+    </button>
+    <button class="btn btn-danger" type="button" ng-click="cancel()">
+      Cancel
+    </button>
   </div>
-  <div class="form-group">
-    <label for="symbol">Symbol</label>
-    <input id="symbol" type="text" class="form-control" ng-disabled="!token.address" ng-model="token.symbol" required />
-  </div>
-  <div class="form-group">
-    <label for="decimals">Decimals</label>
-    <input id="decimals" type="number" class="form-control" ng-disabled="!token.address" ng-model="token.decimals" required />
-  </div>
-</div>
-<div class="modal-footer">
-  <button class="btn btn-default" type="button" ng-click="ok()">
-    Ok
-  </button>
-  <button class="btn btn-danger" type="button" ng-click="cancel()">
-    Cancel
-  </button>
-</div>
+</form>

@@ -63,40 +63,49 @@
       };
 
       factory.withdraw = function (tokenAddress, wallet, to, value, cb) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
-        var data = instance.changeDailyLimit.getData(
-          limit,
-          cb
+        var walletInstance = Wallet.web3.eth.contract(Wallet.json.multiSigDailyLimit.abi).at(wallet);
+        var tokenInstance = Wallet.web3.eth.contract(factory.abi).at(tokenAddress);
+        var data = tokenInstance.transfer.getData(
+          to,
+          value
         );
         // Get nonce
-        wallet.getNonce(wallet, tokenAddress, "0x0", data, function (e, nonce) {
+        Wallet.getNonce(wallet, tokenAddress, "0x0", data, function (e, nonce) {
           if (e) {
             cb(e);
           }
           else {
-            instance.submitTransaction(tokenAddress, "0x0", data, nonce, wallet.txDefaults(), cb);
+            walletInstance.submitTransaction(tokenAddress, "0x0", data, nonce, Wallet.txDefaults(), cb);
           }
         }).call();
       };
 
       factory.withdrawOffline = function (tokenAddress, wallet, to, value, cb) {
-        var walletInstance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(wallet);
-        var tokenInstance = wallet.web3.eth.contract(wallet.json.token.abi).at(tokenAddress);
+        var walletInstance = Wallet.web3.eth.contract(Wallet.json.multiSigDailyLimit.abi).at(wallet);
+        var tokenInstance = Wallet.web3.eth.contract(factory.abi).at(tokenAddress);
         var data = tokenInstance.transfer.getData(
           to,
           value
         );
 
         // Get nonce
-        wallet.getWalletNonces(function (e, nonces) {
+        Wallet.getWalletNonces(function (e, nonces) {
           if (e) {
             cb(e);
           }
           else {
             var mainData = walletInstance.submitTransaction.getData(tokenAddress, "0x0", data, nonces.multisig, cb);
-            wallet.offlineTransaction(wallet, mainData, nonces.account, cb);
+            Wallet.offlineTransaction(wallet, mainData, nonces.account, cb);
           }
         });
+      }
+
+      factory.withdrawData = function (tokenAddress, to, value) {
+        var tokenInstance = Wallet.web3.eth.contract(factory.abi).at(tokenAddress);
+        return tokenInstance.transfer.getData(
+          to,
+          value
+        );
       }
 
       return factory;

@@ -455,6 +455,22 @@
         });
       };
 
+      $scope.withdrawToken = function (token) {
+        $uibModal.open({
+          templateUrl: 'partials/modals/withdrawToken.html',
+          size: 'md',
+          resolve: {
+            wallet: function () {
+              return $scope.wallet;
+            },
+            token: function () {
+              return token;
+            }
+          },
+          controller: 'withdrawTokenCtrl'
+        });
+      };
+
     });
   }
 )();

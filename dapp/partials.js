@@ -681,33 +681,35 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    Add/edit token\n" +
     "  </h3>\n" +
     "</div>\n" +
-    "<div class=\"modal-body\" id=\"modal-body\">\n" +
-    "  <div class=\"form-group\">\n" +
-    "    <label for=\"address\">Address</label>\n" +
-    "    <input id=\"address\" type=\"text\" class=\"form-control\" ng-min=\"40\" ng-change=\"updateInfo()\"\n" +
-    "    ng-model=\"token.address\" required />\n" +
+    "<form name=\"form\" class=\"form\">\n" +
+    "  <div class=\"modal-body\" id=\"modal-body\">\n" +
+    "    <div class=\"form-group\">\n" +
+    "      <label for=\"address\">Address</label>\n" +
+    "      <input id=\"address\" type=\"text\" class=\"form-control\" ng-min=\"40\" ng-change=\"updateInfo()\"\n" +
+    "      ng-model=\"token.address\" required />\n" +
+    "    </div>\n" +
+    "    <div class=\"form-group\">\n" +
+    "      <label for=\"name\">Name</label>\n" +
+    "      <input id=\"name\" type=\"text\" class=\"form-control\" ng-disabled=\"!token.address\" ng-model=\"token.name\" required />\n" +
+    "    </div>\n" +
+    "    <div class=\"form-group\">\n" +
+    "      <label for=\"symbol\">Symbol</label>\n" +
+    "      <input id=\"symbol\" type=\"text\" class=\"form-control\" ng-disabled=\"!token.address\" ng-model=\"token.symbol\" required />\n" +
+    "    </div>\n" +
+    "    <div class=\"form-group\">\n" +
+    "      <label for=\"decimals\">Decimals</label>\n" +
+    "      <input id=\"decimals\" type=\"number\" class=\"form-control\" ng-disabled=\"!token.address\" ng-model=\"token.decimals\" required />\n" +
+    "    </div>\n" +
     "  </div>\n" +
-    "  <div class=\"form-group\">\n" +
-    "    <label for=\"name\">Name</label>\n" +
-    "    <input id=\"name\" type=\"text\" class=\"form-control\" ng-disabled=\"!token.address\" ng-model=\"token.name\" required />\n" +
+    "  <div class=\"modal-footer\">\n" +
+    "    <button class=\"btn btn-default\" type=\"button\" ng-click=\"ok()\" ng-disabled=\"form.$invalid\">\n" +
+    "      Ok\n" +
+    "    </button>\n" +
+    "    <button class=\"btn btn-danger\" type=\"button\" ng-click=\"cancel()\">\n" +
+    "      Cancel\n" +
+    "    </button>\n" +
     "  </div>\n" +
-    "  <div class=\"form-group\">\n" +
-    "    <label for=\"symbol\">Symbol</label>\n" +
-    "    <input id=\"symbol\" type=\"text\" class=\"form-control\" ng-disabled=\"!token.address\" ng-model=\"token.symbol\" required />\n" +
-    "  </div>\n" +
-    "  <div class=\"form-group\">\n" +
-    "    <label for=\"decimals\">Decimals</label>\n" +
-    "    <input id=\"decimals\" type=\"number\" class=\"form-control\" ng-disabled=\"!token.address\" ng-model=\"token.decimals\" required />\n" +
-    "  </div>\n" +
-    "</div>\n" +
-    "<div class=\"modal-footer\">\n" +
-    "  <button class=\"btn btn-default\" type=\"button\" ng-click=\"ok()\">\n" +
-    "    Ok\n" +
-    "  </button>\n" +
-    "  <button class=\"btn btn-danger\" type=\"button\" ng-click=\"cancel()\">\n" +
-    "    Cancel\n" +
-    "  </button>\n" +
-    "</div>\n"
+    "</form>\n"
   );
 
 
@@ -1418,6 +1420,41 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    </button>\n" +
     "    <button type=\"button\" ng-click=\"signOff()\" class=\"btn btn-default\" ng-disabled=\"form.$invalid\" show-hide-by-connectivity=\"offline\">\n" +
     "      Sign Offline\n" +
+    "    </button>\n" +
+    "    <button type=\"button\" ng-click=\"cancel()\" class=\"btn btn-danger\">\n" +
+    "      Cancel\n" +
+    "    </button>\n" +
+    "  </div>\n" +
+    "</form>\n"
+  );
+
+
+  $templateCache.put('partials/modals/withdrawToken.html',
+    "<div class=\"modal-header\">\n" +
+    "  <h3 class=\"modal-title\">\n" +
+    "    Withdraw token\n" +
+    "  </h3>\n" +
+    "</div>\n" +
+    "<form name=\"form\" class=\"form\">\n" +
+    "  <div class=\"modal-body\">\n" +
+    "    <div class=\"form-group\">\n" +
+    "      <label for=\"value\">Amount ({{token.symbol}})</label>\n" +
+    "      <input id=\"value\" type=\"number\" class=\"form-control\" ng-model=\"value\" required>\n" +
+    "    </div>\n" +
+    "    <div class=\"form-group\">\n" +
+    "      <label for=\"address\">Destination Address</label>\n" +
+    "      <input id=\"address\" type=\"text\" class=\"form-control\" ng-model=\"to\" required>\n" +
+    "    </div>\n" +
+    "  </div>\n" +
+    "  <div class=\"modal-footer\">\n" +
+    "    <button type=\"button\" ng-click=\"send()\" class=\"btn btn-default\" ng-disabled=\"form.$invalid\" show-hide-by-connectivity=\"online\">\n" +
+    "      Send transaction\n" +
+    "    </button>\n" +
+    "    <button type=\"button\" ng-click=\"signOff()\" class=\"btn btn-default\" ng-disabled=\"form.$invalid\" show-hide-by-connectivity=\"offline\">\n" +
+    "      Sign Offline\n" +
+    "    </button>\n" +
+    "    <button type=\"button\" class=\"btn btn-default\" ng-click=\"getNonce()\" ng-disabled=\"form.$invalid\" show-hide-by-connectivity=\"online\">\n" +
+    "      Get nonce\n" +
     "    </button>\n" +
     "    <button type=\"button\" ng-click=\"cancel()\" class=\"btn btn-danger\">\n" +
     "      Cancel\n" +

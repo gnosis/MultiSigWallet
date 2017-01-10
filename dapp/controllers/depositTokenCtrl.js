@@ -10,7 +10,7 @@
         Token.transfer(
           $scope.token.address,
           $scope.wallet.address,
-          new EthJS.BN(new Web3().toWei($scope.amount)),
+          new Web3().toBigNumber($scope.amount).mul('1e' + $scope.token.decimals),
           function(e, tx){
             Utils.notification("Deposit transaction was sent.");
             $uibModalInstance.close();
@@ -28,7 +28,7 @@
         Token.transferOffline(
           $scope.token.address,
           $scope.wallet.address,
-          new EthJS.BN(new Web3().toWei($scope.amount)),
+          new Web3().toBigNumber($scope.amount).mul('1e' + $scope.token.decimals),
           function(e, signed){
             if (e) {
               Utils.dangerAlert(e);
@@ -38,7 +38,7 @@
               Utils.signed(signed);
             }
           }
-        );  
+        );
       };
 
         $scope.cancel = function () {

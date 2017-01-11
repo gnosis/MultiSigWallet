@@ -250,6 +250,21 @@
         );
       };
 
+      $scope.confirmMultisigTransactionOffline = function () {
+        $uibModal.open(
+          {
+            templateUrl: 'partials/modals/confirmMultisigTransactionOffline.html',
+            size: 'md',
+            resolve: {
+              address: function () {
+                return $scope.wallet.address;
+              }
+            },
+            controller: 'confirmMultisigTransactionOfflineCtrl'
+          }
+        );
+      };
+
       $scope.revokeConfirmation = function (txHash) {
         $uibModal.open(
           {
@@ -264,6 +279,21 @@
               }
             },
             controller: 'revokeCtrl'
+          }
+        );
+      };
+
+      $scope.revokeMultisigTransactionOffline = function () {
+        $uibModal.open(
+          {
+            templateUrl: 'partials/modals/revokeMultisigConfirmationOffline.html',
+            size: 'md',
+            resolve: {
+              address: function () {
+                return $scope.wallet.address;
+              }
+            },
+            controller: 'confirmMultisigTransactionOfflineCtrl'
           }
         );
       };

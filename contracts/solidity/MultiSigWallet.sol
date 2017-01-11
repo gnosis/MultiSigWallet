@@ -108,8 +108,11 @@ contract MultiSigWallet {
         public
         validRequirement(_owners.length, _required)
     {
-        for (uint i=0; i<_owners.length; i++)
+        for (uint i=0; i<_owners.length; i++) {
+            if (isOwner[_owners[i]])
+                throw;
             isOwner[_owners[i]] = true;
+        }
         owners = _owners;
         required = _required;
     }

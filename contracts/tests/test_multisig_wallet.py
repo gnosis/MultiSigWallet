@@ -1,7 +1,7 @@
 # ethereum
 from ethereum import tester as t
 from ethereum.tester import keys, accounts
-from ethereum.tester import TransactionFailed
+from ethereum.tester import TransactionFailed, ContractCreationFailed
 from preprocessor import PreProcessor
 # standard libraries
 from unittest import TestCase
@@ -27,6 +27,15 @@ class TestContract(TestCase):
         wa_1 = 1
         wa_2 = 2
         wa_3 = 3
+        constructor_parameters = (
+            [accounts[wa_1], accounts[wa_1]],
+            required_accounts
+        )
+        self.assertRaises(ContractCreationFailed,
+                          self.s.abi_contract,
+                          self.pp.process('MultiSigWallet.sol', contract_dir='solidity/', add_dev_code=True),
+                          language='solidity',
+                          constructor_parameters=constructor_parameters)
         constructor_parameters = (
             [accounts[wa_1], accounts[wa_2], accounts[wa_3]],
             required_accounts

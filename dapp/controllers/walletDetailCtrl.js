@@ -162,7 +162,7 @@
             case "173825d9":
               return owner;
             case "cea08621":
-              return new Web3().toBigNumber("0x" + tx.data.slice(11)).div('1e18').toString() + " ETH";            
+              return new Web3().toBigNumber("0x" + tx.data.slice(11)).div('1e18').toString() + " ETH";
             default:
               return tx.data.slice(0, 20) + "...";
           }
@@ -249,6 +249,40 @@
             wallet: function () {
               return $scope.wallet;
             }
+          }
+        });
+      };
+
+      /**
+      * Remove owner in offline mode.
+      */
+      $scope.removeOwnerOffline = function () {
+        $uibModal.open({
+          templateUrl: 'partials/modals/removeWalletOwnerOffline.html',
+          size: 'md',
+          resolve: {
+            wallet: function () {
+              return $scope.wallet;
+            }
+          },
+          controller: function ($scope, $uibModalInstance, wallet) {
+            $scope.owner = {};
+
+            $scope.sign = function () {
+              Wallet.removeOwnerOffline(wallet.address, $scope.owner, function (e, tx) {
+                if (e) {
+                  Utils.dangerAlert(e);
+                }
+                else {
+                  $uibModalInstance.close();
+                  Utils.signed(tx);
+                }
+              });
+            };
+
+            $scope.cancel = function () {
+              $uibModalInstance.dismiss();
+            };
           }
         });
       };

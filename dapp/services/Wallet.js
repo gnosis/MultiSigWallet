@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .service('Wallet', function ($window, $http, $q, $rootScope, $uibModal) {
+    .service('Wallet', function ($window, $http, $q, $rootScope, $uibModal, Utils) {
 
       // Init wallet factory object
       var wallet = {
@@ -20,7 +20,7 @@
         updates: 0
       };
 
-      wallet.webInitialized = $q(function (resolve) {
+      wallet.webInitialized = $q(function (resolve, reject) {
         window.addEventListener('load', function () {
           // Set web3 provider (Metamask, mist, etc)
           if ($window.web3) {
@@ -28,6 +28,13 @@
           }
           else {
             wallet.web3 = new Web3(new Web3.providers.HttpProvider(txDefault.ethereumNode));
+            // Check connection
+            wallet.web3.net.getListening(function(e){
+              if (e) {
+                Utils.dangerAlert("You are not connected to any node.")
+                reject();
+              }
+            });
           }
           resolve();
         });

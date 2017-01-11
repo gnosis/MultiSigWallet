@@ -7,6 +7,9 @@
 <div class="panel panel-default">
   <div class="panel-heading">
     <div class="pull-right">
+      <button type="button" ng-click="removeOwnerOffline()" class="btn btn-default" show-hide-by-connectivity="offline">
+        Remove Offline
+      </button>
       <button type="button" ng-click="addOwner()" class="btn btn-default">
         Add
       </button>
@@ -21,6 +24,7 @@
       Owners
     </h4>
   </div>
+  
   <table class="table table-hover table-bordered table-striped" uib-collapse="hideOwners">
     <thead>
       <tr>
@@ -40,7 +44,10 @@
             <button type="button" ng-click="editOwner(owner)" class="btn btn-default btn-sm">
               Edit
             </button>
-            <button type="button" ng-click="removeOwner(owner)" class="btn btn-danger btn-sm" ng-hide="owners.length == 1">
+            <button type="button" ng-click="removeOwner(owner)"
+              class="btn btn-danger btn-sm"
+              show-hide-by-connectivity="online"
+              ng-hide="owners.length == 1">
               Remove
             </button>
           </div>

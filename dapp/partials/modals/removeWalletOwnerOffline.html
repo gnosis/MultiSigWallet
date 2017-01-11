@@ -1,0 +1,19 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Add owner offline
+  </h3>
+</div>
+<div class="modal-body" id="modal-body">
+  <div class="form-group">
+    <label for="address">Address</label>
+    <input id="address" type="text" class="form-control" ng-model="owner.address" required />
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-default" type="button" ng-click="sign()" show-hide-by-connectivity="offline">
+    Sign offline
+  </button>  
+  <button class="btn btn-danger" type="button" ng-click="cancel()">
+    Cancel
+  </button>
+</div>

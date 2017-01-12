@@ -167,6 +167,9 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "<div class=\"panel panel-default\">\n" +
     "  <div class=\"panel-heading\">\n" +
     "    <div class=\"pull-right\">\n" +
+    "      <button type=\"button\" ng-click=\"removeOwnerOffline()\" class=\"btn btn-default\" show-hide-by-connectivity=\"offline\">\n" +
+    "        Remove Offline\n" +
+    "      </button>\n" +
     "      <button type=\"button\" ng-click=\"addOwner()\" class=\"btn btn-default\">\n" +
     "        Add\n" +
     "      </button>\n" +
@@ -181,6 +184,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "      Owners\n" +
     "    </h4>\n" +
     "  </div>\n" +
+    "  \n" +
     "  <table class=\"table table-hover table-bordered table-striped\" uib-collapse=\"hideOwners\">\n" +
     "    <thead>\n" +
     "      <tr>\n" +
@@ -200,7 +204,10 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "            <button type=\"button\" ng-click=\"editOwner(owner)\" class=\"btn btn-default btn-sm\">\n" +
     "              Edit\n" +
     "            </button>\n" +
-    "            <button type=\"button\" ng-click=\"removeOwner(owner)\" class=\"btn btn-danger btn-sm\" ng-hide=\"owners.length == 1\">\n" +
+    "            <button type=\"button\" ng-click=\"removeOwner(owner)\"\n" +
+    "              class=\"btn btn-danger btn-sm\"\n" +
+    "              show-hide-by-connectivity=\"online\"\n" +
+    "              ng-hide=\"owners.length == 1\">\n" +
     "              Remove\n" +
     "            </button>\n" +
     "          </div>\n" +
@@ -929,9 +936,6 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "  <button class=\"btn btn-default\" type=\"button\" ng-click=\"send()\">\n" +
     "    Send transaction\n" +
     "  </button>\n" +
-    "  <button class=\"btn btn-default\" type=\"button\" ng-click=\"sign()\">\n" +
-    "    Sign offline\n" +
-    "  </button>\n" +
     "  <button class=\"btn btn-default\" type=\"button\" ng-click=\"getNonce()\">\n" +
     "    Get nonce\n" +
     "  </button>\n" +
@@ -1007,6 +1011,29 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    </button>\n" +
     "  </div>\n" +
     "</form>\n"
+  );
+
+
+  $templateCache.put('partials/modals/removeWalletOwnerOffline.html',
+    "<div class=\"modal-header\">\n" +
+    "  <h3 class=\"modal-title\">\n" +
+    "    Add owner offline\n" +
+    "  </h3>\n" +
+    "</div>\n" +
+    "<div class=\"modal-body\" id=\"modal-body\">\n" +
+    "  <div class=\"form-group\">\n" +
+    "    <label for=\"address\">Address</label>\n" +
+    "    <input id=\"address\" type=\"text\" class=\"form-control\" ng-model=\"owner.address\" required />\n" +
+    "  </div>\n" +
+    "</div>\n" +
+    "<div class=\"modal-footer\">\n" +
+    "  <button class=\"btn btn-default\" type=\"button\" ng-click=\"sign()\" show-hide-by-connectivity=\"offline\">\n" +
+    "    Sign offline\n" +
+    "  </button>  \n" +
+    "  <button class=\"btn btn-danger\" type=\"button\" ng-click=\"cancel()\">\n" +
+    "    Cancel\n" +
+    "  </button>\n" +
+    "</div>\n"
   );
 
 
@@ -1116,6 +1143,12 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    <label>\n" +
     "      <input type=\"radio\" value=\"create\" ng-model=\"walletOption\">\n" +
     "      Create new wallet\n" +
+    "    </label>\n" +
+    "  </div>\n" +
+    "  <div class=\"radio\">\n" +
+    "    <label>\n" +
+    "      <input type=\"radio\" value=\"factory\" ng-model=\"walletOption\">\n" +
+    "      Create new wallet with factory\n" +
     "    </label>\n" +
     "  </div>\n" +
     "  <div class=\"radio\">\n" +

@@ -117,9 +117,6 @@
               // open create modal
               $scope.newWallet();
             }
-            else if (option == "factory") {
-              $scope.newFactoryWallet();
-            }
             else {
               // open recover modal
               $scope.restoreWallet();
@@ -142,23 +139,7 @@
             }
           }
         });
-      };
-
-      $scope.newFactoryWallet = function () {
-        $uibModal.open({
-          animation: false,
-          templateUrl: 'partials/modals/newWallet.html',
-          size: 'lg',
-          controller: 'newFactoryWalletCtrl',
-          resolve: {
-            callback: function () {
-              return function () {
-                $scope.updateParams();
-              };
-            }
-          }
-        });
-      };
+      };      
 
 
       $scope.removeWallet = function (address) {

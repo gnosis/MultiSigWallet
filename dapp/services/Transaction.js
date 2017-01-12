@@ -4,7 +4,9 @@
     .module('multiSigWeb')
     .service('Transaction', function(Wallet, $rootScope, $uibModal, $interval) {
       var factory = {
-        transactions: JSON.parse(localStorage.getItem("transactions")) || {}
+        transactions: JSON.parse(localStorage.getItem("transactions")) || {},
+        requiredReceipt: {},
+        requiredInfo: {}
       };
 
       /**
@@ -211,15 +213,15 @@
         for (var i=0; i<txHashes.length; i++) {
           var tx = factory.transactions[txHashes[i]];
           // Get transaction receipt
-          if (tx && !tx.receipt && !tx.askedReceipt) {
-            tx.askedReceipt = true;
+          if (tx && !tx.receipt && !factory.requiredReceipt[tx]) {
+            factory.requiredReceipt[tx] = true;
             batch.add(
               Wallet.web3.eth.getTransactionReceipt.request(txHashes[i], processReceipt)
             );
           }
           // Get transaction info
-          if (tx && !tx.info && !tx.askedInfo) {
-            tx.askedInfo = true;
+          if (tx && !tx.info && !factory.requiredInfo[tx]) {
+            factory.requiredInfo[tx];
             batch.add(
               Wallet.web3.eth.getTransaction.request(
                 txHashes[i],

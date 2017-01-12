@@ -905,8 +905,14 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    <button class=\"btn btn-default\" type=\"button\" ng-click=\"deployWallet()\" ng-disabled=\"newWallet.$invalid\" show-hide-by-connectivity=\"online\">\n" +
     "      Send Transaction\n" +
     "    </button>\n" +
+    "    <button class=\"btn btn-default\" type=\"button\" ng-click=\"deployFactoryWallet()\" ng-disabled=\"newWallet.$invalid\" show-hide-by-connectivity=\"online\">\n" +
+    "      Create with factory\n" +
+    "    </button>\n" +
     "    <button class=\"btn btn-default\" type=\"button\" ng-click=\"deployOfflineWallet()\" ng-disabled=\"newWallet.$invalid\" show-hide-by-connectivity=\"offline\">\n" +
     "      Sign Offline\n" +
+    "    </button>\n" +
+    "    <button class=\"btn btn-default\" type=\"button\" ng-click=\"deployFactoryWalletOffline()\" ng-disabled=\"newWallet.$invalid\" show-hide-by-connectivity=\"offline\">\n" +
+    "      Sign with factory\n" +
     "    </button>\n" +
     "    <button class=\"btn btn-danger\" type=\"button\" ng-click=\"cancel()\">\n" +
     "      Cancel\n" +
@@ -1144,13 +1150,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "      <input type=\"radio\" value=\"create\" ng-model=\"walletOption\">\n" +
     "      Create new wallet\n" +
     "    </label>\n" +
-    "  </div>\n" +
-    "  <div class=\"radio\">\n" +
-    "    <label>\n" +
-    "      <input type=\"radio\" value=\"factory\" ng-model=\"walletOption\">\n" +
-    "      Create new wallet with factory\n" +
-    "    </label>\n" +
-    "  </div>\n" +
+    "  </div>  \n" +
     "  <div class=\"radio\">\n" +
     "    <label>\n" +
     "      <input type=\"radio\" value=\"restore\" ng-model=\"walletOption\">\n" +

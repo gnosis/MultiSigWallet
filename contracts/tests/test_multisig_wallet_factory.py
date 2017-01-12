@@ -51,7 +51,8 @@ class TestContract(TestCase):
         wa_1 = 1
         wa_2 = 2
         wa_3 = 3
-        multisig_wallet_address = self.multisig_wallet_factory.createMultiSigWallet([accounts[wa_1], accounts[wa_2], accounts[wa_3]], required_accounts)
+        multisig_wallet_address = self.multisig_wallet_factory.createMultiSigWallet(
+            [accounts[wa_1], accounts[wa_2], accounts[wa_3]], required_accounts)
         self.assertTrue(self.multisig_wallet_factory.isWallet(multisig_wallet_address))
         # Send money to wallet contract
         deposit = 10000
@@ -61,12 +62,12 @@ class TestContract(TestCase):
         # Update required
         required_update = 3
         update_required = self.multisig_abi.encode("changeRequirement", [required_update])
-        transaction_hash = self.multisig_transaction(multisig_wallet_address,
+        transaction_id = self.multisig_transaction(multisig_wallet_address,
                                                      "submitTransaction",
-                                                     (multisig_wallet_address, 0,  update_required, 0),
+                                                     (multisig_wallet_address, 0,  update_required),
                                                      wa_1)
         self.multisig_transaction(multisig_wallet_address,
                                   "confirmTransaction",
-                                  (transaction_hash, ),
+                                  (transaction_id, ),
                                   wa_2)
         self.assertEqual(self.multisig_transaction(multisig_wallet_address, "required"), required_update)

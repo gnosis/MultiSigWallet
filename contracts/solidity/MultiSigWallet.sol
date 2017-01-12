@@ -156,7 +156,7 @@ contract MultiSigWallet {
     /// @param destination Transaction target address.
     /// @param value Transaction ether value.
     /// @param data Transaction data payload.
-    /// @return Returns ID identifying transaction.
+    /// @return Returns transaction ID.
     function submitTransaction(address destination, uint value, bytes data)
         public
         returns (uint transactionId)
@@ -166,7 +166,7 @@ contract MultiSigWallet {
     }
 
     /// @dev Allows an owner to confirm a transaction.
-    /// @param transactionId identifying a transaction.
+    /// @param transactionId Transaction ID.
     function confirmTransaction(uint transactionId)
         public
         ownerExists(msg.sender)
@@ -176,7 +176,7 @@ contract MultiSigWallet {
     }
 
     /// @dev Allows an owner to revoke a confirmation for a transaction.
-    /// @param transactionId identifying a transaction.
+    /// @param transactionId Transaction ID.
     function revokeConfirmation(uint transactionId)
         public
         ownerExists(msg.sender)
@@ -188,7 +188,7 @@ contract MultiSigWallet {
     }
 
     /// @dev Allows anyone to execute a confirmed transaction.
-    /// @param transactionId identifying a transaction.
+    /// @param transactionId Transaction ID.
     function executeTransaction(uint transactionId)
         public
         notExecuted(transactionId)
@@ -206,7 +206,7 @@ contract MultiSigWallet {
     }
 
     /// @dev Returns the confirmation status of a transaction.
-    /// @param transactionId identifying a transaction.
+    /// @param transactionId Transaction ID.
     /// @return Confirmation status.
     function isConfirmed(uint transactionId)
         public
@@ -223,7 +223,7 @@ contract MultiSigWallet {
     }
 
     /// @dev Returns number of confirmations of a transaction.
-    /// @param transactionId identifying a transaction.
+    /// @param transactionId Transaction ID.
     /// @return Number of confirmations.
     function getConfirmationCount(uint transactionId)
         public
@@ -257,7 +257,7 @@ contract MultiSigWallet {
     /// @param destination Transaction target address.
     /// @param value Transaction ether value.
     /// @param data Transaction data payload.
-    /// @return Returns ID identifying transaction.
+    /// @return Returns transaction ID.
     function addTransaction(address destination, uint value, bytes data)
         internal
         notNull(destination)
@@ -275,7 +275,7 @@ contract MultiSigWallet {
     }
 
     /// @dev Adds a confirmation from an owner for a transaction.
-    /// @param transactionId identifying a transaction.
+    /// @param transactionId Transaction ID.
     /// @param owner Address of owner.
     function addConfirmation(uint transactionId, address owner)
         internal
@@ -301,7 +301,7 @@ contract MultiSigWallet {
     }
 
     /// @dev Returns array with owner addresses, which confirmed transaction.
-    /// @param transactionId identifying a transaction.
+    /// @param transactionId Transaction ID.
     /// @return Returns array of owner addresses.
     function getConfirmations(uint transactionId)
         public
@@ -321,12 +321,12 @@ contract MultiSigWallet {
             _confirmations[i] = confirmationsTemp[i];
     }
 
-    /// @dev Returns list of transaction hashes in defined range.
+    /// @dev Returns list of transaction IDs in defined range.
     /// @param from Index start position of transaction array.
     /// @param to Index end position of transaction array.
     /// @param pending Include pending transactions.
     /// @param executed Include executed transactions.
-    /// @return Returns array of transaction hashes.
+    /// @return Returns array of transaction IDs.
     function getTransactionIds(uint from, uint to, bool pending, bool executed)
         public
         constant

@@ -46,16 +46,15 @@ class TestContract(TestCase):
         self.assertEqual(self.test_token.balanceOf(self.multisig_wallet.address), token_count)
         # Multisig wallet sends tokens to wa_1
         transfer_data = test_token_abi.encode("transfer", [accounts[wa_1], token_count/2])
-        nonce = self.multisig_wallet.getNonce(self.test_token.address, 0, transfer_data)
-        transaction_hash = self.multisig_wallet.submitTransaction(self.test_token.address, 0, transfer_data, nonce,
-                                                                  sender=keys[wa_1])
+        transaction_id = self.multisig_wallet.submitTransaction(self.test_token.address, 0, transfer_data,
+                                                                sender=keys[wa_1])
         include_pending = True
         exclude_executed = False
-        self.assertEqual(self.multisig_wallet.getTransactionHashes(0, 1, include_pending, exclude_executed),
-                         [transaction_hash])
-        self.assertTrue(self.multisig_wallet.confirmations(transaction_hash, accounts[wa_1]))
-        self.assertEqual(self.multisig_wallet.getConfirmationCount(transaction_hash), 1)
-        self.multisig_wallet.confirmTransaction(transaction_hash, sender=keys[wa_2])
-        self.assertEqual(self.multisig_wallet.getConfirmationCount(transaction_hash), 2)
+        self.assertEqual(self.multisig_wallet.getTransactionIds(0, 1, include_pending, exclude_executed),
+                         [transaction_id])
+        self.assertTrue(self.multisig_wallet.confirmations(transaction_id, accounts[wa_1]))
+        self.assertEqual(self.multisig_wallet.getConfirmationCount(transaction_id), 1)
+        self.multisig_wallet.confirmTransaction(transaction_id, sender=keys[wa_2])
+        self.assertEqual(self.multisig_wallet.getConfirmationCount(transaction_id), 2)
         self.assertEqual(self.test_token.balanceOf(self.multisig_wallet.address), token_count/2)
         self.assertEqual(self.test_token.balanceOf(accounts[wa_1]), token_count/2)

@@ -38,12 +38,13 @@
             }
           }
           else {
-            if (typeof error == "object" && error.toString().indexOf("User denied") != -1) {
-              return 'Transaction rejected by user';
-            }
-            else {
-              return error;
-            }
+            return error;
+            // if (typeof error == "object" && error.toString().indexOf("User denied") != -1) {
+            //   return 'Transaction rejected by user';
+            // }
+            // else {
+            //   return error;
+            // }
           }
         }
       };

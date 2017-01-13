@@ -24,7 +24,7 @@
       Owners
     </h4>
   </div>
-  
+
   <table class="table table-hover table-bordered table-striped" uib-collapse="hideOwners">
     <thead>
       <tr>
@@ -168,6 +168,9 @@
     <thead>
       <tr>
         <th>
+          Id
+        </th>
+        <th>
           Destination/Type
         </th>
         <th>
@@ -175,9 +178,6 @@
         </th>
         <th>
           Data
-        </th>
-        <th>
-          Nonce
         </th>
         <th>
           # Confirmations
@@ -191,53 +191,50 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="txHash in txHashes track by $index">
+      <tr ng-repeat="txId in txIds track by $index">
         <td>
-          {{::getType(transactions[txHash])}}
+          {{::txId|bigNumber}}
         </td>
         <td>
-          {{::transactions[txHash].value|ether}}
+          {{::getType(transactions[txId])}}
         </td>
         <td>
-          {{::getParam(transactions[txHash])}}
+          {{transactions[txId].value|ether}}
         </td>
         <td>
-          {{::transactions[txHash].nonce}}
+          {{getParam(transactions[txId])}}
         </td>
         <td>
-          <ul ng-repeat="owner in transactions[txHash].confirmations">
+          <ul ng-repeat="owner in transactions[txId].confirmations">
             <li>
               {{wallet.owners[owner].name}}
             </li>
           </ul>
         </td>
         <td>
-          <span ng-show="transactions[txHash].executed">
+          <span ng-show="transactions[txId].executed">
             Yes
           </span>
-          <span ng-hide="transactions[txHash].executed">
+          <span ng-hide="transactions[txId].executed">
             No
           </span>
         </td>
         <td>
-          <button class="btn btn-default btn-sm" ngclipboard data-clipboard-text="{{txHash}}">
-            Copy hash
-          </button>
           <button type="button" class="btn btn-default btn-sm"
-          ng-hide="transactions[txHash].executed || transactions[txHash].confirmed"
-          ng-click="confirmTransaction(txHash)"
+          ng-hide="transactions[txId].executed || transactions[txId].confirmed"
+          ng-click="confirmTransaction(txId)"
           show-hide-by-connectivity="online">
             Confirm
           </button>
           <button type="button" class="btn btn-default btn-sm"
-          ng-show="transactions[txHash].confirmed && !transactions[txHash].executed"
-          ng-click="revokeConfirmation(txHash)"
+          ng-show="transactions[txId].confirmed && !transactions[txId].executed"
+          ng-click="revokeConfirmation(txId)"
           show-hide-by-connectivity="online">
             Revoke confirmation
           </button>
           <button type="button" class="btn btn-default btn-sm"
-          ng-show="!transactions[txHash].executed && transactions[txHash].confirmations.length == confirmations"
-          ng-click="executeTransaction(txHash)"
+          ng-show="!transactions[txId].executed && transactions[txId].confirmations.length == confirmations"
+          ng-click="executeTransaction(txId)"
           show-hide-by-connectivity="online">
             Execute
           </button>

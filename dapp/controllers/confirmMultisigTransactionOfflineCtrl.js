@@ -4,10 +4,10 @@
     .module("multiSigWeb")
     .controller("confirmMultisigTransactionOfflineCtrl", function ($scope, address, Wallet, Transaction, $uibModalInstance, Utils) {
 
-      $scope.transactionHash = null;
+      $scope.transactionId = null;
 
       $scope.signOffline = function () {
-        Wallet.confirmTransactionOffline(address, $scope.transactionHash, function (e, tx){
+        Wallet.confirmTransactionOffline(address, $scope.transactionId, function (e, tx){
           if (e) {
             Utils.dangerAlert(e);
           }
@@ -20,7 +20,7 @@
 
       $scope.revokeOffline = function () {
 
-        Wallet.revokeConfirmationOffline(address, $scope.transactionHash, function (e, tx) {
+        Wallet.revokeConfirmationOffline(address, $scope.transactionId, function (e, tx) {
           if (e) {
             Utils.dangerAlert(e);
           }

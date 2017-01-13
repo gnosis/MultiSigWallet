@@ -6,7 +6,8 @@ import os
 pp = PreProcessor()
 contracts = ['MultiSigWallet.sol',
              'MultiSigWalletWithDailyLimit.sol',
-             'MultiSigWalletWithPreSign.sol']
+             'MultiSigWalletWithPreSign.sol',
+             'MultiSigWalletWithDailyLimitFactory.sol']
 contract_dir = 'solidity/'
 abi_dir = 'abi'
 

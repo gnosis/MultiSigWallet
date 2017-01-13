@@ -68,8 +68,14 @@
     <button class="btn btn-default" type="button" ng-click="deployWallet()" ng-disabled="newWallet.$invalid" show-hide-by-connectivity="online">
       Send Transaction
     </button>
+    <button class="btn btn-default" type="button" ng-click="deployFactoryWallet()" ng-disabled="newWallet.$invalid" show-hide-by-connectivity="online">
+      Create with factory
+    </button>
     <button class="btn btn-default" type="button" ng-click="deployOfflineWallet()" ng-disabled="newWallet.$invalid" show-hide-by-connectivity="offline">
       Sign Offline
+    </button>
+    <button class="btn btn-default" type="button" ng-click="deployFactoryWalletOffline()" ng-disabled="newWallet.$invalid" show-hide-by-connectivity="offline">
+      Sign with factory
     </button>
     <button class="btn btn-danger" type="button" ng-click="cancel()">
       Cancel

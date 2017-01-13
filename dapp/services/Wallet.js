@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .service('Wallet', function ($window, $http, $q, $rootScope, $uibModal) {
+    .service('Wallet', function ($window, $http, $q, $rootScope, $uibModal, Utils) {
 
       // Init wallet factory object
       var wallet = {
@@ -20,7 +20,7 @@
         updates: 0
       };
 
-      wallet.webInitialized = $q(function (resolve) {
+      wallet.webInitialized = $q(function (resolve, reject) {
         window.addEventListener('load', function () {
           // Set web3 provider (Metamask, mist, etc)
           if ($window.web3) {
@@ -28,6 +28,13 @@
           }
           else {
             wallet.web3 = new Web3(new Web3.providers.HttpProvider(txDefault.ethereumNode));
+            // Check connection
+            wallet.web3.net.getListening(function(e){
+              if (e) {
+                Utils.dangerAlert("You are not connected to any node.")
+                reject();
+              }
+            });
           }
           resolve();
         });
@@ -83,16 +90,21 @@
 
         // Get request object
         var request = method.request.apply(method, methodParams);
-        // Add .call function
-        request.call = function () {
-          var batch = wallet.web3.createBatch();
-
-          batch.add(
-            method.request.apply(method, methodParams)
-          );
-          batch.execute();
+        var params = request.params;
+        request.call = function()
+          {
+            method.call.apply(method, methodParams);
         };
-        return request;
+        return Object.assign({}, request, {
+          method: 'eth_call',
+          params: [
+            {
+              to: params[0].to,
+              data: params[0].data
+            },
+            "latest"
+          ]
+        });
       };
 
       /**
@@ -158,9 +170,7 @@
       * Get ethereum accounts and update account list.
       */
       wallet.updateAccounts = function (cb) {
-        return wallet.callRequest(
-          wallet.web3.eth.getAccounts,
-          [],
+        return wallet.web3.eth.getAccounts.request(
           function (e, accounts) {
             if (e) {
               cb(e);
@@ -192,9 +202,8 @@
       };
 
       wallet.updateNonce = function (address, cb) {
-        return wallet.callRequest(
-          wallet.web3.eth.getTransactionCount,
-          [address],
+        return wallet.web3.eth.getTransactionCount.request(
+          address,
           function (e, count) {
             if (e) {
               cb(e);
@@ -208,9 +217,7 @@
       };
 
       wallet.updateGasPrice = function (cb) {
-        return wallet.callRequest(
-          wallet.web3.eth.getGasPrice,
-          [],
+        return wallet.web3.eth.getGasPrice.request(
           function (e, gasPrice) {
             if (e) {
               cb(e);
@@ -224,9 +231,8 @@
       };
 
       wallet.updateGasLimit = function (cb) {
-        return wallet.callRequest(
-          wallet.web3.eth.getBlock,
-          ["latest"],
+        return wallet.web3.eth.getBlock.request(
+          "latest",
           function (e, block) {
             if (e) {
               cb(e);
@@ -242,71 +248,76 @@
       // Init txParams
       wallet.initParams = function () {
         return $q(function (resolve) {
+            var batchAccount = wallet.web3.createBatch();
             var batch = wallet.web3.createBatch();
-            wallet
-            .updateAccounts(
-              function (e, accounts) {
-                var promises = $q.all(
-                  [
-                    $q(function (resolve, reject) {
-                      batch.add(
-                        wallet.updateGasLimit(function (e) {
-                          if (e) {
-                            reject(e);
-                          }
-                          else {
-                            resolve();
-                          }
-                        })
-                      );
-                    }),
-                    $q(function (resolve, reject) {
-                      batch.add(
-                        wallet.updateGasPrice(function (e) {
-                          if (e) {
-                            reject(e);
-                          }
-                          else {
-                            resolve();
-                          }
-                        })
-                      );
-                    }),
-                    $q(function (resolve, reject) {
-                      batch.add(
-                        wallet.updateNonce(wallet.coinbase, function (e) {
-                          if (e) {
-                            reject(e);
-                          }
-                          else {
-                            resolve();
-                          }
-                        })
-                      );
-                    }),
-                    $q(function (resolve, reject) {
-                      batch.add(
-                        wallet.getBalance(wallet.coinbase, function (e, balance) {
-                          if (e) {
-                            reject(e);
-                          }
-                          else {
-                            wallet.balance = balance;
-                            resolve();
-                          }
-                        })
-                      );
-                    })
-                  ]
-                ).then(function () {
-                  resolve();
-                });
+            batchAccount.add(
+              wallet
+              .updateAccounts(
+                function (e, accounts) {
+                  var promises = $q.all(
+                    [
+                      $q(function (resolve, reject) {
+                        batch.add(
+                          wallet.updateGasLimit(function (e) {
+                            if (e) {
+                              reject(e);
+                            }
+                            else {
+                              resolve();
+                            }
+                          })
+                        );
+                      }),
+                      $q(function (resolve, reject) {
+                        batch.add(
+                          wallet.updateGasPrice(function (e) {
+                            if (e) {
+                              reject(e);
+                            }
+                            else {
+                              resolve();
+                            }
+                          })
+                        );
+                      }),
+                      $q(function (resolve, reject) {
+                        batch.add(
+                          wallet.updateNonce(wallet.coinbase, function (e) {
+                            if (e) {
+                              reject(e);
+                            }
+                            else {
+                              resolve();
+                            }
+                          })
+                        );
+                      }),
+                      $q(function (resolve, reject) {
+                        batch.add(
+                          wallet.getBalance(wallet.coinbase, function (e, balance) {
+                            if (e) {
+                              reject(e);
+                            }
+                            else {
+                              wallet.balance = balance;
+                              resolve();
+                            }
+                          })
+                        );
+                      })
+                    ]
+                  ).then(function () {
+                    resolve();
+                  });
 
-                batch.execute();
-                return promises;
-              }
+                  batch.execute();
+                  return promises;
+                }
 
-            ).call();
+              )
+            );
+            batchAccount.execute();
+
           }
         );
 
@@ -413,6 +424,39 @@
         );
       };
 
+      wallet.deployWithLimitFactory = function (owners, requiredConfirmations, limit, cb) {
+        var factory = wallet.web3.eth.contract(wallet.json.multiSigDailyLimitFactory.abi).at(txDefault.walletFactoryAddress);
+
+        factory.createMultiSigWalletWithDailyLimit(
+          owners,
+          requiredConfirmations,
+          limit,
+          wallet.txDefaults({
+            data: wallet.json.multiSigDailyLimit.binHex
+          }),
+          cb
+        );
+      };
+
+      wallet.deployWithLimitFactoryOffline = function (owners, requiredConfirmations, limit, cb) {
+        var factory = wallet.web3.eth.contract(wallet.json.multiSigDailyLimitFactory.abi).at(txDefault.walletFactoryAddress);
+
+        var data = factory.createMultiSigWalletWithDailyLimit.getData(
+          owners,
+          requiredConfirmations,
+          limit
+        );
+
+        wallet.getUserNonce(function (e, nonce) {
+          if (e) {
+            cb(e);
+          }
+          else {
+            wallet.offlineTransaction(null, data, nonce, cb);
+          }
+        });
+      };
+
       /**
       * Deploy wallet with daily limit
       **/
@@ -455,11 +499,7 @@
       };
 
       wallet.getBalance = function (address, cb) {
-        return wallet.callRequest(
-          wallet.web3.eth.getBalance,
-          [address],
-          cb
-        );
+        return wallet.web3.eth.getBalance.request(address, cb);
       };
 
       wallet.restore = function (info, cb) {

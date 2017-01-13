@@ -139,7 +139,7 @@
             }
           }
         });
-      };
+      };      
 
 
       $scope.removeWallet = function (address) {

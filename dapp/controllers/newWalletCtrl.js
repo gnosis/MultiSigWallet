@@ -43,16 +43,52 @@
 
       $scope.deployOfflineWallet = function () {
         Wallet.deployWithLimitOffline(Object.keys($scope.owners), $scope.confirmations, new Web3().toBigNumber($scope.limit).mul('1e18'),
-        function (e, tx) {
+        function (e, signed) {
           if (e) {
             Utils.dangerAlert(e);
           }
           else {
             $uibModalInstance.close();
-            Utils.success('<div class="form-group"><label>Multisignature wallet '+
-            'deployed offline:</label> <textarea class="form-control" rows="5">'+ tx + '</textarea></div>');
+            Utils.signed(signed);
           }
         });
+      };
+
+      $scope.deployFactoryWallet = function () {
+        Wallet.deployWithLimitFactory(Object.keys($scope.owners), $scope.confirmations, new Web3().toBigNumber($scope.limit).mul('1e18'),
+          function (e, tx) {
+            if (e) {
+              Utils.dangerAlert(e);
+            }
+            else {
+              $uibModalInstance.close();
+              Utils.notification("Deployment transaction sent to factory.");
+              Transaction.add(
+                {
+                  txHash: tx,
+                  "callback": function(receipt){
+                    console.log(receipt);
+                    Utils.success("Wallet deployed at address ¿?");
+                  }
+                }
+              );
+            }
+          }
+        );
+      };
+
+      $scope.deployFactoryWalletOffline = function () {
+        Wallet.deployWithLimitFactoryOffline(Object.keys($scope.owners), $scope.confirmations, new Web3().toBigNumber($scope.limit).mul('1e18'),
+          function (e, signed) {
+            if (e) {
+              Utils.dangerAlert(e);
+            }
+            else {
+              $uibModalInstance.close();
+              Utils.signed(signed);
+            }
+          }
+        );
       };
 
       $scope.cancel = function () {

@@ -105,7 +105,6 @@
             "latest"
           ]
         });
-        return request;
       };
 
       /**
@@ -307,7 +306,7 @@
                         );
                       })
                     ]
-                  ).then(function () {                    
+                  ).then(function () {
                     resolve();
                   });
 
@@ -438,6 +437,26 @@
           cb
         );
       };
+
+      wallet.deployWithLimitFactoryOffline = function (owners, requiredConfirmations, limit, cb) {
+        var factory = wallet.web3.eth.contract(wallet.json.multiSigDailyLimitFactory.abi).at(txDefault.walletFactoryAddress);
+
+        var data = factory.createMultiSigWalletWithDailyLimit.getData(
+          owners,
+          requiredConfirmations,
+          limit
+        );
+
+        wallet.getUserNonce(function (e, nonce) {
+          if (e) {
+            cb(e);
+          }
+          else {
+            wallet.offlineTransaction(null, data, nonce, cb);
+          }
+        });
+      };
+
       /**
       * Deploy wallet with daily limit
       **/

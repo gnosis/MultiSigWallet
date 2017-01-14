@@ -52,11 +52,13 @@ class TestContract(TestCase):
         wa_1 = 1
         wa_2 = 2
         wa_3 = 3
-        multisig_wallet_address = self.multisig_wallet_factory.createMultiSigWalletWithDailyLimit([accounts[wa_1], accounts[wa_2], accounts[wa_3]], required_accounts, daily_limit)
-        wallet_count = self.multisig_wallet_factory.getWalletCount(accounts[0])
-        multisig_wallet_address_confirmation = self.multisig_wallet_factory.wallets(accounts[0], wallet_count - 1)
+        multisig_wallet_address = self.multisig_wallet_factory.create([accounts[wa_1], accounts[wa_2], accounts[wa_3]],
+                                                                      required_accounts,
+                                                                      daily_limit)
+        wallet_count = self.multisig_wallet_factory.getInstantiationCount(accounts[0])
+        multisig_wallet_address_confirmation = self.multisig_wallet_factory.instantiations(accounts[0], wallet_count-1)
         self.assertEqual(multisig_wallet_address, multisig_wallet_address_confirmation)
-        self.assertTrue(self.multisig_wallet_factory.isWallet(multisig_wallet_address))
+        self.assertTrue(self.multisig_wallet_factory.isInstantiation(multisig_wallet_address))
         # Send money to wallet contract
         deposit = 10000
         self.s.send(keys[wa_1], multisig_wallet_address, deposit)

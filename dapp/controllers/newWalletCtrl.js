@@ -66,9 +66,11 @@
               Transaction.add(
                 {
                   txHash: tx,
-                  "callback": function(receipt){
-                    console.log(receipt);
-                    Utils.success("Wallet deployed at address ¿?");
+                  callback: function(receipt){
+                    var walletAddress = receipt.decodedLogs[0].info.instantiation;
+                    Utils.success("Wallet deployed at address " + walletAddress);
+                    Wallet.updateWallet({name: $scope.name, address: walletAddress, owners: $scope.owners});
+                    callback();
                   }
                 }
               );

@@ -12,7 +12,6 @@ class TestContract(TestCase):
     """
 
     HOMESTEAD_BLOCK = 1150000
-    TWENTY_FOUR_HOURS = 86400  # 24h
 
     def __init__(self, *args, **kwargs):
         super(TestContract, self).__init__(*args, **kwargs)

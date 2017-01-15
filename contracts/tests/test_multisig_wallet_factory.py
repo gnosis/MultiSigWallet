@@ -12,7 +12,6 @@ class TestContract(TestCase):
     """
 
     HOMESTEAD_BLOCK = 1150000
-    TWENTY_FOUR_HOURS = 86400  # 24h
 
     def __init__(self, *args, **kwargs):
         super(TestContract, self).__init__(*args, **kwargs)
@@ -51,9 +50,12 @@ class TestContract(TestCase):
         wa_1 = 1
         wa_2 = 2
         wa_3 = 3
-        multisig_wallet_address = self.multisig_wallet_factory.createMultiSigWallet(
-            [accounts[wa_1], accounts[wa_2], accounts[wa_3]], required_accounts)
-        self.assertTrue(self.multisig_wallet_factory.isWallet(multisig_wallet_address))
+        multisig_wallet_address = self.multisig_wallet_factory.create([accounts[wa_1], accounts[wa_2], accounts[wa_3]],
+                                                                      required_accounts)
+        self.assertTrue(self.multisig_wallet_factory.isInstantiation(multisig_wallet_address))
+        wallet_count = self.multisig_wallet_factory.getInstantiationCount(accounts[0])
+        multisig_wallet_address_confirmation = self.multisig_wallet_factory.instantiations(accounts[0], wallet_count-1)
+        self.assertEqual(multisig_wallet_address, multisig_wallet_address_confirmation)
         # Send money to wallet contract
         deposit = 10000
         self.s.send(keys[wa_1], multisig_wallet_address, deposit)

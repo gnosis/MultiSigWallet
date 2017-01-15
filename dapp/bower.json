@@ -35,6 +35,6 @@
     "moment": "^2.17.0",
     "ngclipboard": "^1.1.1",
     "clipboard": "^1.5.16",
-    "ethjs-abi-denis": "*"
+    "ethjs-abi-denis": "0.1.1"
   }
 }

@@ -46,33 +46,32 @@ class TestContract(TestCase):
         wa_4 = 4
         add_owner_data = multisig_abi.encode('addOwner', [accounts[wa_4]])
         # Only a wallet owner (in this case wa_1) can do this. Owner confirms transaction at the same time.
-        nonce = self.multisig_wallet.getNonce(self.multisig_wallet.address, 0, add_owner_data)
-        transaction_hash = self.multisig_wallet.submitTransaction(self.multisig_wallet.address, 0, add_owner_data,
-                                                                  nonce, sender=keys[wa_1])
+        transaction_id = self.multisig_wallet.submitTransaction(self.multisig_wallet.address, 0, add_owner_data,
+                                                                  sender=keys[wa_1])
         # There is one pending transaction
         exclude_pending = False
         include_pending = True
         exclude_executed = False
         include_executed = True
         self.assertEqual(
-            self.multisig_wallet.getTransactionHashes(0, 1, include_pending, exclude_executed), [transaction_hash])
+            self.multisig_wallet.getTransactionIds(0, 1, include_pending, exclude_executed), [transaction_id])
         # Update required to 1
         new_required = 1
         update_requirement_data = multisig_abi.encode('changeRequirement', [new_required])
-        nonce = self.multisig_wallet.getNonce(self.multisig_wallet.address, 0, update_requirement_data)
         # Submit successfully
-        transaction_hash_2 = self.multisig_wallet.submitTransaction(self.multisig_wallet.address, 0,
-                                                                    update_requirement_data, nonce, sender=keys[wa_1])
+        transaction_id_2 = self.multisig_wallet.submitTransaction(self.multisig_wallet.address, 0,
+                                                                  update_requirement_data, sender=keys[wa_1])
         self.assertEqual(
-            self.multisig_wallet.getTransactionHashes(0, 2, include_pending, exclude_executed), [transaction_hash, transaction_hash_2])
+            self.multisig_wallet.getTransactionIds(0, 2, include_pending, exclude_executed),
+            [transaction_id, transaction_id_2])
         # Confirm change requirement transaction
-        self.multisig_wallet.confirmTransaction(transaction_hash_2, sender=keys[wa_2])
+        self.multisig_wallet.confirmTransaction(transaction_id_2, sender=keys[wa_2])
         self.assertEqual(self.multisig_wallet.required(), new_required)
         self.assertEqual(
-            self.multisig_wallet.getTransactionHashes(0, 1, exclude_pending, include_executed),
-            [transaction_hash_2])
+            self.multisig_wallet.getTransactionIds(0, 1, exclude_pending, include_executed),
+            [transaction_id_2])
         # Because the # required confirmations changed to 1, the addOwner transaction can be executed now
-        self.multisig_wallet.executeTransaction(transaction_hash)
+        self.multisig_wallet.executeTransaction(transaction_id)
         self.assertEqual(
-            self.multisig_wallet.getTransactionHashes(0, 2, exclude_pending, include_executed),
-            [transaction_hash, transaction_hash_2])
+            self.multisig_wallet.getTransactionIds(0, 2, exclude_pending, include_executed),
+            [transaction_id, transaction_id_2])

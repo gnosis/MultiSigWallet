@@ -12,7 +12,6 @@ class TestContract(TestCase):
     """
 
     HOMESTEAD_BLOCK = 1150000
-    TWENTY_FOUR_HOURS = 86400  # 24h
 
     def __init__(self, *args, **kwargs):
         super(TestContract, self).__init__(*args, **kwargs)
@@ -45,17 +44,14 @@ class TestContract(TestCase):
         self.assertEqual(self.multisig_wallet.dailyLimit(), daily_limit)
         # Withdraw daily limit
         value = 2000
-        nonce = self.multisig_wallet.getNonce(accounts[wa_1], value, "")
-        tx_1 = self.multisig_wallet.submitTransaction(accounts[wa_1], value, "", nonce, sender=keys[wa_2])
+        tx_1 = self.multisig_wallet.submitTransaction(accounts[wa_1], value, "", sender=keys[wa_2])
         # Transaction succeeds
-        self.assertTrue(self.multisig_wallet.transactions(tx_1)[4])
+        self.assertTrue(self.multisig_wallet.transactions(tx_1)[3])
         # Try to overflow spentToday to reset it to 0.
-        nonce = self.multisig_wallet.getNonce(accounts[wa_1], 2**256 - value, "")
-        tx_2 = self.multisig_wallet.submitTransaction(accounts[wa_1], 2**256 - value, "", nonce, sender=keys[wa_2])
+        tx_2 = self.multisig_wallet.submitTransaction(accounts[wa_1], 2**256 - value, "", sender=keys[wa_2])
         # Transaction cannot complete and spentToday is still == 2000.
-        self.assertFalse(self.multisig_wallet.transactions(tx_2)[4])
+        self.assertFalse(self.multisig_wallet.transactions(tx_2)[3])
         self.assertEqual(self.multisig_wallet.spentToday(), daily_limit)
         # User tries to withdraw daily limit again on same day. It fails as daily limit was withdrawn already.
-        nonce = self.multisig_wallet.getNonce(accounts[wa_1], value, "")
-        tx_3 = self.multisig_wallet.submitTransaction(accounts[wa_1], value, "", nonce, sender=keys[wa_2])
-        self.assertFalse(self.multisig_wallet.transactions(tx_3)[4])
+        tx_3 = self.multisig_wallet.submitTransaction(accounts[wa_1], value, "", sender=keys[wa_2])
+        self.assertFalse(self.multisig_wallet.transactions(tx_3)[3])

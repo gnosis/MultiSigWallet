@@ -12,7 +12,6 @@ class TestContract(TestCase):
     """
 
     HOMESTEAD_BLOCK = 1150000
-    TWENTY_FOUR_HOURS = 86400  # 24h
 
     def __init__(self, *args, **kwargs):
         super(TestContract, self).__init__(*args, **kwargs)
@@ -65,12 +64,12 @@ class TestContract(TestCase):
         # Update required
         required_update = 3
         update_required = self.multisig_abi.encode("changeRequirement", [required_update])
-        transaction_hash = self.multisig_transaction(multisig_wallet_address,
+        transaction_id = self.multisig_transaction(multisig_wallet_address,
                                                      "submitTransaction",
-                                                     (multisig_wallet_address, 0,  update_required, 0),
+                                                     (multisig_wallet_address, 0,  update_required),
                                                      wa_1)
         self.multisig_transaction(multisig_wallet_address,
                                   "confirmTransaction",
-                                  (transaction_hash, ),
+                                  (transaction_id, ),
                                   wa_2)
         self.assertEqual(self.multisig_transaction(multisig_wallet_address, "required"), required_update)

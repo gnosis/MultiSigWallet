@@ -45,15 +45,14 @@ class TestContract(TestCase):
         account_51 = privtoaddr(key_51)
         add_owner_data = multisig_abi.encode("addOwner", [account_51])
         self.assertFalse(self.multisig_wallet.isOwner(account_51))
-        nonce = self.multisig_wallet.getNonce(self.multisig_wallet.address, 0, add_owner_data)
-        add_owner_tx_hash = self.multisig_wallet.submitTransaction(self.multisig_wallet.address, 0, add_owner_data,
-                                                                   nonce, sender=keys[0])
+        add_owner_tx = self.multisig_wallet.submitTransaction(self.multisig_wallet.address, 0, add_owner_data,
+                                                              sender=keys[0])
         include_pending = True
         exclude_executed = False
-        self.assertEqual(self.multisig_wallet.getTransactionHashes(0, 1, include_pending, exclude_executed),
-                         [add_owner_tx_hash])
+        self.assertEqual(self.multisig_wallet.getTransactionIds(0, 1, include_pending, exclude_executed),
+                         [add_owner_tx])
         # Transaction is confirmed but cannot be executed due to too many owners.
-        self.multisig_wallet.confirmTransaction(add_owner_tx_hash, sender=keys[1])
+        self.multisig_wallet.confirmTransaction(add_owner_tx, sender=keys[1])
         # Transaction remains pending
-        self.assertEqual(self.multisig_wallet.getTransactionHashes(0, 1, include_pending, exclude_executed),
-                         [add_owner_tx_hash])
+        self.assertEqual(self.multisig_wallet.getTransactionIds(0, 1, include_pending, exclude_executed),
+                         [add_owner_tx])

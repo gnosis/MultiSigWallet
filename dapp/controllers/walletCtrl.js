@@ -9,7 +9,10 @@
         function () {
             $scope.batch = Wallet.web3.createBatch();
             $scope.interval = $interval($scope.updateParams, 10000);
-            $scope.wallets = Wallet.wallets;
+            $scope.wallets = Wallet.wallets;            
+            if (!$scope.wallets || !Object.keys($scope.wallets).length){
+              $scope.newWalletSelect();
+            }
             $scope.updateParams();
         }
       );
@@ -82,6 +85,9 @@
           });
           $scope.batch.execute();
         }
+        else {
+          $scope.totalItems = 0;
+        }
       };
 
 
@@ -139,7 +145,7 @@
             }
           }
         });
-      };      
+      };
 
 
       $scope.removeWallet = function (address) {

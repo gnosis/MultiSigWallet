@@ -12,7 +12,6 @@ class TestContract(TestCase):
     """
 
     HOMESTEAD_BLOCK = 1150000
-    TWENTY_FOUR_HOURS = 86400  # 24h
 
     def __init__(self, *args, **kwargs):
         super(TestContract, self).__init__(*args, **kwargs)
@@ -52,8 +51,13 @@ class TestContract(TestCase):
         wa_1 = 1
         wa_2 = 2
         wa_3 = 3
-        multisig_wallet_address = self.multisig_wallet_factory.createMultiSigWalletWithDailyLimit([accounts[wa_1], accounts[wa_2], accounts[wa_3]], required_accounts, daily_limit)
-        self.assertTrue(self.multisig_wallet_factory.isWallet(multisig_wallet_address))
+        multisig_wallet_address = self.multisig_wallet_factory.create([accounts[wa_1], accounts[wa_2], accounts[wa_3]],
+                                                                      required_accounts,
+                                                                      daily_limit)
+        wallet_count = self.multisig_wallet_factory.getInstantiationCount(accounts[0])
+        multisig_wallet_address_confirmation = self.multisig_wallet_factory.instantiations(accounts[0], wallet_count-1)
+        self.assertEqual(multisig_wallet_address, multisig_wallet_address_confirmation)
+        self.assertTrue(self.multisig_wallet_factory.isInstantiation(multisig_wallet_address))
         # Send money to wallet contract
         deposit = 10000
         self.s.send(keys[wa_1], multisig_wallet_address, deposit)
@@ -63,13 +67,13 @@ class TestContract(TestCase):
         # Update daily limit
         daily_limit_updated = 2000
         update_daily_limit = self.multisig_abi.encode("changeDailyLimit", [daily_limit_updated])
-        transaction_hash = self.multisig_transaction(multisig_wallet_address,
-                                                     "submitTransaction",
-                                                     (multisig_wallet_address, 0,  update_daily_limit, 0),
-                                                     wa_1)
+        transaction_id = self.multisig_transaction(multisig_wallet_address,
+                                                   "submitTransaction",
+                                                   (multisig_wallet_address, 0,  update_daily_limit),
+                                                   wa_1)
         self.multisig_transaction(multisig_wallet_address,
                                   "confirmTransaction",
-                                  (transaction_hash, ),
+                                  (transaction_id, ),
                                   wa_2)
         self.assertEqual(self.multisig_transaction(multisig_wallet_address, "dailyLimit"), daily_limit_updated)
         self.assertEqual(self.multisig_transaction(multisig_wallet_address, "calcMaxWithdraw"), daily_limit_updated)

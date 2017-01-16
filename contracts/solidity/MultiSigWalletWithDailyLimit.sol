@@ -37,18 +37,18 @@ contract MultiSigWalletWithDailyLimit is MultiSigWallet {
     }
 
     /// @dev Allows anyone to execute a confirmed transaction or ether withdraws until daily limit is reached.
-    /// @param transactionHash Hash identifying a transaction.
-    function executeTransaction(bytes32 transactionHash)
+    /// @param transactionId Transaction ID.
+    function executeTransaction(uint transactionId)
         public
-        notExecuted(transactionHash)
+        notExecuted(transactionId)
     {
-        Transaction tx = transactions[transactionHash];
-        if (isConfirmed(transactionHash) || tx.data.length == 0 && underLimit(tx.value)) {
+        Transaction tx = transactions[transactionId];
+        if (isConfirmed(transactionId) || tx.data.length == 0 && underLimit(tx.value)) {
             tx.executed = true;
             if (tx.destination.call.value(tx.value)(tx.data))
-                Execution(transactionHash);
+                Execution(transactionId);
             else {
-                ExecutionFailure(transactionHash);
+                ExecutionFailure(transactionId);
                 tx.executed = false;
             }
         }
@@ -80,7 +80,7 @@ contract MultiSigWalletWithDailyLimit is MultiSigWallet {
             lastDay = now;
             spentToday = 0;
         }
-        if (spentToday + amount > dailyLimit || amount > dailyLimit)
+        if (spentToday + amount > dailyLimit || amount > spentToday + amount)
             return false;
         spentToday += amount;
         return true;

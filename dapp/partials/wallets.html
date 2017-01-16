@@ -56,7 +56,8 @@
             Deposit
           </button>
         </td>
-        <td ng-bind-html="wallet.confirmations|bigNumber|dashIfEmpty">          
+        <td>
+          <span ng-bind-html="wallet.confirmations|bigNumber|dashIfEmpty"></span>
           <button type="button" class="btn btn-default btn-sm pull-right" ng-click="setRequired(wallet)">
             Edit
           </button>

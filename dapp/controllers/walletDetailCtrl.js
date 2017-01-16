@@ -41,18 +41,6 @@
           )
         );
 
-        // Get nonces
-        batch.add(
-          Wallet
-          .getNonces(
-            $routeParams.address,
-            function (e, nonces) {
-              $scope.nonces = nonces;
-              $scope.$apply();
-            }
-          )
-        );
-
         // Get required confirmations
         batch.add(
           Wallet
@@ -175,21 +163,21 @@
       };
 
       $scope.updateTransactions = function () {
-        // Get all transaction hashes, with filters
+        // Get all transaction ids, with filters
         var from = $scope.totalItems-$scope.itemsPerPage*($scope.currentPage);
         var to = $scope.totalItems-($scope.currentPage-1)*$scope.itemsPerPage;
 
-        Wallet.getTransactionHashes(
+        Wallet.getTransactionIds(
           $scope.wallet.address,
           from>0?from:0,
           to,
           $scope.showPending,
           $scope.showExecuted,
-          function (e, hashes) {
+          function (e, ids) {
             var txBatch = Wallet.web3.createBatch();
             $scope.transactions = {};
-            $scope.txHashes = hashes.slice(0).reverse();
-            hashes.map(function (tx) {
+            $scope.txIds = ids.slice(0).reverse();
+            ids.map(function (tx) {
               $scope.transactions[tx] = {};
               // Get transaction info
               txBatch.add(
@@ -287,7 +275,7 @@
         });
       };
 
-      $scope.confirmTransaction = function (txHash) {
+      $scope.confirmTransaction = function (txId) {
         $uibModal.open(
           {
             templateUrl: 'partials/modals/confirmTransaction.html',
@@ -296,8 +284,8 @@
               address: function () {
                 return $scope.wallet.address;
               },
-              txHash: function () {
-                return txHash;
+              txId: function () {
+                return txId;
               }
             },
             controller: 'confirmTransactionCtrl'
@@ -320,7 +308,7 @@
         );
       };
 
-      $scope.revokeConfirmation = function (txHash) {
+      $scope.revokeConfirmation = function (txId) {
         $uibModal.open(
           {
             templateUrl: 'partials/modals/revokeConfirmation.html',
@@ -329,8 +317,8 @@
               address: function () {
                 return $scope.wallet.address;
               },
-              txHash: function () {
-                return txHash;
+              txId: function () {
+                return txId;
               }
             },
             controller: 'revokeCtrl'
@@ -353,7 +341,7 @@
         );
       };
 
-      $scope.executeTransaction = function (txHash) {
+      $scope.executeTransaction = function (txId) {
         $uibModal.open(
           {
             templateUrl: 'partials/modals/executeTransaction.html',
@@ -362,8 +350,8 @@
               address: function () {
                 return $scope.wallet.address;
               },
-              txHash: function () {
-                return txHash;
+              txId: function () {
+                return txId;
               }
             },
             controller: 'executeTransactionCtrl'

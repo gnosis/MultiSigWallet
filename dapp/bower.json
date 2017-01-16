@@ -35,6 +35,7 @@
     "moment": "^2.17.0",
     "ngclipboard": "^1.1.1",
     "clipboard": "^1.5.16",
+    "angular-mocks": "^1.6.1"
     "ethjs-abi-denis": "0.1.1"
   }
 }

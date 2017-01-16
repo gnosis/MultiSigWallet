@@ -153,7 +153,6 @@ describe('Wallet Service', function(){
   });
 
   it('Update wallet', function (done) {
-
     var limit = 1;
 
     walletService.deployWithLimit([account], 1, new Web3().toBigNumber(limit).mul('1e18'),

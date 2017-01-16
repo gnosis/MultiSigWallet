@@ -1235,10 +1235,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "  </button>\n" +
     "  <button type=\"button\" class=\"btn btn-default\" ng-click=\"sign()\" show-hide-by-connectivity=\"offline\">\n" +
     "    Sign Offline\n" +
-    "  </button>\n" +
-    "  <button type=\"button\" class=\"btn btn-default\" ng-click=\"getNonce()\" show-hide-by-connectivity=\"online\">\n" +
-    "    Get nonce\n" +
-    "  </button>\n" +
+    "  </button>  \n" +
     "  <button type=\"button\" class=\"btn btn-danger\" ng-click=\"cancel()\">\n" +
     "    Cancel\n" +
     "  </button>\n" +

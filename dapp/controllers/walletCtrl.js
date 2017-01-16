@@ -9,7 +9,7 @@
         function () {
             $scope.batch = Wallet.web3.createBatch();
             $scope.interval = $interval($scope.updateParams, 10000);
-            $scope.wallets = Wallet.wallets;            
+            $scope.wallets = Wallet.wallets;
             if (!$scope.wallets || !Object.keys($scope.wallets).length){
               $scope.newWalletSelect();
             }
@@ -48,7 +48,7 @@
               Wallet.getRequired(
                 address,
                 function (e, confirmations) {
-                  if($scope.wallets[address]){
+                  if($scope.wallets[address] && confirmations.greaterThan(0)){
                     $scope.$apply(function () {
                       $scope.wallets[address].confirmations = confirmations;
                     });
@@ -157,6 +157,9 @@
           resolve: {
             wallet: function () {
               return $scope.wallets[address];
+            },
+            callback: function () {
+              return $scope.updateParams;
             }
           }
         });

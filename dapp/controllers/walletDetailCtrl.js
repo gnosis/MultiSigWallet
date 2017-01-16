@@ -65,7 +65,7 @@
               }
             }
           )
-        );        
+        );
         // Get Transaction count
         batch.add(
           Wallet

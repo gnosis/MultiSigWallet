@@ -34,7 +34,7 @@
                 Utils.dangerAlert("You are not connected to any node.")
                 reject();
               }
-            });
+            });            
           }
           resolve();
         });
@@ -401,7 +401,7 @@
             cb(e);
           }
         );
-      };      
+      };
 
       wallet.deployWithLimit = function (owners, requiredConfirmations, limit, cb) {
         var MyContract = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi);
@@ -502,16 +502,17 @@
           if (e) {
             cb(e);
           }
-          if (count.eq(0)) {
-            // it is not a wallet
-            cb("Address " + info.address + " is not a MultiSigWallet contract");
-          }
-          else {
+          // Don't check is a MultiSigWallet
+          // if (count.eq(0)) {
+          //   // it is not a wallet
+          //   cb("Address " + info.address + " is not a MultiSigWallet contract");
+          // }
+          // else {
             // Add wallet
             info.owners = {};
             wallet.updateWallet(info);
             cb(null, info);
-          }
+          // }
         });
       };
 

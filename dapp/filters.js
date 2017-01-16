@@ -50,7 +50,7 @@
     })
     .filter('logParam', function () {
       return function (log) {
-        if(log.indexOf("0x") == -1){
+        if(log && log.indexOf && log.indexOf("0x") == -1){
           return log;
         }
         else{

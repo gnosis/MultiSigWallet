@@ -569,7 +569,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "  <div class=\"modal-body\">\n" +
     "    <div class=\"form-group\">\n" +
     "      <label for=\"nonce\">Transaction Id</label>\n" +
-    "      <textarea class=\"form-control\" ng-model=\"transactionId\"></textarea>\n" +
+    "      <input class=\"form-control\" ng-model=\"transactionId\" type=\"number\" \\>\n" +
     "    </div>\n" +
     "  </div>\n" +
     "  <div class=\"modal-footer\">\n" +
@@ -1119,8 +1119,8 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "<form ng-submit=\"ok()\">\n" +
     "  <div class=\"modal-body\">\n" +
     "    <div class=\"form-group\">\n" +
-    "      <label for=\"nonce\">Transaction Hash</label>\n" +
-    "      <textarea class=\"form-control\" ng-model=\"transactionHash\"></textarea>\n" +
+    "      <label for=\"nonce\">Transaction Id</label>\n" +
+    "      <input type=\"number\" class=\"form-control\" ng-model=\"transactionId\" required \\>\n" +
     "    </div>\n" +
     "  </div>\n" +
     "  <div class=\"modal-footer\">\n" +
@@ -1300,12 +1300,12 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "<form ng-submit=\"ok()\" name=\"form\">\n" +
     "  <div class=\"modal-body\">\n" +
     "    <div class=\"form-group\">\n" +
-    "      <label for=\"multisig-nonce\">Multisig nonce</label>\n" +
-    "      <input id=\"multisig-nonce\" class=\"form-control\" type=\"text\" ng-model=\"nonces.multisig\" required />\n" +
+    "      <label for=\"multisig-nonce\">Multisig transaction id</label>\n" +
+    "      <input id=\"multisig-nonce\" class=\"form-control\" type=\"number\" ng-model=\"nonces.multisig\" required />\n" +
     "    </div>\n" +
     "    <div class=\"form-group\">\n" +
     "      <label for=\"account-nonce\">Account nonce</label>\n" +
-    "      <input id=\"account-nonce\" class=\"form-control\" type=\"text\" ng-model=\"nonces.account\" required />\n" +
+    "      <input id=\"account-nonce\" class=\"form-control\" type=\"number\" ng-model=\"nonces.account\" required />\n" +
     "    </div>\n" +
     "  </div>\n" +
     "  <div class=\"modal-footer\">\n" +

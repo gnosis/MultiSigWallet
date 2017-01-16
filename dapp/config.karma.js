@@ -21,6 +21,9 @@ module.exports = function(config) {
       'bower_components/angular-route/angular-route.min.js',
       'bower_components/ngclipboard/dist/ngclipboard.min.js',
       'bower_components/web3/dist/web3.min.js',
+      'node_modules/phantomjs-polyfill-object-assign/object-assign-polyfill.js',
+      //'bower_components/ethereum-tx/dist/ethereumjs-tx.js',
+      'bower_components/ethjs-abi-denis/dist/ethjs-abi.min.js',
       'app.js',
       'abi.js',
       'config.js',
@@ -32,6 +35,7 @@ module.exports = function(config) {
 
     // list of files to exclude
     exclude: [
+      //'services/Utils.js',
     ],
 
 
@@ -66,7 +70,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['PhantomJS'], //['Chrome'],
+    browsers: ['Chrome'], //['PhantomJS'],
 
 
     // Continuous Integration mode

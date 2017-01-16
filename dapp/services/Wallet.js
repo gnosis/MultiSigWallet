@@ -34,7 +34,7 @@
                 Utils.dangerAlert("You are not connected to any node.")
                 reject();
               }
-            });            
+            });
           }
           resolve();
         });
@@ -434,7 +434,7 @@
       wallet.deployWithLimitFactoryOffline = function (owners, requiredConfirmations, limit, cb) {
         var factory = wallet.web3.eth.contract(wallet.json.multiSigDailyLimitFactory.abi).at(txDefault.walletFactoryAddress);
 
-        var data = factory.createMultiSigWalletWithDailyLimit.getData(
+        var data = factory.create.getData(
           owners,
           requiredConfirmations,
           limit

@@ -25,7 +25,7 @@
           url : txDefault.connectionChecker.url,
         })
         .then(function successCallBack (response) {
-            isConnected = false;
+            isConnected = true;
           }, function errorCallBack (response) {
             isConnected = false;
           }

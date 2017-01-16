@@ -25,12 +25,12 @@
                   }
                 });
               }
-              else if( receipt.to === txDefault.walletFactoryAddress){
+              else if( receipt.decodedLogs.length && receipt.decodedLogs[0] && receipt.decodedLogs[0].info && receipt.decodedLogs[0].info.instantiation){
                 var walletAddress = receipt.decodedLogs[0].info.instantiation;
                 Utils.success("Wallet deployed at address " + walletAddress);
                 Wallet.updateWallet({name: "Factory wallet", address: walletAddress, owners: {}});
               }
-              else {
+              else {                
                 Utils.success("Transaction was mined.");
               }
             }});

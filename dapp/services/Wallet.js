@@ -445,7 +445,7 @@
             cb(e);
           }
           else {
-            wallet.offlineTransaction(null, data, nonce, cb);
+            wallet.offlineTransaction(txDefault.walletFactoryAddress, data, nonce, cb);
           }
         });
       };
@@ -453,26 +453,6 @@
       /**
       * Deploy wallet with daily limit
       **/
-
-      // Sign transaction, don't send it
-      wallet.deployOfflineWallet = function (owners, requiredConfirmations, cb) {
-
-        // Get Transaction Data
-        var MyContract = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi);
-        var data = MyContract.new.getData(owners, requiredConfirmations, {
-          data: wallet.json.multiSigDailyLimit.binHex
-        });
-
-        wallet.getUserNonce(function (e, nonce) {
-          if (e) {
-            cb(e);
-          }
-          else {
-            wallet.offlineTransaction(null, data, nonce, cb);
-          }
-        });
-
-      };
 
       wallet.deployWithLimitOffline = function (owners, requiredConfirmations, limit, cb) {
         // Get Transaction Data

@@ -58,7 +58,7 @@
         </td>
         <td>
           <span ng-bind-html="wallet.confirmations|bigNumber|dashIfEmpty"></span>
-          <button type="button" class="btn btn-default btn-sm pull-right" ng-click="setRequired(wallet)">
+          <button type="button" class="btn btn-default btn-sm pull-right" ng-show="wallet.confirmations" ng-click="setRequired(wallet)">
             Edit
           </button>
         </td>

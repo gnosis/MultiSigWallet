@@ -33,7 +33,7 @@
         batch.add(
           Wallet
           .getOwners(
-            $routeParams.address,
+            $scope.wallet.address,
             function (e, owners) {
               $scope.owners = owners;
               $scope.$apply();
@@ -45,7 +45,7 @@
         batch.add(
           Wallet
           .getRequired(
-            $routeParams.address,
+            $scope.wallet.address,
             function (e, confirmations) {
               $scope.confirmations = confirmations;
               $scope.$apply();
@@ -57,7 +57,7 @@
         batch.add(
           Wallet
           .getRequired(
-            $routeParams.address,
+            $scope.wallet.address,
             function (e, required) {
               if (required) {
                 $scope.required = required.toNumber();
@@ -65,17 +65,16 @@
               }
             }
           )
-        );
-
+        );        
         // Get Transaction count
         batch.add(
           Wallet
           .getTransactionCount(
-            $routeParams.address,
+            $scope.wallet.address,
             $scope.showPending,
             $scope.showExecuted,
             function (e, items) {
-              $scope.totalItems = items;
+              $scope.totalItems = items.toNumber();
               $scope.$apply();
               $scope.updateTransactions();
             }
@@ -219,7 +218,7 @@
           batch.add(
             Wallet
             .getOwners(
-              $routeParams.address,
+              $scope.wallet.address,
               i,
               assignOwner
             )

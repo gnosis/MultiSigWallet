@@ -98,14 +98,12 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "          ng-bind-html=\"getDestinationOrContract(transaction) | dashIfEmpty\">\n" +
     "          </a>\n" +
     "        </td>\n" +
-    "        <td>\n" +
-    "          {{transaction.info.value | ether}}\n" +
+    "        <td ng-bind-html=\"transaction.info.value | ether | dashIfEmpty\">\n" +
     "        </td>\n" +
     "        <td popover-trigger=\"'mouseenter'\" uib-popover-template=\"'partials/txData.html'\" popover-placement=\"bottom\" popover-append-to-body=\"true\"\n" +
     "          ng-bind-html=\"transaction.info.input | txData | dashIfEmpty\">\n" +
     "        </td>\n" +
-    "        <td>\n" +
-    "          {{transaction.info.nonce}}\n" +
+    "        <td ng-bind-html=\"transaction.info.nonce| dashIfEmpty\">\n" +
     "        </td>\n" +
     "        <td>\n" +
     "          <span ng-show=\"transaction.receipt\">\n" +
@@ -129,6 +127,9 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "              </ul>\n" +
     "            </li>\n" +
     "          </ul>\n" +
+    "          <p ng-show=\"!transaction.receipt.decodedLogs.length\" class=\"text-center\">\n" +
+    "            -\n" +
+    "          </p>\n" +
     "\n" +
     "        </td>\n" +
     "        <td>\n" +
@@ -473,7 +474,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "        </td>\n" +
     "        <td>\n" +
     "          <span ng-bind-html=\"wallet.confirmations|bigNumber|dashIfEmpty\"></span>\n" +
-    "          <button type=\"button\" class=\"btn btn-default btn-sm pull-right\" ng-click=\"setRequired(wallet)\">\n" +
+    "          <button type=\"button\" class=\"btn btn-default btn-sm pull-right\" ng-show=\"wallet.confirmations\" ng-click=\"setRequired(wallet)\">\n" +
     "            Edit\n" +
     "          </button>\n" +
     "        </td>\n" +

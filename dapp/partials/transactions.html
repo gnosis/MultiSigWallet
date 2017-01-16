@@ -52,14 +52,12 @@
           ng-bind-html="getDestinationOrContract(transaction) | dashIfEmpty">
           </a>
         </td>
-        <td>
-          {{transaction.info.value | ether}}
+        <td ng-bind-html="transaction.info.value | ether | dashIfEmpty">
         </td>
         <td popover-trigger="'mouseenter'" uib-popover-template="'partials/txData.html'" popover-placement="bottom" popover-append-to-body="true"
           ng-bind-html="transaction.info.input | txData | dashIfEmpty">
         </td>
-        <td>
-          {{transaction.info.nonce}}
+        <td ng-bind-html="transaction.info.nonce| dashIfEmpty">
         </td>
         <td>
           <span ng-show="transaction.receipt">
@@ -83,6 +81,9 @@
               </ul>
             </li>
           </ul>
+          <p ng-show="!transaction.receipt.decodedLogs.length" class="text-center">
+            -
+          </p>
 
         </td>
         <td>

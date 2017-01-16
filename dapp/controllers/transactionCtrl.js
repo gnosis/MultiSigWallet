@@ -83,14 +83,17 @@
       * Returns the transaction or contract address
       */
       $scope.getDestinationOrContract = function (tx) {
-        if (Wallet.wallets[tx.info.to] && Wallet.wallets[tx.info.to].name) {
+        if (tx && tx.info && Wallet.wallets[tx.info.to] && Wallet.wallets[tx.info.to].name) {
           return Wallet.wallets[tx.info.to].name;
         }
-        else if (tx.receipt && tx.receipt.contractAddress) {
+        else if (tx && tx.receipt && tx.receipt.contractAddress) {
           return 'Contract ' + $filter("address")(tx.receipt.contractAddress);
         }
-        else {
+        else if (tx.info){
           return $filter("address")(tx.info.to);
+        }
+        else {
+          return $filter("dashIfEmpty")(null);
         }
       };
 

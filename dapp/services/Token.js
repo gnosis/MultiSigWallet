@@ -45,7 +45,7 @@
 
       factory.transfer = function (tokenAddress, to, value, cb) {
         var instance = Wallet.web3.eth.contract(factory.abi).at(tokenAddress);
-        instance.transfer(to, value, cb);
+        instance.transfer(to, value, Wallet.txDefaults(), cb);
       };
 
       factory.transferOffline = function (tokenAddress, to, value, cb) {
@@ -57,7 +57,7 @@
             cb(e);
           }
           else {
-            Wallet.offlineTransaction(tokenAddress, data, nonce, cb);
+            Wallet.offlineTransaction(tokenAddress, data, nonce, Wallet.txDefaults(), cb);
           }
         });
       };
@@ -71,7 +71,6 @@
         );
         // Get nonce
         Wallet.getNonce(wallet, tokenAddress, "0x0", data, function (e, nonce) {
-          console.log("nonce", nonce);
           if (e) {
             cb(e);
           }

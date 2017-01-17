@@ -36,6 +36,20 @@
             $scope.wallet.address,
             function (e, owners) {
               $scope.owners = owners;
+              // Check if the owners are in the wallet.owners object                            
+              var walletOwnerskeys = Object.keys($scope.wallet.owners);
+
+              for (var x=0; x<owners.length; x++){
+                if (walletOwnerskeys.indexOf($scope.owners[x]) == -1) {
+                  $scope.wallet.owners[$scope.owners[x]] = {
+                    'name' : '',
+                    'address' : $scope.owners[x]
+                  }
+                }
+              }
+
+              Wallet.updateWallet($scope.wallet);
+
               $scope.$apply();
             }
           )

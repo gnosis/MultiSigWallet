@@ -18,9 +18,11 @@
       /**
       * Updates connection status
       */
-      $scope.updateConnectionStatus = function (){
+      $scope.statusIcon = $sce.trustAsHtml('<i class=\'fa fa-refresh fa-spin fa-fw\' aria-hidden=\'true\'></i>');
+
+      $scope.updateConnectionStatus = function () {
         $scope.connectionStatus = Connection.isConnected;
-        $scope.statusIcon = Connection.isConnected ? $sce.trustAsHtml('Online <i class=\'fa fa-circle online-status\' aria-hidden=\'true\'></i>') : $sce.trustAsHtml('Offline <i class=\'fa fa-circle offline-status\' aria-hidden=\'true\'></i>');
+        $scope.statusIcon = Connection.isConnected ? $sce.trustAsHtml('Online <i class=\'fa fa-circle online-status\' aria-hidden=\'true\'></i>') : $sce.trustAsHtml('<i class=\'fa fa-refresh fa-spin fa-fw\' aria-hidden=\'true\'></i> Offline <i class=\'fa fa-circle offline-status\' aria-hidden=\'true\'></i>');
       };
 
       Wallet.webInitialized.then(

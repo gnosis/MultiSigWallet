@@ -338,17 +338,101 @@
       };
 
       /**
+      * Creates and returns the valid configuration for Import/Export purposes
+      */
+      wallet.getValidConfigFromJSON = function (jsonConfig) {
+        /* JSON structure based on the following one
+        *
+        *  {
+        *    "wallet_address": {
+        *      "name": "wallet_name",
+        *      "address" : "wallet_address",
+        *      "owners": {
+        *        "address": "owner_address",
+        *        "name" : "owner_name"
+        *      },
+        *      "tokens":{
+        *         "token_address":{
+        *            "address":"token_address",
+        *            "name":"token_name",
+        *            "symbol":"token_symbol",
+        *            "decimals":token_decimals
+        *         }
+        *      }
+        *    }
+        *  }
+        *
+        */
+
+        if(jsonConfig == {} || jsonConfig == ''){
+          return {};
+        }
+
+        var walletKeys = Object.keys(jsonConfig);
+        var ownerKeys;
+        var tokenKeys;
+        var validJsonConfig = {};
+        // Create th valid JSON input structure
+        for (var x=0; x<walletKeys.length; x++) {
+          var owners = jsonConfig[walletKeys[x]].owners;
+          var tokens = jsonConfig[walletKeys[x]].tokens || [];
+          var validOwners = {};
+          var validTokens = {};
+
+          // Get tokens and owner keys
+          tokenKeys = Object.keys(tokens);
+          ownerKeys = Object.keys(owners);
+
+          // Construct the valid JSON structure
+          validJsonConfig[walletKeys[x]] = {
+            name : jsonConfig[walletKeys[x]].name,
+            address : jsonConfig[walletKeys[x]].address,
+            owners : {},
+            tokens : {}
+          };
+
+          // Populate owners object
+          for (var y=0; y<ownerKeys.length; y++) {
+            validOwners[ownerKeys[y]] = {
+              name : owners[ownerKeys[y]].name,
+              address : owners[ownerKeys[y]].address
+            };
+
+            Object.assign(validJsonConfig[walletKeys[x]].owners, validOwners);
+          }
+
+          // Populate tokens object
+          for (var y=0; y<tokenKeys.length; y++) {
+
+            validTokens[tokenKeys[y]] = {
+              address : tokens[tokenKeys[y]].address,
+              name : tokens[tokenKeys[y]].name,
+              symbol : tokens[tokenKeys[y]].symbol,
+              decimals : tokens[tokenKeys[y]].decimals
+            };
+
+            Object.assign(validJsonConfig[walletKeys[x]].tokens, validTokens);
+
+          }
+        }
+
+        return validJsonConfig;
+      }
+
+      /**
       * Imports a JSON configuration script containing
       * the wallet or wallets declarations
       */
-      wallet.import = function (jsonConfig){
+      wallet.import = function (jsonConfig) {
         // Setting up new configuration
         // No data validation at the moment
         var walletsData = JSON.parse(localStorage.getItem("wallets")) || {};
+
+        var validJsonConfig = wallet.getValidConfigFromJSON(JSON.parse(jsonConfig));
         // Object.assign doesn't create a new key => value pair if
         // the key already exists, so at the moment we execute the
         // entire JSON object returning OK to the user.
-        Object.assign(walletsData, JSON.parse(jsonConfig));
+        Object.assign(walletsData, validJsonConfig);
         localStorage.setItem("wallets", JSON.stringify(walletsData));
 
         wallet.wallets = walletsData;

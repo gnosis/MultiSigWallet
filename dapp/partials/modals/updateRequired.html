@@ -10,13 +10,13 @@
   </div>
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-default" ng-click="update()">
+  <button type="button" class="btn btn-default" ng-click="update()" show-hide-by-connectivity="online">
     Send transaction
   </button>
-  <button type="button" class="btn btn-default" ng-click="signOffline()">
+  <button type="button" class="btn btn-default" ng-click="signOffline()" show-hide-by-connectivity="offline">
     Sign Offline
   </button>
-  <button type="button" class="btn btn-default" ng-click="getNonce()">
+  <button type="button" class="btn btn-default" ng-click="getNonce()" show-hide-by-connectivity="online">
     Get nonce
   </button>
   <button type="button" class="btn btn-danger" ng-click="cancel()">

@@ -54,18 +54,6 @@ contract MultiSigWalletWithDailyLimit is MultiSigWallet {
         }
     }
 
-    /// @dev Returns maximum withdraw amount.
-    /// @return Returns amount.
-    function calcMaxWithdraw()
-        public
-        constant
-        returns (uint)
-    {
-        if (now > lastDay + 24 hours)
-            return dailyLimit;
-        return dailyLimit - spentToday;
-    }
-
     /*
      * Internal functions
      */
@@ -84,5 +72,20 @@ contract MultiSigWalletWithDailyLimit is MultiSigWallet {
             return false;
         spentToday += amount;
         return true;
+    }
+
+    /*
+     * Web3 call functions
+     */
+    /// @dev Returns maximum withdraw amount.
+    /// @return Returns amount.
+    function calcMaxWithdraw()
+        public
+        constant
+        returns (uint)
+    {
+        if (now > lastDay + 24 hours)
+            return dailyLimit;
+        return dailyLimit - spentToday;
     }
 }

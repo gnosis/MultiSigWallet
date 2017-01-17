@@ -23,7 +23,7 @@
             $uibModalInstance.close();
             Utils.notification("Update required confirmations transaction was sent.");
             Transaction.add({txHash: tx, callback: function () {
-              Utils.success("Update required confirmations transaction was minded.");
+              Utils.success("Update required confirmations transaction was mined.");
             }});
           }
         });

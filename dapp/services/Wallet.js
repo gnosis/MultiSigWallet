@@ -890,16 +890,16 @@
       /**
       * Sign confirm transaction offline by another wallet owner
       */
-      wallet.confirmTransactionOffline = function (address, txId, cb) {
+      wallet.confirmTransactionOffline = function (address, cb) {
         var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
-        var mainData = instance.confirmTransaction.getData(txId);
 
-        wallet.getUserNonce(function (e, nonce) {
+        wallet.getWalletNonces(function (e, nonces) {
           if (e) {
             cb(e);
           }
           else {
-            wallet.offlineTransaction(address, mainData, nonce, cb);
+            var mainData = instance.confirmTransaction.getData(nonces.multisig);
+            wallet.offlineTransaction(address, mainData, nonces.account, cb);
           }
         });
       };
@@ -979,15 +979,15 @@
       /**
       * Revoke transaction confirmation offline
       */
-      wallet.revokeConfirmationOffline = function (address, txId, cb) {
+      wallet.revokeConfirmationOffline = function (address, cb) {
         var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
-        var data = instance.revokeConfirmation.getData(txId);
-        wallet.getUserNonce(function (e, nonce) {
+        wallet.getWalletNonces(function (e, nonces) {
           if (e) {
             cb(e);
           }
           else {
-            wallet.offlineTransaction(address, data, nonce, cb);
+            var data = instance.revokeConfirmation.getData(nonces.multisig);
+            wallet.offlineTransaction(address, data, nonces.account, cb);
           }
         });
       };

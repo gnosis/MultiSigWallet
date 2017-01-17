@@ -36,7 +36,7 @@
             $scope.wallet.address,
             function (e, owners) {
               $scope.owners = owners;
-              // Check if the owners are in the wallet.owners object                            
+              // Check if the owners are in the wallet.owners object
               var walletOwnerskeys = Object.keys($scope.wallet.owners);
 
               for (var x=0; x<owners.length; x++){
@@ -307,18 +307,14 @@
       };
 
       $scope.confirmMultisigTransactionOffline = function () {
-        $uibModal.open(
-          {
-            templateUrl: 'partials/modals/confirmMultisigTransactionOffline.html',
-            size: 'md',
-            resolve: {
-              address: function () {
-                return $scope.wallet.address;
-              }
-            },
-            controller: 'confirmMultisigTransactionOfflineCtrl'
+        Wallet.confirmTransactionOffline($scope.wallet.address, function (e, signed) {
+          if (e) {
+            Utils.dangerAlert(e);
           }
-        );
+          else {
+            Utils.signed(signed);
+          }
+        });
       };
 
       $scope.revokeConfirmation = function (txId) {
@@ -340,18 +336,14 @@
       };
 
       $scope.revokeMultisigTransactionOffline = function () {
-        $uibModal.open(
-          {
-            templateUrl: 'partials/modals/revokeMultisigConfirmationOffline.html',
-            size: 'md',
-            resolve: {
-              address: function () {
-                return $scope.wallet.address;
-              }
-            },
-            controller: 'confirmMultisigTransactionOfflineCtrl'
+        Wallet.revokeConfirmationOffline($scope.wallet.address, function (e, signed) {
+          if (e) {
+            Utils.dangerAlert(e);
           }
-        );
+          else {
+            Utils.signed(signed);
+          }
+        });
       };
 
       $scope.executeTransaction = function (txId) {

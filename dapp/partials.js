@@ -566,29 +566,6 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
   );
 
 
-  $templateCache.put('partials/modals/confirmMultisigTransactionOffline.html',
-    "<div class=\"modal-header\">\n" +
-    "  <h3 class=\"modal-title\">\n" +
-    "    Confirm transaction offline\n" +
-    "  </h3>\n" +
-    "</div>\n" +
-    "<form ng-submit=\"ok()\">\n" +
-    "  <div class=\"modal-body\">\n" +
-    "    <div class=\"form-group\">\n" +
-    "      <label for=\"nonce\">Transaction Id</label>\n" +
-    "      <input class=\"form-control\" ng-model=\"transactionId\" type=\"number\" \\>\n" +
-    "    </div>\n" +
-    "  </div>\n" +
-    "  <div class=\"modal-footer\">\n" +
-    "    <input class=\"btn btn-default\" type=\"submit\" value=\"Sign offline\" ng-click=\"signOffline()\" />\n" +
-    "    <button class=\"btn btn-danger\" type=\"button\" ng-click=\"cancel()\">\n" +
-    "      Cancel\n" +
-    "    </button>\n" +
-    "  </div>\n" +
-    "</form>\n"
-  );
-
-
   $templateCache.put('partials/modals/confirmTransaction.html',
     "<div class=\"modal-header\">\n" +
     "  <h3 class=\"modal-title\">\n" +
@@ -1363,10 +1340,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "  </button>\n" +
     "  <button type=\"button\" class=\"btn btn-default\" ng-click=\"signOffline()\" show-hide-by-connectivity=\"offline\">\n" +
     "    Sign Offline\n" +
-    "  </button>\n" +
-    "  <button type=\"button\" class=\"btn btn-default\" ng-click=\"getNonce()\" show-hide-by-connectivity=\"online\">\n" +
-    "    Get nonce\n" +
-    "  </button>\n" +
+    "  </button>  \n" +
     "  <button type=\"button\" class=\"btn btn-danger\" ng-click=\"cancel()\">\n" +
     "    Cancel\n" +
     "  </button>\n" +

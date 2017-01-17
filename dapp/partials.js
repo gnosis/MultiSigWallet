@@ -22,9 +22,15 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "        <label for=\"gas-price\">Gas price</label>\n" +
     "        <input id=\"gas-price\" type=\"number\" ng-model=\"config.gasPrice\" class=\"form-control\" />\n" +
     "      </div>\n" +
+    "      <div class=\"form-group\">\n" +
+    "        <label for=\"wallet-factory\">Wallet factory contract</label>\n" +
+    "        <input id=\"wallet-factory\" type=\"text\" ng-model=\"config.walletFactoryAddress\" class=\"form-control\" />\n" +
+    "      </div>\n" +
+    "\n" +
     "    </div>\n" +
     "    <div class=\"panel-footer\">\n" +
     "      <input type=\"submit\" class=\"btn btn-default\" value=\"Update\" />\n" +
+    "      \n" +
     "    </div>\n" +
     "  </form>\n" +
     "</div>\n" +
@@ -93,7 +99,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    <tbody>\n" +
     "      <tr ng-repeat=\"transaction in transactions | objectToArray| limitTo:currentPage*itemsPerPage:itemsPerPage*(currentPage-1) track by $index\">\n" +
     "        <td>\n" +
-    "          <a uib-popover=\"{{transaction.info.to}}\" popover-trigger=\"'mouseenter'\"\n" +
+    "          <a uib-popover=\"{{transaction.multisig || transaction.info.to}}\" popover-trigger=\"'mouseenter'\"\n" +
     "          ng-href=\"https://testnet.etherscan.io/tx/{{transaction.txHash}}\"\n" +
     "          ng-bind-html=\"getDestinationOrContract(transaction) | dashIfEmpty\">\n" +
     "          </a>\n" +
@@ -467,25 +473,25 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "          </div>\n" +
     "        </td>\n" +
     "        <td>\n" +
-    "          {{wallet.balance|ether}}\n" +
+    "          <span value-or-dash-by-connectivity=\"{{wallet.balance|ether}}\">{{wallet.balance|ether}}</span>\n" +
     "          <button type=\"button\" class=\"btn btn-default btn-sm pull-right\" ng-click=\"deposit(wallet)\">\n" +
     "            Deposit\n" +
     "          </button>\n" +
     "        </td>\n" +
     "        <td>\n" +
-    "          <span ng-bind-html=\"wallet.confirmations|bigNumber|dashIfEmpty\"></span>\n" +
+    "          <span value-or-dash-by-connectivity=\"{{wallet.confirmations|bigNumber|dashIfEmpty}}\"></span>\n" +
     "          <button type=\"button\" class=\"btn btn-default btn-sm pull-right\" ng-show=\"wallet.confirmations\" ng-click=\"setRequired(wallet)\">\n" +
     "            Edit\n" +
     "          </button>\n" +
     "        </td>\n" +
     "        <td>\n" +
-    "          {{wallet.limit|ether}}\n" +
+    "          <span value-or-dash-by-connectivity=\"{{wallet.limit|ether}}\">{{wallet.limit|ether}}</span>\n" +
     "          <button type=\"button\" class=\"btn btn-default btn-sm pull-right\" ng-click=\"setLimit(wallet)\">\n" +
     "            Edit\n" +
     "          </button>\n" +
     "        </td>\n" +
     "        <td>\n" +
-    "          {{wallet.maxWithdraw|ether}}\n" +
+    "          <span value-or-dash-by-connectivity=\"{{wallet.maxWithdraw|ether}}\">{{wallet.maxWithdraw|ether}}</span>\n" +
     "          <button type=\"button\" class=\"btn btn-default btn-sm pull-right\" ng-click=\"withdrawLimit(wallet)\">\n" +
     "            Withdraw\n" +
     "          </button>\n" +
@@ -1352,13 +1358,13 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "  </div>\n" +
     "</div>\n" +
     "<div class=\"modal-footer\">\n" +
-    "  <button type=\"button\" class=\"btn btn-default\" ng-click=\"update()\">\n" +
+    "  <button type=\"button\" class=\"btn btn-default\" ng-click=\"update()\" show-hide-by-connectivity=\"online\">\n" +
     "    Send transaction\n" +
     "  </button>\n" +
-    "  <button type=\"button\" class=\"btn btn-default\" ng-click=\"signOffline()\">\n" +
+    "  <button type=\"button\" class=\"btn btn-default\" ng-click=\"signOffline()\" show-hide-by-connectivity=\"offline\">\n" +
     "    Sign Offline\n" +
     "  </button>\n" +
-    "  <button type=\"button\" class=\"btn btn-default\" ng-click=\"getNonce()\">\n" +
+    "  <button type=\"button\" class=\"btn btn-default\" ng-click=\"getNonce()\" show-hide-by-connectivity=\"online\">\n" +
     "    Get nonce\n" +
     "  </button>\n" +
     "  <button type=\"button\" class=\"btn btn-danger\" ng-click=\"cancel()\">\n" +

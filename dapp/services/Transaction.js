@@ -6,7 +6,8 @@
       var factory = {
         transactions: JSON.parse(localStorage.getItem("transactions")) || {},
         requiredReceipt: {},
-        requiredInfo: {}
+        requiredInfo: {},
+        updates: 0
       };
 
       /**
@@ -16,6 +17,7 @@
         factory.transactions[tx.txHash] = tx;
         tx.date = new Date();
         localStorage.setItem("transactions", JSON.stringify(factory.transactions));
+        factory.updates++;
         try {
           $rootScope.$digest();
         }
@@ -25,6 +27,7 @@
       factory.update = function (txHash, newObj) {
         Object.assign(factory.transactions[txHash], newObj);
         localStorage.setItem("transactions", JSON.stringify(factory.transactions));
+        factory.updates++;
         try {
           $rootScope.$digest();
         }
@@ -37,6 +40,7 @@
       factory.remove = function (txHash) {
         delete factory.transactions[txHash];
         localStorage.setItem("transactions", JSON.stringify(factory.transactions));
+        factory.updates++;
         try{
           $rootScope.$digest();
         }
@@ -49,6 +53,7 @@
       factory.removeAll = function () {
         factory.transactions = {};
         localStorage.removeItem("transactions");
+        factory.updates++;
         try{
           $rootScope.$digest();
         }
@@ -209,15 +214,15 @@
         for (var i=0; i<txHashes.length; i++) {
           var tx = factory.transactions[txHashes[i]];
           // Get transaction receipt
-          if (tx && !tx.receipt && !factory.requiredReceipt[tx]) {
-            factory.requiredReceipt[tx] = true;
+          if (tx && !tx.receipt && !factory.requiredReceipt[txHashes[i]]) {
+            factory.requiredReceipt[txHashes[i]] = true;
             batch.add(
               Wallet.web3.eth.getTransactionReceipt.request(txHashes[i], processReceipt)
             );
           }
           // Get transaction info
-          if (tx && !tx.info && !factory.requiredInfo[tx]) {
-            factory.requiredInfo[tx];
+          if (tx && !tx.info && !factory.requiredInfo[txHashes[i]]) {
+            factory.requiredInfo[txHashes[i]];
             batch.add(
               Wallet.web3.eth.getTransaction.request(
                 txHashes[i],

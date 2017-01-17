@@ -7,7 +7,7 @@
 
       $scope.$watch(
         function () {
-          return Transaction.transactions;
+          return Transaction.updates;
         },
         function () {
           $scope.transactions = Transaction.transactions;

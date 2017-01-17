@@ -193,10 +193,10 @@
     <tbody>
       <tr ng-repeat="txId in txIds track by $index">
         <td>
-          {{::txId|bigNumber}}
+          {{txId|bigNumber}}
         </td>
         <td>
-          {{::getType(transactions[txId])}}
+          {{getType(transactions[txId])}}
         </td>
         <td>
           {{transactions[txId].value|ether}}

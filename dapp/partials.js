@@ -354,10 +354,10 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    <tbody>\n" +
     "      <tr ng-repeat=\"txId in txIds track by $index\">\n" +
     "        <td>\n" +
-    "          {{::txId|bigNumber}}\n" +
+    "          {{txId|bigNumber}}\n" +
     "        </td>\n" +
     "        <td>\n" +
-    "          {{::getType(transactions[txId])}}\n" +
+    "          {{getType(transactions[txId])}}\n" +
     "        </td>\n" +
     "        <td>\n" +
     "          {{transactions[txId].value|ether}}\n" +

@@ -53,8 +53,14 @@
         if(log && log.indexOf && log.indexOf("0x") == -1){
           return log;
         }
-        else{
+        else if (log && log.slice) {
           return log.slice(0, 12) + "...";
+        }
+        else if (log && log.toString().slice) {
+          return log.toString().slice(0, 12) + "...";
+        }
+        else {
+          return log;
         }
       };
     })

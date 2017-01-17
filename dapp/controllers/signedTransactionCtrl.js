@@ -19,6 +19,7 @@
                   if (code.length > 100 && Wallet.json.multiSigDailyLimit.binHex.slice(-992) == code.slice(-992)){
                     Utils.success("Multisig wallet deployed at "+ receipt.contractAddress);
                     Wallet.updateWallet({name: "Offline wallet", address: receipt.contractAddress, owners: {}});
+                    Transaction.update(txHash, {multisig: receipt.contractAddress});
                   }
                   else {
                     Utils.success("Contract deployed at "+ receipt.contractAddress);
@@ -29,8 +30,9 @@
                 var walletAddress = receipt.decodedLogs[0].info.instantiation;
                 Utils.success("Wallet deployed at address " + walletAddress);
                 Wallet.updateWallet({name: "Factory wallet", address: walletAddress, owners: {}});
+                Transaction.update(txHash, {multisig: walletAddress});
               }
-              else {                
+              else {
                 Utils.success("Transaction was mined.");
               }
             }});

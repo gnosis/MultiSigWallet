@@ -69,10 +69,10 @@
         </td>
         <td>
           <ul>
-            <li ng-repeat="log in ::transaction.receipt.decodedLogs">
-              {{::log.name}}
+            <li ng-repeat="log in transaction.receipt.decodedLogs">
+              {{log.name}}
               <ul>
-                <li ng-repeat="(paramKey, param) in ::log.info">
+                <li ng-repeat="(paramKey, param) in log.info">
                   {{paramKey}} :
                   <div uib-popover="{{param}}" popover-trigger="'mouseenter'">
                     {{param|logParam}}

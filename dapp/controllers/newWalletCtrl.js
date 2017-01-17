@@ -29,6 +29,7 @@
                 // Save wallet
                 Wallet.updateWallet({name: $scope.name, address: contract.address, owners: $scope.owners});
                 Utils.success("Wallet deployed at address " + contract.address);
+                Transaction.update(contract.transactionHash, {multisig: contract.address});
                 callback();
               }
               else {
@@ -70,6 +71,7 @@
                     var walletAddress = receipt.decodedLogs[0].info.instantiation;
                     Utils.success("Wallet deployed at address " + walletAddress);
                     Wallet.updateWallet({name: $scope.name, address: walletAddress, owners: $scope.owners});
+                    Transaction.update(tx, {multisig: walletAddress});
                     callback();
                   }
                 }

@@ -115,10 +115,10 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "        </td>\n" +
     "        <td>\n" +
     "          <ul>\n" +
-    "            <li ng-repeat=\"log in ::transaction.receipt.decodedLogs\">\n" +
-    "              {{::log.name}}\n" +
+    "            <li ng-repeat=\"log in transaction.receipt.decodedLogs\">\n" +
+    "              {{log.name}}\n" +
     "              <ul>\n" +
-    "                <li ng-repeat=\"(paramKey, param) in ::log.info\">\n" +
+    "                <li ng-repeat=\"(paramKey, param) in log.info\">\n" +
     "                  {{paramKey}} :\n" +
     "                  <div uib-popover=\"{{param}}\" popover-trigger=\"'mouseenter'\">\n" +
     "                    {{param|logParam}}\n" +

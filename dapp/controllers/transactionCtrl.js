@@ -86,6 +86,14 @@
         if (tx && tx.info && Wallet.wallets[tx.info.to] && Wallet.wallets[tx.info.to].name) {
           return Wallet.wallets[tx.info.to].name;
         }
+        if (tx && tx.multisig) {
+          if( Wallet.wallets[tx.multisig] ) {
+            return "Create wallet " + Wallet.wallets[tx.multisig].name;
+          }
+          else {
+            return "Create wallet " + tx.multisig.slice(0, 10) + "...";
+          }
+        }
         else if (tx && tx.receipt && tx.receipt.contractAddress) {
           return 'Contract ' + $filter("address")(tx.receipt.contractAddress);
         }

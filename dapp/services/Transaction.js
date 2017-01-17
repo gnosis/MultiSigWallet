@@ -22,6 +22,15 @@
         catch (e) {}
       };
 
+      factory.update = function (txHash, newObj) {
+        Object.assign(factory.transactions[txHash], newObj);
+        localStorage.setItem("transactions", JSON.stringify(factory.transactions));
+        try {
+          $rootScope.$digest();
+        }
+        catch (e) {}
+      }
+
       /**
       * Remove transaction identified by transaction hash from the transactions collection
       */
@@ -181,35 +190,22 @@
 
         function processReceipt(e, receipt) {
           if (!e && receipt) {
-            factory.transactions[receipt.transactionHash].receipt = receipt;
-            factory.transactions[receipt.transactionHash].receipt.decodedLogs = Wallet.decodeLogs(receipt.logs);
-
-            // update transactions
-            localStorage.setItem("transactions", JSON.stringify(factory.transactions));
+            receipt.decodedLogs = Wallet.decodeLogs(receipt.logs);
+            factory.update(receipt.transactionHash, {receipt: receipt})
 
             // call callback if it has
             if (factory.transactions[receipt.transactionHash].callback) {
               factory.transactions[receipt.transactionHash].callback(receipt);
             }
-            try{
-              $rootScope.$digest();
-            }
-            catch (error) {}
           }
         }
 
         function getTransactionInfo(e, info) {
           if (!e && info) {
-            factory.transactions[info.hash].info = info;
-
-            // update transactions
-            localStorage.setItem("transactions", JSON.stringify(factory.transactions));
-            try{
-              $rootScope.$digest();
-            }
-            catch (error) {}
+            factory.update(info.hash, {info: info});
           }
         }
+
         for (var i=0; i<txHashes.length; i++) {
           var tx = factory.transactions[txHashes[i]];
           // Get transaction receipt

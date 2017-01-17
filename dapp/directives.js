@@ -15,7 +15,7 @@
         }
       };
     })
-    .directive('showHideByConnectivity', function(Connection){
+    .directive('showHideByConnectivity', function (Connection) {
       return {
         link: function(scope, element, attrs){
           /*
@@ -34,6 +34,24 @@
                 element.css("display", "");
               }
             });
+
+        }
+      };
+    })
+    .directive('valueOrDashByConnectivity', function (Connection) {
+      return {
+        link: function(scope, element, attrs) {
+          /*
+          * The value is shown by considering the
+          * Connection.isConnected variable.
+          */
+          scope.$watch(function () {
+            if (!Connection.isConnected) {
+              element.html("-");
+            } else {
+              element.html(attrs.valueOrDashByConnectivity);
+            }
+          });
 
         }
       };

@@ -5,7 +5,7 @@
     .service('Connection', function ($rootScope, $http, $interval) {
 
       var factory = {};
-      var isConnected = true;
+      var isConnected = false;
 
       var setup = function() {
         // Call it at startup

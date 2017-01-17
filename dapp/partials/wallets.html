@@ -51,25 +51,25 @@
           </div>
         </td>
         <td>
-          {{wallet.balance|ether}}
+          <span value-or-dash-by-connectivity="{{wallet.balance|ether}}">{{wallet.balance|ether}}</span>
           <button type="button" class="btn btn-default btn-sm pull-right" ng-click="deposit(wallet)">
             Deposit
           </button>
         </td>
         <td>
-          <span ng-bind-html="wallet.confirmations|bigNumber|dashIfEmpty"></span>
+          <span value-or-dash-by-connectivity="{{wallet.confirmations|bigNumber|dashIfEmpty}}"></span>
           <button type="button" class="btn btn-default btn-sm pull-right" ng-show="wallet.confirmations" ng-click="setRequired(wallet)">
             Edit
           </button>
         </td>
         <td>
-          {{wallet.limit|ether}}
+          <span value-or-dash-by-connectivity="{{wallet.limit|ether}}">{{wallet.limit|ether}}</span>
           <button type="button" class="btn btn-default btn-sm pull-right" ng-click="setLimit(wallet)">
             Edit
           </button>
         </td>
         <td>
-          {{wallet.maxWithdraw|ether}}
+          <span value-or-dash-by-connectivity="{{wallet.maxWithdraw|ether}}">{{wallet.maxWithdraw|ether}}</span>
           <button type="button" class="btn btn-default btn-sm pull-right" ng-click="withdrawLimit(wallet)">
             Withdraw
           </button>

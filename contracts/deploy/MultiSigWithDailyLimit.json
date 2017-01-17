@@ -3,7 +3,7 @@
         "type": "deployment",
         "file": "MultiSigWalletWithDailyLimit.sol",
         "params": [
-            ["dceceaf3fc5c0a63d195d69b1a90011b7b19650d", "598443f1880ef585b21f1d7585bd0577402861e5"],
+            ["REPLACE_WITH_ADDRESS", "REPLACE_WITH_ADDRESS"],
             2,
             1000000000000000000
         ]
@@ -13,14 +13,14 @@
         "contract": "MultiSigWalletWithDailyLimit",
         "name": "owners",
         "params": [0],
-        "return": "dceceaf3fc5c0a63d195d69b1a90011b7b19650d"
+        "return": "REPLACE_WITH_ADDRESS"
     },
     {
         "type": "assertion",
         "contract": "MultiSigWalletWithDailyLimit",
         "name": "owners",
         "params": [1],
-        "return": "598443f1880ef585b21f1d7585bd0577402861e5"
+        "return": "REPLACE_WITH_ADDRESS"
     },
     {
         "type": "assertion",

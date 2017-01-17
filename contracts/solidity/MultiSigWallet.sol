@@ -170,8 +170,10 @@ contract MultiSigWallet {
     function confirmTransaction(uint transactionId)
         public
         ownerExists(msg.sender)
+        notConfirmed(transactionId, msg.sender)
     {
-        addConfirmation(transactionId, msg.sender);
+        confirmations[transactionId][msg.sender] = true;
+        Confirmation(msg.sender, transactionId);
         executeTransaction(transactionId);
     }
 
@@ -235,21 +237,6 @@ contract MultiSigWallet {
                 count += 1;
     }
 
-    /// @dev Returns total number of transactions after filers are applied.
-    /// @param pending Include pending transactions.
-    /// @param executed Include executed transactions.
-    /// @return Total number of transactions after filters are applied.
-    function getTransactionCount(bool pending, bool executed)
-        public
-        constant
-        returns (uint count)
-    {
-        for (uint i=0; i<transactionCount; i++)
-            if (   pending && !transactions[i].executed
-                || executed && transactions[i].executed)
-                count += 1;
-    }
-
     /*
      * Internal functions
      */
@@ -274,20 +261,24 @@ contract MultiSigWallet {
         Submission(transactionId);
     }
 
-    /// @dev Adds a confirmation from an owner for a transaction.
-    /// @param transactionId Transaction ID.
-    /// @param owner Address of owner.
-    function addConfirmation(uint transactionId, address owner)
-        internal
-        notConfirmed(transactionId, owner)
-    {
-        confirmations[transactionId][owner] = true;
-        Confirmation(owner, transactionId);
-    }
-
     /*
      * Web3 functions
      */
+    /// @dev Returns total number of transactions after filers are applied.
+    /// @param pending Include pending transactions.
+    /// @param executed Include executed transactions.
+    /// @return Total number of transactions after filters are applied.
+    function getTransactionCount(bool pending, bool executed)
+        public
+        constant
+        returns (uint count)
+    {
+        for (uint i=0; i<transactionCount; i++)
+            if (   pending && !transactions[i].executed
+                || executed && transactions[i].executed)
+                count += 1;
+    }
+
     /// @dev Returns list of owners.
     /// @return List of owner addresses.
     function getOwners()

@@ -12,7 +12,7 @@
         "contract": "TestToken",
         "name": "issueTokens",
         "params": [
-            "REPLACE_WITH_YOUR_ADDRESS", 1000
+            "REPLACE_WITH_ADDRESS", 1000
         ]
     },
     {
@@ -20,7 +20,7 @@
         "contract": "TestToken",
         "name": "balanceOf",
         "params": [
-            "REPLACE_WITH_YOUR_ADDRESS"
+            "REPLACE_WITH_ADDRESS"
         ],
         "return": 1000
     }

@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .controller('walletCtrl', function ($scope, Wallet, Utils, Token, Transaction, $uibModal, $interval) {
+    .controller('walletCtrl', function ($rootScope, $scope, Wallet, Utils, Token, Transaction, $uibModal, $interval) {
       Wallet
       .webInitialized
       .then(
@@ -10,10 +10,11 @@
             $scope.batch = Wallet.web3.createBatch();
             $scope.interval = $interval($scope.updateParams, 10000);
             $scope.wallets = Wallet.wallets;
-            if (!$scope.wallets || !Object.keys($scope.wallets).length){
+            if (!$scope.wallets || !Object.keys($scope.wallets).length && !$rootScope.alreadyLogged){
               $scope.newWalletSelect();
             }
             $scope.updateParams();
+            $rootScope.alreadyLogged = true;
         }
       );
 

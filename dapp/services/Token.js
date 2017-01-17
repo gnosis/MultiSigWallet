@@ -70,12 +70,12 @@
           value
         );
         // Get nonce
-        Wallet.getNonce(wallet, tokenAddress, "0x0", data, function (e, nonce) {
+        Wallet.getTransactionCount(wallet, true, true, function (e, count) {
           if (e) {
             cb(e);
           }
           else {
-            walletInstance.submitTransaction(tokenAddress, "0x0", data, nonce, Wallet.txDefaults(), cb);
+            walletInstance.submitTransaction(tokenAddress, "0x0", data, count, Wallet.txDefaults(), cb);
           }
         }).call();
       };

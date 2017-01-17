@@ -1475,10 +1475,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    </button>\n" +
     "    <button type=\"button\" ng-click=\"signOff()\" class=\"btn btn-default\" ng-disabled=\"form.$invalid\" show-hide-by-connectivity=\"offline\">\n" +
     "      Sign Offline\n" +
-    "    </button>\n" +
-    "    <button type=\"button\" class=\"btn btn-default\" ng-click=\"getNonce()\" ng-disabled=\"form.$invalid\" show-hide-by-connectivity=\"online\">\n" +
-    "      Get nonce\n" +
-    "    </button>\n" +
+    "    </button>    \n" +
     "    <button type=\"button\" ng-click=\"cancel()\" class=\"btn btn-danger\">\n" +
     "      Cancel\n" +
     "    </button>\n" +

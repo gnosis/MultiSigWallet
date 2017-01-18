@@ -339,8 +339,10 @@
 
       /**
       * Creates and returns the valid configuration for Import/Export purposes
+      * @param jsonConfig
+      * @param operation 'import' | 'export'
       */
-      wallet.getValidConfigFromJSON = function (jsonConfig) {
+      wallet.getValidConfigFromJSON = function (jsonConfig, operation) {
         /* JSON structure based on the following one
         *
         *  {
@@ -386,17 +388,25 @@
           // Construct the valid JSON structure
           validJsonConfig[walletKeys[x]] = {
             name : jsonConfig[walletKeys[x]].name,
-            address : jsonConfig[walletKeys[x]].address,
             owners : {},
             tokens : {}
           };
 
+          // Add address key => value pair only when importing
+          // configuration to adapt it to the App JSON Structure
+          if (operation == 'import') {
+            validJsonConfig[walletKeys[x]]['address'] = walletKeys[x];
+          }
+
           // Populate owners object
           for (var y=0; y<ownerKeys.length; y++) {
             validOwners[ownerKeys[y]] = {
-              name : owners[ownerKeys[y]].name,
-              address : owners[ownerKeys[y]].address
+              name : owners[ownerKeys[y]].name
             };
+
+            if (operation == 'import') {
+              validOwners[ownerKeys[y]]['address'] = ownerKeys[y];
+            }
 
             Object.assign(validJsonConfig[walletKeys[x]].owners, validOwners);
           }
@@ -405,11 +415,14 @@
           for (var y=0; y<tokenKeys.length; y++) {
 
             validTokens[tokenKeys[y]] = {
-              address : tokens[tokenKeys[y]].address,
               name : tokens[tokenKeys[y]].name,
               symbol : tokens[tokenKeys[y]].symbol,
               decimals : tokens[tokenKeys[y]].decimals
             };
+
+            if (operation == 'import') {
+              validTokens[tokenKeys[y]]['address'] = tokenKeys[y];
+            }
 
             Object.assign(validJsonConfig[walletKeys[x]].tokens, validTokens);
 
@@ -428,7 +441,7 @@
         // No data validation at the moment
         var walletsData = JSON.parse(localStorage.getItem("wallets")) || {};
 
-        var validJsonConfig = wallet.getValidConfigFromJSON(JSON.parse(jsonConfig));
+        var validJsonConfig = wallet.getValidConfigFromJSON(JSON.parse(jsonConfig), 'import');
         // Object.assign doesn't create a new key => value pair if
         // the key already exists, so at the moment we execute the
         // entire JSON object returning OK to the user.
@@ -1056,7 +1069,7 @@
       **/
       wallet.getType = function (tx) {
         if (tx.data && tx.data.length > 3) {
-          var method = tx.data.slice(2, 10);          
+          var method = tx.data.slice(2, 10);
           switch (method) {
             case "ba51a6df":
               return "Update required confirmations";

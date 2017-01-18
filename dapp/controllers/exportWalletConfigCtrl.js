@@ -4,7 +4,7 @@
     .module("multiSigWeb")
     .controller("exportWalletConfigCtrl", function ($scope, $uibModalInstance, Utils, Wallet) {
 
-      $scope.configuration = JSON.stringify(Wallet.getValidConfigFromJSON(JSON.parse(localStorage.getItem("wallets")) || ""));
+      $scope.configuration = JSON.stringify(Wallet.getValidConfigFromJSON(JSON.parse(localStorage.getItem("wallets")) || "", 'export'));
 
       $scope.close = function () {
         $uibModalInstance.dismiss();

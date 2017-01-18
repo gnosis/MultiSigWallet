@@ -195,9 +195,7 @@
         <td>
           {{txId|bigNumber}}
         </td>
-        <td>
-          {{getType(transactions[txId])}}
-        </td>
+        <td ng-bind-html="getType(transactions[txId])"></td>
         <td>
           {{transactions[txId].value|ether}}
         </td>

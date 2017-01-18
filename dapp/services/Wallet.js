@@ -1073,7 +1073,7 @@
         else {
           if (tx.to) {
             if (wallet.wallets[tx.to] && wallet.wallets[tx.to].name) {
-              return wallet.wallets[tx.to].name;
+              return "<img src='./img/wallet-logo.svg' class='wallet-icon' alt='Wallet' />&nbsp;" + wallet.wallets[tx.to].name;
             }
             else {
               return tx.to.slice(0, 20) + "...";

@@ -42,3 +42,7 @@ textarea.json-config {
 .offline-status{
   color: #f5231c; /* red */
 }
+
+.wallet-icon{
+  max-width: 20px;
+}

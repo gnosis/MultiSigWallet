@@ -289,7 +289,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "      </tr>\n" +
     "    </tbody>\n" +
     "  </table>\n" +
-    "  <div ng-show=\"!wallet.tokens\" class=\"panel-body text-center\" uib-collapse=\"hideTokens\">\n" +
+    "  <div ng-show=\"!totalTokens\" class=\"panel-body text-center\" uib-collapse=\"hideTokens\">\n" +
     "    No tokens. Add an ERC20 token <a href=\"\" ng-click=\"addToken()\">now</a>.\n" +
     "  </div>\n" +
     "</div>\n" +
@@ -354,9 +354,6 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "        <th>\n" +
     "          Executed\n" +
     "        </th>\n" +
-    "        <th>\n" +
-    "          Actions\n" +
-    "        </th>\n" +
     "      </tr>\n" +
     "    </thead>\n" +
     "    <tbody>\n" +
@@ -372,39 +369,55 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "          {{getParam(transactions[txId])}}\n" +
     "        </td>\n" +
     "        <td>\n" +
-    "          <ul ng-repeat=\"owner in transactions[txId].confirmations\">\n" +
-    "            <li>\n" +
-    "              {{wallet.owners[owner].name}}\n" +
-    "            </li>\n" +
-    "          </ul>\n" +
+    "          <div class=\"row\">\n" +
+    "            <div ng-class=\"{'col-md-12' : transactions[txId].executed, 'col-md-6' : !transactions[txId].executed}\"\n" +
+    "                ng-hide=\"!transactions[txId].confirmations.length\">\n" +
+    "              <ul ng-repeat=\"owner in transactions[txId].confirmations\">\n" +
+    "                <li>\n" +
+    "                  {{wallet.owners[owner].name}}\n" +
+    "                </li>\n" +
+    "              </ul>\n" +
+    "            </div>\n" +
+    "            <div ng-hide=\"transactions[txId].executed || transactions[txId].confirmed\" class=\"col-md-6\">\n" +
+    "              <button type=\"button\" class=\"btn btn-default btn-sm\"\n" +
+    "                ng-hide=\"transactions[txId].executed || transactions[txId].confirmed\"\n" +
+    "                ng-click=\"confirmTransaction(txId)\"\n" +
+    "                show-hide-by-connectivity=\"online\">\n" +
+    "                Confirm\n" +
+    "              </button>\n" +
+    "            </div>\n" +
+    "\n" +
+    "            <div class=\"col-md-6\"\n" +
+    "                ng-show=\"transactions[txId].confirmed && !transactions[txId].executed\">\n" +
+    "\n" +
+    "              <button type=\"button\" class=\"btn btn-default btn-sm\"\n" +
+    "                  ng-show=\"transactions[txId].confirmed && !transactions[txId].executed\"\n" +
+    "                  ng-click=\"revokeConfirmation(txId)\"\n" +
+    "                  show-hide-by-connectivity=\"online\">\n" +
+    "                Revoke confirmation\n" +
+    "              </button>\n" +
+    "            </div>\n" +
+    "          </div>\n" +
     "        </td>\n" +
     "        <td>\n" +
-    "          <span ng-show=\"transactions[txId].executed\">\n" +
-    "            Yes\n" +
-    "          </span>\n" +
-    "          <span ng-hide=\"transactions[txId].executed\">\n" +
-    "            No\n" +
-    "          </span>\n" +
-    "        </td>\n" +
-    "        <td>\n" +
-    "          <button type=\"button\" class=\"btn btn-default btn-sm\"\n" +
-    "          ng-hide=\"transactions[txId].executed || transactions[txId].confirmed\"\n" +
-    "          ng-click=\"confirmTransaction(txId)\"\n" +
-    "          show-hide-by-connectivity=\"online\">\n" +
-    "            Confirm\n" +
-    "          </button>\n" +
-    "          <button type=\"button\" class=\"btn btn-default btn-sm\"\n" +
-    "          ng-show=\"transactions[txId].confirmed && !transactions[txId].executed\"\n" +
-    "          ng-click=\"revokeConfirmation(txId)\"\n" +
-    "          show-hide-by-connectivity=\"online\">\n" +
-    "            Revoke confirmation\n" +
-    "          </button>\n" +
-    "          <button type=\"button\" class=\"btn btn-default btn-sm\"\n" +
-    "          ng-show=\"!transactions[txId].executed && transactions[txId].confirmations.length == confirmations\"\n" +
-    "          ng-click=\"executeTransaction(txId)\"\n" +
-    "          show-hide-by-connectivity=\"online\">\n" +
-    "            Execute\n" +
-    "          </button>\n" +
+    "          <div class=\"row\">\n" +
+    "            <div class=\"col-md-2\">\n" +
+    "              <span ng-show=\"transactions[txId].executed\">\n" +
+    "                Yes\n" +
+    "              </span>\n" +
+    "              <span ng-hide=\"transactions[txId].executed\">\n" +
+    "                No\n" +
+    "              </span>\n" +
+    "            </div>\n" +
+    "            <div class=\"col-md-10\" ng-show=\"!transactions[txId].executed && transactions[txId].confirmations.length == confirmations\">\n" +
+    "              <button type=\"button\" class=\"pull-right btn btn-default btn-sm\"\n" +
+    "                ng-show=\"!transactions[txId].executed && transactions[txId].confirmations.length == confirmations\"\n" +
+    "                ng-click=\"executeTransaction(txId)\"\n" +
+    "                show-hide-by-connectivity=\"online\">\n" +
+    "                Execute\n" +
+    "              </button>\n" +
+    "            </div>\n" +
+    "          </div>\n" +
     "        </td>\n" +
     "      </tr>\n" +
     "    </tbody>\n" +

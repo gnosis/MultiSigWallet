@@ -3,7 +3,35 @@
     angular
     .module("multiSigWeb")
     .controller("walletDetailCtrl", function ($scope, $filter, $sce, Wallet, $routeParams, Utils, Transaction, $interval, $uibModal, Token) {
-      $scope.wallet = Wallet.wallets[$routeParams.address];
+      $scope.wallet = {};
+
+      $scope.$watch(
+        function () {
+          return Wallet.updates;
+        },
+        function () {
+          // Javascript doesn't have a deep object copy, this is a patch
+          var copyObject = Wallet.getAllWallets()[$routeParams.address];
+          var tokenAddresses = Object.keys(copyObject.tokens);
+          // The token collection is updated by the controller and the service, so must be merged.
+          tokenAddresses.map(function(item){
+            // Initialize, user token balance
+            if (!$scope.userTokens[item]) {
+              $scope.userTokens[item] = {};
+              // Assign token to user tokens collection
+              Object.assign($scope.userTokens[item], copyObject.tokens[item]);
+            }
+
+            // If token has a previous balance, copy it
+            if ($scope.wallet.tokens && $scope.wallet.tokens[item] && copyObject.tokens && copyObject.tokens[item]){
+              copyObject.tokens[item].balance = $scope.wallet.tokens[item].balance;
+            }
+          });
+
+          $scope.wallet = copyObject;
+          $scope.totalTokens = Object.keys($scope.wallet.tokens).length;
+        }
+      );
       // Get wallet balance, nonce, transactions, owners
       $scope.owners = [];
       $scope.transactions = {};
@@ -49,9 +77,7 @@
                 }
               }
 
-              Wallet.updateWallet($scope.wallet);
-
-              $scope.$apply();
+              //Wallet.updateWallet($scope.wallet);
             }
           )
         );
@@ -62,8 +88,9 @@
           .getRequired(
             $scope.wallet.address,
             function (e, confirmations) {
-              $scope.confirmations = confirmations;
-              $scope.$apply();
+              $scope.$apply(function () {
+                $scope.confirmations = confirmations;
+              });
             }
           )
         );
@@ -75,8 +102,9 @@
             $scope.wallet.address,
             function (e, required) {
               if (required) {
-                $scope.required = required.toNumber();
-                $scope.$apply();
+                $scope.$apply(function () {
+                  $scope.required = required.toNumber();
+                });
               }
             }
           )
@@ -90,8 +118,8 @@
             $scope.showExecuted,
             function (e, items) {
               $scope.totalItems = items.toNumber();
-              $scope.$apply();
               $scope.updateTransactions();
+
             }
           )
         );
@@ -101,9 +129,6 @@
           Object.keys($scope.wallet.tokens)
           .map(
             function (token) {
-              // Assign token to user tokens collection
-              $scope.userTokens[token] = {};
-              Object.assign($scope.userTokens[token], $scope.wallet.tokens[token]);
 
               // Get multisig balance
               batch.add(
@@ -112,7 +137,7 @@
                   $scope.wallet.address,
                   function (e, balance) {
                     $scope.wallet.tokens[token].balance = balance;
-                    $scope.$apply();
+                    Wallet.triggerUpdates();
                   }
                 )
               );
@@ -124,7 +149,7 @@
                   Wallet.coinbase,
                   function (e, balance) {
                     $scope.userTokens[token].balance = balance;
-                    $scope.$apply();
+                    Wallet.triggerUpdates();
                   }
                 )
               );
@@ -226,20 +251,22 @@
               // Get transaction info
               txBatch.add(
                 Wallet.getTransaction($scope.wallet.address, tx, function (e, info) {
-                  // Added reference to the wallet
-                  info.from = $scope.wallet.address;
-                  Object.assign($scope.transactions[tx], info);
-                  $scope.$apply();
+                  $scope.$apply(function () {
+                    // Added reference to the wallet
+                    info.from = $scope.wallet.address;
+                    Object.assign($scope.transactions[tx], info);
+                  });
                 })
               );
               // Get transaction confirmations
               txBatch.add(
                 Wallet.getConfirmations($scope.wallet.address, tx, function (e, confirmations) {
-                  $scope.transactions[tx].confirmations = confirmations;
-                  if (confirmations.indexOf(Wallet.coinbase) != -1) {
-                    $scope.transactions[tx].confirmed=true;
-                  }
-                  $scope.$apply();
+                  $scope.$apply(function () {
+                    $scope.transactions[tx].confirmations = confirmations;
+                    if (confirmations.indexOf(Wallet.coinbase) != -1) {
+                      $scope.transactions[tx].confirmed=true;
+                    }
+                  });
                 })
               );
             });
@@ -254,8 +281,9 @@
 
         function assignOwner (e, owner) {
           if (owner) {
-            $scope.owners.push(owner);
-            $scope.$apply();
+            $scope.$apply(function () {
+              $scope.owners.push(owner);
+            });
           }
         }
 

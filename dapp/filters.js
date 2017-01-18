@@ -102,7 +102,7 @@
           }
           if (string_split.length == 2) {
             new_string += '.' + string_split[1].substring(0, 2);
-          }
+          }          
           return new_string + " " + token.symbol;
         }
         else if (token && token.symbol){
@@ -124,7 +124,7 @@
       };
     })
     .filter('addressCanBeOwner', function () {
-      return function (addressCandidate, wallet) {        
+      return function (addressCandidate, wallet) {
         if (addressCandidate && addressCandidate.indexOf("0x") != -1) {
           if ( wallet && wallet.owners && wallet.owners[addressCandidate]){
             return wallet.owners[addressCandidate].name;

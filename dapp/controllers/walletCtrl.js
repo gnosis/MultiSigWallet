@@ -23,13 +23,13 @@
           return Wallet.updates;
         },
         function () {
-          $scope.wallets = Wallet.wallets;
+          $scope.wallets = Wallet.getAllWallets();
+          $scope.totalItems = Object.keys($scope.wallets).length;
         }
       );
 
       $scope.updateParams = function () {
-        if($scope.wallets){
-          $scope.totalItems = Object.keys($scope.wallets).length;
+        if($scope.wallets){          
           // Init wallet balance of each wallet address
           Object.keys($scope.wallets).map(function (address) {
             $scope.batch.add(

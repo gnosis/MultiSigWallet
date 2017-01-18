@@ -28,10 +28,12 @@
       };
 
       $scope.send = function () {
-        $scope.tx.value = new Web3().toBigNumber($scope.tx.value).mul('1e18');
+        var tx = {};
+        Object.assign(tx, $scope.tx);
+        tx.value = new Web3().toBigNumber($scope.tx.value).mul('1e18');
         Wallet.submitTransaction(
           $scope.wallet.address,
-          $scope.tx,
+          tx,
           $scope.abiArray,
           $scope.method?$scope.method.name:null,
           $scope.params,
@@ -57,20 +59,22 @@
       };
 
       $scope.signOff = function () {
-        $scope.tx.value = "0x" + new Web3().toBigNumber($scope.tx.value).mul('1e18').toString(16);
+        var tx = {};
+        Object.assign(tx, $scope.tx);
+        tx.value = new Web3().toBigNumber($scope.tx.value).mul('1e18');
         Wallet.signTransaction(
           $scope.wallet.address,
-          $scope.tx,
+          tx,
           $scope.abiArray,
           $scope.method?$scope.method.name:null,
           $scope.params,
-          function (e, tx) {
+          function (e, signed) {
             if (e) {
               Utils.dangerAlert(e);
             }
             else {
               $uibModalInstance.close();
-              Utils.signed(tx);
+              Utils.signed(signed);
             }
           }
         );

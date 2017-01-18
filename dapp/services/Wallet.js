@@ -328,7 +328,22 @@
         if (!wallet.wallets[w.address]) {
           wallet.wallets[w.address] = {};
         }
-        Object.assign(wallet.wallets[w.address], {address: w.address, name: w.name, owners: w.owners, tokens: w.tokens});
+        console.log("update")
+        var tokens = {};
+        if (w.tokens) {
+          var tokenAddresses = Object.keys(w.tokens);
+          tokenAddresses.map(function (item) {
+            var token = w.tokens[item];
+            tokens[token.address] = {
+              name: token.name,
+              symbol: token.symbol,
+              decimals: token.decimals,
+              address: token.address
+            };
+          });
+        }
+        console.log(tokens);
+        Object.assign(wallet.wallets[w.address], {address: w.address, name: w.name, owners: w.owners, tokens: tokens});
         localStorage.setItem("wallets", JSON.stringify(wallet.wallets));
         wallet.updates++;
         try{
@@ -1056,7 +1071,7 @@
       **/
       wallet.getType = function (tx) {
         if (tx.data && tx.data.length > 3) {
-          var method = tx.data.slice(2, 10);          
+          var method = tx.data.slice(2, 10);
           switch (method) {
             case "ba51a6df":
               return "Update required confirmations";
@@ -1089,6 +1104,11 @@
           }
         }
       };
+
+      // Works as observer triggering for watch $scope
+      wallet.triggerUpdates = function () {
+        wallet.updates++;
+      }
 
       /**
       * Returns a list of comprehensive logs, decoded from a list of encoded logs

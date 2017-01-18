@@ -59,8 +59,7 @@
         </td>
         <td ng-bind-html="transaction.info.nonce| dashIfEmpty">
         </td>
-        <td>
-          {{ transaction.date|date:'medium'}}
+        <td>          
           <span ng-show="transaction.receipt">
             Yes
           </span>

@@ -111,8 +111,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "        </td>\n" +
     "        <td ng-bind-html=\"transaction.info.nonce| dashIfEmpty\">\n" +
     "        </td>\n" +
-    "        <td>\n" +
-    "          {{ transaction.date|date:'medium'}}\n" +
+    "        <td>          \n" +
     "          <span ng-show=\"transaction.receipt\">\n" +
     "            Yes\n" +
     "          </span>\n" +

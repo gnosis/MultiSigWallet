@@ -2,7 +2,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("walletDetailCtrl", function ($scope, Wallet, $routeParams, Utils, Transaction, $interval, $uibModal, Token) {
+    .controller("walletDetailCtrl", function ($scope, $sce, Wallet, $routeParams, Utils, Transaction, $interval, $uibModal, Token) {
       $scope.wallet = Wallet.wallets[$routeParams.address];
       // Get wallet balance, nonce, transactions, owners
       $scope.owners = [];
@@ -161,7 +161,19 @@
       };
 
       $scope.getType = function (tx) {
-        return Wallet.getType(tx);
+        var type = Wallet.getType(tx);
+        // Returns the name associated with tx.to if it is
+        // addressed to a wallet owner
+        if (tx.to && $scope.wallet.owners[tx.to]) {
+          // If type is equal to the owner address, we do not show that address          
+          if ($scope.wallet.owners[tx.to].address.slice(0,20) == type.slice(0,20)) {
+            type = '';
+          }
+
+          return $sce.trustAsHtml("<i class='fa fa-user-o' aria-hidden='true'></i>&nbsp;" + $scope.wallet.owners[tx.to].name + ' ' + type);
+        }
+
+        return $sce.trustAsHtml(type);
       };
 
       $scope.getParam = function (tx) {

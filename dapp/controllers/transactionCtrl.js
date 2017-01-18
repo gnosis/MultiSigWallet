@@ -2,15 +2,23 @@
   function () {
     angular
     .module('multiSigWeb')
-    .controller('transactionCtrl', function ($scope, Wallet, Utils, Transaction, $uibModal, $filter) {
-
+    .controller('transactionCtrl', function ($scope, $sce, Wallet, Utils, Transaction, $uibModal, $filter) {
 
       $scope.$watch(
         function () {
           return Transaction.updates;
         },
         function () {
-          $scope.transactions = Transaction.transactions;
+          var transactions = Transaction.transactions;
+          var txArray = [];
+
+          for (txKey in transactions) {
+              txArray.push(transactions[txKey]);
+          }
+
+          // Transactions sorted by tx.date DESC
+          $scope.transactions = txArray.sort( (a,b) => new Date(a.date).getTime() + new Date(b.date).getTime() )
+
           $scope.totalItems = Object.keys($scope.transactions).length;
         }
       );
@@ -19,15 +27,11 @@
       $scope.itemsPerPage = 10;
 
       $scope.remove = function (txHash) {
-        Utils.confirmation("Remove transaction", "Are you sure?", function () {
-          Transaction.remove(txHash);
-        });
+        Transaction.remove(txHash);
       };
 
       $scope.removeAll = function () {
-        Utils.confirmation("Remove all transactions", "Are you sure?", function () {
-          Transaction.removeAll();
-        });
+        Transaction.removeAll();
       };
 
       $scope.sendRawTransaction = function () {
@@ -88,7 +92,7 @@
       */
       $scope.getDestinationOrContract = function (tx) {
         if (tx && tx.info && Wallet.wallets[tx.info.to] && Wallet.wallets[tx.info.to].name) {
-          return Wallet.wallets[tx.info.to].name;
+          return $sce.trustAsHtml("<img src='./img/wallet-logo.svg' class='wallet-icon' alt='Wallet' />&nbsp;" + Wallet.wallets[tx.info.to].name);
         }
         if (tx && tx.multisig) {
           if( Wallet.wallets[tx.multisig] ) {
@@ -101,10 +105,27 @@
         else if (tx && tx.receipt && tx.receipt.contractAddress) {
           return 'Contract ' + $filter("address")(tx.receipt.contractAddress);
         }
-        else if (tx.info){
-          return $filter("address")(tx.info.to);
-        }
         else {
+          if (tx.info) {
+            // Check if Tx.info.to refers to an owner
+            var walletsKeys = Object.keys(Wallet.wallets);
+
+            for (var x=0; x<walletsKeys.length; x++) {
+
+              if (Wallet.wallets[walletsKeys[x]].owners
+                    && Object.keys(Wallet.wallets[walletsKeys[x]].owners).indexOf(tx.info.to) != -1) {
+
+                var ownersKeys = Object.keys(Wallet.wallets[walletsKeys[x]].owners);
+                var ownerKey = ownersKeys[ownersKeys.indexOf(tx.info.to)];
+
+                return $sce.trustAsHtml("<i class='fa fa-user-o' aria-hidden='true'></i>&nbsp;" + Wallet.wallets[walletsKeys[x]].owners[ownerKey].name);
+
+              }
+            }
+
+            return $filter("address")(tx.info.to);
+          }
+
           return $filter("dashIfEmpty")(null);
         }
       };

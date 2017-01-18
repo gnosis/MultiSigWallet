@@ -17,7 +17,19 @@
           }
 
           // Transactions sorted by tx.date DESC
-          $scope.transactions = txArray.sort( (a,b) => new Date(a.date).getTime() + new Date(b.date).getTime() )
+          $scope.transactions = txArray.sort(
+            function (a, b) {
+              var dateA = new Date(a.date).getTime();
+              var dateB = new Date(b.date).getTime();
+
+              if ( dateA > dateB) {
+                return 1;
+              }
+              else {
+                return -1;
+              }
+            }
+          );
 
           $scope.totalItems = Object.keys($scope.transactions).length;
         }
@@ -25,7 +37,7 @@
 
       $scope.currentPage = 1;
       $scope.itemsPerPage = 10;
-      $scope.wallets = Wallet.wallets;            
+      $scope.wallets = Wallet.wallets;
 
       $scope.remove = function (txHash) {
         Transaction.remove(txHash);

@@ -1087,25 +1087,39 @@
       * Needs the abi to decode them
       **/
       wallet.decodeLogs = function (logs) {
-        var i = 0;
+
         var decoded = [];
-        while(i<logs.length){
+        var i = 0;
+        while(i<logs.length){          
           // Event hash matches
           var id = logs[i].topics[0].slice(2);
           var method = wallet.methodIds[id];
           if(method){
             var params = logs[i].data;
-            decoded.push(
-              {
-                name: method.name,
-                info: ethAbi.decodeEvent(method, params)
-              }
-            );
+            var decodedEvent = null;
+            try {
+              decodedEvent = ethAbi.decodeEvent(method, params);
+              decoded.push(
+                {
+                  name: method.name,
+                  info: decodedEvent
+                }
+              );
+            }
+            catch (error) {
+              console.log(method, params, logs[i], id);
+              decoded.push(
+                {
+                  name: method.name,
+                  info: ["Decode error"]
+                }
+              );
+            }
+
           }
           // Doesn't match, we move i
           i++;
         }
-
         return decoded;
       };
 

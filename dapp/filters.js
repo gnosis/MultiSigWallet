@@ -105,7 +105,12 @@
       }
       return new_string + " " + token.symbol;
     }
-    return null;
+    else if (token && token.symbol){
+      return "0 "+ token.symbol;
+    }
+    else{
+      return null;
+    }
   };
 })
   .filter('reverse', function () {

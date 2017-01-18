@@ -7,6 +7,7 @@
       // Get wallet balance, nonce, transactions, owners
       $scope.owners = [];
       $scope.transactions = {};
+      $scope.userTokens = {};
 
       $scope.currentPage = 1;
       $scope.itemsPerPage = 5;
@@ -100,12 +101,30 @@
           Object.keys($scope.wallet.tokens)
           .map(
             function (token) {
+              // Assign token to user tokens collection
+              $scope.userTokens[token] = {};
+              Object.assign($scope.userTokens[token], $scope.wallet.tokens[token]);
+
+              // Get multisig balance
               batch.add(
                 Token.balanceOf(
                   token,
                   $scope.wallet.address,
                   function (e, balance) {
                     $scope.wallet.tokens[token].balance = balance;
+                    $scope.$apply();
+                  }
+                )
+              );
+
+              // Get account balance
+              batch.add(
+                Token.balanceOf(
+                  token,
+                  Wallet.coinbase,
+                  function (e, balance) {
+                    // console.log($scope.userTokens, token, balance.toNumber(), Wallet.coinbase)
+                    $scope.userTokens[token].balance = balance;
                     $scope.$apply();
                   }
                 )

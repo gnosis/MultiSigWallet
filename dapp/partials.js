@@ -121,10 +121,10 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "        </td>\n" +
     "        <td>\n" +
     "          <ul>\n" +
-    "            <li ng-repeat=\"log in transaction.receipt.decodedLogs\">\n" +
+    "            <li ng-repeat=\"log in transaction.receipt.decodedLogs track by $index\">\n" +
     "              {{log.name}}\n" +
     "              <ul>\n" +
-    "                <li ng-repeat=\"(paramKey, param) in log.info\">\n" +
+    "                <li ng-repeat=\"(paramKey, param) in log.info track by $index\">\n" +
     "                  {{paramKey}} :\n" +
     "                  <div uib-popover=\"{{param}}\" popover-trigger=\"'mouseenter'\">\n" +
     "                    {{param|logParam}}\n" +
@@ -251,10 +251,10 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "          Name\n" +
     "        </th>\n" +
     "        <th>\n" +
-    "          Balance\n" +
+    "          Account balance\n" +
     "        </th>\n" +
     "        <th>\n" +
-    "          Actions\n" +
+    "          Multisig balance\n" +
     "        </th>\n" +
     "      </tr>\n" +
     "    </thead>\n" +
@@ -262,19 +262,20 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "      <tr ng-repeat=\"token in wallet.tokens track by $index\">\n" +
     "        <td>\n" +
     "          {{token.name}}\n" +
-    "        </td>\n" +
-    "        <td>\n" +
-    "          {{token|token}}\n" +
-    "        </td>\n" +
-    "        <td>\n" +
     "          <button type=\"button\" class=\"btn btn-default btn-sm\"\n" +
     "          ng-click=\"editToken(token)\">\n" +
     "            Edit\n" +
     "          </button>\n" +
-    "          <button type=\"button\" class=\"btn btn-default btn-sm\"\n" +
+    "          <button type=\"button\" class=\"btn btn-danger btn-sm\"\n" +
     "          ng-click=\"removeToken(token)\">\n" +
     "            Remove\n" +
     "          </button>\n" +
+    "        </td>\n" +
+    "        <td>\n" +
+    "          {{userTokens[token.address]|token}}\n" +
+    "        </td>\n" +
+    "        <td>\n" +
+    "          {{token|token}}\n" +
     "          <button type=\"button\" class=\"btn btn-default btn-sm\"\n" +
     "          ng-click=\"depositToken(token)\">\n" +
     "            Deposit\n" +

@@ -84,10 +84,10 @@
           Name
         </th>
         <th>
-          Balance
+          Account balance
         </th>
         <th>
-          Actions
+          Multisig balance
         </th>
       </tr>
     </thead>
@@ -95,19 +95,20 @@
       <tr ng-repeat="token in wallet.tokens track by $index">
         <td>
           {{token.name}}
-        </td>
-        <td>
-          {{token|token}}
-        </td>
-        <td>
           <button type="button" class="btn btn-default btn-sm"
           ng-click="editToken(token)">
             Edit
           </button>
-          <button type="button" class="btn btn-default btn-sm"
+          <button type="button" class="btn btn-danger btn-sm"
           ng-click="removeToken(token)">
             Remove
           </button>
+        </td>
+        <td>
+          {{userTokens[token.address]|token}}
+        </td>
+        <td>
+          {{token|token}}
           <button type="button" class="btn btn-default btn-sm"
           ng-click="depositToken(token)">
             Deposit

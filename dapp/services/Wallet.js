@@ -1056,7 +1056,7 @@
       **/
       wallet.getType = function (tx) {
         if (tx.data && tx.data.length > 3) {
-          var method = tx.data.slice(2, 10);
+          var method = tx.data.slice(2, 10);          
           switch (method) {
             case "ba51a6df":
               return "Update required confirmations";
@@ -1066,6 +1066,14 @@
               return "Remove owner";
             case "cea08621":
               return "Update daily limit";
+            case "a9059cbb":
+              if ( wallet.wallets[tx.from] && wallet.wallets[tx.from].tokens && wallet.wallets[tx.from].tokens[tx.to]) {
+                return "Withdraw " + wallet.wallets[tx.from].tokens[tx.to].symbol;
+              }
+              else {
+                return "Withdraw " + tx.to.slice(0, 12) + "...";
+              }
+
             default:
               return tx.to.slice(0, 20) + "...";
           }
@@ -1090,7 +1098,7 @@
 
         var decoded = [];
         var i = 0;
-        while(i<logs.length){          
+        while(i<logs.length){
           // Event hash matches
           var id = logs[i].topics[0].slice(2);
           var method = wallet.methodIds[id];
@@ -1107,7 +1115,7 @@
               );
             }
             catch (error) {
-              console.log(method, params, logs[i], id);
+              console.error(error);
               decoded.push(
                 {
                   name: method.name,

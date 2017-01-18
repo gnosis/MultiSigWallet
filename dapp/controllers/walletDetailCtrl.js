@@ -2,7 +2,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("walletDetailCtrl", function ($scope, $sce, Wallet, $routeParams, Utils, Transaction, $interval, $uibModal, Token) {
+    .controller("walletDetailCtrl", function ($scope, $filter, $sce, Wallet, $routeParams, Utils, Transaction, $interval, $uibModal, Token) {
       $scope.wallet = Wallet.wallets[$routeParams.address];
       // Get wallet balance, nonce, transactions, owners
       $scope.owners = [];
@@ -122,8 +122,7 @@
                 Token.balanceOf(
                   token,
                   Wallet.coinbase,
-                  function (e, balance) {
-                    // console.log($scope.userTokens, token, balance.toNumber(), Wallet.coinbase)
+                  function (e, balance) {                    
                     $scope.userTokens[token].balance = balance;
                     $scope.$apply();
                   }
@@ -165,7 +164,7 @@
         // Returns the name associated with tx.to if it is
         // addressed to a wallet owner
         if (tx.to && $scope.wallet.owners[tx.to]) {
-          // If type is equal to the owner address, we do not show that address          
+          // If type is equal to the owner address, we do not show that address
           if ($scope.wallet.owners[tx.to].address.slice(0,20) == type.slice(0,20)) {
             type = '';
           }
@@ -195,6 +194,14 @@
               return owner;
             case "cea08621":
               return new Web3().toBigNumber("0x" + tx.data.slice(11)).div('1e18').toString() + " ETH";
+            case "a9059cbb":
+              var tokenAddress = tx.to;
+              var account = "0x" + tx.data.slice(34, 74);
+              var accountName = $scope.wallet.owners[account]?$scope.wallet.owners[account].name:account;
+              var token = {};
+              Object.assign(token, $scope.wallet.tokens[tokenAddress]);
+              token.balance = new Web3().toBigNumber( "0x" + tx.data.slice(74));
+              return $filter("token")(token) + " to " + accountName;
             default:
               return tx.data.slice(0, 20) + "...";
           }
@@ -226,8 +233,9 @@
               // Get transaction info
               txBatch.add(
                 Wallet.getTransaction($scope.wallet.address, tx, function (e, info) {
+                  // Added reference to the wallet
+                  info.from = $scope.wallet.address;
                   Object.assign($scope.transactions[tx], info);
-
                   $scope.$apply();
                 })
               );

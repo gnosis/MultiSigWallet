@@ -97,7 +97,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "      </tr>\n" +
     "    </thead>\n" +
     "    <tbody>\n" +
-    "      <tr ng-repeat=\"transaction in transactions | objectToArray| limitTo:currentPage*itemsPerPage:itemsPerPage*(currentPage-1) track by $index\">\n" +
+    "      <tr ng-repeat=\"transaction in transactions | limitTo:currentPage*itemsPerPage:itemsPerPage*(currentPage-1) track by $index\">\n" +
     "        <td>\n" +
     "          <a uib-popover=\"{{transaction.multisig || transaction.info.to}}\" popover-trigger=\"'mouseenter'\"\n" +
     "          ng-href=\"https://testnet.etherscan.io/tx/{{transaction.txHash}}\"\n" +
@@ -363,9 +363,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "        <td>\n" +
     "          {{txId|bigNumber}}\n" +
     "        </td>\n" +
-    "        <td>\n" +
-    "          {{getType(transactions[txId])}}\n" +
-    "        </td>\n" +
+    "        <td ng-bind-html=\"getType(transactions[txId])\"></td>\n" +
     "        <td>\n" +
     "          {{transactions[txId].value|ether}}\n" +
     "        </td>\n" +
@@ -706,24 +704,26 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    Edit wallet\n" +
     "  </h3>\n" +
     "</div>\n" +
-    "<div class=\"modal-body\" id=\"modal-body\">\n" +
-    "  <div class=\"form-group\">\n" +
-    "    <label for=\"name\">Name</label>\n" +
-    "    <input id=\"name\" type=\"text\" class=\"form-control\" ng-model=\"name\" required />\n" +
+    "<form class=\"form\" name=\"form\">\n" +
+    "  <div class=\"modal-body\" id=\"modal-body\">\n" +
+    "    <div class=\"form-group\">\n" +
+    "      <label for=\"name\">Name</label>\n" +
+    "      <input id=\"name\" type=\"text\" class=\"form-control\" ng-model=\"name\" required />\n" +
+    "    </div>\n" +
+    "    <div class=\"form-group\">\n" +
+    "      <label for=\"address\">Address</label>\n" +
+    "      <input id=\"address\" type=\"text\" class=\"form-control\" ng-model=\"address\" disabled />\n" +
+    "    </div>\n" +
     "  </div>\n" +
-    "  <div class=\"form-group\">\n" +
-    "    <label for=\"address\">Address</label>\n" +
-    "    <input id=\"address\" type=\"text\" class=\"form-control\" ng-model=\"address\" disabled />\n" +
+    "  <div class=\"modal-footer\">\n" +
+    "    <button class=\"btn btn-default\" type=\"button\" ng-click=\"ok()\" ng-disabled=\"form.$invalid\">\n" +
+    "      Ok\n" +
+    "    </button>\n" +
+    "    <button class=\"btn btn-danger\" type=\"button\" ng-click=\"cancel()\">\n" +
+    "      Cancel\n" +
+    "    </button>\n" +
     "  </div>\n" +
-    "</div>\n" +
-    "<div class=\"modal-footer\">\n" +
-    "  <button class=\"btn btn-default\" type=\"button\" ng-click=\"ok()\">\n" +
-    "    Ok\n" +
-    "  </button>\n" +
-    "  <button class=\"btn btn-danger\" type=\"button\" ng-click=\"cancel()\">\n" +
-    "    Cancel\n" +
-    "  </button>\n" +
-    "</div>\n"
+    "</form>\n"
   );
 
 

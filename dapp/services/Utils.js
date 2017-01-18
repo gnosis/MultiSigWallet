@@ -57,6 +57,33 @@
         });
       };
 
+      factory.confirmation = function (title, message, cb) {
+        BootstrapDialog.show({
+          type: BootstrapDialog.TYPE_DANGER,
+          title: title,
+          message: "<strong>"+message+"</strong>",
+          buttons: [
+            {
+              label: 'Ok',
+              cssClass: 'btn btn-default',
+              // hotkey: 13, // Enter.
+              action: function(dialogItself){
+                dialogItself.close();
+                cb();
+              }
+            },
+            {
+              label: 'Cancel',
+              cssClass: 'btn btn-danger',
+              hotkey: 13, // Enter.
+              action: function(dialogItself){
+                dialogItself.close();
+              }
+            }
+          ]
+        });
+      }
+
       factory.notification = function (info) {
         BootstrapDialog.show({
             message: info,

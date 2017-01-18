@@ -62,7 +62,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "      <button type=\"button\" class=\"btn btn-default\" ng-click=\"getNonce()\" show-hide-by-connectivity=\"online\">\n" +
     "        Get nonce\n" +
     "      </button>\n" +
-    "      <button type=\"button\" class=\"btn btn-danger\" ng-click=\"removeAll()\">\n" +
+    "      <button type=\"button\" class=\"btn btn-danger\" ng-disabld=\"!totalItems\" ng-click=\"removeAll()\">\n" +
     "        Remove all\n" +
     "      </button>\n" +
     "    </div>\n" +

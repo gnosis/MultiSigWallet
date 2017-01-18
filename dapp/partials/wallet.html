@@ -186,9 +186,6 @@
         <th>
           Executed
         </th>
-        <th>
-          Actions
-        </th>
       </tr>
     </thead>
     <tbody>
@@ -204,39 +201,55 @@
           {{getParam(transactions[txId])}}
         </td>
         <td>
-          <ul ng-repeat="owner in transactions[txId].confirmations">
-            <li>
-              {{wallet.owners[owner].name}}
-            </li>
-          </ul>
+          <div class="row">
+            <div ng-class="{'col-md-12' : transactions[txId].executed, 'col-md-6' : !transactions[txId].executed}"
+                ng-hide="!transactions[txId].confirmations.length">
+              <ul ng-repeat="owner in transactions[txId].confirmations">
+                <li>
+                  {{wallet.owners[owner].name}}
+                </li>
+              </ul>
+            </div>
+            <div ng-hide="transactions[txId].executed || transactions[txId].confirmed" class="col-md-6">
+              <button type="button" class="btn btn-default btn-sm"
+                ng-hide="transactions[txId].executed || transactions[txId].confirmed"
+                ng-click="confirmTransaction(txId)"
+                show-hide-by-connectivity="online">
+                Confirm
+              </button>
+            </div>
+
+            <div class="col-md-6"
+                ng-show="transactions[txId].confirmed && !transactions[txId].executed">
+
+              <button type="button" class="btn btn-default btn-sm"
+                  ng-show="transactions[txId].confirmed && !transactions[txId].executed"
+                  ng-click="revokeConfirmation(txId)"
+                  show-hide-by-connectivity="online">
+                Revoke confirmation
+              </button>
+            </div>
+          </div>
         </td>
         <td>
-          <span ng-show="transactions[txId].executed">
-            Yes
-          </span>
-          <span ng-hide="transactions[txId].executed">
-            No
-          </span>
-        </td>
-        <td>
-          <button type="button" class="btn btn-default btn-sm"
-          ng-hide="transactions[txId].executed || transactions[txId].confirmed"
-          ng-click="confirmTransaction(txId)"
-          show-hide-by-connectivity="online">
-            Confirm
-          </button>
-          <button type="button" class="btn btn-default btn-sm"
-          ng-show="transactions[txId].confirmed && !transactions[txId].executed"
-          ng-click="revokeConfirmation(txId)"
-          show-hide-by-connectivity="online">
-            Revoke confirmation
-          </button>
-          <button type="button" class="btn btn-default btn-sm"
-          ng-show="!transactions[txId].executed && transactions[txId].confirmations.length == confirmations"
-          ng-click="executeTransaction(txId)"
-          show-hide-by-connectivity="online">
-            Execute
-          </button>
+          <div class="row">
+            <div class="col-md-2">
+              <span ng-show="transactions[txId].executed">
+                Yes
+              </span>
+              <span ng-hide="transactions[txId].executed">
+                No
+              </span>
+            </div>
+            <div class="col-md-10" ng-show="!transactions[txId].executed && transactions[txId].confirmations.length == confirmations">
+              <button type="button" class="pull-right btn btn-default btn-sm"
+                ng-show="!transactions[txId].executed && transactions[txId].confirmations.length == confirmations"
+                ng-click="executeTransaction(txId)"
+                show-hide-by-connectivity="online">
+                Execute
+              </button>
+            </div>
+          </div>
         </td>
       </tr>
     </tbody>

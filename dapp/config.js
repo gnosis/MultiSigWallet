@@ -1,6 +1,6 @@
 var txDefaultOrig =
 {
-  gasLimit: 3141592,
+  gasLimit: 4000000,
   gasPrice: 18000000000,
   ethereumNode: "http://localhost:8545",
   connectionChecker:{

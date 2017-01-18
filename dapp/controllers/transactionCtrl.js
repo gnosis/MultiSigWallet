@@ -23,10 +23,10 @@
               var dateB = new Date(b.date).getTime();
 
               if ( dateA > dateB) {
-                return 1;
+                return -1;
               }
               else {
-                return -1;
+                return 1;
               }
             }
           );

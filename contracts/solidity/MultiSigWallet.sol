@@ -7,14 +7,14 @@ contract MultiSigWallet {
 
     uint constant public MAX_OWNER_COUNT = 50;
 
-    event Confirmation(address sender, uint transactionId);
-    event Revocation(address sender, uint transactionId);
-    event Submission(uint transactionId);
-    event Execution(uint transactionId);
-    event ExecutionFailure(uint transactionId);
-    event Deposit(address sender, uint value);
-    event OwnerAddition(address owner);
-    event OwnerRemoval(address owner);
+    event Confirmation(address indexed sender, uint indexed transactionId);
+    event Revocation(address indexed sender, uint indexed transactionId);
+    event Submission(uint indexed transactionId);
+    event Execution(uint indexed transactionId);
+    event ExecutionFailure(uint indexed transactionId);
+    event Deposit(address indexed sender, uint value);
+    event OwnerAddition(address indexed owner);
+    event OwnerRemoval(address indexed owner);
     event RequirementChange(uint required);
 
     mapping (uint => Transaction) public transactions;

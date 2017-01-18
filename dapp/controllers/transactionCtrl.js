@@ -25,6 +25,7 @@
 
       $scope.currentPage = 1;
       $scope.itemsPerPage = 10;
+      $scope.wallets = Wallet.wallets;            
 
       $scope.remove = function (txHash) {
         Transaction.remove(txHash);

@@ -127,7 +127,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "                <li ng-repeat=\"(paramKey, param) in log.info track by $index\">\n" +
     "                  {{paramKey}} :\n" +
     "                  <div uib-popover=\"{{param}}\" popover-trigger=\"'mouseenter'\">\n" +
-    "                    {{param|logParam}}\n" +
+    "                    {{param|addressCanBeOwner:wallets[transaction.info.to]|logParam}}\n" +
     "                  </div>\n" +
     "                </li>\n" +
     "              </ul>\n" +
@@ -921,10 +921,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "<div class=\"modal-footer\">\n" +
     "  <button class=\"btn btn-default\" type=\"button\" ng-click=\"send()\">\n" +
     "    Send transaction\n" +
-    "  </button>\n" +
-    "  <button class=\"btn btn-default\" type=\"button\" ng-click=\"getNonce()\">\n" +
-    "    Get nonce\n" +
-    "  </button>\n" +
+    "  </button>  \n" +
     "  <button class=\"btn btn-danger\" type=\"button\" ng-click=\"cancel()\">\n" +
     "    Cancel\n" +
     "  </button>\n" +

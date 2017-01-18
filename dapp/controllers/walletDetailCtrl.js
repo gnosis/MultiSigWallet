@@ -122,7 +122,7 @@
                 Token.balanceOf(
                   token,
                   Wallet.coinbase,
-                  function (e, balance) {                    
+                  function (e, balance) {
                     $scope.userTokens[token].balance = balance;
                     $scope.$apply();
                   }
@@ -183,25 +183,18 @@
             case "ba51a6df":
               return new Web3().toBigNumber("0x" + tx.data.slice(11)).toString();
             case "7065cb48":
-              if ($scope.wallet.owners && $scope.wallet.owners[owner] && $scope.wallet.owners[owner].name) {
-                return $scope.wallet.owners[owner].name;
-              }
-              else{
-                return owner;
-              }
-              break;
+              return $filter("addressCanBeOwner")(owner, $scope.wallet);
             case "173825d9":
-              return owner;
+              return $filter("addressCanBeOwner")(owner, $scope.wallet);
             case "cea08621":
               return new Web3().toBigNumber("0x" + tx.data.slice(11)).div('1e18').toString() + " ETH";
             case "a9059cbb":
               var tokenAddress = tx.to;
               var account = "0x" + tx.data.slice(34, 74);
-              var accountName = $scope.wallet.owners[account]?$scope.wallet.owners[account].name:account;
               var token = {};
               Object.assign(token, $scope.wallet.tokens[tokenAddress]);
               token.balance = new Web3().toBigNumber( "0x" + tx.data.slice(74));
-              return $filter("token")(token) + " to " + accountName;
+              return $filter("token")(token) + " to " + $filter("addressCanBeOwner")(account, $scope.wallet);
             default:
               return tx.data.slice(0, 20) + "...";
           }

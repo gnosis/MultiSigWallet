@@ -126,9 +126,9 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "              <ul>\n" +
     "                <li ng-repeat=\"(paramKey, param) in log.info track by $index\">\n" +
     "                  {{paramKey}} :\n" +
-    "                  <div uib-popover=\"{{param}}\" popover-trigger=\"'mouseenter'\">\n" +
+    "                  <span uib-popover=\"{{param}}\" popover-trigger=\"'mouseenter'\">\n" +
     "                    {{param|addressCanBeOwner:wallets[transaction.info.to]|logParam}}\n" +
-    "                  </div>\n" +
+    "                  </span>\n" +
     "                </li>\n" +
     "              </ul>\n" +
     "            </li>\n" +

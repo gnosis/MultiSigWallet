@@ -1134,26 +1134,42 @@
           var id = logs[i].topics[0].slice(2);
           var method = wallet.methodIds[id];
           if(method){
-            var params = logs[i].data;
-            var decodedEvent = null;
-            try {
-              decodedEvent = ethAbi.decodeEvent(method, params);
-              decoded.push(
-                {
-                  name: method.name,
-                  info: decodedEvent
-                }
-              );
-            }
-            catch (error) {
-              console.error(error);
-              decoded.push(
-                {
-                  name: method.name,
-                  info: ["Decode error"]
-                }
-              );
-            }
+            var logData = logs[i].data;
+            var decodedParams = [];
+            var dataIndex = 2;
+            var topicsIndex = 1;
+            // Loop topic and data to get the params
+            method.inputs.map(function (param) {
+              if (param.indexed) {
+                  decodedParams.push(
+                    {
+                      name: param.name,
+                      value: "0x" + new Web3().toBigNumber(logs[i].topics[topicsIndex]).toString(16)
+                    }
+                  )
+                  topicsIndex++;
+              }
+              else {
+                var dataEndIndex = dataIndex + 64;
+
+                decodedParams.push(
+                  {
+                    name: param.name,
+                    value: "0x" + new Web3().toBigNumber( "0x" + logData.slice(dataIndex, dataEndIndex)).toString(16)
+                  }
+                )
+                dataIndex = dataEndIndex;
+              }
+            });
+
+            decoded.push(
+              {
+                name: method.name,
+                info: decodedParams
+              }
+            );
+
+
 
           }
           // Doesn't match, we move i

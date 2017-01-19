@@ -54,3 +54,4 @@ Thumbs.db
 
 # Collected static files via Django's staticfiles app
 /staticfiles
+/dapp/partials.js

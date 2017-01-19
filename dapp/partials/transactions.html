@@ -72,10 +72,10 @@
             <li ng-repeat="log in transaction.receipt.decodedLogs track by $index">
               {{log.name}}
               <ul>
-                <li ng-repeat="(paramKey, param) in log.info track by $index">
-                  {{paramKey}} :
-                  <span uib-popover="{{param}}" popover-trigger="'mouseenter'">
-                    {{param|addressCanBeOwner:wallets[transaction.info.to]|logParam}}
+                <li ng-repeat="param in log.info track by $index">
+                  {{param.name}} :
+                  <span uib-popover="{{param.value}}" popover-trigger="'mouseenter'">
+                    {{param.value|addressCanBeOwner:wallets[transaction.info.to]|logParam}}
                   </span>
                 </li>
               </ul>

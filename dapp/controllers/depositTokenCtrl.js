@@ -12,14 +12,19 @@
           $scope.wallet.address,
           new Web3().toBigNumber($scope.amount).mul('1e' + $scope.token.decimals),
           function(e, tx){
-            Utils.notification("Deposit transaction was sent.");
-            $uibModalInstance.close();
-            Transaction.add({
-              txHash: tx,
-              callback: function () {
-                Utils.success("Deposit transaction was mined.");
-              }
-            });
+            if (e) {
+              // Don't show anything, it could be a Tx Signature Rejected
+            }
+            else {
+                Utils.notification("Deposit transaction was sent.");
+                $uibModalInstance.close();
+                Transaction.add({
+                  txHash: tx,
+                  callback: function () {
+                    Utils.success("Deposit transaction was mined.");
+                  }
+                });
+            }
           }
         );
       };
@@ -31,7 +36,8 @@
           new Web3().toBigNumber($scope.amount).mul('1e' + $scope.token.decimals),
           function(e, signed){
             if (e) {
-              Utils.dangerAlert(e);
+              // Don't show anything, it could be a Tx Signature Rejected
+              //Utils.dangerAlert(e);
             }
             else {
               $uibModalInstance.close();

@@ -16,6 +16,11 @@
           $scope.to,
           new Web3().toBigNumber($scope.amount).mul('1e' + $scope.token.decimals),
           function (e, tx) {
+            if (e) {
+              // Don't show anything, it could be a Tx Signature Rejected
+              return;
+            }
+            
             Utils.notification("Withdraw token transaction was sent.");
             $uibModalInstance.close();
             Transaction.add({

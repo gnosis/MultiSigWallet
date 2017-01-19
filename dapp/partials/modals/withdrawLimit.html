@@ -10,7 +10,7 @@
       <input id="value" type="number" class="form-control" ng-model="tx.value" required>
     </div>
     <div class="form-group">
-      <label for="address">Destination Address</label>
+      <label for="address">Destination</label>
       <input id="address" type="text" class="form-control" ng-model="tx.to" required>
     </div>
   </div>
@@ -19,7 +19,7 @@
       Send transaction
     </button>
     <button type="button" ng-click="signOff()" class="btn btn-default" ng-disabled="form.$invalid" show-hide-by-connectivity="offline">
-      Sign Offline
+      Sign offline
     </button>
     <button type="button" ng-click="cancel()" class="btn btn-danger">
       Cancel

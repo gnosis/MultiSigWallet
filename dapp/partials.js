@@ -139,7 +139,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "\n" +
     "        </td>\n" +
     "        <td>\n" +
-    "          <button class=\"btn btn-danger btn-sm\" ng-click=\"remove(transaction.txHash)\">\n" +
+    "          <button class=\"btn btn-danger btn-sm pull-right\" ng-click=\"remove(transaction.txHash)\">\n" +
     "            Remove\n" +
     "          </button>\n" +
     "        </td>\n" +
@@ -251,10 +251,10 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "          Name\n" +
     "        </th>\n" +
     "        <th>\n" +
-    "          Account balance\n" +
+    "          Multisig balance\n" +
     "        </th>\n" +
     "        <th>\n" +
-    "          Multisig balance\n" +
+    "          Account balance\n" +
     "        </th>\n" +
     "      </tr>\n" +
     "    </thead>\n" +
@@ -262,28 +262,32 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "      <tr ng-repeat=\"token in wallet.tokens track by $index\">\n" +
     "        <td>\n" +
     "          {{token.name}}\n" +
-    "          <button type=\"button\" class=\"btn btn-default btn-sm\"\n" +
-    "          ng-click=\"editToken(token)\">\n" +
-    "            Edit\n" +
-    "          </button>\n" +
-    "          <button type=\"button\" class=\"btn btn-danger btn-sm\"\n" +
-    "          ng-click=\"removeToken(token)\">\n" +
-    "            Remove\n" +
-    "          </button>\n" +
-    "        </td>\n" +
-    "        <td>\n" +
-    "          {{userTokens[token.address]|token}}\n" +
+    "          <div class=\"pull-right\">\n" +
+    "            <button type=\"button\" class=\"btn btn-default btn-sm\"\n" +
+    "            ng-click=\"editToken(token)\">\n" +
+    "              Edit\n" +
+    "            </button>\n" +
+    "            <button type=\"button\" class=\"btn btn-danger btn-sm\"\n" +
+    "            ng-click=\"removeToken(token)\">\n" +
+    "              Remove\n" +
+    "            </button>\n" +
+    "          </div>\n" +
     "        </td>\n" +
     "        <td>\n" +
     "          {{token|token}}\n" +
-    "          <button type=\"button\" class=\"btn btn-default btn-sm\"\n" +
-    "          ng-click=\"depositToken(token)\">\n" +
-    "            Deposit\n" +
-    "          </button>\n" +
-    "          <button type=\"button\" class=\"btn btn-default btn-sm\"\n" +
-    "          ng-click=\"withdrawToken(token)\">\n" +
-    "            Withdraw\n" +
-    "          </button>\n" +
+    "          <div class=\"pull-right\">\n" +
+    "            <button type=\"button\" class=\"btn btn-default btn-sm\"\n" +
+    "            ng-click=\"depositToken(token)\">\n" +
+    "              Deposit\n" +
+    "            </button>\n" +
+    "            <button type=\"button\" class=\"btn btn-default btn-sm\"\n" +
+    "            ng-click=\"withdrawToken(token)\">\n" +
+    "              Withdraw\n" +
+    "            </button>\n" +
+    "          </div>\n" +
+    "        </td>\n" +
+    "        <td>\n" +
+    "          {{userTokens[token.address]|token}}\n" +
     "        </td>\n" +
     "      </tr>\n" +
     "    </tbody>\n" +
@@ -336,7 +340,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    <thead>\n" +
     "      <tr>\n" +
     "        <th>\n" +
-    "          Id\n" +
+    "          ID\n" +
     "        </th>\n" +
     "        <th>\n" +
     "          Destination/Type\n" +
@@ -370,7 +374,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "        <td>\n" +
     "          <div class=\"row\">\n" +
     "            <div ng-class=\"{'col-md-12' : transactions[txId].executed, 'col-md-6' : !transactions[txId].executed}\"\n" +
-    "                ng-hide=\"!transactions[txId].confirmations.length\">\n" +
+    "                >\n" +
     "              <ul ng-repeat=\"owner in transactions[txId].confirmations\">\n" +
     "                <li>\n" +
     "                  {{wallet.owners[owner].name}}\n" +
@@ -378,7 +382,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "              </ul>\n" +
     "            </div>\n" +
     "            <div ng-hide=\"transactions[txId].executed || transactions[txId].confirmed\" class=\"col-md-6\">\n" +
-    "              <button type=\"button\" class=\"btn btn-default btn-sm\"\n" +
+    "              <button type=\"button\" class=\"btn btn-default btn-sm pull-right\"\n" +
     "                ng-hide=\"transactions[txId].executed || transactions[txId].confirmed\"\n" +
     "                ng-click=\"confirmTransaction(txId)\"\n" +
     "                show-hide-by-connectivity=\"online\">\n" +
@@ -389,7 +393,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "            <div class=\"col-md-6\"\n" +
     "                ng-show=\"transactions[txId].confirmed && !transactions[txId].executed\">\n" +
     "\n" +
-    "              <button type=\"button\" class=\"btn btn-default btn-sm\"\n" +
+    "              <button type=\"button\" class=\"btn btn-default btn-sm pull-right\"\n" +
     "                  ng-show=\"transactions[txId].confirmed && !transactions[txId].executed\"\n" +
     "                  ng-click=\"revokeConfirmation(txId)\"\n" +
     "                  show-hide-by-connectivity=\"online\">\n" +
@@ -409,7 +413,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "              </span>\n" +
     "            </div>\n" +
     "            <div class=\"col-md-10\" ng-show=\"!transactions[txId].executed && transactions[txId].confirmations.length == confirmations\">\n" +
-    "              <button type=\"button\" class=\"pull-right btn btn-default btn-sm\"\n" +
+    "              <button type=\"button\" class=\"pull-right btn btn-default btn-sm pull-right\"\n" +
     "                ng-show=\"!transactions[txId].executed && transactions[txId].confirmations.length == confirmations\"\n" +
     "                ng-click=\"executeTransaction(txId)\"\n" +
     "                show-hide-by-connectivity=\"online\">\n" +
@@ -896,16 +900,16 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "  </div>\n" +
     "  <div class=\"modal-footer\">\n" +
     "    <button class=\"btn btn-default\" type=\"button\" ng-click=\"deployWallet()\" ng-disabled=\"newWallet.$invalid\" show-hide-by-connectivity=\"online\">\n" +
-    "      Send Transaction\n" +
+    "      Deploy\n" +
     "    </button>\n" +
     "    <button class=\"btn btn-default\" type=\"button\" ng-click=\"deployFactoryWallet()\" ng-disabled=\"newWallet.$invalid\" show-hide-by-connectivity=\"online\">\n" +
-    "      Create with factory\n" +
+    "      Deploy with factory\n" +
     "    </button>\n" +
     "    <button class=\"btn btn-default\" type=\"button\" ng-click=\"deployOfflineWallet()\" ng-disabled=\"newWallet.$invalid\" show-hide-by-connectivity=\"offline\">\n" +
-    "      Sign Offline\n" +
+    "      Sign deployment offline\n" +
     "    </button>\n" +
     "    <button class=\"btn btn-default\" type=\"button\" ng-click=\"deployFactoryWalletOffline()\" ng-disabled=\"newWallet.$invalid\" show-hide-by-connectivity=\"offline\">\n" +
-    "      Sign with factory\n" +
+    "      Sign deployment with factory offline\n" +
     "    </button>\n" +
     "    <button class=\"btn btn-danger\" type=\"button\" ng-click=\"cancel()\">\n" +
     "      Cancel\n" +
@@ -1095,9 +1099,6 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "  <button type=\"button\" class=\"btn btn-default\" ng-click=\"send()\">\n" +
     "    Send transaction\n" +
     "  </button>\n" +
-    "  <button type=\"button\" class=\"btn btn-default\" ng-click=\"sign()\">\n" +
-    "    Sign offline\n" +
-    "  </button>\n" +
     "  <button type=\"button\" class=\"btn btn-danger\" ng-click=\"cancel()\">\n" +
     "    Cancel\n" +
     "  </button>\n" +
@@ -1114,7 +1115,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "<form ng-submit=\"ok()\">\n" +
     "  <div class=\"modal-body\">\n" +
     "    <div class=\"form-group\">\n" +
-    "      <label for=\"nonce\">Transaction Id</label>\n" +
+    "      <label for=\"nonce\">Transaction ID</label>\n" +
     "      <input type=\"number\" class=\"form-control\" ng-model=\"transactionId\" required \\>\n" +
     "    </div>\n" +
     "  </div>\n" +
@@ -1201,7 +1202,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "      Send transaction\n" +
     "    </button>\n" +
     "    <button type=\"button\" ng-click=\"signOff()\" class=\"btn btn-default\" ng-disabled=\"form.$invalid\">\n" +
-    "      Sign Offline\n" +
+    "      Sign offline\n" +
     "    </button>\n" +
     "    <button type=\"button\" ng-click=\"cancel()\" class=\"btn btn-danger\">\n" +
     "      Cancel\n" +
@@ -1219,7 +1220,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "</div>\n" +
     "<div class=\"modal-body\">\n" +
     "  <div class=\"form-group\">\n" +
-    "    <label for=\"limit\">Limit in ETH</label>\n" +
+    "    <label for=\"limit\">Limit (ETH)</label>\n" +
     "    <input id=\"limit\" type=\"number\" step=\"any\" ng-model=\"limit\" class=\"form-control\" />\n" +
     "  </div>\n" +
     "</div>\n" +
@@ -1228,7 +1229,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    Send transaction\n" +
     "  </button>\n" +
     "  <button type=\"button\" class=\"btn btn-default\" ng-click=\"sign()\" show-hide-by-connectivity=\"offline\">\n" +
-    "    Sign Offline\n" +
+    "    Sign offline\n" +
     "  </button>  \n" +
     "  <button type=\"button\" class=\"btn btn-danger\" ng-click=\"cancel()\">\n" +
     "    Cancel\n" +
@@ -1350,7 +1351,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    Send transaction\n" +
     "  </button>\n" +
     "  <button type=\"button\" class=\"btn btn-default\" ng-click=\"signOffline()\" show-hide-by-connectivity=\"offline\">\n" +
-    "    Sign Offline\n" +
+    "    Sign offline\n" +
     "  </button>  \n" +
     "  <button type=\"button\" class=\"btn btn-danger\" ng-click=\"cancel()\">\n" +
     "    Cancel\n" +
@@ -1424,7 +1425,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "      <input id=\"value\" type=\"number\" class=\"form-control\" ng-model=\"tx.value\" required>\n" +
     "    </div>\n" +
     "    <div class=\"form-group\">\n" +
-    "      <label for=\"address\">Destination Address</label>\n" +
+    "      <label for=\"address\">Destination</label>\n" +
     "      <input id=\"address\" type=\"text\" class=\"form-control\" ng-model=\"tx.to\" required>\n" +
     "    </div>\n" +
     "  </div>\n" +
@@ -1433,7 +1434,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "      Send transaction\n" +
     "    </button>\n" +
     "    <button type=\"button\" ng-click=\"signOff()\" class=\"btn btn-default\" ng-disabled=\"form.$invalid\" show-hide-by-connectivity=\"offline\">\n" +
-    "      Sign Offline\n" +
+    "      Sign offline\n" +
     "    </button>\n" +
     "    <button type=\"button\" ng-click=\"cancel()\" class=\"btn btn-danger\">\n" +
     "      Cancel\n" +
@@ -1456,7 +1457,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "      <input id=\"amount\" type=\"number\" class=\"form-control\" ng-model=\"amount\" required>\n" +
     "    </div>\n" +
     "    <div class=\"form-group\">\n" +
-    "      <label for=\"address\">Destination Address</label>\n" +
+    "      <label for=\"address\">Destination</label>\n" +
     "      <input id=\"address\" type=\"text\" class=\"form-control\" ng-model=\"to\" required>\n" +
     "    </div>\n" +
     "  </div>\n" +
@@ -1465,7 +1466,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "      Send transaction\n" +
     "    </button>\n" +
     "    <button type=\"button\" ng-click=\"signOff()\" class=\"btn btn-default\" ng-disabled=\"form.$invalid\" show-hide-by-connectivity=\"offline\">\n" +
-    "      Sign Offline\n" +
+    "      Sign offline\n" +
     "    </button>    \n" +
     "    <button type=\"button\" ng-click=\"cancel()\" class=\"btn btn-danger\">\n" +
     "      Cancel\n" +

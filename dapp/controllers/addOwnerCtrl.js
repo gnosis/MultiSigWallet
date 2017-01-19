@@ -16,7 +16,7 @@
               Wallet.updateWallet(wallet);
               Utils.notification("Add owner transaction was sent.");
               Transaction.add({txHash: tx, callback: function () {
-                Utils.success("Add owner transaction was mined. It might require more confirmations by other owners to add the new owner.");
+                Utils.success("Add owner transaction was mined.");
               }});
               $uibModalInstance.close();
             }
@@ -29,7 +29,8 @@
       $scope.sign = function () {
         Wallet.addOwnerOffline(wallet.address, $scope.owner, function (e, tx) {
           if (e) {
-            Utils.dangerAlert(e);
+            // Don't show anything, it could be a Tx Signature Rejected
+            //Utils.dangerAlert(e);
           }
           else {
             $uibModalInstance.close();

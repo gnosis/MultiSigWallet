@@ -10,8 +10,7 @@
           {
             to: $scope.wallet.address,
             from: Wallet.coinbase,
-            value: new EthJS.BN(new Web3().toWei($scope.amount)),
-            nonce: Wallet.txParams.nonce
+            value: new EthJS.BN(new Web3().toWei($scope.amount))            
           },
           function (e, tx) {
             if (e) {

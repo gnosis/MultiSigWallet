@@ -214,15 +214,13 @@
         for (var i=0; i<txHashes.length; i++) {
           var tx = factory.transactions[txHashes[i]];
           // Get transaction receipt
-          if (tx && !tx.receipt && !factory.requiredReceipt[txHashes[i]]) {
-            factory.requiredReceipt[txHashes[i]] = true;
+          if (tx && !tx.receipt) {            
             batch.add(
               Wallet.web3.eth.getTransactionReceipt.request(txHashes[i], processReceipt)
             );
           }
           // Get transaction info
-          if (tx && !tx.info && !factory.requiredInfo[txHashes[i]]) {
-            factory.requiredInfo[txHashes[i]];
+          if (tx && !tx.info) {
             batch.add(
               Wallet.web3.eth.getTransaction.request(
                 txHashes[i],

@@ -8,15 +8,7 @@
         value: 0,
         from: Wallet.coinbase
       };
-      $scope.params = [];
-      $scope.$watch(
-        function () {
-          return Wallet.txParams.nonce;
-        },
-        function () {
-          $scope.tx.nonce = Wallet.txParams.nonce;
-        }
-      );
+      $scope.params = [];      
 
       $scope.send = function () {
         $scope.tx.value = new Web3().toBigNumber($scope.tx.value).mul('1e18');

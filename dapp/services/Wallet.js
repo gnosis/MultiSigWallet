@@ -61,7 +61,7 @@
       * Browser localStorage
       */
       wallet.getAllWallets = function () {
-        return JSON.parse(localStorage.getItem("wallets") || {});
+        return JSON.parse(localStorage.getItem("wallets")) || {};
       };
 
 

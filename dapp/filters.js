@@ -43,7 +43,7 @@
             return "";
           }
           else if(data.length > 3){
-            return data.slice(2, 12) + "...";
+            return data.slice(0, 10) + "...";
           }
         }
       };

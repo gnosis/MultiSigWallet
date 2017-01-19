@@ -68,12 +68,12 @@
           </span>
         </td>
         <td>
-          <ul>
+          <ul ng-show="transaction.receipt.decodedLogs.length">
             <li ng-repeat="log in transaction.receipt.decodedLogs track by $index">
               {{log.name}}
               <ul>
                 <li ng-repeat="param in log.info track by $index">
-                  {{param.name}} :
+                  {{param.name}}:
                   <span uib-popover="{{param.value}}" popover-trigger="'mouseenter'">
                     {{param.value|addressCanBeOwner:wallets[transaction.info.to]|logParam}}
                   </span>
@@ -84,10 +84,9 @@
           <p ng-show="!transaction.receipt.decodedLogs.length" class="text-center">
             -
           </p>
-
         </td>
         <td>
-          <button class="btn btn-danger btn-sm pull-right" ng-click="remove(transaction.txHash)">
+          <button class="btn btn-danger btn-sm" ng-click="remove(transaction.txHash)">
             Remove
           </button>
         </td>

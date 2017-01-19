@@ -40,11 +40,15 @@
       $scope.wallets = Wallet.wallets;
 
       $scope.remove = function (txHash) {
-        Transaction.remove(txHash);
+        Utils.confirmation("Remove transaction", "Are you sure?", function () {
+          Transaction.remove(txHash);
+        });
       };
 
       $scope.removeAll = function () {
-        Transaction.removeAll();
+        Utils.confirmation("Remove all transactions", "Are you sure?", function () {
+          Transaction.removeAll();
+        });
       };
 
       $scope.sendRawTransaction = function () {

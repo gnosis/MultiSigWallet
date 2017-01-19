@@ -57,7 +57,7 @@
         <td popover-trigger="'mouseenter'" uib-popover-template="'partials/txData.html'" popover-placement="bottom" popover-append-to-body="true"
           ng-bind-html="transaction.info.input | txData | dashIfEmpty">
         </td>
-        <td ng-bind-html="transaction.info.nonce| dashIfEmpty">
+        <td ng-bind-html="transaction.info.nonce | dashIfEmpty">
         </td>
         <td>
           <span ng-show="transaction.receipt">

@@ -75,8 +75,7 @@
       wallet.txDefaults = function (tx) {
         var txParams = {
           gasPrice: EthJS.Util.intToHex(wallet.txParams.gasPrice),
-          gas: EthJS.Util.intToHex(wallet.txParams.gasLimit),
-          nonce: EthJS.Util.intToHex(wallet.txParams.nonce),
+          gas: EthJS.Util.intToHex(wallet.txParams.gasLimit),          
           from: wallet.coinbase
         };
 
@@ -334,7 +333,6 @@
         if (!wallet.wallets[w.address]) {
           wallet.wallets[w.address] = {};
         }
-        console.log("update")
         var tokens = {};
         if (w.tokens) {
           var tokenAddresses = Object.keys(w.tokens);
@@ -348,7 +346,6 @@
             };
           });
         }
-        console.log(tokens);
         Object.assign(wallet.wallets[w.address], {address: w.address, name: w.name, owners: w.owners, tokens: tokens});
         localStorage.setItem("wallets", JSON.stringify(wallet.wallets));
         wallet.updates++;

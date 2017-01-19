@@ -71,7 +71,7 @@
       wallet.txDefaults = function (tx) {
         var txParams = {
           gasPrice: EthJS.Util.intToHex(wallet.txParams.gasPrice),
-          gas: EthJS.Util.intToHex(wallet.txParams.gasLimit),          
+          gas: EthJS.Util.intToHex(wallet.txParams.gasLimit),
           from: wallet.coinbase
         };
 
@@ -204,6 +204,7 @@
       wallet.updateNonce = function (address, cb) {
         return wallet.web3.eth.getTransactionCount.request(
           address,
+          "pending",
           function (e, count) {
             if (e) {
               cb(e);

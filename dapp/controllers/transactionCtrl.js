@@ -109,7 +109,7 @@
       */
       $scope.getDestinationOrContract = function (tx) {
         if (tx && tx.info && Wallet.wallets[tx.info.to] && Wallet.wallets[tx.info.to].name) {
-          return $sce.trustAsHtml("<img src='./img/wallet-logo.svg' class='wallet-icon' alt='Wallet' />&nbsp;" + Wallet.wallets[tx.info.to].name);
+          return Wallet.wallets[tx.info.to].name + " wallet";
         }
         if (tx && tx.multisig) {
           if( Wallet.wallets[tx.multisig] ) {

@@ -332,7 +332,8 @@
             $scope.sign = function () {
               Wallet.removeOwnerOffline(wallet.address, $scope.owner, function (e, tx) {
                 if (e) {
-                  Utils.dangerAlert(e);
+                  // Don't show anything, it could be a Tx Signature Rejected
+                  //Utils.dangerAlert(e);
                 }
                 else {
                   $uibModalInstance.close();
@@ -369,7 +370,8 @@
       $scope.confirmMultisigTransactionOffline = function () {
         Wallet.confirmTransactionOffline($scope.wallet.address, function (e, signed) {
           if (e) {
-            Utils.dangerAlert(e);
+            // Don't show anything, it could be a Tx Signature Rejected
+            //Utils.dangerAlert(e);
           }
           else {
             Utils.signed(signed);
@@ -398,7 +400,8 @@
       $scope.revokeMultisigTransactionOffline = function () {
         Wallet.revokeConfirmationOffline($scope.wallet.address, function (e, signed) {
           if (e) {
-            Utils.dangerAlert(e);
+            // Don't show anything, it could be a Tx Signature Rejected
+            // Utils.dangerAlert(e);
           }
           else {
             Utils.signed(signed);

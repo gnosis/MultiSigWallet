@@ -29,7 +29,8 @@
       $scope.sign = function () {
         Wallet.addOwnerOffline(wallet.address, $scope.owner, function (e, tx) {
           if (e) {
-            Utils.dangerAlert(e);
+            // Don't show anything, it could be a Tx Signature Rejected
+            //Utils.dangerAlert(e);
           }
           else {
             $uibModalInstance.close();

@@ -57,7 +57,8 @@
             cb(e);
           }
           else {
-            Wallet.offlineTransaction(tokenAddress, data, nonce, Wallet.txDefaults(), cb);
+            //Wallet.offlineTransaction(tokenAddress, data, nonce, Wallet.txDefaults(), cb);
+            Wallet.offlineTransaction(tokenAddress, data, nonce, cb);
           }
         });
       };

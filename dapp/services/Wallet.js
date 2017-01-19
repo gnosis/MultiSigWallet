@@ -61,7 +61,11 @@
       * Browser localStorage
       */
       wallet.getAllWallets = function () {
-        return JSON.parse(localStorage.getItem("wallets")) || {};
+        try {
+          return JSON.parse(localStorage.getItem("wallets")) || {};
+        } catch (error) {
+          return {};
+        }
       };
 
 
@@ -132,13 +136,15 @@
           if (e) {
             cb(e);
           }
-          var signature = EthJS.Util.fromRpcSig(sig);
-          tx.v = EthJS.Util.intToHex(signature.v);
-          tx.r = EthJS.Util.bufferToHex(signature.r);
-          tx.s = EthJS.Util.bufferToHex(signature.s);
+          else {
+            var signature = EthJS.Util.fromRpcSig(sig);
+            tx.v = EthJS.Util.intToHex(signature.v);
+            tx.r = EthJS.Util.bufferToHex(signature.r);
+            tx.s = EthJS.Util.bufferToHex(signature.s);
 
-          // Return raw transaction as hex string
-          cb(null, EthJS.Util.bufferToHex(tx.serialize()));
+            // Return raw transaction as hex string
+            cb(null, EthJS.Util.bufferToHex(tx.serialize()));            
+          }
         });
 
       };

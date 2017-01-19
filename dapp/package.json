@@ -4,7 +4,8 @@
   "description": "Angular web app made for Multi Sig Wallet",
   "main": "index.html",
   "scripts": {
-    "test": "karma start config.karma.js"
+    "test": "karma start config.karma.js",
+    "dist": "zip -r ../multisigWallet.zip ./"
   },
   "keywords": [
     "ethereum",

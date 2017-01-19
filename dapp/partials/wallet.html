@@ -95,28 +95,32 @@
       <tr ng-repeat="token in wallet.tokens track by $index">
         <td>
           {{token.name}}
-          <button type="button" class="btn btn-default btn-sm"
-          ng-click="editToken(token)">
-            Edit
-          </button>
-          <button type="button" class="btn btn-danger btn-sm"
-          ng-click="removeToken(token)">
-            Remove
-          </button>
+          <div class="pull-right">
+            <button type="button" class="btn btn-default btn-sm"
+            ng-click="editToken(token)">
+              Edit
+            </button>
+            <button type="button" class="btn btn-danger btn-sm"
+            ng-click="removeToken(token)">
+              Remove
+            </button>
+          </div>
         </td>
         <td>
           {{userTokens[token.address]|token}}
         </td>
         <td>
           {{token|token}}
-          <button type="button" class="btn btn-default btn-sm"
-          ng-click="depositToken(token)">
-            Deposit
-          </button>
-          <button type="button" class="btn btn-default btn-sm"
-          ng-click="withdrawToken(token)">
-            Withdraw
-          </button>
+          <div class="pull-right">
+            <button type="button" class="btn btn-default btn-sm"
+            ng-click="depositToken(token)">
+              Deposit
+            </button>
+            <button type="button" class="btn btn-default btn-sm"
+            ng-click="withdrawToken(token)">
+              Withdraw
+            </button>
+          </div>
         </td>
       </tr>
     </tbody>
@@ -203,7 +207,7 @@
         <td>
           <div class="row">
             <div ng-class="{'col-md-12' : transactions[txId].executed, 'col-md-6' : !transactions[txId].executed}"
-                ng-hide="!transactions[txId].confirmations.length">
+                >
               <ul ng-repeat="owner in transactions[txId].confirmations">
                 <li>
                   {{wallet.owners[owner].name}}
@@ -211,7 +215,7 @@
               </ul>
             </div>
             <div ng-hide="transactions[txId].executed || transactions[txId].confirmed" class="col-md-6">
-              <button type="button" class="btn btn-default btn-sm"
+              <button type="button" class="btn btn-default btn-sm pull-right"
                 ng-hide="transactions[txId].executed || transactions[txId].confirmed"
                 ng-click="confirmTransaction(txId)"
                 show-hide-by-connectivity="online">
@@ -222,7 +226,7 @@
             <div class="col-md-6"
                 ng-show="transactions[txId].confirmed && !transactions[txId].executed">
 
-              <button type="button" class="btn btn-default btn-sm"
+              <button type="button" class="btn btn-default btn-sm pull-right"
                   ng-show="transactions[txId].confirmed && !transactions[txId].executed"
                   ng-click="revokeConfirmation(txId)"
                   show-hide-by-connectivity="online">
@@ -242,7 +246,7 @@
               </span>
             </div>
             <div class="col-md-10" ng-show="!transactions[txId].executed && transactions[txId].confirmations.length == confirmations">
-              <button type="button" class="pull-right btn btn-default btn-sm"
+              <button type="button" class="pull-right btn btn-default btn-sm pull-right"
                 ng-show="!transactions[txId].executed && transactions[txId].confirmations.length == confirmations"
                 ng-click="executeTransaction(txId)"
                 show-hide-by-connectivity="online">

@@ -54,8 +54,10 @@
         </td>
         <td ng-bind-html="transaction.info.value | ether | dashIfEmpty">
         </td>
-        <td popover-trigger="'mouseenter'" uib-popover-template="'partials/txData.html'" popover-placement="bottom" popover-append-to-body="true"
-          ng-bind-html="transaction.info.input | txData | dashIfEmpty">
+        <td>
+          <span popover-trigger="'mouseenter'" uib-popover-template="'partials/txData.html'" popover-placement="bottom" popover-append-to-body="true"
+            ng-bind-html="transaction.info.input | txData | dashIfEmpty">
+          </span>
         </td>
         <td ng-bind-html="transaction.info.nonce | dashIfEmpty">
         </td>

@@ -42,7 +42,10 @@
           if (data == "0x") {
             return "";
           }
-          else if(data.length > 3){
+          else if(data.length > 3 && data.length < 10) {
+            return data.slice(0, 10);
+          }
+          else if (data.length > 3 && data.length > 10) {
             return data.slice(0, 10) + "...";
           }
         }
@@ -53,11 +56,13 @@
         if(log && log.indexOf && log.indexOf("0x") == -1){
           return log;
         }
-        else if (log && log.slice) {
-          return log.slice(0, 12) + "...";
-        }
         else if (log && log.toString().slice) {
-          return log.toString().slice(0, 12) + "...";
+          if(log.toString().length < 12){
+            return log.toString().slice(0, 12);
+          }
+          else{
+            return log.toString().slice(0, 12) + "...";
+          }
         }
         else {
           return log;

@@ -22,7 +22,7 @@
 
         Wallet.submitTransaction(
           $scope.wallet.address,
-          $scope.tx,
+          tx,
           null,
           null,
           null,
@@ -51,10 +51,10 @@
         var tx = {};
         Object.assign(tx, $scope.tx);
         tx.value = new Web3().toBigNumber($scope.tx.value).mul('1e18');
-        
+
         Wallet.signTransaction(
           $scope.wallet.address,
-          $scope.tx,
+          tx,
           null,
           null,
           null,
@@ -69,24 +69,7 @@
             }
           }
         );
-      };
-
-      $scope.getNonce = function () {
-        $scope.tx.value = "0x" + new Web3().toBigNumber($scope.tx.value).mul('1e18').toString(16);
-
-        Wallet.getNonce(wallet.address, $scope.tx.to, $scope.tx.value, "0x0", function (e, nonce) {
-          if (e) {
-            Utils.dangerAlert(e);
-          }
-          else{
-            $uibModalInstance.close();
-            // Open new modal with nonce
-            Utils.nonce(nonce);
-            // Utils.success("Multisig Nonce: "+nonce);
-          }
-        }).call();
-
-      };
+      };    
 
       $scope.cancel = function () {
         $uibModalInstance.dismiss();

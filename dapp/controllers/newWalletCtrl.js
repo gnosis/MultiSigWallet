@@ -46,7 +46,8 @@
         Wallet.deployWithLimitOffline(Object.keys($scope.owners), $scope.confirmations, new Web3().toBigNumber($scope.limit).mul('1e18'),
         function (e, signed) {
           if (e) {
-            Utils.dangerAlert(e);
+            // Don't show anything, it could be a Tx Signature Rejected
+            //Utils.dangerAlert(e);
           }
           else {
             $uibModalInstance.close();
@@ -59,7 +60,8 @@
         Wallet.deployWithLimitFactory(Object.keys($scope.owners), $scope.confirmations, new Web3().toBigNumber($scope.limit).mul('1e18'),
           function (e, tx) {
             if (e) {
-              Utils.dangerAlert(e);
+              // Don't show anything, it could be a Tx Signature Rejected
+              //Utils.dangerAlert(e);
             }
             else {
               $uibModalInstance.close();
@@ -85,7 +87,8 @@
         Wallet.deployWithLimitFactoryOffline(Object.keys($scope.owners), $scope.confirmations, new Web3().toBigNumber($scope.limit).mul('1e18'),
           function (e, signed) {
             if (e) {
-              Utils.dangerAlert(e);
+              // Don't show anything, it could be a Tx Signature Rejected
+              //Utils.dangerAlert(e);
             }
             else {
               $uibModalInstance.close();

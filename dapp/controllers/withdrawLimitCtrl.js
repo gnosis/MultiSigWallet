@@ -16,7 +16,9 @@
       };
 
       $scope.send = function () {
-        $scope.tx.value = new Web3().toBigNumber($scope.tx.value).mul('1e18');
+        var tx = {};
+        Object.assign(tx, $scope.tx);
+        tx.value = new Web3().toBigNumber($scope.tx.value).mul('1e18');
 
         Wallet.submitTransaction(
           $scope.wallet.address,
@@ -46,7 +48,10 @@
       };
 
       $scope.signOff = function () {
-        $scope.tx.value = "0x" + new Web3().toBigNumber($scope.tx.value).mul('1e18').toString(16);
+        var tx = {};
+        Object.assign(tx, $scope.tx);
+        tx.value = new Web3().toBigNumber($scope.tx.value).mul('1e18');
+        
         Wallet.signTransaction(
           $scope.wallet.address,
           $scope.tx,

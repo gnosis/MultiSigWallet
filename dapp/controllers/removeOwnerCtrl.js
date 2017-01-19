@@ -14,7 +14,7 @@
             Wallet.updateWallet(wallet);
             Utils.notification("Remove owner transaction was sent.");
             Transaction.add({txHash: tx, callback: function (){
-              Utils.success("Remove owner transaction was mined. It might require more confirmations by other owners to remove the owner.");
+              Utils.success("Remove owner transaction was mined.");
             }});
             $uibModalInstance.close();
           }

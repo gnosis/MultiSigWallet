@@ -17,18 +17,18 @@
               if (receipt.contractAddress){
                 Wallet.web3.eth.getCode(receipt.contractAddress, function (e, code){
                   if (code.length > 100 && Wallet.json.multiSigDailyLimit.binHex.slice(-992) == code.slice(-992)){
-                    Utils.success("Multisig wallet deployed at "+ receipt.contractAddress);
+                    Utils.success("Wallet deployed at address: " + receipt.contractAddress);
                     Wallet.updateWallet({name: "Offline wallet", address: receipt.contractAddress, owners: {}});
                     Transaction.update(txHash, {multisig: receipt.contractAddress});
                   }
                   else {
-                    Utils.success("Contract deployed at "+ receipt.contractAddress);
+                    Utils.success("Contract deployed at address: " + receipt.contractAddress);
                   }
                 });
               }
               else if( receipt.decodedLogs.length && receipt.decodedLogs[0] && receipt.decodedLogs[0].info && receipt.decodedLogs[0].info.instantiation){
                 var walletAddress = receipt.decodedLogs[0].info.instantiation;
-                Utils.success("Wallet deployed at address " + walletAddress);
+                Utils.success("Wallet deployed at address:" + walletAddress);
                 Wallet.updateWallet({name: "Factory wallet", address: walletAddress, owners: {}});
                 Transaction.update(txHash, {multisig: walletAddress});
               }

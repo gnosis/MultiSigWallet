@@ -84,10 +84,10 @@
           Name
         </th>
         <th>
-          Account balance
+          Multisig balance
         </th>
         <th>
-          Multisig balance
+          Account balance
         </th>
       </tr>
     </thead>
@@ -107,9 +107,6 @@
           </div>
         </td>
         <td>
-          {{userTokens[token.address]|token}}
-        </td>
-        <td>
           {{token|token}}
           <div class="pull-right">
             <button type="button" class="btn btn-default btn-sm"
@@ -121,6 +118,9 @@
               Withdraw
             </button>
           </div>
+        </td>
+        <td>
+          {{userTokens[token.address]|token}}
         </td>
       </tr>
     </tbody>
@@ -173,7 +173,7 @@
     <thead>
       <tr>
         <th>
-          Id
+          ID
         </th>
         <th>
           Destination/Type

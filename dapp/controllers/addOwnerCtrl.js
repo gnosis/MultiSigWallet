@@ -16,7 +16,7 @@
               Wallet.updateWallet(wallet);
               Utils.notification("Add owner transaction was sent.");
               Transaction.add({txHash: tx, callback: function () {
-                Utils.success("Add owner transaction was mined. It might require more confirmations by other owners to add the new owner.");
+                Utils.success("Add owner transaction was mined.");
               }});
               $uibModalInstance.close();
             }

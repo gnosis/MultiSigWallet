@@ -12,7 +12,7 @@
           Wallet.web3 = new Web3($scope.config.ethereumNode);
         }
 
-        Utils.success("Updated");
+        Utils.success("Configuration updated successfully.");
       };      
 
       /**

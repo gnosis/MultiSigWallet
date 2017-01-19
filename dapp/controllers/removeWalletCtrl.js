@@ -13,7 +13,7 @@
           console.log(err);
         }
         $uibModalInstance.close();
-        Utils.success("The wallet has been removed successfully.");
+        Utils.success("The wallet was removed successfully.");
         callback();
       };
 

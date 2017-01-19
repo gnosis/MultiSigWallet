@@ -12,24 +12,24 @@
       $scope.load = function () {
         if($scope.configuration && $scope.configuration.trim() !== ""){
             // Setting up new configuration
-            try{
+            try {
               Wallet.import($scope.configuration);
               // Show success message
-              Utils.success("Configuration saved successfully.");
+              Utils.success("Configuration imported successfully.");
 
               $scope.close();
-            }catch(err){
+            } catch (err) {
               // An error occurred
               Utils.dangerAlert("Please provide a valid JSON configuration script.");
             }
 
-            try{
+            try {
               $rootScope.$digest();
             }
             catch (e) {}
 
-        }else{
-          Utils.dangerAlert("Please provide a valid configuration script.");
+        } else {
+          Utils.dangerAlert("Please provide a valid JSON configuration script.");
         }
       };
 

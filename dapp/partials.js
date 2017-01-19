@@ -109,9 +109,9 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "        <td popover-trigger=\"'mouseenter'\" uib-popover-template=\"'partials/txData.html'\" popover-placement=\"bottom\" popover-append-to-body=\"true\"\n" +
     "          ng-bind-html=\"transaction.info.input | txData | dashIfEmpty\">\n" +
     "        </td>\n" +
-    "        <td ng-bind-html=\"transaction.info.nonce| dashIfEmpty\">\n" +
+    "        <td ng-bind-html=\"transaction.info.nonce | dashIfEmpty\">\n" +
     "        </td>\n" +
-    "        <td>          \n" +
+    "        <td>\n" +
     "          <span ng-show=\"transaction.receipt\">\n" +
     "            Yes\n" +
     "          </span>\n" +

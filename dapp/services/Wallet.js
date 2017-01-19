@@ -142,7 +142,7 @@
             tx.s = EthJS.Util.bufferToHex(signature.s);
 
             // Return raw transaction as hex string
-            cb(null, EthJS.Util.bufferToHex(tx.serialize()));            
+            cb(null, EthJS.Util.bufferToHex(tx.serialize()));
           }
         });
 
@@ -1146,26 +1146,28 @@
             var topicsIndex = 1;
             // Loop topic and data to get the params
             method.inputs.map(function (param) {
+              var decodedP = {
+                name: param.name
+              };
+
               if (param.indexed) {
-                  decodedParams.push(
-                    {
-                      name: param.name,
-                      value: "0x" + new Web3().toBigNumber(logs[i].topics[topicsIndex]).toString(16)
-                    }
-                  )
-                  topicsIndex++;
+                decodedP.value = logs[i].topics[topicsIndex];
+                topicsIndex++;
               }
               else {
                 var dataEndIndex = dataIndex + 64;
-
-                decodedParams.push(
-                  {
-                    name: param.name,
-                    value: "0x" + new Web3().toBigNumber( "0x" + logData.slice(dataIndex, dataEndIndex)).toString(16)
-                  }
-                )
+                decodedP.value = "0x" + logData.slice(dataIndex, dataEndIndex);
                 dataIndex = dataEndIndex;
               }
+
+              if (param.type == "address"){
+                decodedP.value = "0x" + new Web3().toBigNumber(decodedP.value).toString(16);
+              }
+              else if(param.type == "uint256" ){
+                decodedP.value = new Web3().toBigNumber(decodedP.value).toNumber();
+              }
+
+              decodedParams.push(decodedP);
             });
 
             decoded.push(

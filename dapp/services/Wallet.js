@@ -729,7 +729,7 @@
             instance.submitTransaction(wallet, "0x0", data, count, wallet.txDefaults(), cb);
           }
         }).call();
-      }
+      };
 
       /**
       * Sign replace owner offline
@@ -747,7 +747,7 @@
             wallet.offlineTransaction(address, mainData, nonces.account, cb);
           }
         });
-      }
+      };
 
       /**
       * Get required confirmations number

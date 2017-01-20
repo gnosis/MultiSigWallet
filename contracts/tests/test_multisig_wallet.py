@@ -31,6 +31,7 @@ class TestContract(TestCase):
             [accounts[wa_1], accounts[wa_1]],
             required_accounts
         )
+        # Contract creation fails, because we add the same account twice
         self.assertRaises(ContractCreationFailed,
                           self.s.abi_contract,
                           self.pp.process('MultiSigWallet.sol', contract_dir='solidity/', add_dev_code=True),

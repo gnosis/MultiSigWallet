@@ -73,8 +73,8 @@ contract MultiSigWallet {
         _;
     }
 
-    modifier notNull(address destination) {
-        if (destination == 0)
+    modifier notNull(address _address) {
+        if (_address == 0)
             throw;
         _;
     }
@@ -107,7 +107,7 @@ contract MultiSigWallet {
         validRequirement(_owners.length, _required)
     {
         for (uint i=0; i<_owners.length; i++) {
-            if (isOwner[_owners[i]])
+            if (isOwner[_owners[i]] || _owners[i] == 0)
                 throw;
             isOwner[_owners[i]] = true;
         }
@@ -121,6 +121,7 @@ contract MultiSigWallet {
         public
         onlyWallet
         ownerDoesNotExist(owner)
+        notNull(owner)
         validRequirement(owners.length + 1, required)
     {
         isOwner[owner] = true;

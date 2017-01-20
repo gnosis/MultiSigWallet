@@ -47,9 +47,11 @@ class TestContract(TestCase):
                                                                 sender=keys[wa_1])
         # Other owner wa_2 confirms and executes transaction at the same time as min sig are available
         self.assertFalse(self.multisig_wallet.transactions(transaction_id)[3])
+        self.assertEqual(self.multisig_wallet.getOwners(), [accounts[wa_1].encode('hex'), accounts[wa_2].encode('hex')])
         self.multisig_wallet.confirmTransaction(transaction_id, sender=keys[wa_2])
         # Transaction was executed
         self.assertTrue(self.multisig_wallet.transactions(transaction_id)[3])
         # Owner was switched
         self.assertFalse(self.multisig_wallet.isOwner(accounts[wa_2]))
         self.assertTrue(self.multisig_wallet.isOwner(accounts[wa_3]))
+        self.assertEqual(self.multisig_wallet.getOwners(), [accounts[wa_1].encode('hex'), accounts[wa_3].encode('hex')])

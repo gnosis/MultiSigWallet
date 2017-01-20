@@ -312,11 +312,9 @@ contract MultiSigWallet {
     function getOwners()
         public
         constant
-        returns (address[] _owners)
+        returns (address[])
     {
-        _owners = new address[](owners.length);
-        for (uint i=0; i<owners.length; i++)
-            _owners[i] = owners[i];
+        return owners;
     }
 
     /// @dev Returns array with owner addresses, which confirmed transaction.

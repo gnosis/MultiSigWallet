@@ -131,7 +131,7 @@
     .filter('addressCanBeOwner', function () {
       return function (addressCandidate, wallet) {
         if (addressCandidate && addressCandidate.indexOf && addressCandidate.indexOf("0x") != -1) {
-          if ( wallet && wallet.owners && wallet.owners[addressCandidate]){
+          if ( wallet && wallet.owners && wallet.owners[addressCandidate] && wallet.owners[addressCandidate].name){
             return wallet.owners[addressCandidate].name;
           }
           else{

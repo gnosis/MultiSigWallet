@@ -39,22 +39,26 @@
           }
           else {
             return error;
-            // if (typeof error == "object" && error.toString().indexOf("User denied") != -1) {
-            //   return 'Transaction rejected by user';
-            // }
-            // else {
-            //   return error;
-            // }
+            if (typeof error == "object" && error.toString().indexOf("User denied") != -1) {
+              return 'Transaction rejected by user';
+            }
+            else {
+              return error;
+            }
           }
         }
       };
 
       factory.dangerAlert = function (error) {
-        BootstrapDialog.show({
-          type: BootstrapDialog.TYPE_DANGER,
-          title: 'Error',
-          message: factory.errorToHtml(error)
-        });
+        var errorHtml = factory.errorToHtml(error);
+        // Just show alert is user don't rejected the tx
+        if (errorHtml !== "Transaction rejected by user") {
+          BootstrapDialog.show({
+            type: BootstrapDialog.TYPE_DANGER,
+            title: 'Error',
+            message: errorHtml
+          });
+        }
       };
 
       factory.confirmation = function (title, message, cb) {

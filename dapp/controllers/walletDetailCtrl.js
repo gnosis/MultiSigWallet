@@ -63,7 +63,7 @@
           Wallet
           .getOwners(
             $scope.wallet.address,
-            function (e, owners) {              
+            function (e, owners) {
               $scope.owners = owners;
               // Check if the owners are in the wallet.owners object
               var walletOwnerskeys = Object.keys($scope.wallet.owners);
@@ -352,8 +352,7 @@
             $scope.sign = function () {
               Wallet.removeOwnerOffline(wallet.address, $scope.owner, function (e, tx) {
                 if (e) {
-                  // Don't show anything, it could be a Tx Signature Rejected
-                  //Utils.dangerAlert(e);
+                  Utils.dangerAlert(e);
                 }
                 else {
                   $uibModalInstance.close();
@@ -368,6 +367,19 @@
           }
         });
       };
+
+      $scope.replaceOwnerOffline = function () {
+        $uibModal.open({
+          templateUrl: 'partials/modals/replaceOwnerOffline.html',
+          size: 'md',
+          resolve: {
+            wallet: function () {
+              return $scope.wallet;
+            }
+          },
+          controller: 'replaceOwnerOfflineCtrl'
+        });
+      }
 
       $scope.confirmTransaction = function (txId) {
         $uibModal.open(

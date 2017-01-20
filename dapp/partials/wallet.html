@@ -10,6 +10,9 @@
       <button type="button" ng-click="removeOwnerOffline()" class="btn btn-default" show-hide-by-connectivity="offline">
         Remove Offline
       </button>
+      <button type="button" ng-click="replaceOwnerOffline()" class="btn btn-default" show-hide-by-connectivity="offline">
+        Replace Offline
+      </button>
       <button type="button" ng-click="addOwner()" class="btn btn-default">
         Add
       </button>
@@ -48,7 +51,7 @@
               class="btn btn-default btn-sm"
               show-hide-by-connectivity="online"
               ng-hide="owners.length == 1">
-              Replace owner
+              Replace
             </button>
             <button type="button" ng-click="removeOwner(owner)"
               class="btn btn-danger btn-sm"

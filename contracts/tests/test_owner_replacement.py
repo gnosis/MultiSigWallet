@@ -26,9 +26,8 @@ class TestContract(TestCase):
         required_accounts = 2
         wa_1 = 1
         wa_2 = 2
-        wa_3 = 3
         constructor_parameters = (
-            [accounts[wa_1], accounts[wa_2], accounts[wa_3]],
+            [accounts[wa_1], accounts[wa_2]],
             required_accounts
         )
         self.multisig_wallet = self.s.abi_contract(
@@ -36,19 +35,23 @@ class TestContract(TestCase):
             language='solidity',
             constructor_parameters=constructor_parameters
         )
+        self.assertTrue(self.multisig_wallet.isOwner(accounts[wa_1]))
+        self.assertTrue(self.multisig_wallet.isOwner(accounts[wa_2]))
         # Create ABIs
         multisig_abi = self.multisig_wallet.translator
-        # Exchange owner wa_1 with wa_4
-        wa_4 = 4
-        exchange_owner_data = multisig_abi.encode('replaceOwner', [accounts[wa_1], accounts[wa_4]])
+        # Exchange owner wa_2 with wa_3
+        wa_3 = 3
+        exchange_owner_data = multisig_abi.encode('replaceOwner', [accounts[wa_2], accounts[wa_3]])
         # Only a wallet owner (in this case wa_1) can do this. Owner confirms transaction at the same time.
         transaction_id = self.multisig_wallet.submitTransaction(self.multisig_wallet.address, 0, exchange_owner_data,
                                                                 sender=keys[wa_1])
         # Other owner wa_2 confirms and executes transaction at the same time as min sig are available
         self.assertFalse(self.multisig_wallet.transactions(transaction_id)[3])
+        self.assertEqual(self.multisig_wallet.getOwners(), [accounts[wa_1].encode('hex'), accounts[wa_2].encode('hex')])
         self.multisig_wallet.confirmTransaction(transaction_id, sender=keys[wa_2])
         # Transaction was executed
         self.assertTrue(self.multisig_wallet.transactions(transaction_id)[3])
         # Owner was switched
-        self.assertTrue(self.multisig_wallet.isOwner(accounts[wa_4]))
-        self.assertFalse(self.multisig_wallet.isOwner(accounts[wa_1]))
+        self.assertFalse(self.multisig_wallet.isOwner(accounts[wa_2]))
+        self.assertTrue(self.multisig_wallet.isOwner(accounts[wa_3]))
+        self.assertEqual(self.multisig_wallet.getOwners(), [accounts[wa_1].encode('hex'), accounts[wa_3].encode('hex')])

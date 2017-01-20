@@ -76,7 +76,7 @@
               <ul>
                 <li ng-repeat="param in log.info track by $index">
                   {{param.name}}:
-                  <span uib-popover="{{param.value}}" popover-trigger="'mouseenter'">
+                  <span uib-popover="{{param.value}}" popover-enable="param.value && param.value.toString().length > 10" popover-trigger="'mouseenter'">
                     {{param.value|addressCanBeOwner:wallets[transaction.info.to]|logParam}}
                   </span>
                 </li>

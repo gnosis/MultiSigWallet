@@ -1164,7 +1164,7 @@
                 decodedP.value = "0x" + new Web3().toBigNumber(decodedP.value).toString(16);
               }
               else if(param.type == "uint256" ){
-                decodedP.value = new Web3().toBigNumber(decodedP.value).toNumber();
+                decodedP.value = new Web3().toBigNumber(decodedP.value).toString(10);
               }
 
               decodedParams.push(decodedP);

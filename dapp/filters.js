@@ -53,15 +53,15 @@
     })
     .filter('logParam', function () {
       return function (log) {
-        if(log && log.indexOf && log.indexOf("0x") == -1){
+        if(log && log.indexOf && log.indexOf("0x") != -1){
           return log;
         }
-        else if (log && log.toString().slice) {
-          if(log.toString().length < 12){
-            return log.toString().slice(0, 12);
+        else if ( log && log.match(/^[0-9]+$/) != null) {
+          if(log.toString().length < 10){
+            return log.toString().slice(0, 10);
           }
           else{
-            return log.toString().slice(0, 12) + "...";
+            return log.toString().slice(0, 10) + "...";
           }
         }
         else {

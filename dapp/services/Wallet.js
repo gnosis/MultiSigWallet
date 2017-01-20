@@ -716,17 +716,17 @@
       /**
       * Replace owner
       **/
-      wallet.replaceOwner = function (wallet, owner, newOwner, cb) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(wallet);
+      wallet.replaceOwner = function (address, owner, newOwner, cb) {
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         var data = instance.replaceOwner.getData(owner, newOwner);
 
         // Get nonce
-        wallet.getTransactionCount(wallet, true, true, function (e, count) {
+        wallet.getTransactionCount(address, true, true, function (e, count) {
           if (e) {
             cb(e);
           }
           else {
-            instance.submitTransaction(wallet, "0x0", data, count, wallet.txDefaults(), cb);
+            instance.submitTransaction(address, "0x0", data, count, wallet.txDefaults(), cb);
           }
         }).call();
       };
@@ -734,8 +734,8 @@
       /**
       * Sign replace owner offline
       **/
-      wallet.replaceOwnerOffline = function (wallet, owner, newOwner, cb) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(wallet);
+      wallet.replaceOwnerOffline = function (address, owner, newOwner, cb) {
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         var data = instance.replaceOwner.getData(owner, newOwner);
         // Get nonce
         wallet.getWalletNonces(function (e, nonces) {
@@ -1134,6 +1134,8 @@
               return "Remove owner";
             case "cea08621":
               return "Update daily limit";
+            case "e20056e6":
+              return "Replace owner";
             case "a9059cbb":
               if ( wallet.wallets[tx.from] && wallet.wallets[tx.from].tokens && wallet.wallets[tx.from].tokens[tx.to]) {
                 return "Withdraw " + wallet.wallets[tx.from].tokens[tx.to].symbol;

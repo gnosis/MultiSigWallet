@@ -63,7 +63,7 @@
           Wallet
           .getOwners(
             $scope.wallet.address,
-            function (e, owners) {
+            function (e, owners) {              
               $scope.owners = owners;
               // Check if the owners are in the wallet.owners object
               var walletOwnerskeys = Object.keys($scope.wallet.owners);
@@ -220,6 +220,10 @@
               Object.assign(token, $scope.wallet.tokens[tokenAddress]);
               token.balance = new Web3().toBigNumber( "0x" + tx.data.slice(74));
               return $filter("token")(token) + " to " + $filter("addressCanBeOwner")(account, $scope.wallet);
+            case "e20056e6":
+              var oldOwner = "0x" + tx.data.slice(34, 74);
+              var newOwner = "0x" + tx.data.slice(98, 138);
+              return "Old " + $filter("addressCanBeOwner")(oldOwner, $scope.wallet) + " / New " + $filter("addressCanBeOwner")(newOwner, $scope.wallet);
             default:
               return tx.data.slice(0, 20) + "...";
           }
@@ -309,6 +313,22 @@
           resolve: {
             wallet: function () {
               return $scope.wallet;
+            }
+          }
+        });
+      };
+
+      $scope.replaceOwner = function (owner) {
+        $uibModal.open({
+          templateUrl: 'partials/modals/replaceOwner.html',
+          size: 'md',
+          controller: 'replaceOwnerCtrl',
+          resolve: {
+            wallet: function () {
+              return $scope.wallet;
+            },
+            owner: function () {
+              return $scope.wallet.owners[owner];
             }
           }
         });

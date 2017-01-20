@@ -8,13 +8,15 @@
         value: 0,
         from: Wallet.coinbase
       };
-      $scope.params = [];      
+      $scope.params = [];
 
       $scope.send = function () {
-        $scope.tx.value = new Web3().toBigNumber($scope.tx.value).mul('1e18');
+        var tx = {};
+        Object.assign(tx, $scope.tx);
+        tx.value = new Web3().toBigNumber($scope.tx.value).mul('1e18');
         // if method, use contract instance method
         if ($scope.method) {
-          Transaction.sendMethod($scope.tx, $scope.abiArray, $scope.method.name, $scope.params, function (e, tx) {
+          Transaction.sendMethod(tx, $scope.abiArray, $scope.method.name, $scope.params, function (e, tx) {
             if (tx.info && tx.info.blockNumber) {
               Utils.success("Transaction was mined.");
             }
@@ -26,7 +28,7 @@
         }
         else {
           try {
-            Transaction.send($scope.tx, function (e, tx) {
+            Transaction.send(tx, function (e, tx) {
               if (e) {
                 // Don't show anything, it could be a Tx Signature Rejected
                 // Other errors are not managed by callback error 'e'

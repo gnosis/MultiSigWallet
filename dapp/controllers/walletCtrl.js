@@ -29,7 +29,7 @@
       );
 
       $scope.updateParams = function () {
-        if($scope.wallets){          
+        if ($scope.wallets) {
           // Init wallet balance of each wallet address
           Object.keys($scope.wallets).map(function (address) {
             $scope.batch.add(

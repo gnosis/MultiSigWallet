@@ -714,6 +714,42 @@
       };
 
       /**
+      * Replace owner
+      **/
+      wallet.replaceOwner = function (wallet, owner, newOwner, cb) {
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(wallet);
+        var data = instance.replaceOwner.getData(owner, newOwner);
+
+        // Get nonce
+        wallet.getTransactionCount(wallet, true, true, function (e, count) {
+          if (e) {
+            cb(e);
+          }
+          else {
+            instance.submitTransaction(wallet, "0x0", data, count, wallet.txDefaults(), cb);
+          }
+        }).call();
+      }
+
+      /**
+      * Sign replace owner offline
+      **/
+      wallet.replaceOwnerOffline = function (wallet, owner, newOwner, cb) {
+        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(wallet);
+        var data = instance.replaceOwner.getData(owner, newOwner);
+        // Get nonce
+        wallet.getWalletNonces(function (e, nonces) {
+          if (e) {
+            cb(e);
+          }
+          else {
+            var mainData = instance.submitTransaction.getData(address, "0x0", data, nonces.multisig, wallet.txDefaults());
+            wallet.offlineTransaction(address, mainData, nonces.account, cb);
+          }
+        });
+      }
+
+      /**
       * Get required confirmations number
       */
       wallet.getRequired = function (address, cb) {

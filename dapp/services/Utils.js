@@ -5,6 +5,8 @@
     .service("Utils", function ($uibModal) {
       var factory = {};
 
+      factory.rejectedTxErrorMessage = 'Transaction rejected by user';
+
       factory.errorToHtml = function (error) {
         if (error.status == 500) {
           return 'Internal Server Error';
@@ -38,9 +40,8 @@
             }
           }
           else {
-            return error;
             if (typeof error == "object" && error.toString().indexOf("User denied") != -1) {
-              return 'Transaction rejected by user';
+              return factory.rejectedTxErrorMessage;
             }
             else {
               return error;
@@ -52,7 +53,7 @@
       factory.dangerAlert = function (error) {
         var errorHtml = factory.errorToHtml(error);
         // Just show alert is user don't rejected the tx
-        if (errorHtml !== "Transaction rejected by user") {
+        if (errorHtml !== factory.rejectedTxErrorMessage) {
           BootstrapDialog.show({
             type: BootstrapDialog.TYPE_DANGER,
             title: 'Error',

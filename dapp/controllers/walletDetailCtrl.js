@@ -402,8 +402,7 @@
       $scope.confirmMultisigTransactionOffline = function () {
         Wallet.confirmTransactionOffline($scope.wallet.address, function (e, signed) {
           if (e) {
-            // Don't show anything, it could be a Tx Signature Rejected
-            //Utils.dangerAlert(e);
+            Utils.dangerAlert(e);
           }
           else {
             Utils.signed(signed);
@@ -431,9 +430,8 @@
 
       $scope.revokeMultisigTransactionOffline = function () {
         Wallet.revokeConfirmationOffline($scope.wallet.address, function (e, signed) {
-          if (e) {
-            // Don't show anything, it could be a Tx Signature Rejected
-            // Utils.dangerAlert(e);
+          if (e) {            
+            Utils.dangerAlert(e);
           }
           else {
             Utils.signed(signed);

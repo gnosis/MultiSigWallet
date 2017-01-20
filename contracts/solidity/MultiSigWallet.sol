@@ -49,6 +49,12 @@ contract MultiSigWallet {
         _;
     }
 
+    modifier transactionExists(uint transactionId) {
+        if (transactions[transactionId].destination == 0)
+            throw;
+        _;
+    }
+
     modifier confirmed(uint transactionId, address owner) {
         if (!confirmations[transactionId][owner])
             throw;
@@ -170,6 +176,7 @@ contract MultiSigWallet {
     function confirmTransaction(uint transactionId)
         public
         ownerExists(msg.sender)
+        transactionExists(transactionId)
         notConfirmed(transactionId, msg.sender)
     {
         confirmations[transactionId][msg.sender] = true;

@@ -91,6 +91,8 @@ class TestContract(TestCase):
         self.multisig_wallet.revokeConfirmation(transaction_id, sender=keys[wa_1])
         self.assertFalse(self.multisig_wallet.confirmations(transaction_id, accounts[wa_1]))
         self.assertEqual(self.multisig_wallet.getConfirmationCount(transaction_id), 0)
+        # He changes his mind but confirms wrong transaction
+        self.assertRaises(TransactionFailed, self.multisig_wallet.confirmTransaction, 100, sender=keys[wa_2])
         # He changes his mind, confirms again
         self.multisig_wallet.confirmTransaction(transaction_id, sender=keys[wa_1])
         self.assertTrue(self.multisig_wallet.confirmations(transaction_id, accounts[wa_1]))

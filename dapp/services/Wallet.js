@@ -1140,7 +1140,7 @@
               if ( wallet.wallets[tx.from] && wallet.wallets[tx.from].tokens && wallet.wallets[tx.from].tokens[tx.to]) {
                 return "Withdraw " + wallet.wallets[tx.from].tokens[tx.to].symbol;
               }
-              else {
+              else {
                 return "Withdraw " + tx.to.slice(0, 12) + "...";
               }
 

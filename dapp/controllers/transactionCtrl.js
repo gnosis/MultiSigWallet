@@ -115,7 +115,7 @@
           if( Wallet.wallets[tx.multisig] ) {
             return "Create wallet " + Wallet.wallets[tx.multisig].name;
           }
-          else {
+          else {
             return "Create wallet " + tx.multisig.slice(0, 10) + "...";
           }
         }

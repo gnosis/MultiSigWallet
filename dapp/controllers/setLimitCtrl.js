@@ -14,8 +14,7 @@
       $scope.setLimit = function () {
         Wallet.updateLimit($scope.address, new Web3().toBigNumber($scope.limit).mul('1e18'), function (e, tx){
           if (e) {
-            //Utils.dangerAlert(e);
-            // Don't show anything
+            Utils.dangerAlert(e);
           }
           else {
             $uibModalInstance.close();
@@ -29,9 +28,8 @@
 
       $scope.sign = function () {
         Wallet.signLimit($scope.address, new Web3().toBigNumber($scope.limit).mul('1e18'), function (e, tx) {
-          if (e) {
-            // Don't show anything, it could be a Tx Signature Rejected
-            //Utils.dangerAlert(e);
+          if (e) {            
+            Utils.dangerAlert(e);
           }
           else {
             $uibModalInstance.close();

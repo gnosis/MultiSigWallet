@@ -9,8 +9,7 @@
       $scope.signOffline = function () {
         Wallet.confirmTransactionOffline(address, $scope.transactionId, function (e, tx){
           if (e) {
-            // Don't show Tx Sign Rejected errors
-            // Utils.dangerAlert(e);
+            Utils.dangerAlert(e);
           }
           else {
             Utils.signed(tx);
@@ -23,8 +22,7 @@
 
         Wallet.revokeConfirmationOffline(address, $scope.transactionId, function (e, tx) {
           if (e) {
-            // Don't show Tx Sign Rejected errors
-            // Utils.dangerAlert(e);
+            Utils.dangerAlert(e);
           }
           else{
             Utils.signed(tx);

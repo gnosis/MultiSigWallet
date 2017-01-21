@@ -10,7 +10,7 @@
           {
             to: $scope.wallet.address,
             from: Wallet.coinbase,
-            value: new EthJS.BN(new Web3().toWei($scope.amount))            
+            value: new EthJS.BN(new Web3().toWei($scope.amount))
           },
           function (e, tx) {
             if (e) {
@@ -36,9 +36,8 @@
             value: new EthJS.BN(new Web3().toWei($scope.amount))
           },
           function (e, signed) {
-            if (e) {
-              // Don't show anything, it could be a Tx Signature Rejected
-              //Utils.dangerAlert(e);
+            if (e) {              
+              Utils.dangerAlert(e);
             }
             else {
               $uibModalInstance.close();

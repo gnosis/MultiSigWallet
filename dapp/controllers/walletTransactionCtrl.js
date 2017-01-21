@@ -39,8 +39,7 @@
           $scope.params,
           function (e, tx) {
             if (e) {
-              // Don't show anything
-              // Utils.dangerAlert(e);
+              Utils.dangerAlert(e);
             }
             else {
               Utils.notification("Multisig transaction was sent.");
@@ -70,8 +69,7 @@
           $scope.params,
           function (e, signed) {
             if (e) {
-              // Don't show anything, it could be a Tx Signature Rejected
-              // Utils.dangerAlert(e);
+              Utils.dangerAlert(e);
             }
             else {
               $uibModalInstance.close();

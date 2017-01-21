@@ -16,8 +16,7 @@
       $scope.update = function () {
         Wallet.updateRequired($scope.address, $scope.required, function (e, tx) {
           if (e) {
-            //Utils.dangerAlert(e);
-            // Don't show anything, it could be a Tx Signature Rejected
+            Utils.dangerAlert(e);
           }
           else {
             $uibModalInstance.close();
@@ -31,9 +30,8 @@
 
       $scope.signOffline = function () {
         Wallet.signUpdateRequired($scope.address, $scope.required, function (e, tx) {
-          if (e) {
-            // Don't show anything, it could be a Tx Signature Rejected
-            //Utils.dangerAlert(e);
+          if (e) {            
+            Utils.dangerAlert(e);
           }
           else {
             $uibModalInstance.close();

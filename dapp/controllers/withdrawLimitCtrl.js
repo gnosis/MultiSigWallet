@@ -28,8 +28,7 @@
           null,
           function (e, tx) {
             if (e) {
-              // Utils.dangerAlert(e);
-              // Don't show anything, it could be a Tx Signature Rejected
+              Utils.dangerAlert(e);
             }
             else {
               Utils.notification("Multisig transaction was sent.");
@@ -59,9 +58,8 @@
           null,
           null,
           function (e, tx) {
-            if (e) {
-              // Don't show anything, it could be a Tx Signature Rejected
-              //Utils.dangerAlert(e);
+            if (e) {              
+              Utils.dangerAlert(e);
             }
             else{
               $uibModalInstance.close();
@@ -69,7 +67,7 @@
             }
           }
         );
-      };    
+      };
 
       $scope.cancel = function () {
         $uibModalInstance.dismiss();

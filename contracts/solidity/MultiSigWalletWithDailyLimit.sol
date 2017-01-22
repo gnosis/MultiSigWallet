@@ -43,15 +43,18 @@ contract MultiSigWalletWithDailyLimit is MultiSigWallet {
         notExecuted(transactionId)
     {
         Transaction tx = transactions[transactionId];
-        uint _spentToday = spentToday;
-        if (isConfirmed(transactionId) || tx.data.length == 0 && underLimit(tx.value)) {
+        bool confirmed = isConfirmed(transactionId);
+        if (confirmed || tx.data.length == 0 && isUnderLimit(tx.value)) {
             tx.executed = true;
+            if (!confirmed)
+                spentToday += tx.value;
             if (tx.destination.call.value(tx.value)(tx.data))
                 Execution(transactionId);
             else {
                 ExecutionFailure(transactionId);
-                spentToday = _spentToday;
                 tx.executed = false;
+                if (!confirmed)
+                    spentToday -= tx.value;
             }
         }
     }
@@ -62,7 +65,7 @@ contract MultiSigWalletWithDailyLimit is MultiSigWallet {
     /// @dev Returns if amount is within daily limit and updates daily spending.
     /// @param amount Amount to withdraw.
     /// @return Returns if amount is under daily limit.
-    function underLimit(uint amount)
+    function isUnderLimit(uint amount)
         internal
         returns (bool)
     {
@@ -72,7 +75,6 @@ contract MultiSigWalletWithDailyLimit is MultiSigWallet {
         }
         if (spentToday + amount > dailyLimit || amount > spentToday + amount)
             return false;
-        spentToday += amount;
         return true;
     }
 

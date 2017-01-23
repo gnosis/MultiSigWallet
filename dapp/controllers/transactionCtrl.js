@@ -70,40 +70,10 @@
       $scope.getNonce = function () {
         $uibModal.open({
           templateUrl: 'partials/modals/getNonce.html',
-          size: 'md',          
+          size: 'md',
           controller: 'nonceCtrl'
-          /*controller: function ($scope, $uibModalInstance, Wallet, Utils) {
-            $scope.cancel = function () {
-              $uibModalInstance.dismiss();
-            };
-
-            $scope.ok = function () {
-              Wallet.web3.eth.getTransactionCount(
-                $scope.address,
-                function (e, count) {
-                  if (e) {
-                    Utils.dangerAlert(e);
-                  }
-                  else {
-                    $uibModalInstance.close();
-                    Utils.success("Nonce: " + count);
-                  }
-                }
-              );
-            };
-          }*/
         });
       };
-
-      // @Deprecated, use getDestinationOrContract() instead
-      // $scope.getTo = function (to) {
-      //   if (Wallet.wallets[to] && Wallet.wallets[to].name) {
-      //     return Wallet.wallets[to].name;
-      //   }
-      //   else {
-      //     return $filter("address")(to);
-      //   }
-      // };
 
       /**
       * Returns the transaction or contract address

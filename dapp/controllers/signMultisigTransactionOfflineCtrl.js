@@ -8,9 +8,8 @@
         $uibModalInstance.close($scope.nonces);
       };
 
-      $scope.cancel = function () {
-        //$uibModalInstance.dismiss("User rejected to sign transaction");
-        $uibModalInstance.close();      
+      $scope.cancel = function () {        
+        $uibModalInstance.close();
       };
 
     });

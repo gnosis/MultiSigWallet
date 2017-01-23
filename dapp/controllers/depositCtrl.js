@@ -14,9 +14,7 @@
           },
           function (e, tx) {
             if (e) {
-              // Don't show anything, it could be a Tx Signature Rejected
-              // Other errors are not managed by callback error 'e'
-              // but thrown by Transaction.send() method
+              Utils.dangerAlert(e);
             }
             else if (tx.blockNumber) {
               Utils.success("Deposit transaction was mined.");
@@ -36,7 +34,7 @@
             value: new EthJS.BN(new Web3().toWei($scope.amount))
           },
           function (e, signed) {
-            if (e) {              
+            if (e) {
               Utils.dangerAlert(e);
             }
             else {

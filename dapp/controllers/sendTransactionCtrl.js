@@ -30,9 +30,7 @@
           try {
             Transaction.send(tx, function (e, tx) {
               if (e) {
-                // Don't show anything, it could be a Tx Signature Rejected
-                // Other errors are not managed by callback error 'e'
-                // but thrown by Transaction.send() method
+                Utils.dangerAlert(e);
               }
               else if (tx.blockNumber) {
                 Utils.success("Transaction was mined.");

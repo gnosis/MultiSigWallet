@@ -12,8 +12,8 @@
           $scope.wallet.address,
           new Web3().toBigNumber($scope.amount).mul('1e' + $scope.token.decimals),
           function(e, tx){
-            if (e) {
-              // Don't show anything, it could be a Tx Signature Rejected
+            if (e) {              
+              Utils.dangerAlert(e);
             }
             else {
                 Utils.notification("Deposit transaction was sent.");
@@ -35,7 +35,7 @@
           $scope.wallet.address,
           new Web3().toBigNumber($scope.amount).mul('1e' + $scope.token.decimals),
           function(e, signed){
-            if (e) {              
+            if (e) {
               Utils.dangerAlert(e);
             }
             else {

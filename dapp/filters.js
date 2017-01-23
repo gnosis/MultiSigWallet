@@ -128,13 +128,16 @@
         return text || text == 0 ? $sce.trustAsHtml(text.toString()) : $sce.trustAsHtml("<p class='text-center'>\n-\n</p>");
       };
     })
-    .filter('addressCanBeOwner', function () {
+    .filter('addressCanBeOwner', function (Wallet) {
       return function (addressCandidate, wallet) {
         if (addressCandidate && addressCandidate.indexOf && addressCandidate.indexOf("0x") != -1) {
           if ( wallet && wallet.owners && wallet.owners[addressCandidate] && wallet.owners[addressCandidate].name){
             return wallet.owners[addressCandidate].name;
           }
-          else{
+          else if (Wallet.wallets[addressCandidate]){
+            return Wallet.wallets[addressCandidate].name;
+          }          
+          else {
             return addressCandidate;
           }
         }

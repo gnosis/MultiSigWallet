@@ -31,7 +31,7 @@
             // Check connection
             wallet.web3.net.getListening(function(e){
               if (e) {
-                Utils.dangerAlert("You are not connected to any node.")
+                Utils.dangerAlert("You are not connected to any node.");
                 reject();
               }
             });
@@ -95,7 +95,6 @@
 
         // Get request object
         var request = method.request.apply(method, methodParams);
-        var params = request.params;
         request.call = function () {
             method.call.apply(method, methodParams);
         };
@@ -103,8 +102,8 @@
           method: 'eth_call',
           params: [
             {
-              to: params[0].to,
-              data: params[0].data
+              to: request.params[0].to,
+              data: request.params[0].data
             },
             "latest"
           ]
@@ -385,7 +384,7 @@
         *
         */
 
-        if(jsonConfig == {} || jsonConfig == ''){
+        if(jsonConfig === {} || jsonConfig === ''){
           return {};
         }
 
@@ -414,7 +413,7 @@
           // Add address key => value pair only when importing
           // configuration to adapt it to the App JSON Structure
           if (operation == 'import') {
-            validJsonConfig[walletKeys[x]]['address'] = walletKeys[x];
+            validJsonConfig[walletKeys[x]].address = walletKeys[x];
           }
 
           // Populate owners object
@@ -424,23 +423,23 @@
             };
 
             if (operation == 'import') {
-              validOwners[ownerKeys[y]]['address'] = ownerKeys[y];
+              validOwners[ownerKeys[y]].address = ownerKeys[y];
             }
 
             Object.assign(validJsonConfig[walletKeys[x]].owners, validOwners);
           }
 
           // Populate tokens object
-          for (var y=0; y<tokenKeys.length; y++) {
+          for (var k=0; y<tokenKeys.length; k++) {
 
-            validTokens[tokenKeys[y]] = {
-              name : tokens[tokenKeys[y]].name,
-              symbol : tokens[tokenKeys[y]].symbol,
-              decimals : tokens[tokenKeys[y]].decimals
+            validTokens[tokenKeys[k]] = {
+              name : tokens[tokenKeys[k]].name,
+              symbol : tokens[tokenKeys[k]].symbol,
+              decimals : tokens[tokenKeys[k]].decimals
             };
 
             if (operation == 'import') {
-              validTokens[tokenKeys[y]]['address'] = tokenKeys[y];
+              validTokens[tokenKeys[k]].address = tokenKeys[k];
             }
 
             Object.assign(validJsonConfig[walletKeys[x]].tokens, validTokens);
@@ -449,7 +448,7 @@
         }
 
         return validJsonConfig;
-      }
+      };
 
       /**
       * Imports a JSON configuration script containing
@@ -1103,7 +1102,7 @@
           if (e) {
             cb(e);
           }
-          else if (nonces == undefined){
+          else if (nonces === undefined){
             // Don's show anything, user closed the modal
           }
           else {
@@ -1143,6 +1142,7 @@
               else {
                 return "Withdraw " + tx.to.slice(0, 12) + "...";
               }
+              break;
 
             default:
               return tx.to.slice(0, 20) + "...";
@@ -1163,7 +1163,7 @@
       // Works as observer triggering for watch $scope
       wallet.triggerUpdates = function () {
         wallet.updates++;
-      }
+      };
 
       /**
       * Returns a list of comprehensive logs, decoded from a list of encoded logs

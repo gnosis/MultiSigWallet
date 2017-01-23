@@ -12,7 +12,7 @@
           var transactions = Transaction.transactions;
           var txArray = [];
 
-          for (txKey in transactions) {
+          for (var txKey in transactions) {
               txArray.push(transactions[txKey]);
           }
 
@@ -129,8 +129,7 @@
 
             for (var x=0; x<walletsKeys.length; x++) {
 
-              if (Wallet.wallets[walletsKeys[x]].owners
-                    && Object.keys(Wallet.wallets[walletsKeys[x]].owners).indexOf(tx.info.to) != -1) {
+              if (Wallet.wallets[walletsKeys[x]].owners && Object.keys(Wallet.wallets[walletsKeys[x]].owners).indexOf(tx.info.to) != -1) {
 
                 var ownersKeys = Object.keys(Wallet.wallets[walletsKeys[x]].owners);
                 var ownerKey = ownersKeys[ownersKeys.indexOf(tx.info.to)];

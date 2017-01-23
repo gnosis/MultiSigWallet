@@ -12,7 +12,7 @@
         factory.checkConnection();
         // Setup interval
         $interval(factory.checkConnection, txDefault.connectionChecker.checkInterval);
-      }
+      };
 
       function callDigest() {
         try{

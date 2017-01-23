@@ -99,7 +99,7 @@
             Wallet.offlineTransaction(wallet, mainData, nonces.account, cb);
           }
         });
-      }
+      };
 
       factory.withdrawData = function (tokenAddress, to, value) {
         var tokenInstance = Wallet.web3.eth.contract(factory.abi).at(tokenAddress);
@@ -107,7 +107,7 @@
           to,
           value
         );
-      }
+      };
 
       return factory;
     });

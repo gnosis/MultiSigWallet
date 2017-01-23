@@ -56,7 +56,7 @@
         if(log && log.indexOf && log.indexOf("0x") != -1){
           return log.slice(0, 10) + "...";
         }
-        else if ( log && log.match(/^[0-9]+$/) != null) {
+        else if ( log && log.match(/^[0-9]+$/) !== null) {
           if(log.toString().length < 10){
             return log.toString().slice(0, 10);
           }
@@ -125,7 +125,7 @@
     })
     .filter('dashIfEmpty', function ($sce){
       return function (text){
-        return text || text == 0 ? $sce.trustAsHtml(text.toString()) : $sce.trustAsHtml("<p class='text-center'>\n-\n</p>");
+        return text || text === 0 ? $sce.trustAsHtml(text.toString()) : $sce.trustAsHtml("<p class='text-center'>\n-\n</p>");
       };
     })
     .filter('addressCanBeOwner', function (Wallet) {
@@ -136,7 +136,7 @@
           }
           else if (Wallet.wallets[addressCandidate]){
             return Wallet.wallets[addressCandidate].name;
-          }          
+          }
           else {
             return addressCandidate;
           }
@@ -144,7 +144,7 @@
         else {
           return addressCandidate;
         }
-      }
+      };
     });
   }
 )();

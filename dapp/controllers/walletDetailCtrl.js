@@ -73,7 +73,7 @@
                   $scope.wallet.owners[$scope.owners[x]] = {
                     'name' : '',
                     'address' : $scope.owners[x]
-                  }
+                  };
                 }
               }
 
@@ -379,7 +379,7 @@
           },
           controller: 'replaceOwnerOfflineCtrl'
         });
-      }
+      };
 
       $scope.confirmTransaction = function (txId) {
         $uibModal.open(
@@ -430,7 +430,7 @@
 
       $scope.revokeMultisigTransactionOffline = function () {
         Wallet.revokeConfirmationOffline($scope.wallet.address, function (e, signed) {
-          if (e) {            
+          if (e) {
             Utils.dangerAlert(e);
           }
           else {

@@ -32,7 +32,7 @@
           $rootScope.$digest();
         }
         catch (e) {}
-      }
+      };
 
       /**
       * Remove transaction identified by transaction hash from the transactions collection
@@ -116,7 +116,7 @@
                 tx.s = EthJS.Util.bufferToHex(signature.s);
 
                 // Return raw transaction as hex string
-                cb(null, EthJS.Util.bufferToHex(tx.serialize()));                
+                cb(null, EthJS.Util.bufferToHex(tx.serialize()));
               }
             });
           }
@@ -198,7 +198,7 @@
         function processReceipt(e, receipt) {
           if (!e && receipt) {
             receipt.decodedLogs = Wallet.decodeLogs(receipt.logs);
-            factory.update(receipt.transactionHash, {receipt: receipt})
+            factory.update(receipt.transactionHash, {receipt: receipt});
 
             // call callback if it has
             if (factory.transactions[receipt.transactionHash].callback) {
@@ -216,7 +216,7 @@
         for (var i=0; i<txHashes.length; i++) {
           var tx = factory.transactions[txHashes[i]];
           // Get transaction receipt
-          if (tx && !tx.receipt) {            
+          if (tx && !tx.receipt) {
             batch.add(
               Wallet.web3.eth.getTransactionReceipt.request(txHashes[i], processReceipt)
             );

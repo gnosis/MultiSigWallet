@@ -87,7 +87,7 @@
             }
           ]
         });
-      }
+      };
 
       factory.notification = function (info) {
         BootstrapDialog.show({

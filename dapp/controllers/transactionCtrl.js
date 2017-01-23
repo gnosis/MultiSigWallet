@@ -70,8 +70,9 @@
       $scope.getNonce = function () {
         $uibModal.open({
           templateUrl: 'partials/modals/getNonce.html',
-          size: 'md',
-          controller: function ($scope, $uibModalInstance, Wallet, Utils) {
+          size: 'md',          
+          controller: 'nonceCtrl'
+          /*controller: function ($scope, $uibModalInstance, Wallet, Utils) {
             $scope.cancel = function () {
               $uibModalInstance.dismiss();
             };
@@ -90,7 +91,7 @@
                 }
               );
             };
-          }
+          }*/
         });
       };
 

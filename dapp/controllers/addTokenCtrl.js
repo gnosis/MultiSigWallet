@@ -4,7 +4,9 @@
     .module("multiSigWeb")
     .controller("addTokenCtrl", function ($scope, $uibModalInstance, Wallet, Token, token, wallet) {
 
+      $scope.editToken = {}; // Used for editing data
       $scope.token = token;
+      Object.assign($scope.editToken, $scope.token);
       $scope.wallet = wallet;
 
       if (!$scope.wallet.tokens) {
@@ -49,7 +51,8 @@
       };
 
       $scope.ok = function () {
-        $scope.wallet.tokens[$scope.token.address] = $scope.token;
+        //$scope.wallet.tokens[$scope.token.address] = $scope.token;
+        $scope.wallet.tokens[$scope.editToken.address] = $scope.editToken;
         Wallet.updateWallet($scope.wallet);
         $uibModalInstance.close();
       };

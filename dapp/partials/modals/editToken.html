@@ -8,19 +8,19 @@
     <div class="form-group">
       <label for="address">Address</label>
       <input id="address" type="text" class="form-control" ng-min="40" ng-change="updateInfo()"
-      ng-model="token.address" required />
+      ng-model="editToken.address" required />
     </div>
     <div class="form-group">
       <label for="name">Name</label>
-      <input id="name" type="text" class="form-control" ng-disabled="!token.address" ng-model="token.name" required />
+      <input id="name" type="text" class="form-control" ng-disabled="!token.address" ng-model="editToken.name" required />
     </div>
     <div class="form-group">
       <label for="symbol">Symbol</label>
-      <input id="symbol" type="text" class="form-control" ng-disabled="!token.address" ng-model="token.symbol" required />
+      <input id="symbol" type="text" class="form-control" ng-disabled="!token.address" ng-model="editToken.symbol" required />
     </div>
     <div class="form-group">
       <label for="decimals">Decimals</label>
-      <input id="decimals" type="number" class="form-control" ng-disabled="!token.address" ng-model="token.decimals" required />
+      <input id="decimals" type="number" class="form-control" ng-disabled="!token.address" ng-model="editToken.decimals" required />
     </div>
   </div>
   <div class="modal-footer">

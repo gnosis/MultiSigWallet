@@ -430,7 +430,7 @@
           }
 
           // Populate tokens object
-          for (var k=0; y<tokenKeys.length; k++) {
+          for (var k=0; k<tokenKeys.length; k++) {
 
             validTokens[tokenKeys[k]] = {
               name : tokens[tokenKeys[k]].name,

@@ -32,6 +32,20 @@
 
       };
 
+      $scope.executeOffline = function () {
+
+        Wallet.executeOffline(address, $scope.transactionId, function (e, tx) {
+          if (e) {
+            Utils.dangerAlert(e);
+          }
+          else{
+            Utils.signed(tx);
+            $uibModalInstance.close();
+          }
+        });
+
+      };
+
       $scope.cancel = function () {
         $uibModalInstance.dismiss();
       };

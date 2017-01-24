@@ -1,0 +1,19 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Execute transaction offline
+  </h3>
+</div>
+<form ng-submit="ok()">
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="nonce">Transaction ID</label>
+      <input type="number" class="form-control" ng-model="transactionId" required \>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <input class="btn btn-default" type="submit" value="Execute offline" ng-click="executeOffline()" />
+    <button class="btn btn-danger" type="button" ng-click="cancel()">
+      Cancel
+    </button>
+  </div>
+</form>

@@ -988,16 +988,16 @@
       /**
       * Signs transaction for execute multisig transaction, must be already signed by required owners
       */
-      wallet.executeTransactionOffline = function (address, txId, cb) {
+      wallet.executeTransactionOffline = function (address, cb) {
         var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
-        var mainData = instance.executeTransaction.getData(txId);
 
-        wallet.getUserNonce(function (e, nonce) {
+        wallet.getWalletNonces(function (e, nonces) {
           if (e) {
             cb(e);
           }
           else {
-            wallet.offlineTransaction(address, mainData, nonce, cb);
+            var mainData = instance.executeTransaction.getData(nonces.multisig);
+            wallet.offlineTransaction(address, mainData, nonces.account, cb);
           }
         });
       };

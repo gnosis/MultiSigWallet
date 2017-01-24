@@ -457,6 +457,17 @@
         );
       };
 
+      $scope.executeMultisigTransactionOffline = function () {
+        Wallet.executeTransactionOffline($scope.wallet.address, function (e, signed) {
+          if (e) {
+            Utils.dangerAlert(e);
+          }
+          else {
+            Utils.signed(signed);
+          }
+        });
+      };
+
       $scope.removeOwner = function (owner) {
         if (!$scope.wallet.owners[owner]) {
           $scope.wallet.owners[owner] = {address: owner};

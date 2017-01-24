@@ -418,17 +418,19 @@
 
           // Populate owners object
           for (var y=0; y<ownerKeys.length; y++) {
-            validOwners[ownerKeys[y]] = {
-              name : owners[ownerKeys[y]].name
-            };
 
             if (operation == 'import') {
-              validOwners[ownerKeys[y]].address = ownerKeys[y];
+              validOwners[ownerKeys[y]] = {
+                name : owners[ownerKeys[y]] ? owners[ownerKeys[y]] : '',
+                address : ownerKeys[y]
+              };
+            } else {
+              validOwners[ownerKeys[y]] = owners[ownerKeys[y]].name ? owners[ownerKeys[y]].name : '';
             }
 
-            Object.assign(validJsonConfig[walletKeys[x]].owners, validOwners);
           }
 
+          Object.assign(validJsonConfig[walletKeys[x]].owners, validOwners);
           // Populate tokens object
           for (var k=0; k<tokenKeys.length; k++) {
 

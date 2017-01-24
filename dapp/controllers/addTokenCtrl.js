@@ -12,6 +12,10 @@
       if (!$scope.wallet.tokens) {
         $scope.wallet.tokens = {};
       }
+      
+      if (Object.keys(token).length) {
+        $scope.editMode = true;
+      }
 
       // Refresh token info when address changes
       $scope.updateInfo = function () {

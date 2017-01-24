@@ -90,13 +90,13 @@
         );
 
         // Get nonce
-        Wallet.getWalletNonces(function (e, nonces) {
+        Wallet.getUserNonce(function (e, nonce) {
           if (e) {
             cb(e);
           }
           else {
-            var mainData = walletInstance.submitTransaction.getData(tokenAddress, "0x0", data, nonces.multisig, cb);
-            Wallet.offlineTransaction(wallet, mainData, nonces.account, cb);
+            var mainData = walletInstance.submitTransaction.getData(tokenAddress, "0x0", data);
+            Wallet.offlineTransaction(wallet, mainData, nonce, cb);
           }
         });
       };

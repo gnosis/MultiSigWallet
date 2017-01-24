@@ -652,13 +652,13 @@
         var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         var data = instance.addOwner.getData(owner.address);
         // Get nonce
-        wallet.getWalletNonces(function (e, nonces) {
+        wallet.getUserNonce(function (e, nonce) {
           if (e) {
             cb(e);
           }
           else {
-            var mainData = instance.submitTransaction.getData(address, "0x0", data, nonces.multisig, wallet.txDefaults());
-            wallet.offlineTransaction(address, mainData, nonces.account, cb);
+            var mainData = instance.submitTransaction.getData(address, "0x0", data);
+            wallet.offlineTransaction(address, mainData, nonce, cb);
           }
         });
       };
@@ -703,13 +703,13 @@
         var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         var data = instance.removeOwner.getData(owner.address);
         // Get nonce
-        wallet.getWalletNonces(function (e, nonces) {
+        wallet.getUserNonce(function (e, nonce) {
           if (e) {
             cb(e);
           }
           else {
-            var mainData = instance.submitTransaction.getData(address, "0x0", data, nonces.multisig, wallet.txDefaults());
-            wallet.offlineTransaction(address, mainData, nonces.account, cb);
+            var mainData = instance.submitTransaction.getData(address, "0x0", data);
+            wallet.offlineTransaction(address, mainData, nonce, cb);
           }
         });
       };
@@ -739,13 +739,13 @@
         var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         var data = instance.replaceOwner.getData(owner, newOwner);
         // Get nonce
-        wallet.getWalletNonces(function (e, nonces) {
+        wallet.getUserNonce(function (e, nonce) {
           if (e) {
             cb(e);
           }
           else {
-            var mainData = instance.submitTransaction.getData(address, "0x0", data, nonces.multisig, wallet.txDefaults());
-            wallet.offlineTransaction(address, mainData, nonces.account, cb);
+            var mainData = instance.submitTransaction.getData(address, "0x0", data);
+            wallet.offlineTransaction(address, mainData, nonce, cb);
           }
         });
       };
@@ -792,13 +792,13 @@
         var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         var data = instance.changeRequirement.getData(required);
         // Get nonce
-        wallet.getWalletNonces(function (e, nonces) {
+        wallet.getUserNonce(function (e, nonce) {
           if (e) {
             cb(e);
           }
           else {
-            var mainData = instance.submitTransaction.getData(address, "0x0", data, nonces.multisig, cb);
-            wallet.offlineTransaction(address, mainData, nonces.account, cb);
+            var mainData = instance.submitTransaction.getData(address, "0x0", data);
+            wallet.offlineTransaction(address, mainData, nonce, cb);
           }
         });
       };
@@ -933,13 +933,13 @@
         );
 
         // Get nonce
-        wallet.getWalletNonces(function (e, nonces) {
+        wallet.getUserNonce(function (e, nonce) {
           if (e) {
             cb(e);
           }
           else {
-            var mainData = instance.submitTransaction.getData(address, "0x0", data, nonces.multisig, cb);
-            wallet.offlineTransaction(address, mainData, nonces.account, cb);
+            var mainData = instance.submitTransaction.getData(address, "0x0", data);
+            wallet.offlineTransaction(address, mainData, nonce, cb);
           }
         });
       };
@@ -1100,22 +1100,20 @@
         }
         var walletInstance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         // Get nonce
-        wallet.getWalletNonces(function (e, nonces) {
+        wallet.getUserNonce(function (e, nonce) {
           if (e) {
             cb(e);
           }
-          else if (nonces === undefined){
+          else if (nonce === undefined){
             // Don's show anything, user closed the modal
           }
           else {
             var mainData = walletInstance.submitTransaction.getData(
               tx.to,
               tx.value,
-              data,
-              nonces.multisig,
-              wallet.txDefaults()
+              data
             );
-            wallet.offlineTransaction(address, mainData, nonces.account, cb);
+            wallet.offlineTransaction(address, mainData, nonce, cb);
           }
         });
       };

@@ -19,30 +19,36 @@
 
         batchInfo.add(
           Token.name(
-            $scope.token.address,
+            $scope.editToken.address,
             function (e, name) {
-              $scope.token.name = name;
-              $scope.$apply();
+              if (!e) {
+                $scope.editToken.name = name;
+                $scope.$apply();
+              }
             }
           )
         );
 
         batchInfo.add(
           Token.symbol(
-            $scope.token.address,
+            $scope.editToken.address,
             function (e, symbol) {
-              $scope.token.symbol = symbol;
-              $scope.$apply();
+              if (!e) {
+                $scope.editToken.symbol = symbol;
+                $scope.$apply();
+              }
             }
           )
         );
 
         batchInfo.add(
           Token.decimals(
-            $scope.token.address,
+            $scope.editToken.address,
             function (e, decimals) {
-              $scope.token.decimals = decimals.toNumber();
-              $scope.$apply();
+              if (!e) {
+                $scope.editToken.decimals = decimals.toNumber();
+                $scope.$apply();
+              }
             }
           )
         );

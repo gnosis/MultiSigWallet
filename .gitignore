@@ -54,4 +54,7 @@ Thumbs.db
 
 # Collected static files via Django's staticfiles app
 /staticfiles
+
+# custom multisig folders
+/contracts/abi
 /dapp/partials.js

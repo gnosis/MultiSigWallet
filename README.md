@@ -1,7 +1,7 @@
 Multisignature Wallet
 ===================
 
-Allows multiple parties to agree on transactions before execution. Allows to add and remove owners and update the number of required confirmations.
+Allows multiple parties to agree on transactions before execution. Allows to add and remove owners and update the number of required confirmations. A web user interface can be found [here](/dapp).
 
 Install
 -------------
@@ -37,11 +37,6 @@ python deploy.py -f deploy/MultiSig.json
 cd /vagrant/contracts/
 python deploy.py -f deploy/MultiSigWithDailyLimit.json
 ```
-### Deploy multisig wallet with pre-signed transactions:
-```
-cd /vagrant/contracts/
-python deploy.py -f deploy/MultiSigWithPreSign.json
-```
 
 Limitations
 -------------
@@ -55,7 +50,11 @@ All contracts are WITHOUT ANY WARRANTY; without even the implied warranty of MER
 Reviewers
 -------------
 The following people have reviewed the code at the time of the linked commit:
-- Stefan George ([Georgi87](https://github.com/Georgi87)): [62247de24b979ab0d055768589784cb275a07afe](https://github.com/ConsenSys/MultiSigWallet/tree/62247de24b979ab0d055768589784cb275a07afe)
+- Stefan George ([Georgi87](https://github.com/Georgi87)): [b9405cc30de4615e325b1d46c71cdef670bdeadc](https://github.com/ConsenSys/MultiSigWallet/tree/b9405cc30de4615e325b1d46c71cdef670bdeadc)
+
+Deployed instances with significant funds
+-------------
+- Golem [0x7da82c7ab4771ff031b66538d2fb9b0b047f6cf9] (https://etherscan.io/address/0x7da82c7ab4771ff031b66538d2fb9b0b047f6cf9)
 
 License
 -------------

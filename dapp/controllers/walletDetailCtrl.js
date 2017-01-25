@@ -400,14 +400,18 @@
       };
 
       $scope.confirmMultisigTransactionOffline = function () {
-        Wallet.confirmTransactionOffline($scope.wallet.address, function (e, signed) {
-          if (e) {
-            Utils.dangerAlert(e);
+        $uibModal.open(
+          {
+            templateUrl: 'partials/modals/confirmTransactionOffline.html',
+            size: 'md',
+            resolve: {
+              address: function () {
+                return $scope.wallet.address;
+              }
+            },
+            controller: 'confirmMultisigTransactionOfflineCtrl'
           }
-          else {
-            Utils.signed(signed);
-          }
-        });
+        );
       };
 
       $scope.revokeConfirmation = function (txId) {
@@ -429,14 +433,18 @@
       };
 
       $scope.revokeMultisigTransactionOffline = function () {
-        Wallet.revokeConfirmationOffline($scope.wallet.address, function (e, signed) {
-          if (e) {
-            Utils.dangerAlert(e);
+        $uibModal.open(
+          {
+            templateUrl: 'partials/modals/revokeMultisigConfirmationOffline.html',
+            size: 'md',
+            resolve: {
+              address: function () {
+                return $scope.wallet.address;
+              }
+            },
+            controller: 'confirmMultisigTransactionOfflineCtrl'
           }
-          else {
-            Utils.signed(signed);
-          }
-        });
+        );
       };
 
       $scope.executeTransaction = function (txId) {
@@ -458,14 +466,18 @@
       };
 
       $scope.executeMultisigTransactionOffline = function () {
-        Wallet.executeTransactionOffline($scope.wallet.address, function (e, signed) {
-          if (e) {
-            Utils.dangerAlert(e);
+        $uibModal.open(
+          {
+            templateUrl: 'partials/modals/executeMultisigTransactionOffline.html',
+            size: 'md',
+            resolve: {
+              address: function () {
+                return $scope.wallet.address;
+              }
+            },
+            controller: 'confirmMultisigTransactionOfflineCtrl'
           }
-          else {
-            Utils.signed(signed);
-          }
-        });
+        );
       };
 
       $scope.removeOwner = function (owner) {

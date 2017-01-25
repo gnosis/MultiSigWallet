@@ -16,19 +16,7 @@
             $uibModalInstance.close();
           }
         });
-      };
-
-      $scope.sign = function () {
-        Wallet.confirmTransactionOffline(address, txId, function (e, tx){
-          if (e) {
-            Utils.dangerAlert(e);
-          }
-          else {
-            Utils.signed(tx);
-            $uibModalInstance.close();
-          }
-        });
-      };
+      };      
 
       $scope.cancel = function () {
         $uibModalInstance.dismiss();

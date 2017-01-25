@@ -34,7 +34,7 @@
 
       $scope.executeOffline = function () {
 
-        Wallet.executeOffline(address, $scope.transactionId, function (e, tx) {
+        Wallet.executeTransactionOffline(address, $scope.transactionId, function (e, tx) {
           if (e) {
             Utils.dangerAlert(e);
           }

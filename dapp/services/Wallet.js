@@ -961,16 +961,16 @@
       /**
       * Sign confirm transaction offline by another wallet owner
       */
-      wallet.confirmTransactionOffline = function (address, cb) {
+      wallet.confirmTransactionOffline = function (address, txId, cb) {
         var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
 
-        wallet.getWalletNonces(function (e, nonces) {
+        wallet.getUserNonce(function (e, nonce) {
           if (e) {
             cb(e);
           }
           else {
-            var mainData = instance.confirmTransaction.getData(nonces.multisig);
-            wallet.offlineTransaction(address, mainData, nonces.account, cb);
+            var mainData = instance.confirmTransaction.getData(txId);
+            wallet.offlineTransaction(address, mainData, nonce, cb);
           }
         });
       };
@@ -990,16 +990,16 @@
       /**
       * Signs transaction for execute multisig transaction, must be already signed by required owners
       */
-      wallet.executeTransactionOffline = function (address, cb) {
+      wallet.executeTransactionOffline = function (address, txId, cb) {
         var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
 
-        wallet.getWalletNonces(function (e, nonces) {
+        wallet.getUserNonce(function (e, nonce) {
           if (e) {
             cb(e);
           }
           else {
-            var mainData = instance.executeTransaction.getData(nonces.multisig);
-            wallet.offlineTransaction(address, mainData, nonces.account, cb);
+            var mainData = instance.executeTransaction.getData(txId);
+            wallet.offlineTransaction(address, mainData, nonce, cb);
           }
         });
       };
@@ -1050,15 +1050,15 @@
       /**
       * Revoke transaction confirmation offline
       */
-      wallet.revokeConfirmationOffline = function (address, cb) {
+      wallet.revokeConfirmationOffline = function (address, txId, cb) {
         var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
-        wallet.getWalletNonces(function (e, nonces) {
+        wallet.getUserNonce(function (e, nonce) {
           if (e) {
             cb(e);
           }
           else {
-            var data = instance.revokeConfirmation.getData(nonces.multisig);
-            wallet.offlineTransaction(address, data, nonces.account, cb);
+            var data = instance.revokeConfirmation.getData(txId);
+            wallet.offlineTransaction(address, data, nonce, cb);
           }
         });
       };

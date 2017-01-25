@@ -515,7 +515,9 @@
             cb(null, nonce);
           },
           function (e) {
-            cb(e);
+            if (e) {
+              cb(e);
+            }
           }
         );
       };

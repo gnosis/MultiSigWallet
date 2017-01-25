@@ -9,7 +9,7 @@
       };
 
       $scope.cancel = function () {
-        $uibModalInstance.dismiss("User rejected to sign transaction");
+        $uibModalInstance.dismiss();
       };
 
     });

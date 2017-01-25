@@ -1,4 +1,4 @@
-Multisignature Wallet
+Ethereum Multisignature Wallet
 ===================
 
 Allows multiple parties to agree on transactions before execution. Allows to add and remove owners and update the number of required confirmations. A web user interface can be found [here](/dapp).

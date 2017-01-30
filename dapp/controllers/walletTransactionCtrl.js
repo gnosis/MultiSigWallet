@@ -6,7 +6,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("walletTransactionCtrl", function ($scope, Wallet, Transaction, Utils, wallet, $uibModalInstance) {
+    .controller("walletTransactionCtrl", function ($scope, Wallet, Transaction, Utils, wallet, $uibModalInstance, ABI) {
 
       $scope.wallet = wallet;
       $scope.abiArray = null;
@@ -15,6 +15,16 @@
       $scope.params = [];
       $scope.tx = {
         value: 0
+      };
+
+      $scope.updateABI = function () {
+        if ($scope.tx.to && $scope.tx.to.length > 40) {
+          $scope.abis = ABI.get();
+          if ($scope.abis[$scope.tx.to]) {
+            $scope.abi = JSON.stringify($scope.abis[$scope.tx.to]);
+            $scope.updateMethods();
+          }
+        }
       };
 
       // Parse abi
@@ -43,6 +53,7 @@
             }
             else {
               Utils.notification("Multisig transaction was sent.");
+              ABI.update($scope.abiArray, $scope.tx.to);
               Transaction.add(
                 {
                   txHash: tx,

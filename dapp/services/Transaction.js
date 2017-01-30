@@ -10,6 +10,24 @@
         updates: 0
       };
 
+      function processReceipt(e, receipt) {
+        if (!e && receipt) {
+          receipt.decodedLogs = Wallet.decodeLogs(receipt.logs);
+          factory.update(receipt.transactionHash, {receipt: receipt});
+
+          // call callback if it has
+          if (factory.transactions[receipt.transactionHash].callback) {
+            factory.transactions[receipt.transactionHash].callback(receipt);
+          }
+        }
+      }
+
+      function getTransactionInfo(e, info) {
+        if (!e && info) {
+          factory.update(info.hash, {info: info});
+        }
+      }
+
       /**
       * Add transaction object to the transactions collection
       */
@@ -22,6 +40,10 @@
           $rootScope.$digest();
         }
         catch (e) {}
+        Wallet.web3.eth.getTransaction(
+          tx.txHash,
+          getTransactionInfo
+        )
       };
 
       factory.update = function (txHash, newObj) {
@@ -194,24 +216,6 @@
 
         // Add transactions without receipt to batch request
         var txHashes = Object.keys(factory.transactions);
-
-        function processReceipt(e, receipt) {
-          if (!e && receipt) {
-            receipt.decodedLogs = Wallet.decodeLogs(receipt.logs);
-            factory.update(receipt.transactionHash, {receipt: receipt});
-
-            // call callback if it has
-            if (factory.transactions[receipt.transactionHash].callback) {
-              factory.transactions[receipt.transactionHash].callback(receipt);
-            }
-          }
-        }
-
-        function getTransactionInfo(e, info) {
-          if (!e && info) {
-            factory.update(info.hash, {info: info});
-          }
-        }
 
         for (var i=0; i<txHashes.length; i++) {
           var tx = factory.transactions[txHashes[i]];

@@ -2,7 +2,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .service("ABI", function (Wallet) {
+    .service("ABI", function () {
       var factory = {
         saved: JSON.parse(localStorage.getItem("abis")) || {},
       };
@@ -56,7 +56,7 @@
             }
 
             decodedParams.push(decodedP);
-          });          
+          });
           return {
             title: methodIds[method].name,
             params: decodedParams

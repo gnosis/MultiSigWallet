@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .service('Wallet', function ($window, $http, $q, $rootScope, $uibModal, Utils) {
+    .service('Wallet', function ($window, $http, $q, $rootScope, $uibModal, Utils, ABI) {
 
       // Init wallet factory object
       var wallet = {
@@ -17,7 +17,8 @@
         accounts: [],
         coinbase: null,
         methodIds: {},
-        updates: 0
+        updates: 0,
+        mergedABI: []
       };
 
       wallet.webInitialized = $q(function (resolve, reject) {
@@ -40,10 +41,17 @@
         });
       });
 
-      var mergedABI = wallet.json.multiSigDailyLimit.abi.concat(wallet.json.multiSigDailyLimitFactory.abi).concat(wallet.json.token.abi);
+      wallet.mergedABI = wallet.json.multiSigDailyLimit.abi.concat(wallet.json.multiSigDailyLimitFactory.abi).concat(wallet.json.token.abi);
+
+      // Concat cached abis
+      var cachedABIs = ABI.get();
+      Object.keys(cachedABIs).map(function(key) {
+        //console.log(cachedABIs[key])
+        wallet.mergedABI = wallet.mergedABI.concat(cachedABIs[key]);
+      });            
 
       // Generate event id's
-      mergedABI.map(function(item){
+      wallet.mergedABI.map(function(item){
         if(item.name){
           var signature = new Web3().sha3(item.name + "(" + item.inputs.map(function(input) {return input.type;}).join(",") + ")");
           if(item.type == "event"){

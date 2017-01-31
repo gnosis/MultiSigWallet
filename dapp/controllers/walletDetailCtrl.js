@@ -2,7 +2,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("walletDetailCtrl", function ($scope, $filter, $sce, Wallet, $routeParams, Utils, Transaction, $interval, $uibModal, Token) {
+    .controller("walletDetailCtrl", function ($scope, $filter, $sce, Wallet, $routeParams, Utils, Transaction, $interval, $uibModal, Token, ABI) {
       $scope.wallet = {};
 
       $scope.$watch(
@@ -206,26 +206,49 @@
           var owner = '0x' + new Web3().toBigNumber("0x" + tx.data.slice(11)).toString(16);
           switch (method) {
             case "ba51a6df":
-              return new Web3().toBigNumber("0x" + tx.data.slice(11)).toString();
+              return {
+                title: new Web3().toBigNumber("0x" + tx.data.slice(11)).toString()
+              };
             case "7065cb48":
-              return $filter("addressCanBeOwner")(owner, $scope.wallet);
+              return {
+                title: $filter("addressCanBeOwner")(owner, $scope.wallet)
+              };
             case "173825d9":
-              return $filter("addressCanBeOwner")(owner, $scope.wallet);
+              return {
+                title: $filter("addressCanBeOwner")(owner, $scope.wallet)
+              };
             case "cea08621":
-              return new Web3().toBigNumber("0x" + tx.data.slice(11)).div('1e18').toString() + " ETH";
+              return {
+                title: new Web3().toBigNumber("0x" + tx.data.slice(11)).div('1e18').toString() + " ETH"
+              };
             case "a9059cbb":
               var tokenAddress = tx.to;
               var account = "0x" + tx.data.slice(34, 74);
               var token = {};
               Object.assign(token, $scope.wallet.tokens[tokenAddress]);
               token.balance = new Web3().toBigNumber( "0x" + tx.data.slice(74));
-              return $filter("token")(token) + " to " + $filter("addressCanBeOwner")(account, $scope.wallet);
+              return {
+                title: $filter("token")(token) + " to " + $filter("addressCanBeOwner")(account, $scope.wallet)
+              };
             case "e20056e6":
               var oldOwner = "0x" + tx.data.slice(34, 74);
               var newOwner = "0x" + tx.data.slice(98, 138);
-              return "Old " + $filter("addressCanBeOwner")(oldOwner, $scope.wallet) + " / New " + $filter("addressCanBeOwner")(newOwner, $scope.wallet);
+              return {
+                title: "Old " + $filter("addressCanBeOwner")(oldOwner, $scope.wallet) + " / New " + $filter("addressCanBeOwner")(newOwner, $scope.wallet)
+              };
             default:
-              return tx.data.slice(0, 20) + "...";
+              // Check abis in cache
+              var abis = ABI.get();
+              if (abis[tx.to]) {
+                // Decode
+                var abi = abis[tx.to];
+                return ABI.decode(abi, tx.data);
+              }
+              else {
+                return {
+                  title: tx.data.slice(0, 20) + "..."
+                };
+              }
           }
         }
         else {
@@ -259,6 +282,9 @@
                     // Added reference to the wallet
                     info.from = $scope.wallet.address;
                     Object.assign($scope.transactions[tx], info);
+
+                    // Get data info
+                    $scope.transactions[tx].dataDecoded = $scope.getParam($scope.transactions[tx]);
                   });
                 })
               );

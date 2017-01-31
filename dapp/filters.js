@@ -53,7 +53,10 @@
     })
     .filter('logParam', function () {
       return function (log) {
-        if(log && log.indexOf && log.indexOf("0x") != -1){
+        if (log === "0x0") {
+          return "0x0";
+        }
+        else if(log && log.indexOf && log.indexOf("0x") != -1){
           return log.slice(0, 10) + "...";
         }
         else if ( log && log.match(/^[0-9]+$/) !== null) {

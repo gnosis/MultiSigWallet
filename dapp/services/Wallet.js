@@ -41,6 +41,20 @@
         });
       });
 
+      wallet.addMethods = function (abi) {
+        abi.map(function(item){
+          if(item.name){
+            var signature = new Web3().sha3(item.name + "(" + item.inputs.map(function(input) {return input.type;}).join(",") + ")");
+            if(item.type == "event"){
+              wallet.methodIds[signature.slice(2)] = item;
+            }
+            else{
+              wallet.methodIds[signature.slice(2, 6)] = item;
+            }
+          }
+        });
+      };
+
       wallet.mergedABI = wallet.json.multiSigDailyLimit.abi.concat(wallet.json.multiSigDailyLimitFactory.abi).concat(wallet.json.token.abi);
 
       // Concat cached abis
@@ -48,20 +62,10 @@
       Object.keys(cachedABIs).map(function(key) {
         //console.log(cachedABIs[key])
         wallet.mergedABI = wallet.mergedABI.concat(cachedABIs[key]);
-      });            
+      });
 
       // Generate event id's
-      wallet.mergedABI.map(function(item){
-        if(item.name){
-          var signature = new Web3().sha3(item.name + "(" + item.inputs.map(function(input) {return input.type;}).join(",") + ")");
-          if(item.type == "event"){
-            wallet.methodIds[signature.slice(2)] = item;
-          }
-          else{
-            wallet.methodIds[signature.slice(2, 6)] = item;
-          }
-        }
-      });
+      wallet.addMethods(wallet.mergedABI);
 
 
       /**

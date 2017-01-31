@@ -27,6 +27,7 @@
               $uibModalInstance.close();
               Utils.notification("Transaction was sent.");
               ABI.update($scope.abiArray, $scope.tx.to);
+              Wallet.addMethods($scope.abiArray);
             }
           });
         }

@@ -18,7 +18,8 @@
   "dependencies": {
     "grunt": "^1.0.1",
     "grunt-angular-templates": "^1.1.0",
-    "grunt-http-server": "^2.0.0"
+    "grunt-http-server": "^2.0.0",
+    "bower": "^1.8.0"
   },
   "devDependencies": {
     "grunt-angular-templates": "^1.1.0",
@@ -30,7 +31,6 @@
     "karma-chrome-launcher": "^2.0.0",
     "karma-jasmine": "^1.1.0",
     "karma-phantomjs-launcher": "^1.0.2",
-    "phantomjs-polyfill-object-assign": "0.0.2",
-    "bower": "^1.8.0"
+    "phantomjs-polyfill-object-assign": "0.0.2"
   }
 }

@@ -222,11 +222,17 @@
               </span>
             </li>
           </ul>
+          <button ng-show="transactions[txId].dataDecoded.notDecoded" class="btn btn-default" ng-click="addABI(transactions[txId].to)">
+            Add
+          </button>
+          <button ng-show="transactions[txId].dataDecoded.params" class="btn btn-default" ng-click="editABI(transactions[txId].to)">
+            Edit
+          </button>
+
         </td>
         <td>
           <div class="row">
-            <div ng-class="{'col-md-12' : transactions[txId].executed, 'col-md-6' : !transactions[txId].executed}"
-                >
+            <div ng-class="{'col-md-12' : transactions[txId].executed, 'col-md-6' : !transactions[txId].executed}">
               <ul ng-repeat="owner in transactions[txId].confirmations">
                 <li>
                   {{wallet.owners[owner].name}}

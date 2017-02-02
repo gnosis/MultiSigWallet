@@ -246,7 +246,8 @@
               }
               else {
                 return {
-                  title: tx.data.slice(0, 20) + "..."
+                  title: tx.data.slice(0, 20) + "...",
+                  notDecoded: true
                 };
               }
           }
@@ -667,6 +668,32 @@
             }
           },
           controller: 'withdrawTokenCtrl'
+        });
+      };
+
+      $scope.editABI = function (to) {
+        $uibModal.open({
+          templateUrl: 'partials/modals/editABI.html',
+          size: 'md',
+          resolve: {
+            to: function () {
+              return to;
+            }
+          },
+          controller: 'editABICtrl'
+        });
+      };
+
+      $scope.addABI = function (to) {
+        $uibModal.open({
+          templateUrl: 'partials/modals/addABI.html',
+          size: 'md',
+          resolve: {
+            to: function () {
+              return to;
+            }
+          },
+          controller: 'editABICtrl'
         });
       };
 

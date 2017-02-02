@@ -64,7 +64,8 @@
         }
         else {
           return {
-            title: data
+            title: data.slice(0, 20) + "...",
+            notDecoded: true
           };
         }
       }

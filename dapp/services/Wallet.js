@@ -23,8 +23,8 @@
 
       wallet.webInitialized = $q(function (resolve, reject) {
         window.addEventListener('load', function () {
-          // Set web3 provider (Metamask, mist, etc)
-          if ($window.web3) {
+          // Set web3 provider (Metamask, mist, etc)          
+          if ($window && $window.web3) {
             wallet.web3 = new Web3($window.web3.currentProvider);
           }
           else {

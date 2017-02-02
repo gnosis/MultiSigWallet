@@ -2,9 +2,18 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("exportWalletConfigCtrl", function ($scope, $uibModalInstance, Utils, Wallet) {
+    .controller("exportWalletConfigCtrl", function ($scope, $uibModalInstance, Utils, Wallet, ABI) {
 
-      $scope.configuration = JSON.stringify(Wallet.getValidConfigFromJSON(JSON.parse(localStorage.getItem("wallets")) || "", 'export'));
+      function getConfiguration () {
+        var config = {};
+        config.wallets = JSON.parse(localStorage.getItem("wallets")) || {};
+        config.abis =ABI.get();
+        var validConfig = Wallet.getValidConfigFromJSON(config || "", 'export');
+        return JSON.stringify(validConfig);
+      }
+
+      //$scope.configuration = JSON.stringify(Wallet.getValidConfigFromJSON(JSON.parse(localStorage.getItem("wallets")) || "", 'export'));
+      $scope.configuration = getConfiguration();
 
       $scope.close = function () {
         $uibModalInstance.dismiss();

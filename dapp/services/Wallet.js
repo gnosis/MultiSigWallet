@@ -376,21 +376,26 @@
         /* JSON structure based on the following one
         *
         *  {
-        *    "wallet_address": {
-        *      "name": "wallet_name",
-        *      "address" : "wallet_address",
-        *      "owners": {
-        *        "address": "owner_address",
-        *        "name" : "owner_name"
-        *      },
-        *      "tokens":{
-        *         "token_address":{
-        *            "address":"token_address",
-        *            "name":"token_name",
-        *            "symbol":"token_symbol",
-        *            "decimals":token_decimals
-        *         }
+        *    "wallets" : {
+        *      "wallet_address": {
+        *        "name": "wallet_name",
+        *        "address" : "wallet_address",
+        *        "owners": {
+        *          "address": "owner_address",
+        *          "name" : "owner_name"
+        *        },
+        *        "tokens":{
+        *           "token_address":{
+        *              "address":"token_address",
+        *              "name":"token_name",
+        *              "symbol":"token_symbol",
+        *              "decimals":token_decimals
+        *           }
+        *        }
         *      }
+        *    },
+        *    "abis" : {
+        *        "address" : [ abi array ]
         *    }
         *  }
         *
@@ -400,65 +405,82 @@
           return {};
         }
 
-        var walletKeys = Object.keys(jsonConfig);
-        var ownerKeys;
-        var tokenKeys;
-        var validJsonConfig = {};
         // Create th valid JSON input structure
-        for (var x=0; x<walletKeys.length; x++) {
-          var owners = jsonConfig[walletKeys[x]].owners;
-          var tokens = jsonConfig[walletKeys[x]].tokens || [];
-          var validOwners = {};
-          var validTokens = {};
+        var validJsonConfig = {};
+        validJsonConfig.wallets = {};
+        validJsonConfig.abis = {};
 
-          // Get tokens and owner keys
-          tokenKeys = Object.keys(tokens);
-          ownerKeys = Object.keys(owners);
+        if (!angular.equals(jsonConfig.abis, {})) {
+            validJsonConfig.abis = jsonConfig.abis;
+        }
+        else {
+          delete validJsonConfig.abis;
+        }
 
-          // Construct the valid JSON structure
-          validJsonConfig[walletKeys[x]] = {
-            name : jsonConfig[walletKeys[x]].name,
-            owners : {},
-            tokens : {}
-          };
+        if (!angular.equals(jsonConfig.wallets, {})) {
 
-          // Add address key => value pair only when importing
-          // configuration to adapt it to the App JSON Structure
-          if (operation == 'import') {
-            validJsonConfig[walletKeys[x]].address = walletKeys[x];
-          }
+          var walletKeys = Object.keys(jsonConfig.wallets);
+          var ownerKeys;
+          var tokenKeys;
 
-          // Populate owners object
-          for (var y=0; y<ownerKeys.length; y++) {
+          for (var x=0; x<walletKeys.length; x++) {
+            var owners = jsonConfig.wallets[walletKeys[x]].owners;
+            var tokens = jsonConfig.wallets[walletKeys[x]].tokens || [];
+            var validOwners = {};
+            var validTokens = {};
 
-            if (operation == 'import') {
-              validOwners[ownerKeys[y]] = {
-                name : owners[ownerKeys[y]] ? owners[ownerKeys[y]] : '',
-                address : ownerKeys[y]
-              };
-            } else {
-              validOwners[ownerKeys[y]] = owners[ownerKeys[y]].name ? owners[ownerKeys[y]].name : '';
-            }
+            // Get tokens and owner keys
+            tokenKeys = Object.keys(tokens);
+            ownerKeys = Object.keys(owners);
 
-          }
-
-          Object.assign(validJsonConfig[walletKeys[x]].owners, validOwners);
-          // Populate tokens object
-          for (var k=0; k<tokenKeys.length; k++) {
-
-            validTokens[tokenKeys[k]] = {
-              name : tokens[tokenKeys[k]].name,
-              symbol : tokens[tokenKeys[k]].symbol,
-              decimals : tokens[tokenKeys[k]].decimals
+            // Construct the valid JSON structure
+            validJsonConfig.wallets[walletKeys[x]] = {
+              name : jsonConfig.wallets[walletKeys[x]].name,
+              owners : {},
+              tokens : {}
             };
 
+            // Add address key => value pair only when importing
+            // configuration to adapt it to the App JSON Structure
             if (operation == 'import') {
-              validTokens[tokenKeys[k]].address = tokenKeys[k];
+              validJsonConfig.wallets[walletKeys[x]].address = walletKeys[x];
             }
 
-            Object.assign(validJsonConfig[walletKeys[x]].tokens, validTokens);
+            // Populate owners object
+            for (var y=0; y<ownerKeys.length; y++) {
 
+              if (operation == 'import') {
+                validOwners[ownerKeys[y]] = {
+                  name : owners[ownerKeys[y]] ? owners[ownerKeys[y]] : '',
+                  address : ownerKeys[y]
+                };
+              } else {
+                validOwners[ownerKeys[y]] = owners[ownerKeys[y]].name ? owners[ownerKeys[y]].name : '';
+              }
+
+            }
+
+            Object.assign(validJsonConfig.wallets[walletKeys[x]].owners, validOwners);
+            // Populate tokens object
+            for (var k=0; k<tokenKeys.length; k++) {
+
+              validTokens[tokenKeys[k]] = {
+                name : tokens[tokenKeys[k]].name,
+                symbol : tokens[tokenKeys[k]].symbol,
+                decimals : tokens[tokenKeys[k]].decimals
+              };
+
+              if (operation == 'import') {
+                validTokens[tokenKeys[k]].address = tokenKeys[k];
+              }
+
+              Object.assign(validJsonConfig.wallets[walletKeys[x]].tokens, validTokens);
+
+            }
           }
+        }
+        else {
+          delete validJsonConfig.wallets;
         }
 
         return validJsonConfig;
@@ -472,13 +494,21 @@
         // Setting up new configuration
         // No data validation at the moment
         var walletsData = JSON.parse(localStorage.getItem("wallets")) || {};
-
+        var abisData = ABI.get();
         var validJsonConfig = wallet.getValidConfigFromJSON(JSON.parse(jsonConfig), 'import');
         // Object.assign doesn't create a new key => value pair if
         // the key already exists, so at the moment we execute the
         // entire JSON object returning OK to the user.
-        Object.assign(walletsData, validJsonConfig);
+        Object.assign(walletsData, validJsonConfig.wallets);
         localStorage.setItem("wallets", JSON.stringify(walletsData));
+
+        // Update abis if the key exists in the configuration object
+        if (validJsonConfig.abis !== undefined) {
+          var abiAddresses = Object.keys(validJsonConfig.abis)
+          for (var x=0; x<abiAddresses.length; x++) {
+            ABI.update(validJsonConfig.abis[abiAddresses[x]], abiAddresses[x]);
+          }
+        }
 
         wallet.wallets = walletsData;
         wallet.updates++;

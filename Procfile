@@ -1,1 +1,1 @@
-web: sh -c "cd $PWD/dapp/; npm start"
+web: sh -c "cd /app/dapp/; npm start"

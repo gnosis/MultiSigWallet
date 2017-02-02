@@ -6,7 +6,8 @@
   "scripts": {
     "test": "karma start config.karma.js",
     "dist": "zip -x node_modules/\\* -x npm-debug.log -x tests/ -x config.karma.js -x .DS_Store -x .gitignore -r ../multisigWallet.zip ./",
-    "postinstall": "./node_modules/bower/bin/bower install"
+    "postinstall": "./node_modules/bower/bin/bower install",
+    "start": "http-server -a localhost -p 8000"
   },
   "keywords": [
     "ethereum",
@@ -16,10 +17,11 @@
   "author": "denis.granha@consensys.net",
   "license": "ISC",
   "dependencies": {
+    "bower": "^1.8.0",
     "grunt": "^1.0.1",
     "grunt-angular-templates": "^1.1.0",
     "grunt-http-server": "^2.0.0",
-    "bower": "^1.8.0"
+    "http-server": "^0.9.0"
   },
   "devDependencies": {
     "grunt-angular-templates": "^1.1.0",

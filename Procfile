@@ -1,1 +1,1 @@
-web: sh -c "cd /app/dapp/; npm start"
+web: node /app/dapp/node_modules/.bin/http-server -a 0.0.0.0 -p 8000

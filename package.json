@@ -5,7 +5,7 @@
   "main": "dapp/index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "install": "cd dapp && bower install && npm install"
+    "install": "cd dapp && bower install"
   },
   "repository": {
     "type": "git",
@@ -16,8 +16,5 @@
   "bugs": {
     "url": "https://github.com/ConsenSys/MultiSigWallet/issues"
   },
-  "homepage": "https://github.com/ConsenSys/MultiSigWallet#readme",
-  "dependencies": {
-    "bower": "^1.8.0"
-  }
+  "homepage": "https://github.com/ConsenSys/MultiSigWallet#readme"
 }

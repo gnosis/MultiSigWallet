@@ -7,7 +7,7 @@
     "test": "karma start config.karma.js",
     "dist": "zip -x node_modules/\\* -x npm-debug.log -x tests/ -x config.karma.js -x .DS_Store -x .gitignore -r ../multisigWallet.zip ./",
     "postinstall": "./node_modules/bower/bin/bower install",
-    "start": "http-server -a localhost -p 8000"
+    "start": "http-server -a 0.0.0.0 -p 5000"    
   },
   "keywords": [
     "ethereum",

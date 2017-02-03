@@ -6,8 +6,8 @@
   "scripts": {
     "test": "karma start config.karma.js",
     "dist": "zip -x node_modules/\\* -x npm-debug.log -x tests/ -x config.karma.js -x .DS_Store -x .gitignore -r ../multisigWallet.zip ./",
-    "postinstall": "./node_modules/bower/bin/bower install",
-    "start": "http-server -a 0.0.0.0 -p 5000"    
+    "postinstall": "./node_modules/bower/bin/bower install && ./node_modules/grunt/bin/grunt ngtemplates",
+    "start": "http-server -a 0.0.0.0 -p 5000"
   },
   "keywords": [
     "ethereum",

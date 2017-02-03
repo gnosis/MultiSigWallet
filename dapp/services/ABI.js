@@ -7,7 +7,7 @@
         saved: JSON.parse(localStorage.getItem("abis")) || {},
       };
 
-      factory.get = function () {
+      factory.get = function () {
         return JSON.parse(localStorage.getItem("abis")) || {};
       };
 

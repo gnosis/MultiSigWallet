@@ -67,7 +67,7 @@
         }
       };
 
-      $scope.updateABI = function () {
+      $scope.updateABI = function () {
         if ($scope.tx.to && $scope.tx.to.length > 40) {
           $scope.abis = ABI.get();
           if ($scope.abis[$scope.tx.to]) {

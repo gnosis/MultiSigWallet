@@ -279,14 +279,16 @@
               // Get transaction info
               txBatch.add(
                 Wallet.getTransaction($scope.wallet.address, tx, function (e, info) {
-                  $scope.$apply(function () {
-                    // Added reference to the wallet
-                    info.from = $scope.wallet.address;
-                    Object.assign($scope.transactions[tx], info);
+                  if (!e && info.to) {
+                    $scope.$apply(function () {
+                      // Added reference to the wallet
+                      info.from = $scope.wallet.address;
+                      Object.assign($scope.transactions[tx], info);
 
-                    // Get data info
-                    $scope.transactions[tx].dataDecoded = $scope.getParam($scope.transactions[tx]);
-                  });
+                      // Get data info
+                      $scope.transactions[tx].dataDecoded = $scope.getParam($scope.transactions[tx]);
+                    });
+                  }
                 })
               );
               // Get transaction confirmations

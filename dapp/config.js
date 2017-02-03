@@ -2,7 +2,7 @@ var txDefaultOrig =
 {
   gasLimit: 3141592,
   gasPrice: 18000000000,
-  ethereumNode: "http://localhost:8545",
+  ethereumNode: "https://mainnet.infura.io:8545",
   connectionChecker:{
     method : "OPTIONS",
     url : "https://www.google.com",

@@ -5,7 +5,7 @@
   "main": "index.html",
   "scripts": {
     "test": "karma start config.karma.js",
-    "dist": "zip -x node_modules/\\* -x npm-debug.log -x tests/ -x config.karma.js -x .DS_Store -x .gitignore -r ../multisigWallet.zip ./"
+    "dist": "zip -x node_modules/\\* -x npm-debug.log -x tests/\\* -x config.karma.js -x .DS_Store -x .gitignore -r ../multisigWallet.zip ./"
   },
   "keywords": [
     "ethereum",

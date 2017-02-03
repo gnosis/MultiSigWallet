@@ -6,11 +6,11 @@
       $scope.send = function () {
         Wallet.revokeConfirmation(address, txId, function (e, tx) {
           if (e) {
-            Utils.dangerAlert(e);            
+            Utils.dangerAlert(e);
           }
           else {
             Utils.notification("Revoke confirmation transaction was sent.");
-            Transaction.add({txId: tx, callback: function () {
+            Transaction.add({txHash: tx, callback: function () {
               Utils.success("Revoke confirmation transaction was mined.");
             }});
             $uibModalInstance.close();

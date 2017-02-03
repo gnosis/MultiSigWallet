@@ -3,14 +3,14 @@
     angular
     .module("multiSigWeb")
     .controller("executeTransactionCtrl", function ($scope, txId, address, Wallet, Transaction, $uibModalInstance, Utils){
-      $scope.send = function () {        
+      $scope.send = function () {
         Wallet.executeTransaction(address, txId, function (e, tx) {
           if (e) {
             Utils.dangerAlert(e);
           }
           else {
             Utils.notification("Execution transaction was sent.");
-            Transaction.add({txId: tx, callback: function (){
+            Transaction.add({txHash: tx, callback: function (){
               Utils.success("Execution transaction was mined.");
             }});
             $uibModalInstance.close();

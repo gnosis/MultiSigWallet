@@ -10,13 +10,13 @@
           }
           else {
             Utils.notification("Confirmation transaction was sent.");
-            Transaction.add({txId: tx, callback: function () {
+            Transaction.add({txHash: tx, callback: function () {
               Utils.success("Confirmation transaction was mined.");
             }});
             $uibModalInstance.close();
           }
         });
-      };      
+      };
 
       $scope.cancel = function () {
         $uibModalInstance.dismiss();

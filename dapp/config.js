@@ -5,7 +5,7 @@ var txDefaultOrig =
   ethereumNode: "http://localhost:8545",
   connectionChecker:{
     method : "OPTIONS",
-    url : "http://status.gnosis.pm",
+    url : "https://www.google.com",
     checkInterval: 5000
   },
   // Testrpc

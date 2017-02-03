@@ -1,1 +1,1 @@
-web: cd dapp && node /app/dapp/node_modules/.bin/http-server -p 5000
+web: node /app/dapp/node_modules/.bin/http-server -p 5000

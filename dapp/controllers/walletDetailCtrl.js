@@ -203,7 +203,10 @@
       $scope.getParam = function (tx) {
         if (tx.data && tx.data.length > 3) {
           var method = tx.data.slice(2, 10);
-          var owner = '0x' + new Web3().toBigNumber("0x" + tx.data.slice(11)).toString(16);
+          var owner = "0x1";
+          if (tx.data && tx.data.length > 12) {
+            owner = '0x' + new Web3().toBigNumber("0x" + tx.data.slice(11)).toString(16);
+          }
           switch (method) {
             case "ba51a6df":
               return {

@@ -58,3 +58,4 @@ Thumbs.db
 # custom multisig folders
 /contracts/abi
 /dapp/partials.js
+multisigWallet.zip

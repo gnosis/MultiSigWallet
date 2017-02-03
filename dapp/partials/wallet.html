@@ -222,12 +222,14 @@
               </span>
             </li>
           </ul>
-          <button ng-show="transactions[txId].dataDecoded.notDecoded" class="btn btn-default" ng-click="addABI(transactions[txId].to)">
-            Add
-          </button>
-          <button ng-show="transactions[txId].dataDecoded.params" class="btn btn-default" ng-click="editABI(transactions[txId].to)">
-            Edit
-          </button>
+          <div class="pull-right">
+            <button ng-show="transactions[txId].dataDecoded.notDecoded" class="btn btn-default btn-sm" ng-click="addABI(transactions[txId].to)">
+              Add
+            </button>
+            <button ng-show="transactions[txId].dataDecoded.params" class="btn btn-default btn-sm" ng-click="editABI(transactions[txId].to)">
+              Edit
+            </button>
+          </div>
 
         </td>
         <td>

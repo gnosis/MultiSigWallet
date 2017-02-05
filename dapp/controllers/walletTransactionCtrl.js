@@ -53,8 +53,10 @@
             }
             else {
               Utils.notification("Multisig transaction was sent.");
-              ABI.update($scope.abiArray, $scope.tx.to);
-              Wallet.addMethods($scope.abiArray);
+              if ($scope.abiArray) {
+                ABI.update($scope.abiArray, $scope.tx.to);
+                Wallet.addMethods($scope.abiArray);
+              }
               Transaction.add(
                 {
                   txHash: tx,

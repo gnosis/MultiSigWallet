@@ -288,8 +288,10 @@
                       info.from = $scope.wallet.address;
                       Object.assign($scope.transactions[tx], info);
 
-                      // Get data info
-                      $scope.transactions[tx].dataDecoded = $scope.getParam($scope.transactions[tx]);
+                      // Get data info if data has not being decoded, because is a new transactions or we don't have the abi to do it
+                      if (!$scope.transactions[tx].dataDecoded || $scope.transactions[tx].dataDecoded.notDecoded) {
+                        $scope.transactions[tx].dataDecoded = $scope.getParam($scope.transactions[tx]);
+                      }
                     });
                   }
                 })

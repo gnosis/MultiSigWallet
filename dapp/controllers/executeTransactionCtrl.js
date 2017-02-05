@@ -18,7 +18,7 @@
         });
       };
 
-      $scope.sign = function (){
+      $scope.sign = function () {
         Wallet.executeTransactionOffline(address, txId, function (e, tx) {
           if (e) {
             Utils.dangerAlert(e);

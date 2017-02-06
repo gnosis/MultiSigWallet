@@ -22,9 +22,9 @@
       <select id="method" ng-model="method" ng-options="method.name for method in methods track by method.index"
        ng-required="tx.abi" class="form-control" ng-change="setMethod()" ng-disabled="!abiArray" ></select>
     </div>
-    <div class="form-group" ng-show="method">
+    <div class="form-group" ng-show="method && abiArray[method.index].inputs.length > 0">
       <h3>
-        Params
+        Parameters
       </h3>
       <div ng-repeat="param in abiArray[method.index].inputs" >
         <div ng-switch on="param.type">

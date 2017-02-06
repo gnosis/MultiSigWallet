@@ -179,7 +179,7 @@
       });
 
       $scope.getOwnerName = function (address) {
-        if ($scope.wallet.owners && $scope.wallet.owners[address]){
+        if ($scope.wallet.owners && $scope.wallet.owners[address]) {
           return $scope.wallet.owners[address].name;
         }
       };

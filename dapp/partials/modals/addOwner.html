@@ -14,7 +14,7 @@
   </div>
 </div>
 <div class="modal-footer">
-  <button class="btn btn-default" type="button" ng-click="ok()">
+  <button class="btn btn-default" type="button" ng-click="ok()" ng-disabled="!owner.address.length > 0">
     Ok
   </button>
   <button class="btn btn-danger" type="button" ng-click="cancel()">

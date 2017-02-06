@@ -97,8 +97,8 @@
         $interval.cancel($scope.interval);
       });
 
-      $scope.currentPage = 1;
-      $scope.itemsPerPage = 5;
+      /*$scope.currentPage = 1;
+      $scope.itemsPerPage = 5;*/
 
 
       $scope.newWalletSelect = function () {

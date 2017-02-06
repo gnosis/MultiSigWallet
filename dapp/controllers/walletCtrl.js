@@ -152,7 +152,7 @@
       $scope.removeWallet = function (address) {
         $uibModal.open({
           templateUrl: 'partials/modals/removeWallet.html',
-          size: 'lg',
+          size: 'sm',
           scope: $scope,
           controller: 'removeWalletCtrl',
           resolve: {

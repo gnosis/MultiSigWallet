@@ -16,6 +16,10 @@ body {
     margin-top: -6px;
 }
 
+.active {
+  font-weight: bold;
+}
+
 .tx-data{
     word-wrap: break-word;
 }

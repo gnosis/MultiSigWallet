@@ -358,7 +358,15 @@
             };
           });
         }
-        Object.assign(wallet.wallets[w.address], {address: w.address, name: w.name, owners: w.owners, tokens: tokens});
+
+        // Converts to lowercase the addresses
+        var owners = {};
+        for (var key in w.owners) {
+          w.owners[key].address = w.owners[key].address.toLowerCase();
+          owners[key.toLowerCase()] = w.owners[key];
+        }
+
+        Object.assign(wallet.wallets[w.address], {address: w.address, name: w.name, owners: owners, tokens: tokens});
         localStorage.setItem("wallets", JSON.stringify(wallet.wallets));
         wallet.updates++;
         try{

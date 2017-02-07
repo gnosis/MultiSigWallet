@@ -37,7 +37,7 @@
             callDigest();
           }
         );*/
-        factory.isConnected = navigator.onLine; // true|false
+        factory.isConnected = navigator.onLine; // true | false
         callDigest();
 
       };

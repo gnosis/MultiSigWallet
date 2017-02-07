@@ -89,17 +89,17 @@
         </div>
         <div class="collapse navbar-collapse" uib-collapse="navCollapsed">
             <ul class="nav navbar-nav">
-              <li>
+              <li ng-class="getMenuItemClass('/wallets')">
                 <a href="#/wallets">
                   Wallets
                 </a>
               </li>
-              <li>
+              <li ng-class="getMenuItemClass('/transactions')">
                 <a href="#/transactions">
                   Transactions
                 </a>
               </li>
-              <li>
+              <li ng-class="getMenuItemClass('/settings')">
                 <a href="#/settings">
                   Settings
                 </a>

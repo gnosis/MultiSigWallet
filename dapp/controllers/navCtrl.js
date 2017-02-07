@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .controller('navCtrl', function ($scope, Wallet, Connection, $interval, $sce) {
+    .controller('navCtrl', function ($scope, Wallet, Connection, $interval, $sce, $location) {
       $scope.navCollapsed = true;
 
       $scope.updateInfo = function (){
@@ -51,6 +51,12 @@
       $scope.selectAccount = function (account) {
         Wallet.selectAccount(account);
         $scope.updateInfo();
+      };
+
+      $scope.getMenuItemClass = function (path) {
+        if ($location.path() == path) {
+          return 'active';
+        }
       };
     });
   }

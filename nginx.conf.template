@@ -5,7 +5,7 @@ server {
   listen      [::]:$NGINX_PORT;
   listen      $NGINX_PORT;
   server_name $SSL_SERVER_NAME;
-  return 301 https://$host$request_uri;
+  return 301 https://$APP$request_uri;
 }
 
 server {

@@ -244,7 +244,7 @@
               var abis = ABI.get();
               if (abis[tx.to]) {
                 // Decode
-                var abi = abis[tx.to];
+                var abi = abis[tx.to].abi;
                 return ABI.decode(abi, tx.data);
               }
               else {
@@ -692,23 +692,7 @@
           },
           controller: 'editABICtrl'
         });
-      };
-
-      $scope.addABI = function (to) {
-        $uibModal.open({
-          templateUrl: 'partials/modals/addABI.html',
-          size: 'md',
-          resolve: {
-            to: function () {
-              return to;
-            },
-            cb: function () {
-              return $scope.updateTransactions;
-            }
-          },
-          controller: 'editABICtrl'
-        });
-      };
+      };      
 
     });
   }

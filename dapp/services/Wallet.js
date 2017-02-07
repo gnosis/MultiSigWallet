@@ -61,7 +61,7 @@
       var cachedABIs = ABI.get();
       Object.keys(cachedABIs).map(function(key) {
         //console.log(cachedABIs[key])
-        wallet.mergedABI = wallet.mergedABI.concat(cachedABIs[key]);
+        wallet.mergedABI = wallet.mergedABI.concat(cachedABIs[key].abi);
       });
 
       // Generate event id's
@@ -1197,7 +1197,13 @@
               break;
 
             default:
-              return tx.to.slice(0, 20) + "...";
+              var abis = ABI.get();
+              if(abis[tx.to] && abis[tx.to].name) {
+                return abis[tx.to].name;
+              }
+              else {
+                return tx.to.slice(0, 20) + "...";
+              }
           }
         }
         else {

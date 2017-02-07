@@ -16,6 +16,10 @@
     <div class="form-group">
       <label for="abi"> ABI string </label>
       <textarea id="abi" rows="5" type="text" class="form-control" ng-model="abi" ng-change="updateMethods()" ng-required="!tx.value"></textarea>
+    </div>    
+    <div class="form-group" ng-show="abi">
+      <label for="name">Contract name</label>
+      <input type="text" class="form-control" ng-model="name" name="name" />
     </div>
     <div class="form-group">
       <label for="method">Method</label>

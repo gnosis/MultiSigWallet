@@ -21,7 +21,8 @@
         if ($scope.tx.to && $scope.tx.to.length > 40) {
           $scope.abis = ABI.get();
           if ($scope.abis[$scope.tx.to]) {
-            $scope.abi = JSON.stringify($scope.abis[$scope.tx.to]);
+            $scope.abi = JSON.stringify($scope.abis[$scope.tx.to].abi);
+            $scope.name = $scope.abis[$scope.tx.to].name;
             $scope.updateMethods();
           }
         }
@@ -54,7 +55,7 @@
             else {
               Utils.notification("Multisig transaction was sent.");
               if ($scope.abiArray) {
-                ABI.update($scope.abiArray, $scope.tx.to);
+                ABI.update($scope.abiArray, $scope.tx.to, $scope.name);
                 Wallet.addMethods($scope.abiArray);
               }
               Transaction.add(

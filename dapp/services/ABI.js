@@ -11,8 +11,8 @@
         return JSON.parse(localStorage.getItem("abis")) || {};
       };
 
-      factory.update = function (abi, to) {
-        factory.saved[to] = abi;
+      factory.update = function (abi, to, name) {
+        factory.saved[to] = { abi: abi, name: name};
 
         localStorage.setItem("abis", JSON.stringify(factory.saved));
       };
@@ -33,7 +33,7 @@
           }
         });
 
-        var method = data.slice(2, 6);        
+        var method = data.slice(2, 6);
         var dataIndex = 10;
         var decodedParams = [];
         if (methodIds[method]) {

@@ -213,6 +213,7 @@
           {{transactions[txId].value|ether}}
         </td>
         <td>
+          <div class="col-md-8">
           {{transactions[txId].dataDecoded.title}}
           <ul>
             <li ng-repeat="param in transactions[txId].dataDecoded.params">
@@ -222,11 +223,9 @@
               </span>
             </li>
           </ul>
-          <div class="pull-right">
-            <button ng-show="transactions[txId].dataDecoded.notDecoded" class="btn btn-default btn-sm" ng-click="addABI(transactions[txId].to)">
-              Edit ABI
-            </button>
-            <button ng-show="transactions[txId].dataDecoded.params" class="btn btn-default btn-sm" ng-click="editABI(transactions[txId].to)">
+          </div>
+          <div class="col-md-4">
+            <button ng-show="transactions[txId].dataDecoded.notDecoded || transactions[txId].dataDecoded.params" class="btn btn-default btn-sm" ng-click="editABI(transactions[txId].to)">
               Edit ABI
             </button>
           </div>

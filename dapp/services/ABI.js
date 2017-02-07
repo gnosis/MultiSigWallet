@@ -33,8 +33,8 @@
           }
         });
 
-        var method = data.slice(2, 6);
-        var dataIndex = 35;
+        var method = data.slice(2, 6);        
+        var dataIndex = 10;
         var decodedParams = [];
         if (methodIds[method]) {
           // Iterate params

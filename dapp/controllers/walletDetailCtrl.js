@@ -685,6 +685,9 @@
           resolve: {
             to: function () {
               return to;
+            },
+            cb: function () {
+              return $scope.updateTransactions;
             }
           },
           controller: 'editABICtrl'
@@ -698,6 +701,9 @@
           resolve: {
             to: function () {
               return to;
+            },
+            cb: function () {
+              return $scope.updateTransactions;
             }
           },
           controller: 'editABICtrl'

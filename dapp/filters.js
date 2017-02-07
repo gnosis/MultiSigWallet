@@ -96,7 +96,7 @@
         return function (token) {
         if (token && token.balance) {
           var decimals = token.decimals;
-          if(!token.decimals){
+          if(token.decimals === undefined){
             decimals = 18;
           }
           var string_split = new Web3().toBigNumber(token.balance).div("1e" + decimals).toString(10).split('.');

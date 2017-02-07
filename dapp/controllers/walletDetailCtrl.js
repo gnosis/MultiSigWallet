@@ -692,7 +692,7 @@
           },
           controller: 'editABICtrl'
         });
-      };      
+      };
 
     });
   }

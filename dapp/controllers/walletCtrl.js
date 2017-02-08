@@ -18,12 +18,21 @@
         }
       );
 
+      $scope.wallets = {};
+
       $scope.$watch(
         function () {
           return Wallet.updates;
         },
         function () {
-          $scope.wallets = Wallet.getAllWallets();
+          var walletsToCopy = Wallet.getAllWallets();
+
+          for (wallet in walletsToCopy) {
+            if (!$scope.wallets[wallet]) {
+              $scope.wallets[wallet] = {};
+            }
+            Object.assign($scope.wallets[wallet], walletsToCopy[wallet]);
+          }          
           $scope.totalItems = Object.keys($scope.wallets).length;
         }
       );

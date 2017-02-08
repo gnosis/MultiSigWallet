@@ -13,7 +13,7 @@
       <button type="button" ng-click="replaceOwnerOffline()" class="btn btn-default" show-hide-by-connectivity="offline">
         Replace offline
       </button>
-      <button type="button" ng-click="addOwner()" class="btn btn-default">
+      <button type="button" ng-click="addOwner()" class="btn btn-default" show-hide-by-connectivity="offline">
         Add
       </button>
       <button type="button" ng-click="hideOwners=true" class="btn btn-default" ng-hide="hideOwners">
@@ -62,6 +62,29 @@
         </td>
         <td>
           {{owner}}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-2">
+              <button type="button" ng-click="addOwner()" class="btn btn-default btn-sm pull-left"
+                ng-disabled="newOwner.address == undefined || !newOwner.address.length > 0">
+                Add
+              </button>
+            </div>
+            <div class="col-md-10">
+              <input type="text" class="form-control" placeholder="Name" ng-model="newOwner.name" />
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="row">
+            <div class="col-md-10">
+              <input type="text" class="form-control" placeholder="Address" ng-model="newOwner.address" />
+            </div>
+            <div class="col-md-2"></div>
+          </div>
         </td>
       </tr>
     </tbody>

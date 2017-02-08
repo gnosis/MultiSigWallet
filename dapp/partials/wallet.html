@@ -208,7 +208,12 @@
         <td>
           {{txId|bigNumber}}
         </td>
-        <td ng-bind-html="getType(transactions[txId])"></td>
+        <td>
+          <span uib-popover="{{transactions[txId].to}}" popover-enable="'true'" popover-trigger="'mouseenter'">
+            {{transactions[txId].type}}
+          </span>
+
+        </td>
         <td>
           {{transactions[txId].value|ether}}
         </td>

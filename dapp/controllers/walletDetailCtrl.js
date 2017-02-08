@@ -189,15 +189,10 @@
         // Returns the name associated with tx.to if it is
         // addressed to a wallet owner
         if (tx.to && $scope.wallet.owners[tx.to]) {
-          // If type is equal to the owner address, we do not show that address
-          if ($scope.wallet.owners[tx.to].address.slice(0,20) == type.slice(0,20)) {
-            type = '';
-          }
-
-          return $sce.trustAsHtml("<i class='fa fa-user-o' aria-hidden='true'></i>&nbsp;" + $scope.wallet.owners[tx.to].name + ' ' + type);
+          type = $scope.wallet.owners[tx.to].name;
         }
 
-        return $sce.trustAsHtml(type);
+        return type;
       };
 
       $scope.getParam = function (tx) {
@@ -291,6 +286,10 @@
                       // Get data info if data has not being decoded, because is a new transactions or we don't have the abi to do it
                       if (!$scope.transactions[tx].dataDecoded || $scope.transactions[tx].dataDecoded.notDecoded) {
                         $scope.transactions[tx].dataDecoded = $scope.getParam($scope.transactions[tx]);
+                      }
+                      // If destionation type has not been set
+                      if (!$scope.transactions[tx].type) {
+                        $scope.transactions[tx].type = $scope.getType($scope.transactions[tx]);                        
                       }
                     });
                   }

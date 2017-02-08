@@ -31,9 +31,7 @@
             if (!$scope.wallets[wallet]) {
               $scope.wallets[wallet] = {};
             }
-            console.log($scope.wallets[wallet].limit);
-            Object.assign($scope.wallets[wallet], walletsToCopy[wallet]);
-            console.log($scope.wallets[wallet].limit);
+            Object.assign($scope.wallets[wallet], walletsToCopy[wallet]);            
           }
           $scope.totalItems = Object.keys($scope.wallets).length;
         }

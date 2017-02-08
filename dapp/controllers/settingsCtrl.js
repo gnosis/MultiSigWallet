@@ -3,7 +3,7 @@
     angular
     .module("multiSigWeb")
     .controller("settingsCtrl", function ($scope, Wallet, Utils, $window, $uibModal) {
-      $scope.config = Object.assign({}, txDefault);
+      $scope.config = Object.assign({}, txDefault, JSON.parse(localStorage.getItem("userConfig")));
 
       $scope.update = function () {
         localStorage.setItem("userConfig", JSON.stringify($scope.config));
@@ -13,7 +13,7 @@
         }
 
         Utils.success("Configuration updated successfully.");
-      };      
+      };
 
       /**
       * Shows the wallets configuration export dialog

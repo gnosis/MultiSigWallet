@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .service('Wallet', function ($window, $http, $q, $rootScope, $uibModal, Utils, ABI) {
+    .service('Wallet', function ($window, $http, $q, $rootScope, $uibModal, Utils, ABI, Connection) {
 
       // Init wallet factory object
       var wallet = {
@@ -647,21 +647,26 @@
       wallet.restore = function (info, cb) {
         var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(info.address);
         // Check contract function works
-        instance.MAX_OWNER_COUNT(function (e, count) {
-          if (e) {
+        instance.MAX_OWNER_COUNT(function (e, count) {        
+          if (e && Connection.isConnected) {
             cb(e);
           }
-          // Don't check is a MultiSigWallet
-          // if (count.eq(0)) {
-          //   // it is not a wallet
-          //   cb("Address " + info.address + " is not a MultiSigWallet contract");
-          // }
-          // else {
-            // Add wallet
-            info.owners = {};
-            wallet.updateWallet(info);
-            cb(null, info);
-          // }
+          else {
+            if ((!count && Connection.isConnected) || (count && count.eq(0) && Connection.isConnected)) {
+              // it is not a wallet
+              cb("Address " + info.address + " is not a MultiSigWallet contract");
+            }
+            else {
+              // Add wallet, add My account to the object by default, won't be
+              // displayed anyway if user is not an owner, but if it is, name will be used
+              var coinbase = wallet.coinbase.toLowerCase();
+              info.owners = {};
+              info.owners[coinbase] = { address: wallet.coinbase.toLowerCase(), name: 'My Account'};
+              console.log(info);
+              wallet.updateWallet(info);
+              cb(null, info);
+            }
+          }
         });
       };
 

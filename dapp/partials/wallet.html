@@ -235,7 +235,6 @@
           <span uib-popover="{{transactions[txId].to}}" popover-enable="'true'" popover-trigger="'mouseenter'">
             {{transactions[txId].type}}
           </span>
-
         </td>
         <td>
           {{transactions[txId].value|ether}}
@@ -245,7 +244,7 @@
           {{transactions[txId].dataDecoded.title}}
           <ul>
             <li ng-repeat="param in transactions[txId].dataDecoded.params">
-              {{param.name}} :
+              {{param.name}}:
               <span uib-popover="{{param.value}}" popover-enable="param.value && param.value.toString().length > 10" popover-trigger="'mouseenter'">
                 {{param.value|addressCanBeOwner:wallet|logParam}}
               </span>
@@ -253,11 +252,10 @@
           </ul>
           </div>
           <div class="col-md-4">
-            <button ng-show="transactions[txId].dataDecoded.notDecoded || transactions[txId].dataDecoded.params" class="btn btn-default btn-sm" ng-click="editABI(transactions[txId].to)">
+            <button ng-show="transactions[txId].dataDecoded.notDecoded || transactions[txId].dataDecoded.params" class="btn btn-default btn-sm pull-right" ng-click="editABI(transactions[txId].to)">
               Edit ABI
             </button>
           </div>
-
         </td>
         <td>
           <div class="row">
@@ -276,10 +274,7 @@
                 Confirm
               </button>
             </div>
-
-            <div class="col-md-6"
-                ng-show="transactions[txId].confirmed && !transactions[txId].executed">
-
+            <div class="col-md-6" ng-show="transactions[txId].confirmed && !transactions[txId].executed">
               <button type="button" class="btn btn-default btn-sm pull-right"
                   ng-show="transactions[txId].confirmed && !transactions[txId].executed"
                   ng-click="revokeConfirmation(txId)"
@@ -291,7 +286,7 @@
         </td>
         <td>
           <div class="row">
-            <div class="col-md-2">
+            <div class="col-md-6">
               <span ng-show="transactions[txId].executed">
                 Yes
               </span>
@@ -299,7 +294,7 @@
                 No
               </span>
             </div>
-            <div class="col-md-10" ng-show="!transactions[txId].executed && transactions[txId].confirmations.length == confirmations">
+            <div class="col-md-6" ng-show="!transactions[txId].executed && transactions[txId].confirmations.length == confirmations">
               <button type="button" class="pull-right btn btn-default btn-sm pull-right"
                 ng-show="!transactions[txId].executed && transactions[txId].confirmations.length == confirmations"
                 ng-click="executeTransaction(txId)"

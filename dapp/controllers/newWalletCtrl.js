@@ -102,7 +102,7 @@
         $uibModal.open({
           animation: false,
           templateUrl: 'partials/modals/addOwner.html',
-          size: 'sm',
+          size: 'md',
           controller: function ($scope, $uibModalInstance) {
             $scope.owner = {
               name: "",

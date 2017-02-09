@@ -217,21 +217,23 @@
           {{transactions[txId].value|ether}}
         </td>
         <td>
-          <div class="col-md-8">
-          {{transactions[txId].dataDecoded.title}}
-          <ul>
-            <li ng-repeat="param in transactions[txId].dataDecoded.params">
-              {{param.name}}:
-              <span uib-popover="{{param.value}}" popover-enable="param.value && param.value.toString().length > 10" popover-trigger="'mouseenter'">
-                {{param.value|addressCanBeOwner:wallet|logParam}}
-              </span>
-            </li>
-          </ul>
-          </div>
-          <div class="col-md-4">
-            <button ng-show="transactions[txId].dataDecoded.notDecoded || transactions[txId].dataDecoded.params" class="btn btn-default btn-sm pull-right" ng-click="editABI(transactions[txId].to)">
-              Edit ABI
-            </button>
+          <div class="row">
+            <div class="col-md-8">
+              {{transactions[txId].dataDecoded.title}}
+              <ul>
+                <li ng-repeat="param in transactions[txId].dataDecoded.params">
+                  {{param.name}}:
+                  <span uib-popover="{{param.value}}" popover-enable="param.value && param.value.toString().length > 10" popover-trigger="'mouseenter'">
+                    {{param.value|addressCanBeOwner:wallet|logParam}}
+                  </span>
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-4" ng-show="transactions[txId].dataDecoded.notDecoded || transactions[txId].dataDecoded.params">
+              <button ng-show="transactions[txId].dataDecoded.notDecoded || transactions[txId].dataDecoded.params" class="btn btn-default btn-sm pull-right" ng-click="editABI(transactions[txId].to)">
+                Edit ABI
+              </button>
+            </div>
           </div>
         </td>
         <td>

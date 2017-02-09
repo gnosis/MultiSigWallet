@@ -647,7 +647,7 @@
       wallet.restore = function (info, cb) {
         var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(info.address);
         // Check contract function works
-        instance.MAX_OWNER_COUNT(function (e, count) {        
+        instance.MAX_OWNER_COUNT(function (e, count) {
           if (e && Connection.isConnected) {
             cb(e);
           }
@@ -1264,7 +1264,7 @@
               if (param.type == "address"){
                 decodedP.value = "0x" + new Web3().toBigNumber(decodedP.value).toString(16);
               }
-              else if(param.type == "uint256" ){
+              else if(param.type == "uint256" || param.type == "uint8" || param.type == "int" ){
                 decodedP.value = new Web3().toBigNumber(decodedP.value).toString(10);
               }
 

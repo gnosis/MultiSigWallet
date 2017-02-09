@@ -60,11 +60,11 @@
           return log.slice(0, 10) + "...";
         }
         else if ( log && log.match(/^[0-9]+$/) !== null) {
-          if(log.toString().length < 10){
-            return log.toString().slice(0, 10);
+          if(log.toString().length < 7){
+            return log.toString().slice(0, 7);
           }
           else{
-            return log.toString().slice(0, 10) + "...";
+            return new Web3().toBigNumber(log).toExponential(3);
           }
         }
         else {

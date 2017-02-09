@@ -55,9 +55,30 @@
         <td ng-bind-html="transaction.info.value | ether | dashIfEmpty">
         </td>
         <td>
-          <span popover-trigger="'mouseenter'" uib-popover-template="'partials/txData.html'" popover-placement="bottom" popover-append-to-body="true"
-            ng-bind-html="transaction.info.input | txData | dashIfEmpty">
-          </span>
+          <div ng-show="transaction.info.input">
+            <div class="col-md-8">
+              <span  popover-trigger="'mouseenter'" uib-popover-template="'partials/txData.html'" popover-placement="bottom" popover-append-to-body="true">
+                {{transaction.decodedData.title}}
+              </span>
+            <ul>
+              <li ng-repeat="param in transaction.decodedData.params">
+                {{param.name}} :
+                <span uib-popover="{{param.value}}" popover-enable="param.value && param.value.toString().length > 10" popover-trigger="'mouseenter'">
+                  {{param.value|addressCanBeOwner:wallet|logParam}}
+                </span>
+              </li>
+            </ul>
+            </div>
+            <div class="col-md-4">
+              <button ng-show="transaction.decodedData.notDecoded || transaction.decodedData.params" ng-hide="transaction.toWallet" class="btn btn-default btn-sm" ng-click="editABI(transaction.info.to)">
+                Edit ABI
+              </button>
+            </div>
+          </div>
+          <div class="text-center" ng-show="!transaction.info.input">
+            -
+          </div>
+
         </td>
         <td ng-bind-html="transaction.info.nonce | dashIfEmpty">
         </td>
@@ -76,7 +97,7 @@
               <ul>
                 <li ng-repeat="param in log.info track by $index">
                   {{param.name}}:
-                  <span uib-popover="{{param.value}}" popover-enable="param.value && param.value.toString().length > 10" popover-trigger="'mouseenter'">
+                  <span uib-popover="{{param.value}}" popover-enable="param.value && param.value.toString().length > 7" popover-trigger="'mouseenter'">
                     {{param.value|addressCanBeOwner:wallets[transaction.info.to]|logParam}}
                   </span>
                 </li>

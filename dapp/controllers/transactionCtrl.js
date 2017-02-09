@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .controller('transactionCtrl', function ($scope, $sce, Wallet, Utils, Transaction, $uibModal, $filter) {
+    .controller('transactionCtrl', function ($scope, $sce, Wallet, Utils, Transaction, $uibModal, $filter, ABI) {
 
       $scope.$watch(
         function () {
@@ -14,6 +14,25 @@
 
           for (var txKey in transactions) {
               txArray.push(transactions[txKey]);
+
+              if (transactions[txKey].info && (!transactions[txKey].decodedData || transactions[txKey].decodedData.notDecoded)) {
+                // Decode data
+                var abis = ABI.get();
+                var savedABI = abis[transactions[txKey].info.to];
+                if (savedABI) {
+                  transactions[txKey].decodedData = ABI.decode(savedABI.abi, transactions[txKey].info.input);
+                }
+                else if (Wallet.wallets[transactions[txKey].info.to]) {
+                  transactions[txKey].toWallet = true;
+                  transactions[txKey].decodedData = ABI.decode(Wallet.json.multiSigDailyLimit.abi, transactions[txKey].info.input);
+                }
+                else {
+                  transactions[txKey].decodedData = {
+                    title: transactions[txKey].info.input.slice(0, 20) + "...",
+                    notDecoded: true
+                  };
+                }
+              }
           }
 
           // Transactions sorted by tx.date DESC
@@ -95,18 +114,16 @@
         }
         else {
           if (tx.info) {
-            // Check if Tx.info.to refers to an owner
+            // Check if Tx.info.to refers to an owner or a token
             var walletsKeys = Object.keys(Wallet.wallets);
 
             for (var x=0; x<walletsKeys.length; x++) {
 
-              if (Wallet.wallets[walletsKeys[x]].owners && Object.keys(Wallet.wallets[walletsKeys[x]].owners).indexOf(tx.info.to) != -1) {
-
-                var ownersKeys = Object.keys(Wallet.wallets[walletsKeys[x]].owners);
-                var ownerKey = ownersKeys[ownersKeys.indexOf(tx.info.to)];
-
-                return $sce.trustAsHtml("<i class='fa fa-user-o' aria-hidden='true'></i>&nbsp;" + Wallet.wallets[walletsKeys[x]].owners[ownerKey].name);
-
+              if (Wallet.wallets[walletsKeys[x]].owners && Wallet.wallets[walletsKeys[x]].owners[tx.info.to]) {
+                return Wallet.wallets[walletsKeys[x]].owners[tx.info.to].name;
+              }
+              else if (Wallet.wallets[walletsKeys[x]].tokens && Wallet.wallets[walletsKeys[x]].tokens[tx.info.to]) {
+                return Wallet.wallets[walletsKeys[x]].tokens[tx.info.to].name;
               }
             }
 
@@ -119,6 +136,22 @@
 
       $scope.decodeLogs = function (logs) {
         return Wallet.decodeLogs(logs);
+      };
+
+      $scope.editABI = function (to) {
+        $uibModal.open({
+          templateUrl: 'partials/modals/editABI.html',
+          size: 'md',
+          resolve: {
+            to: function () {
+              return to;
+            },
+            cb: function () {
+              return Transaction.notifyObservers
+            }
+          },
+          controller: 'editABICtrl'
+        });
       };
 
     });

@@ -56,6 +56,10 @@
         catch (e) {}
       };
 
+      factory.notifyObservers = function () {
+        factory.updates++;
+      };
+
       /**
       * Remove transaction identified by transaction hash from the transactions collection
       */
@@ -189,7 +193,7 @@
               );
               cb(null, txHash);
           }
-        });        
+        });
         instance[method].apply(this, transactionParams);
 
       };

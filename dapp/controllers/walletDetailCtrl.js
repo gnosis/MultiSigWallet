@@ -4,7 +4,6 @@
     .module("multiSigWeb")
     .controller("walletDetailCtrl", function ($scope, $filter, $sce, Wallet, $routeParams, Utils, Transaction, $interval, $uibModal, Token, ABI) {
       $scope.wallet = {};
-      $scope.newOwner = {};
 
       $scope.$watch(
         function () {
@@ -339,7 +338,7 @@
         batch.execute();
       };
 
-      /*$scope.addOwner = function () {
+      $scope.addOwner = function () {
         $uibModal.open({
           templateUrl: 'partials/modals/addWalletOwner.html',
           size: 'md',
@@ -350,27 +349,6 @@
             }
           }
         });
-      };*/
-      $scope.addOwner = function () {
-        try{
-          Wallet.addOwner($scope.wallet.address, $scope.newOwner, function (e, tx) {
-            if (e) {
-              Utils.dangerAlert(e);
-            }
-            else {
-              // Update owners array
-              $scope.wallet.owners[$scope.newOwner.address] = $scope.newOwner;
-              Wallet.updateWallet($scope.wallet);
-              Utils.notification("Add owner transaction was sent.");
-              Transaction.add({txHash: tx, callback: function () {
-                Utils.success("Add owner transaction was mined.");
-                $scope.newOwner = {}; // reset values
-              }});
-            }
-          });
-        } catch (error) {
-          Utils.dangerAlert(error);
-        }
       };
 
       $scope.replaceOwner = function (owner) {

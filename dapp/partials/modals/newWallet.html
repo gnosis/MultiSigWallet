@@ -49,13 +49,27 @@
               </button>
             </td>
           </tr>
-          <tr>
+          <!--<tr>
             <td>
             </td>
             <td>
             </td>
             <td>
               <button ng-click="addOwner()" type="button" class="btn btn-default">
+                Add
+              </button>
+            </td>
+          </tr>-->
+          <tr>
+            <td>
+              <input type="text" class="form-control" placeholder="Name" ng-model="newOwner.name" />
+            </td>
+            <td>
+              <input type="text" class="form-control" placeholder="Address" ng-model="newOwner.address" />
+            </td>
+            <td>
+              <button ng-click="addOwner()" type="button" class="btn btn-default"
+                ng-disabled="newOwner.address == undefined || !newOwner.address.length > 0">
                 Add
               </button>
             </td>

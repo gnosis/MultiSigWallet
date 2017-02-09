@@ -4,6 +4,7 @@
     .module("multiSigWeb")
     .controller("newWalletCtrl", function ($scope, $uibModalInstance, $uibModal, Utils, Transaction, Wallet, callback) {
 
+      $scope.newOwner = {};
       $scope.owners = {};
       $scope.owners[Wallet.coinbase] = {
         name: 'My account',
@@ -83,7 +84,7 @@
       $scope.deployFactoryWalletOffline = function () {
         Wallet.deployWithLimitFactoryOffline(Object.keys($scope.owners), $scope.confirmations, new Web3().toBigNumber($scope.limit).mul('1e18'),
           function (e, signed) {
-            if (e) {              
+            if (e) {
               Utils.dangerAlert(e);
             }
             else {
@@ -99,10 +100,15 @@
       };
 
       $scope.addOwner = function () {
+          $scope.owners[$scope.newOwner.address] = $scope.newOwner;
+          $scope.newOwner = {}; // reset values
+      };
+
+      /*$scope.addOwner = function () {
         $uibModal.open({
           animation: false,
           templateUrl: 'partials/modals/addOwner.html',
-          size: 'sm',
+          size: 'md',
           controller: function ($scope, $uibModalInstance) {
             $scope.owner = {
               name: "",
@@ -124,7 +130,7 @@
             $scope.owners[owner.address] = owner;
           }
         );
-      };
+      };*/
     });
   }
 )();

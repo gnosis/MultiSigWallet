@@ -654,7 +654,7 @@
           else {
             if ((!count && Connection.isConnected) || (count && count.eq(0) && Connection.isConnected)) {
               // it is not a wallet
-              cb("Address " + info.address + " is not a MultiSigWallet contract");
+              cb("Address " + info.address + " is not a wallet contract");
             }
             else {
               // Add wallet, add My account to the object by default, won't be

@@ -161,7 +161,7 @@
       $scope.removeWallet = function (address) {
         $uibModal.open({
           templateUrl: 'partials/modals/removeWallet.html',
-          size: 'sm',
+          size: 'md',
           scope: $scope,
           controller: 'removeWalletCtrl',
           resolve: {
@@ -179,7 +179,7 @@
         $uibModal.open({
           animation: false,
           templateUrl: 'partials/modals/restoreWallet.html',
-          size: 'lg',
+          size: 'md',
           controller: function ($scope, $uibModalInstance) {
             $scope.ok = function () {
               Wallet.restore($scope.old, function (e) {
@@ -201,7 +201,7 @@
       $scope.editWallet = function (wallet) {
         $uibModal.open({
           templateUrl: 'partials/modals/editWallet.html',
-          size: 'sm',
+          size: 'md',
           resolve: {
             wallet: function () {
               return wallet;

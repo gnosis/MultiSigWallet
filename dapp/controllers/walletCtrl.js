@@ -11,12 +11,19 @@
             $scope.interval = $interval($scope.updateParams, 10000);
             $scope.wallets = Wallet.wallets;
             if (!$scope.wallets || !Object.keys($scope.wallets).length && !$rootScope.alreadyLogged){
-              $scope.newWalletSelect();
+              $scope.termsInterval = $interval($scope.checkTerms, 500);
             }
             $scope.updateParams();
             $rootScope.alreadyLogged = true;
         }
       );
+
+      $scope.checkTerms = function () {
+        if (localStorage.getItem("termsAccepted")){
+          $interval.cancel($scope.termsInterval);
+          $scope.newWalletSelect();
+        };
+      };
 
       $scope.wallets = {};
 
@@ -31,7 +38,7 @@
             if (!$scope.wallets[wallet]) {
               $scope.wallets[wallet] = {};
             }
-            Object.assign($scope.wallets[wallet], walletsToCopy[wallet]);            
+            Object.assign($scope.wallets[wallet], walletsToCopy[wallet]);
           }
           $scope.totalItems = Object.keys($scope.wallets).length;
         }
@@ -104,6 +111,7 @@
 
       $scope.$on('$destroy', function () {
         $interval.cancel($scope.interval);
+        $interval.cancel($scope.termsInterval);
       });
 
       /*$scope.currentPage = 1;

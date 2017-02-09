@@ -46,3 +46,9 @@ textarea.json-config {
 .wallet-icon{
   max-width: 20px;
 }
+
+.prevent-focus:focus {
+  outline:0 !important;
+  text-decoration: none !important;
+  border:none !important;
+}

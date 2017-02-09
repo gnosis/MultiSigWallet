@@ -2,8 +2,26 @@
   function () {
     angular
     .module('multiSigWeb')
-    .controller('navCtrl', function ($scope, Wallet, Connection, $interval, $sce, $location) {
+    .controller('navCtrl', function ($scope, Wallet, Connection, $interval, $sce, $location, $uibModal) {
       $scope.navCollapsed = true;
+
+      // If not terms acepted, prompt disclaimer
+      var termsAccepted = localStorage.getItem("termsAccepted");
+
+      if (!termsAccepted) {
+        $uibModal.open({
+          templateUrl: 'partials/modals/disclaimer.html',
+          size: 'md',
+          backdrop: 'static',
+          controller: function ($scope, $uibModalInstance) {
+            $scope.ok = function () {
+              $uibModalInstance.close($scope.walletOption);
+              localStorage.setItem("termsAccepted", true);
+            };
+          }
+        });
+      }
+
 
       $scope.updateInfo = function (){
         Wallet.initParams().then(function () {

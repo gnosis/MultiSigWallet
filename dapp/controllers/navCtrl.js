@@ -13,6 +13,7 @@
           templateUrl: 'partials/modals/disclaimer.html',
           size: 'md',
           backdrop: 'static',
+          windowClass: 'bootstrap-dialog type-danger',
           controller: function ($scope, $uibModalInstance) {
             $scope.ok = function () {
               $uibModalInstance.close($scope.walletOption);

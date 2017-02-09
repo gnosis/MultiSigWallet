@@ -18,11 +18,13 @@
       };
 
       $scope.updateABI = function () {
-        if ($scope.tx.to && $scope.tx.to.length > 40) {
+        var to = $scope.tx.to;
+        if (to && to.length > 40) {
+          to = to.toLowerCase();
           $scope.abis = ABI.get();
-          if ($scope.abis[$scope.tx.to]) {
-            $scope.abi = JSON.stringify($scope.abis[$scope.tx.to].abi);
-            $scope.name = $scope.abis[$scope.tx.to].name;
+          if ($scope.abis[to]) {
+            $scope.abi = JSON.stringify($scope.abis[to].abi);
+            $scope.name = $scope.abis[to].name;
             $scope.updateMethods();
           }
         }
@@ -30,12 +32,17 @@
 
       // Parse abi
       $scope.updateMethods = function () {
-        $scope.abiArray = JSON.parse($scope.abi);
-        $scope.abiArray.map(function (item, index) {
-          if (!item.constant && item.name && item.type == "function") {
-            $scope.methods.push({name: item.name, index: index});
-          }
-        });
+        try {
+          $scope.methods = [];
+          $scope.abiArray = JSON.parse($scope.abi);
+          $scope.abiArray.map(function (item, index) {
+            if (!item.constant && item.name && item.type == "function") {
+              $scope.methods.push({name: item.name, index: index});
+            }
+          });
+        } catch (error) {
+          $scope.methods = []; // reset methods
+        }
       };
 
       $scope.send = function () {

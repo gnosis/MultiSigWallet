@@ -72,8 +72,8 @@ module.exports = function(grunt) {
         }
       }
     },
-    jshint: {
-     all: ['Gruntfile.js', 'controllers/**.js', 'services/**.js', '**.js']
+    eslint: {
+     target: ['Gruntfile.js', 'controllers/**.js', 'services/**.js', '**.js']
    }
   });
 
@@ -81,7 +81,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-http-server');
   grunt.loadNpmTasks('grunt-angular-templates');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-eslint');
 
   grunt.registerTask('default', ['ngtemplates', 'http-server']);
 };

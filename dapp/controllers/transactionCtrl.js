@@ -147,7 +147,7 @@
               return to;
             },
             cb: function () {
-              return Transaction.notifyObservers
+              return Transaction.notifyObservers;
             }
           },
           controller: 'editABICtrl'

@@ -6,7 +6,7 @@
       var abis = ABI.get();
       if (abis[to]) {
         var abiObject = abis[to];
-        $scope.abi = JSON.stringify(abiObject.abi);        
+        $scope.abi = JSON.stringify(abiObject.abi);
         $scope.name = abiObject.name;
       }
       else {
@@ -28,7 +28,7 @@
         catch (e) {
           Utils.dangerAlert(e);
         }
-      }
+      };
 
     });
   }

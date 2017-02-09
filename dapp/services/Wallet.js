@@ -512,7 +512,7 @@
 
         // Update abis if the key exists in the configuration object
         if (validJsonConfig.abis !== undefined) {
-          var abiAddresses = Object.keys(validJsonConfig.abis)
+          var abiAddresses = Object.keys(validJsonConfig.abis);
           for (var x=0; x<abiAddresses.length; x++) {
             ABI.update(validJsonConfig.abis[abiAddresses[x]], abiAddresses[x]);
           }

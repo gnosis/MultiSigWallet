@@ -68,7 +68,7 @@
             notDecoded: true
           };
         }
-      }
+      };
 
       return factory;
     });

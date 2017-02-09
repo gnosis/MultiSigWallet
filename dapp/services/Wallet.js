@@ -514,7 +514,7 @@
         if (validJsonConfig.abis !== undefined) {
           var abiAddresses = Object.keys(validJsonConfig.abis);
           for (var x=0; x<abiAddresses.length; x++) {
-            ABI.update(validJsonConfig.abis[abiAddresses[x]], abiAddresses[x]);
+            ABI.update(validJsonConfig.abis[abiAddresses[x]].abi, abiAddresses[x], validJsonConfig.abis[abiAddresses[x]].name);
           }
         }
 

@@ -12,10 +12,15 @@
       };
 
       factory.update = function (abi, to, name) {
-        factory.saved[to] = { abi: abi, name: name};
+        factory.saved[to.toLowerCase()] = { abi: abi, name: name};
 
         localStorage.setItem("abis", JSON.stringify(factory.saved));
       };
+
+      factory.remove = function (to) {
+        delete factory.saved[to];
+        localStorage.setItem("abis", JSON.stringify(factory.saved));
+      }
 
       factory.decode = function (abi, data) {
         var methodIds = {};

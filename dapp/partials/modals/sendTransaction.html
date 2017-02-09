@@ -30,7 +30,7 @@
       <h3>
         Parameters
       </h3>
-      <div ng-repeat="param in abiArray[method.index].inputs" >
+      <div class="form-group" ng-repeat="param in abiArray[method.index].inputs" >
         <div ng-switch on="param.type">
           <label ng-attr-for="{{ 'value-' + $index }}">{{param.name}}</label>
           <input ng-attr-id="{{ 'value-' + $index }}" ng-switch-default type="text" class="form-control" ng-model="params[$index]">

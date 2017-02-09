@@ -1,6 +1,12 @@
 {
   "name": "multisigweb",
   "version": "1.0.0",
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "node": false
+    }
+  },
   "description": "Angular web app made for Multi Sig Wallet",
   "main": "index.html",
   "scripts": {
@@ -27,6 +33,7 @@
     "grunt-angular-templates": "^1.1.0",
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-contrib-watch": "^1.0.0",
+    "grunt-eslint": "^19.0.0",
     "jasmine-core": "^2.5.2",
     "jshint": "^2.9.4",
     "karma": "^1.3.0",

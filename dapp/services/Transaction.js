@@ -43,7 +43,7 @@
         Wallet.web3.eth.getTransaction(
           tx.txHash,
           getTransactionInfo
-        )
+        );
       };
 
       factory.update = function (txHash, newObj) {

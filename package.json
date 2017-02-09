@@ -17,5 +17,11 @@
   "bugs": {
     "url": "https://github.com/ConsenSys/MultiSigWallet/issues"
   },
-  "homepage": "https://github.com/ConsenSys/MultiSigWallet#readme"
+  "homepage": "https://github.com/ConsenSys/MultiSigWallet#readme",
+  "eslintConfig": {
+        "env": {
+            "browser": true,
+            "node": false
+        }
+    }
 }

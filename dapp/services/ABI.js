@@ -73,7 +73,7 @@
             notDecoded: true
           };
         }
-      }
+      };
 
       return factory;
     });

@@ -60,7 +60,7 @@
           return log.slice(0, 10) + "...";
         }
         else if ( log && log.match(/^[0-9]+$/) !== null) {
-          if(log.toString().length < 7){
+          if(log.toString().length < 8){
             return log.toString().slice(0, 7);
           }
           else{

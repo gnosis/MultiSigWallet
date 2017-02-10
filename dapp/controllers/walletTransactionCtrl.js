@@ -33,7 +33,8 @@
       // Parse abi
       $scope.updateMethods = function () {
         try {
-          $scope.methods = [];
+          $scope.methods = [{name: "- fallback -", index: ""}];
+          $scope.method = $scope.methods[0];
           $scope.abiArray = JSON.parse($scope.abi);
           $scope.abiArray.map(function (item, index) {
             if (!item.constant && item.name && item.type == "function") {

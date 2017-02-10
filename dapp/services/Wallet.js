@@ -342,19 +342,20 @@
       };
 
       wallet.updateWallet = function (w) {
-        if (!wallet.wallets[w.address]) {
-          wallet.wallets[w.address] = {};
+        var address = w.address.toLowerCase();
+        if (!wallet.wallets[address]) {
+          wallet.wallets[address] = {};
         }
         var tokens = {};
         if (w.tokens) {
           var tokenAddresses = Object.keys(w.tokens);
           tokenAddresses.map(function (item) {
             var token = w.tokens[item];
-            tokens[token.address] = {
+            tokens[token.address.toLowerCase()] = {
               name: token.name,
               symbol: token.symbol,
               decimals: token.decimals,
-              address: token.address
+              address: token.address.toLowerCase()
             };
           });
         }
@@ -366,7 +367,7 @@
           owners[key.toLowerCase()] = w.owners[key];
         }
 
-        Object.assign(wallet.wallets[w.address], {address: w.address, name: w.name, owners: owners, tokens: tokens});
+        Object.assign(wallet.wallets[address], {address: address, name: w.name, owners: owners, tokens: tokens});
         localStorage.setItem("wallets", JSON.stringify(wallet.wallets));
         wallet.updates++;
         try{
@@ -662,7 +663,6 @@
               var coinbase = wallet.coinbase.toLowerCase();
               info.owners = {};
               info.owners[coinbase] = { address: wallet.coinbase.toLowerCase(), name: 'My Account'};
-              console.log(info);
               wallet.updateWallet(info);
               cb(null, info);
             }

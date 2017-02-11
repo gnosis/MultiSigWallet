@@ -4,11 +4,12 @@
     <title>Multisignature Wallet</title>
     <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="any" href="./img/wallet-logo.png" />
+    <!-- Custom Stylesheets -->
+    <link href="./css/app.css" rel="stylesheet" type="text/css" />
+    <link href="./css/gnosis-bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="./css/gnosis-bootstrap-dialog.css" rel="stylesheet" type="text/css" />
     <!-- 3rd party Stylesheets -->
-    <link href="./bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
-    <link href="./bower_components/bootstrap/dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
     <link href="./bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-    <link href="./bower_components/bootstrap3-dialog/dist/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
     <!-- 3rd party Script -->
     <script src="./bower_components/angular/angular.min.js"></script>
     <script src="./bower_components/angular-animate/angular-animate.min.js"></script>
@@ -24,8 +25,6 @@
     <script src="./bower_components/ethjs-abi-denis/dist/ethjs-abi.min.js "></script>
     <script src="./bower_components/clipboard/dist/clipboard.min.js"></script>
     <script src="./bower_components/ngclipboard/dist/ngclipboard.min.js"></script>
-    <!-- Custom Stylesheets -->
-    <link href="./css/app.css" rel="stylesheet" type="text/css" />
     <!-- App -->
     <script src="./config.js"></script>
     <script src="./app.js"></script>
@@ -130,18 +129,5 @@
     <div class="container">
       <ng-view></ng-view>
     </div>
-    <footer class="footer">
-      <nav class="navbar navbar-inverse navbar-fixed-bottom">
-        <a class="navbar-brand" href="https://www.gnosis.pm" target="_blank">
-          <img src="./img/gnosis-logo.svg" class="img-responsive" />
-        </a>
-        <a class="navbar-brand" href="https://consensys.net" target="_blank">
-          <img src="./img/consensys-logo.svg" class="img-responsive" />
-        </a>
-        <a class="navbar-brand" href="https://github.com/ConsenSys/MultiSigWallet" target="_blank">
-          <img src="./img/github-logo.svg" class="img-responsive" />
-        </a>
-      </nav>
-    </footer>
   </body>
 </html>

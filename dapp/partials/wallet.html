@@ -225,7 +225,7 @@
               <ul>
                 <li ng-repeat="param in transactions[txId].dataDecoded.params">
                   {{param.name}}:
-                  <span uib-popover="{{param.value}}" popover-enable="param.value && param.value.toString().length > 10" popover-trigger="'mouseenter'">
+                  <span uib-popover="{{param.value}}" popover-enable="param.value && param.value.toString().length > 7" popover-trigger="'mouseenter'">
                     {{param.value|addressCanBeOwner:wallet|logParam}}
                   </span>
                 </li>

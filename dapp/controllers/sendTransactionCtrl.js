@@ -15,7 +15,7 @@
         Object.assign(tx, $scope.tx);
         tx.value = new Web3().toBigNumber($scope.tx.value).mul('1e18');
         // if method, use contract instance method
-        if ($scope.method) {
+        if ($scope.method && $scope.method.index) {      
           Transaction.sendMethod(tx, $scope.abiArray, $scope.method.name, $scope.params, function (e, tx) {
             if (e) {
               Utils.dangerAlert(e);

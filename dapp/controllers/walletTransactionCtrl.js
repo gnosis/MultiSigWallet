@@ -54,7 +54,7 @@
           $scope.wallet.address,
           tx,
           $scope.abiArray,
-          $scope.method?$scope.method.name:null,
+          $scope.method && $scope.method.index?$scope.method.name:null,
           $scope.params,
           function (e, tx) {
             if (e) {

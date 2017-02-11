@@ -173,10 +173,7 @@
         var transactionParams = params.slice();
 
         // sendTransction takes (param1, param2, ..., paramN, txObject, cb)
-        transactionParams.push({
-          to: tx.to?tx.to:null,
-          value: tx.value?tx.value:null
-        });
+        transactionParams.push(tx);
         transactionParams.push(function (e, txHash) {
           if (e) {
             cb(e);
@@ -194,7 +191,7 @@
               cb(null, txHash);
           }
         });
-        instance[method].apply(this, transactionParams);
+        instance[method].apply(instance[method], transactionParams);
 
       };
 

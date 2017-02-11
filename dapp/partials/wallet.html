@@ -219,7 +219,9 @@
         <td>
           <div class="row">
             <div class="col-md-8">
-              {{transactions[txId].dataDecoded.title}}
+              <span popover-trigger="'mouseenter'" uib-popover-template="'partials/multisigData.html'" popover-placement="bottom" popover-append-to-body="true">
+                {{transactions[txId].dataDecoded.title}}
+              </span>
               <ul>
                 <li ng-repeat="param in transactions[txId].dataDecoded.params">
                   {{param.name}}:

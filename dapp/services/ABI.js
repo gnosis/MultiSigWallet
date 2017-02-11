@@ -68,10 +68,18 @@
           };
         }
         else {
-          return {
-            title: data.slice(0, 20) + "...",
-            notDecoded: true
-          };
+          if (data.length > 20) {
+            return {
+              title: data.slice(0, 20) + "...",
+              notDecoded: true
+            };
+          }
+          else {
+            return {
+              title: data.slice(0, 20),
+              notDecoded: true
+            };
+          }
         }
       };
 

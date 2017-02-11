@@ -239,20 +239,23 @@
               var abis = ABI.get();
               if (abis[tx.to]) {
                 // Decode
-                var abi = abis[tx.to].abi;
+                var abi = abis[tx.to].abi;                
                 return ABI.decode(abi, tx.data);
               }
               else {
-                return {
-                  title: tx.data.slice(0, 20) + "...",
-                  notDecoded: true
-                };
+                if (tx.data.length > 20) {
+                  return {
+                    title: tx.data.slice(0, 20) + "...",
+                    notDecoded: true
+                  };
+                }
+                else {
+                  return {
+                    title: tx.data.slice(0, 20),
+                    notDecoded: true
+                  };
+                }
               }
-          }
-        }
-        else {
-          if ( tx.data && tx.data.length> 3) {
-            return tx.data.slice(0, 20) + "...";
           }
         }
       };

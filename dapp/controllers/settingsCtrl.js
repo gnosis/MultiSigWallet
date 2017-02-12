@@ -15,6 +15,31 @@
         Utils.success("Configuration updated successfully.");
       };
 
+      $scope.reset = function () {
+        $uibModal.open({
+          templateUrl: 'partials/modals/resetSettings.html',
+          size: 'md',
+          controller: function ($uibModalInstance, $scope) {
+            $scope.ok = function () {
+              $uibModalInstance.close();
+              localStorage.removeItem("userConfig");
+              Object.assign(txDefault, txDefaultOrig);
+            };
+
+            $scope.cancel = function () {
+              $uibModalInstance.dismiss();
+            };
+          }
+        })
+        .result
+        .then(
+          function () {
+            Utils.success("Configuration reseted successfully.");
+            $scope.config = Object.assign({}, txDefault, JSON.parse(localStorage.getItem("userConfig")));
+          }
+        );
+      };
+
       /**
       * Shows the wallets configuration export dialog
       */

@@ -55,7 +55,7 @@
         <td ng-bind-html="transaction.info.value | ether | dashIfEmpty">
         </td>
         <td>
-          <div ng-show="transaction.decodedData.title">
+          <div ng-show="transaction.decodedData.title" class="row">
             <div class="col-md-8">
               <span  popover-trigger="'mouseenter'" uib-popover-template="'partials/txData.html'" popover-placement="bottom" popover-append-to-body="true">
                 {{transaction.decodedData.title}}
@@ -70,7 +70,7 @@
             </ul>
             </div>
             <div class="col-md-4">
-              <button ng-show="transaction.decodedData.notDecoded || transaction.decodedData.params" ng-hide="transaction.toWallet" class="btn btn-default btn-sm" ng-click="editABI(transaction.info.to)">
+              <button ng-show="transaction.decodedData.notDecoded || transaction.decodedData.params" ng-hide="transaction.toWallet" class="btn btn-default btn-sm pull-right" ng-click="editABI(transaction.info.to)">
                 Edit ABI
               </button>
             </div>
@@ -78,7 +78,6 @@
           <div class="text-center" ng-show="!transaction.decodedData.title">
             -
           </div>
-
         </td>
         <td ng-bind-html="transaction.info.nonce | dashIfEmpty">
         </td>

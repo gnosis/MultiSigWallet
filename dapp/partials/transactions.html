@@ -55,7 +55,7 @@
         <td ng-bind-html="transaction.info.value | ether | dashIfEmpty">
         </td>
         <td>
-          <div ng-show="transaction.info.input">
+          <div ng-show="transaction.decodedData.title">
             <div class="col-md-8">
               <span  popover-trigger="'mouseenter'" uib-popover-template="'partials/txData.html'" popover-placement="bottom" popover-append-to-body="true">
                 {{transaction.decodedData.title}}
@@ -75,7 +75,7 @@
               </button>
             </div>
           </div>
-          <div class="text-center" ng-show="!transaction.info.input">
+          <div class="text-center" ng-show="!transaction.decodedData.title">
             -
           </div>
 

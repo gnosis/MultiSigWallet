@@ -10,16 +10,16 @@
       <input id="destination" type="text" ng-model="tx.to" ng-change="updateABI()"  ng-min="40" class="form-control" required>
     </div>
     <div class="form-group">
+      <label for="name">Contract name</label>
+      <input type="text" class="form-control" ng-model="name" name="name" />
+    </div>
+    <div class="form-group">
       <label for="value">Amount (ETH)</label>
       <input id="value" type="number" class="form-control" ng-model="tx.value" ng-required="!abi">
     </div>
     <div class="form-group">
       <label for="abi">ABI string</label>
       <textarea id="abi" rows="3" class="form-control" ng-model="abi" ng-change="updateMethods()" ng-required="!tx.value"></textarea>
-    </div>
-    <div class="form-group" ng-show="abi">
-      <label for="name">Contract name</label>
-      <input type="text" class="form-control" ng-model="name" name="name" />
     </div>
     <div class="form-group">
       <label for="method">Method</label>

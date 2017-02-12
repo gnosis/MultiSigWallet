@@ -191,8 +191,12 @@
               cb(null, txHash);
           }
         });
-        instance[method].apply(instance[method], transactionParams);
-
+        try {
+          instance[method].apply(instance[method], transactionParams);
+        }
+        catch (e) {
+          cb(e);
+        }
       };
 
       /**

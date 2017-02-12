@@ -217,6 +217,9 @@
           {{transactions[txId].value|ether}}
         </td>
         <td>
+          <div class="text-center" ng-show="!transactions[txId].dataDecoded.title">
+            -
+          </div>
           <div class="row">
             <div class="col-md-8">
               <span popover-trigger="'mouseenter'" uib-popover-template="'partials/multisigData.html'" popover-placement="bottom" popover-append-to-body="true">

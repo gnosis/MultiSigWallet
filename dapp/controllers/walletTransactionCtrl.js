@@ -66,6 +66,9 @@
                 ABI.update($scope.abiArray, $scope.tx.to, $scope.name);
                 Wallet.addMethods($scope.abiArray);
               }
+              else if ($scope.name) {
+                ABI.update(undefined, $scope.tx.to, $scope.name);
+              }
               Transaction.add(
                 {
                   txHash: tx,

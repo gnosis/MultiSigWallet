@@ -237,9 +237,9 @@
             default:
               // Check abis in cache
               var abis = ABI.get();
-              if (abis[tx.to]) {
+              if (abis[tx.to] && abis[tx.to].abi) {
                 // Decode
-                var abi = abis[tx.to].abi;                
+                var abi = abis[tx.to].abi;
                 return ABI.decode(abi, tx.data);
               }
               else {

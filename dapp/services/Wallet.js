@@ -1175,55 +1175,7 @@
             wallet.offlineTransaction(address, mainData, nonce, cb);
           }
         });
-      };
-
-      /**
-      * Get type of transaction or destination
-      **/
-      wallet.getType = function (tx) {
-        if (tx.data && tx.data.length > 3) {
-          var method = tx.data.slice(2, 10);
-          switch (method) {
-            case "ba51a6df":
-              return "Update required confirmations";
-            case "7065cb48":
-              return "Add owner";
-            case "173825d9":
-              return "Remove owner";
-            case "cea08621":
-              return "Update daily limit";
-            case "e20056e6":
-              return "Replace owner";
-            case "a9059cbb":
-              if ( wallet.wallets[tx.from] && wallet.wallets[tx.from].tokens && wallet.wallets[tx.from].tokens[tx.to]) {
-                return "Withdraw " + wallet.wallets[tx.from].tokens[tx.to].symbol;
-              }
-              else {
-                return "Withdraw " + tx.to.slice(0, 12) + "...";
-              }
-              break;
-
-            default:
-              var abis = ABI.get();
-              if(abis[tx.to] && abis[tx.to].name) {
-                return abis[tx.to].name;
-              }
-              else {
-                return tx.to.slice(0, 20) + "...";
-              }
-          }
-        }
-        else {
-          if (tx.to) {
-            if (wallet.wallets[tx.to] && wallet.wallets[tx.to].name) {
-              return wallet.wallets[tx.to].name;
-            }
-            else {
-              return tx.to.slice(0, 20) + "...";
-            }
-          }
-        }
-      };
+      };    
 
       // Works as observer triggering for watch $scope
       wallet.triggerUpdates = function () {

@@ -257,7 +257,24 @@
       };
 
       $scope.getDestination = function (tx) {
-
+        if (Wallet.wallets[tx.to]) {
+          return Wallet.wallets[tx.to].name;
+        }
+        else if ($scope.wallet.owners && $scope.wallet.owners[tx.to] && $scope.wallet.owners[tx.to].name){
+          return $scope.wallet.owners[tx.to].name;
+        }
+        else if ($scope.wallet.tokens && $scope.wallet.tokens[tx.to] && $scope.wallet.tokens[tx.to].name) {
+          return $scope.wallet.tokens[tx.to].name;
+        }
+        else {
+          var abis = ABI.get();
+          if (abis[tx.to] && abis[tx.to].name) {
+            return abis[tx.to].name;
+          }
+          else {
+            return tx.to.slice(0, 10) + "...";
+          }
+        }
       };
 
       $scope.updateTransactions = function () {
@@ -290,9 +307,9 @@
                       if (!$scope.transactions[tx].dataDecoded || $scope.transactions[tx].dataDecoded.notDecoded) {
                         $scope.transactions[tx].dataDecoded = $scope.getParam($scope.transactions[tx]);
                       }
-                      // If destionation type has not been set TODO
+                      // If destionation type has not been set
                       if (!$scope.transactions[tx].destination) {
-                        // $scope.transactions[tx].type = $scope.getDestination($scope.transactions[tx]);
+                        $scope.transactions[tx].destination = $scope.getDestination($scope.transactions[tx]);
                       }
                     });
                   }

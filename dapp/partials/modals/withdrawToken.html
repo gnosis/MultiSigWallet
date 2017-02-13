@@ -7,11 +7,11 @@
   <div class="modal-body">
     <div class="form-group">
       <label for="amount">Amount ({{token.symbol}})</label>
-      <input id="amount" type="number" class="form-control" ng-model="amount" required>
+      <input id="amount" type="number" class="form-control" ng-model="amount" ng-min="0" required>
     </div>
     <div class="form-group">
       <label for="address">Destination</label>
-      <input id="address" type="text" class="form-control" ng-model="to" required>
+      <input id="address" type="text" class="form-control" ng-model="to" ng-minlength="40" required>
     </div>
   </div>
   <div class="modal-footer">

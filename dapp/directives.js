@@ -47,7 +47,7 @@
           * Admitted attributes are 'online|offline'.
           */
           scope.$watch(function (){
-            return userConfig.walletFactoryAddress;
+            return txDefault.walletFactoryAddress;
           },
           function(){
             var address = Object.assign({}, txDefault, JSON.parse(localStorage.getItem("userConfig"))).walletFactoryAddress;

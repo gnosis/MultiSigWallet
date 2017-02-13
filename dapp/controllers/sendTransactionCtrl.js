@@ -20,7 +20,7 @@
             if (e) {
               Utils.dangerAlert(e);
             }
-            else if (tx.info && tx.info.blockNumber) {
+            else if (tx.blockNumber) {
               Utils.success("Transaction was mined.");
             }
             else {

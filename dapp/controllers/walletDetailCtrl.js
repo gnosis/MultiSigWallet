@@ -18,9 +18,9 @@
             // Initialize, user token balance
             if (!$scope.userTokens[item]) {
               $scope.userTokens[item] = {};
-              // Assign token to user tokens collection
-              Object.assign($scope.userTokens[item], copyObject.tokens[item]);
             }
+            // Assign token to user tokens collection
+            Object.assign($scope.userTokens[item], copyObject.tokens[item]);
 
             // If token has a previous balance, copy it
             if ($scope.wallet.tokens && $scope.wallet.tokens[item] && copyObject.tokens && copyObject.tokens[item]){
@@ -614,7 +614,13 @@
             }
           },
           controller: 'addTokenCtrl'
-        });
+        })
+        .result
+        .then(
+          function () {
+            $scope.updateParams();
+          }
+        );
       };
 
       $scope.editToken = function (token) {
@@ -630,7 +636,13 @@
             }
           },
           controller: 'addTokenCtrl'
-        });
+        })
+        .result
+        .then(
+          function () {
+            $scope.updateParams();
+          }
+        );
       };
 
       $scope.removeToken = function (token) {
@@ -662,7 +674,13 @@
               $uibModalInstance.dismiss();
             };
           }
-        });
+        })
+        .result
+        .then(
+          function () {
+            $scope.updateParams();
+          }
+        );
       };
 
       $scope.depositToken = function (token) {

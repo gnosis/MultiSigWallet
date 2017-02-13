@@ -20,7 +20,7 @@
     </div>
     <div class="form-group">
       <label for="decimals">Decimals</label>
-      <input id="decimals" type="number" class="form-control" ng-disabled="!editToken.address" ng-model="editToken.decimals" required />
+      <input id="decimals" type="number" class="form-control" ng-disabled="!editToken.address" ng-model="editToken.decimals" min="0" required />
     </div>
   </div>
   <div class="modal-footer">

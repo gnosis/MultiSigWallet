@@ -4,10 +4,10 @@
     .module('multiSigWeb')
     .service('Transaction', function(Wallet, $rootScope, $uibModal, $interval) {
       var factory = {
-        transactions: JSON.parse(localStorage.getItem("transactions")) || {},
         requiredReceipt: {},
         requiredInfo: {},
-        updates: 0
+        updates: 0,
+        callbacks: {}
       };
 
       function processReceipt(e, receipt) {
@@ -16,8 +16,8 @@
           factory.update(receipt.transactionHash, {receipt: receipt});
 
           // call callback if it has
-          if (factory.transactions[receipt.transactionHash].callback) {
-            factory.transactions[receipt.transactionHash].callback(receipt);
+          if (factory.callbacks[receipt.transactionHash]) {
+            factory.callbacks[receipt.transactionHash](receipt);
           }
         }
       }
@@ -28,14 +28,20 @@
         }
       }
 
+      factory.get = function () {
+        return JSON.parse(localStorage.getItem("transactions")) || {};
+      };
+
       /**
       * Add transaction object to the transactions collection
       */
       factory.add = function (tx) {
-        var transactions = JSON.parse(localStorage.getItem("transactions")) || {};
+        var transactions = factory.get();
         transactions[tx.txHash] = tx;
+        if (tx.callback) {
+          factory.callbacks[tx.txHash] = tx.callback;
+        }
         tx.date = new Date();
-        factory.transactions = transactions;
         localStorage.setItem("transactions", JSON.stringify(transactions));
         factory.updates++;
         try {
@@ -49,9 +55,8 @@
       };
 
       factory.update = function (txHash, newObj) {
-        var transactions = JSON.parse(localStorage.getItem("transactions")) || {};
+        var transactions = factory.get();
         Object.assign(transactions[txHash], newObj);
-        factory.transactions = transactions;
         localStorage.setItem("transactions", JSON.stringify(transactions));
         factory.updates++;
         try {
@@ -65,11 +70,13 @@
       };
 
       /**
+      * TODO Update
       * Remove transaction identified by transaction hash from the transactions collection
       */
       factory.remove = function (txHash) {
-        delete factory.transactions[txHash];
-        localStorage.setItem("transactions", JSON.stringify(factory.transactions));
+        var transactions = factory.get();
+        delete transactions[txHash];
+        localStorage.setItem("transactions", JSON.stringify(transactions));
         factory.updates++;
         try{
           $rootScope.$digest();
@@ -81,7 +88,6 @@
       * Remove all transactions
       */
       factory.removeAll = function () {
-        factory.transactions = {};
         localStorage.removeItem("transactions");
         factory.updates++;
         try{
@@ -222,10 +228,11 @@
         var batch = Wallet.web3.createBatch();
 
         // Add transactions without receipt to batch request
-        var txHashes = Object.keys(factory.transactions);
+        var transactions = factory.get();
+        var txHashes = Object.keys(transactions);
 
         for (var i=0; i<txHashes.length; i++) {
-          var tx = factory.transactions[txHashes[i]];
+          var tx = transactions[txHashes[i]];
           // Get transaction receipt
           if (tx && !tx.receipt) {
             batch.add(

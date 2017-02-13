@@ -38,7 +38,7 @@
           $scope.abiArray = JSON.parse($scope.abi);
           $scope.abiArray.map(function (item, index) {
             if (!item.constant && item.name && item.type == "function") {
-              $scope.methods.push({name: item.name, index: index});
+              $scope.methods.push({name: item.name, index: index, inputs: item.inputs});
             }
           });
         } catch (error) {
@@ -49,13 +49,30 @@
       $scope.send = function () {
         var tx = {};
         Object.assign(tx, $scope.tx);
+        var params = [];
+        Object.assign(params, $scope.params);
+        console.log(params);
+        if ($scope.method) {
+          params.map(function(param, index) {
+            // Parse if array param
+            if ($scope.method.inputs && $scope.method.inputs[index].type.indexOf("[]") !== -1) {
+              try {
+                params[index] = JSON.parse($scope.params[index]);
+              }
+              catch (e) {
+                Utils.dangerAlert(e);
+              }
+            }
+          });
+        }
+        console.log(params);
         tx.value = new Web3().toBigNumber($scope.tx.value).mul('1e18');
         Wallet.submitTransaction(
           $scope.wallet.address,
           tx,
           $scope.abiArray,
           $scope.method && $scope.method.index?$scope.method.name:null,
-          $scope.params,
+          params,
           function (e, tx) {
             if (e) {
               Utils.dangerAlert(e);

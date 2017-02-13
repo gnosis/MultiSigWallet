@@ -10,12 +10,12 @@
         },
         function () {
           var txArray = [];
-
-          for (var txKey in Transaction.transactions) {
+          var storageTransactions = Transaction.get();
+          for (var txKey in storageTransactions) {
             if (!$scope.transactionsMap[txKey]) {
               $scope.transactionsMap[txKey] = {};
             }
-            Object.assign($scope.transactionsMap[txKey], Transaction.transactions[txKey]);
+            Object.assign($scope.transactionsMap[txKey], storageTransactions[txKey]);
             txArray.push($scope.transactionsMap[txKey]);
 
             if ($scope.transactionsMap[txKey].info && (!$scope.transactionsMap[txKey].decodedData || $scope.transactionsMap[txKey].decodedData.notDecoded)) {

@@ -221,7 +221,7 @@
           </div>
           <div class="row">
             <div ng-class="{'col-md-8': transactions[txId].dataDecoded.notDecoded || transactions[txId].dataDecoded.params, 'col-md-12': !transactions[txId].dataDecoded.notDecoded && !transactions[txId].dataDecoded.params}">
-              <span popover-trigger="'mouseenter'" uib-popover-template="'partials/multisigData.html'" popover-placement="bottom" popover-append-to-body="true">
+              <span popover-trigger="'mouseenter'" uib-popover-template="'partials/multisigData.html'" popover-placement="bottom" popover-append-to-body="true" popover-enable="transactions[txId].data != '0x'">
                 {{transactions[txId].dataDecoded.title}}
               </span>
               <ul>

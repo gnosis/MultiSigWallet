@@ -2,8 +2,13 @@
     cursor: pointer;
 }
 
+.navbar {
+    font-weight: bold;
+}
+
 .popover {
     max-width: 450px;
+    color: #87949c;
 }
 
 html {

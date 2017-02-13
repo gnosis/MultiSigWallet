@@ -184,17 +184,6 @@
         }
       };
 
-      $scope.getType = function (tx) {
-        var type = Wallet.getType(tx);
-        // Returns the name associated with tx.to if it is
-        // addressed to a wallet owner
-        if (tx.to && $scope.wallet.owners[tx.to]) {
-          type = $scope.wallet.owners[tx.to].name;
-        }
-
-        return type;
-      };
-
       $scope.getParam = function (tx) {
         if (tx.data && tx.data.length > 3) {
           var method = tx.data.slice(2, 10);
@@ -204,20 +193,22 @@
           }
           switch (method) {
             case "ba51a6df":
+              var confirmations = new Web3().toBigNumber("0x" + tx.data.slice(11)).toString();
               return {
-                title: new Web3().toBigNumber("0x" + tx.data.slice(11)).toString()
+                title: "Change required confirmations to "+ confirmations
               };
             case "7065cb48":
               return {
-                title: $filter("addressCanBeOwner")(owner, $scope.wallet)
+                title: "Add owner " + $filter("addressCanBeOwner")(owner, $scope.wallet)
               };
             case "173825d9":
               return {
-                title: $filter("addressCanBeOwner")(owner, $scope.wallet)
+                title: "Remove owner " + $filter("addressCanBeOwner")(owner, $scope.wallet)
               };
             case "cea08621":
+              var limit = $filter("ether")("0x" + tx.data.slice(11));
               return {
-                title: new Web3().toBigNumber("0x" + tx.data.slice(11)).div('1e18').toString() + " ETH"
+                title: "Change daily limit to " + limit
               };
             case "a9059cbb":
               var tokenAddress = tx.to;
@@ -232,14 +223,14 @@
               var oldOwner = "0x" + tx.data.slice(34, 74);
               var newOwner = "0x" + tx.data.slice(98, 138);
               return {
-                title: "Old " + $filter("addressCanBeOwner")(oldOwner, $scope.wallet) + " / New " + $filter("addressCanBeOwner")(newOwner, $scope.wallet)
+                title: "Replace owner " + $filter("addressCanBeOwner")(oldOwner, $scope.wallet) + " with " + $filter("addressCanBeOwner")(newOwner, $scope.wallet)
               };
             default:
               // Check abis in cache
               var abis = ABI.get();
-              if (abis[tx.to]) {
+              if (abis[tx.to] && abis[tx.to].abi) {
                 // Decode
-                var abi = abis[tx.to].abi;                
+                var abi = abis[tx.to].abi;
                 return ABI.decode(abi, tx.data);
               }
               else {
@@ -256,6 +247,32 @@
                   };
                 }
               }
+          }
+        }
+        else {
+          return {
+            title: "Transfer " + $filter("ether")(tx.value) + " to " + $filter("addressCanBeOwner")(tx.to, $scope.wallet)
+          };
+        }
+      };
+
+      $scope.getDestination = function (tx) {
+        if (Wallet.wallets[tx.to]) {
+          return Wallet.wallets[tx.to].name;
+        }
+        else if ($scope.wallet.owners && $scope.wallet.owners[tx.to] && $scope.wallet.owners[tx.to].name){
+          return $scope.wallet.owners[tx.to].name;
+        }
+        else if ($scope.wallet.tokens && $scope.wallet.tokens[tx.to] && $scope.wallet.tokens[tx.to].name) {
+          return $scope.wallet.tokens[tx.to].name;
+        }
+        else {
+          var abis = ABI.get();
+          if (abis[tx.to] && abis[tx.to].name) {
+            return abis[tx.to].name;
+          }
+          else {
+            return tx.to.slice(0, 10) + "...";
           }
         }
       };
@@ -291,8 +308,8 @@
                         $scope.transactions[tx].dataDecoded = $scope.getParam($scope.transactions[tx]);
                       }
                       // If destionation type has not been set
-                      if (!$scope.transactions[tx].type) {
-                        $scope.transactions[tx].type = $scope.getType($scope.transactions[tx]);
+                      if (!$scope.transactions[tx].destination) {
+                        $scope.transactions[tx].destination = $scope.getDestination($scope.transactions[tx]);
                       }
                     });
                   }

@@ -15,7 +15,7 @@
         Object.assign(tx, $scope.tx);
         tx.value = new Web3().toBigNumber($scope.tx.value).mul('1e18');
         // if method, use contract instance method
-        if ($scope.method && $scope.method.index) {      
+        if ($scope.method && $scope.method.index !== undefined && $scope.method.index !== "") {
           Transaction.sendMethod(tx, $scope.abiArray, $scope.method.name, $scope.params, function (e, tx) {
             if (e) {
               Utils.dangerAlert(e);
@@ -43,6 +43,15 @@
               else {
                 $uibModalInstance.close();
                 Utils.notification("Transaction was sent.");
+
+                if ($scope.name) {
+                  if ($scope.abiArray) {
+                    ABI.update($scope.abiArray, $scope.tx.to, $scope.name);
+                  }
+                  else {
+                    ABI.update(undefined, $scope.tx.to, $scope.name);
+                  }
+                }
               }
             });
           } catch (error) {

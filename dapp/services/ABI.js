@@ -22,7 +22,21 @@
         localStorage.setItem("abis", JSON.stringify(factory.saved));
       }
 
-      factory.decode = function (abi, data) {
+      factory.decode = function (abi, data) {        
+        if (!abi) {
+          if (data.length > 20) {
+            return {
+              title: data.slice(0, 20) + "...",
+              notDecoded: true
+            };
+          }
+          else {
+            return {
+              title: data.slice(0, 20),
+              notDecoded: true
+            };
+          }
+        }
         var methodIds = {};
         // Generate event id's
         Object.keys(abi).map(function(key){

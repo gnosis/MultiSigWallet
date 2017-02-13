@@ -37,7 +37,12 @@
 
         if (executeChanges) {
           if (remove) {
-            ABI.remove(to);
+            if ($scope.name) {
+              ABI.update(undefined, to, $scope.name);
+            }
+            else {
+              ABI.remove(to);
+            }
           }
           else {
             ABI.update(parsedABI, to, $scope.name);

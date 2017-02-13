@@ -74,6 +74,11 @@
                 }
               });
             }
+            else {
+              if (attrs.showHideByFactoryStatus=='online') {
+                element.css("display", "none");
+              }
+            }
           });
 
         }

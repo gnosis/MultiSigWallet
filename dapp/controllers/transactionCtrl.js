@@ -16,22 +16,31 @@
               txArray.push(transactions[txKey]);
 
               if (transactions[txKey].info && (!transactions[txKey].decodedData || transactions[txKey].decodedData.notDecoded)) {
-                // Decode data
-                var abis = ABI.get();
-                var savedABI = abis[transactions[txKey].info.to];
-                if (savedABI) {
-                  transactions[txKey].decodedData = ABI.decode(savedABI.abi, transactions[txKey].info.input);
-                }
-                else if (Wallet.wallets[transactions[txKey].info.to]) {
-                  transactions[txKey].toWallet = true;
-                  transactions[txKey].decodedData = ABI.decode(Wallet.json.multiSigDailyLimit.abi, transactions[txKey].info.input);
+                if (transactions[txKey].info.input !== "0x" && transactions[txKey].info.input.data !== "0x0") {
+                  // Decode data
+                  var abis = ABI.get();
+                  var savedABI = abis[transactions[txKey].info.to];
+                  if (savedABI) {
+                    transactions[txKey].decodedData = ABI.decode(savedABI.abi, transactions[txKey].info.input);
+                  }
+                  else if (Wallet.wallets[transactions[txKey].info.to]) {
+                    transactions[txKey].toWallet = true;
+                    transactions[txKey].decodedData = ABI.decode(Wallet.json.multiSigDailyLimit.abi, transactions[txKey].info.input);
+                  }
+                  else {
+                    transactions[txKey].decodedData = {
+                      title: transactions[txKey].info.input.slice(0, 20) + "...",
+                      notDecoded: true
+                    };
+                  }
                 }
                 else {
                   transactions[txKey].decodedData = {
-                    title: transactions[txKey].info.input.slice(0, 20) + "...",
+                    title: "",
                     notDecoded: true
                   };
                 }
+
               }
           }
 

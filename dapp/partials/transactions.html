@@ -56,7 +56,7 @@
         </td>
         <td>
           <div ng-show="transaction.decodedData.title" class="row">
-            <div class="col-md-8">
+            <div ng-class="{'col-md-8' : !transaction.toWallet && !transaction.toToken, 'col-md-12': transaction.toWallet || transaction.toToken}">
               <span  popover-trigger="'mouseenter'" uib-popover-template="'partials/txData.html'" popover-placement="bottom" popover-append-to-body="true">
                 {{transaction.decodedData.title}}
               </span>
@@ -69,8 +69,8 @@
               </li>
             </ul>
             </div>
-            <div class="col-md-4">
-              <button ng-show="transaction.decodedData.notDecoded || transaction.decodedData.params" ng-hide="transaction.toWallet" class="btn btn-default btn-sm pull-right" ng-click="editABI(transaction.info.to)">
+            <div class="col-md-4" ng-show="transaction.decodedData.notDecoded || transaction.decodedData.params" ng-hide="transaction.toWallet || transaction.toToken">
+              <button class="btn btn-default btn-sm pull-right" ng-click="editABI(transaction.info.to)">
                 Edit ABI
               </button>
             </div>

@@ -3,45 +3,57 @@
     angular
     .module('multiSigWeb')
     .controller('transactionCtrl', function ($scope, $sce, Wallet, Utils, Transaction, $uibModal, $filter, ABI) {
-
+      $scope.transactionsMap = {};
       $scope.$watch(
         function () {
           return Transaction.updates;
         },
         function () {
-          var transactions = Transaction.transactions;
           var txArray = [];
 
-          for (var txKey in transactions) {
-              txArray.push(transactions[txKey]);
+          for (var txKey in Transaction.transactions) {
+            if (!$scope.transactionsMap[txKey]) {
+              $scope.transactionsMap[txKey] = {};
+            }
+            Object.assign($scope.transactionsMap[txKey], Transaction.transactions[txKey]);
+            txArray.push($scope.transactionsMap[txKey]);
 
-              if (transactions[txKey].info && (!transactions[txKey].decodedData || transactions[txKey].decodedData.notDecoded)) {
-                if (transactions[txKey].info.input !== "0x" && transactions[txKey].info.input.data !== "0x0") {
-                  // Decode data
-                  var abis = ABI.get();
-                  var savedABI = abis[transactions[txKey].info.to];
-                  if (savedABI) {
-                    transactions[txKey].decodedData = ABI.decode(savedABI.abi, transactions[txKey].info.input);
-                  }
-                  else if (Wallet.wallets[transactions[txKey].info.to]) {
-                    transactions[txKey].toWallet = true;
-                    transactions[txKey].decodedData = ABI.decode(Wallet.json.multiSigDailyLimit.abi, transactions[txKey].info.input);
-                  }
-                  else {
-                    transactions[txKey].decodedData = {
-                      title: transactions[txKey].info.input.slice(0, 20) + "...",
+            if ($scope.transactionsMap[txKey].info && (!$scope.transactionsMap[txKey].decodedData || $scope.transactionsMap[txKey].decodedData.notDecoded)) {
+              if ($scope.transactionsMap[txKey].info.input !== "0x" && $scope.transactionsMap[txKey].info.input.data !== "0x0") {
+                // Decode data
+                var abis = ABI.get();
+                var savedABI = abis[$scope.transactionsMap[txKey].info.to];
+                if (savedABI && savedABI.abi) {
+                  $scope.transactionsMap[txKey].decodedData = ABI.decode(savedABI.abi, $scope.transactionsMap[txKey].info.input);
+                }
+                else if (Wallet.wallets[$scope.transactionsMap[txKey].info.to]) {
+                  $scope.transactionsMap[txKey].toWallet = true;
+                  $scope.transactionsMap[txKey].decodedData = ABI.decode(Wallet.json.multiSigDailyLimit.abi, $scope.transactionsMap[txKey].info.input);
+                }
+                else {
+                  // Try to decode it with token ABI
+                  var tokenDecoding = ABI.decode(Wallet.json.token.abi, $scope.transactionsMap[txKey].info.input);
+                  if (tokenDecoding.notDecoded) {
+                    $scope.transactionsMap[txKey].decodedData = {
+                      title: $scope.transactionsMap[txKey].info.input.slice(0, 20) + "...",
                       notDecoded: true
                     };
                   }
-                }
-                else {
-                  transactions[txKey].decodedData = {
-                    title: "",
-                    notDecoded: true
-                  };
-                }
+                  else {
+                    $scope.transactionsMap[txKey].decodedData = tokenDecoding;
+                    $scope.transactionsMap[txKey].toToken = true;
+                  }
 
+                }
               }
+              else {
+                $scope.transactionsMap[txKey].decodedData = {
+                  title: "",
+                  notDecoded: true
+                };
+              }
+
+            }
           }
 
           // Transactions sorted by tx.date DESC

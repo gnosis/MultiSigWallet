@@ -32,9 +32,11 @@
       * Add transaction object to the transactions collection
       */
       factory.add = function (tx) {
-        factory.transactions[tx.txHash] = tx;
+        var transactions = JSON.parse(localStorage.getItem("transactions")) || {};
+        transactions[tx.txHash] = tx;
         tx.date = new Date();
-        localStorage.setItem("transactions", JSON.stringify(factory.transactions));
+        factory.transactions = transactions;
+        localStorage.setItem("transactions", JSON.stringify(transactions));
         factory.updates++;
         try {
           $rootScope.$digest();
@@ -47,8 +49,10 @@
       };
 
       factory.update = function (txHash, newObj) {
-        Object.assign(factory.transactions[txHash], newObj);
-        localStorage.setItem("transactions", JSON.stringify(factory.transactions));
+        var transactions = JSON.parse(localStorage.getItem("transactions")) || {};
+        Object.assign(transactions[txHash], newObj);
+        factory.transactions = transactions;
+        localStorage.setItem("transactions", JSON.stringify(transactions));
         factory.updates++;
         try {
           $rootScope.$digest();

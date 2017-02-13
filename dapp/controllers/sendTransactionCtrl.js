@@ -13,10 +13,25 @@
       $scope.send = function () {
         var tx = {};
         Object.assign(tx, $scope.tx);
+        var params = [];
+        Object.assign(params, $scope.params);
+        if ($scope.method) {
+          params.map(function(param, index) {
+            // Parse if array param
+            if ($scope.method.inputs && $scope.method.inputs[index].type.indexOf("[]") !== -1) {
+              try {
+                params[index] = JSON.parse($scope.params[index]);
+              }
+              catch (e) {
+                Utils.dangerAlert(e);
+              }
+            }
+          });
+        }
         tx.value = new Web3().toBigNumber($scope.tx.value).mul('1e18');
         // if method, use contract instance method
         if ($scope.method && $scope.method.index !== undefined && $scope.method.index !== "") {
-          Transaction.sendMethod(tx, $scope.abiArray, $scope.method.name, $scope.params, function (e, tx) {
+          Transaction.sendMethod(tx, $scope.abiArray, $scope.method.name, params, function (e, tx) {
             if (e) {
               Utils.dangerAlert(e);
             }
@@ -62,8 +77,23 @@
 
       $scope.signOff = function () {
         $scope.tx.value = "0x" + new Web3().toBigNumber($scope.tx.value).mul('1e18').toString(16);
+        var params = [];
+        Object.assign(params, $scope.params);
         if ($scope.method) {
-          Transaction.signMethodOffline($scope.tx, $scope.abiArray, $scope.method.name, $scope.params, function (e, tx) {
+          params.map(function(param, index) {
+            // Parse if array param
+            if ($scope.method.inputs && $scope.method.inputs[index].type.indexOf("[]") !== -1) {
+              try {
+                params[index] = JSON.parse($scope.params[index]);
+              }
+              catch (e) {
+                Utils.dangerAlert(e);
+              }
+            }
+          });
+        }
+        if ($scope.method) {
+          Transaction.signMethodOffline($scope.tx, $scope.abiArray, $scope.method.name, params, function (e, tx) {
             $uibModalInstance.close();
             Utils.signed(tx);
           });
@@ -117,7 +147,7 @@
           $scope.abiArray = JSON.parse($scope.abi);
           $scope.abiArray.map(function (item, index) {
             if (!item.constant && item.name && item.type == "function") {
-              $scope.methods.push({name: item.name, index: index});
+              $scope.methods.push({name: item.name, index: index, inputs: item.inputs});
             }
           });
         } catch (error) {

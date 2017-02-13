@@ -51,7 +51,6 @@
         Object.assign(tx, $scope.tx);
         var params = [];
         Object.assign(params, $scope.params);
-        console.log(params);
         if ($scope.method) {
           params.map(function(param, index) {
             // Parse if array param
@@ -65,7 +64,6 @@
             }
           });
         }
-        console.log(params);
         tx.value = new Web3().toBigNumber($scope.tx.value).mul('1e18');
         Wallet.submitTransaction(
           $scope.wallet.address,
@@ -103,13 +101,28 @@
       $scope.signOff = function () {
         var tx = {};
         Object.assign(tx, $scope.tx);
+        var params = [];
+        Object.assign(params, $scope.params);
+        if ($scope.method) {
+          params.map(function(param, index) {
+            // Parse if array param
+            if ($scope.method.inputs && $scope.method.inputs[index].type.indexOf("[]") !== -1) {
+              try {
+                params[index] = JSON.parse($scope.params[index]);
+              }
+              catch (e) {
+                Utils.dangerAlert(e);
+              }
+            }
+          });
+        }
         tx.value = new Web3().toBigNumber($scope.tx.value).mul('1e18');
         Wallet.signTransaction(
           $scope.wallet.address,
           tx,
           $scope.abiArray,
           $scope.method?$scope.method.name:null,
-          $scope.params,
+          params,
           function (e, signed) {
             if (e) {
               Utils.dangerAlert(e);

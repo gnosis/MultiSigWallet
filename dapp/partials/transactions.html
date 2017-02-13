@@ -62,7 +62,7 @@
               </span>
             <ul>
               <li ng-repeat="param in transaction.decodedData.params">
-                {{param.name}} :
+                {{param.name}}:
                 <span uib-popover="{{param.value}}" popover-enable="param.value && param.value.toString().length > 10" popover-trigger="'mouseenter'">
                   {{param.value|addressCanBeOwner:wallet|logParam}}
                 </span>

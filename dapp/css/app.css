@@ -11,6 +11,10 @@
     color: #87949c;
 }
 
+h1 {
+    font-size: 40px !important;
+}
+
 html {
     height: 100%;
 }

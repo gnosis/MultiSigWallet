@@ -290,10 +290,15 @@
           $scope.showExecuted,
           function (e, ids) {
             var txBatch = Wallet.web3.createBatch();
-            $scope.transactions = {};
+            if (!$scope.transactions) {
+              $scope.transactions = {};
+            }
+
             $scope.txIds = ids.slice(0).reverse();
             ids.map(function (tx) {
-              $scope.transactions[tx] = {};
+              if (!$scope.transactions[tx]) {
+                $scope.transactions[tx] = {};
+              }
               // Get transaction info
               txBatch.add(
                 Wallet.getTransaction($scope.wallet.address, tx, function (e, info) {

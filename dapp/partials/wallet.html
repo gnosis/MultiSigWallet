@@ -220,7 +220,7 @@
             -
           </div>
           <div class="row">
-            <div class="col-md-8">
+            <div ng-class="{'col-md-8': transactions[txId].dataDecoded.notDecoded || transactions[txId].dataDecoded.params, 'col-md-12': !transactions[txId].dataDecoded.notDecoded && !transactions[txId].dataDecoded.params}">
               <span popover-trigger="'mouseenter'" uib-popover-template="'partials/multisigData.html'" popover-placement="bottom" popover-append-to-body="true">
                 {{transactions[txId].dataDecoded.title}}
               </span>
@@ -233,8 +233,8 @@
                 </li>
               </ul>
             </div>
-            <div class="col-md-4" ng-show="transactions[txId].dataDecoded.notDecoded || transactions[txId].dataDecoded.params">
-              <button ng-show="transactions[txId].dataDecoded.notDecoded || transactions[txId].dataDecoded.params" class="btn btn-default btn-sm pull-right" ng-click="editABI(transactions[txId].to)">
+            <div ng-class="{'col-md-4': transactions[txId].dataDecoded.notDecoded || transactions[txId].dataDecoded.params}" ng-show="transactions[txId].dataDecoded.notDecoded || transactions[txId].dataDecoded.params">
+              <button class="btn btn-default btn-sm pull-right" ng-click="editABI(transactions[txId].to)">
                 Edit ABI
               </button>
             </div>
@@ -269,7 +269,7 @@
         </td>
         <td>
           <div class="row">
-            <div class="col-md-6">
+            <div ng-class="{'col-md-12' : transactions[txId].executed, 'col-md-6' : !transactions[txId].executed}">
               <span ng-show="transactions[txId].executed">
                 Yes
               </span>

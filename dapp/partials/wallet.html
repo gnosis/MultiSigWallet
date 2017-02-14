@@ -249,7 +249,7 @@
                 </li>
               </ul>
             </div>
-            <div ng-hide="transactions[txId].executed || transactions[txId].confirmed" class="col-md-6">
+            <div ng-hide="transactions[txId].executed || transactions[txId].confirmed" ng-class="{'col-md-12' : !transactions[txId].confirmations.length, 'col-md-6' : transactions[txId].confirmations.length}">
               <button type="button" class="btn btn-default btn-sm pull-right"
                 ng-hide="transactions[txId].executed || transactions[txId].confirmed"
                 ng-click="confirmTransaction(txId)"

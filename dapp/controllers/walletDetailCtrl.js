@@ -332,6 +332,9 @@
                     if (confirmations.indexOf(Wallet.coinbase) != -1) {
                       $scope.transactions[tx].confirmed=true;
                     }
+                    else {
+                      $scope.transactions[tx].confirmed = false;
+                    }
                   });
                 })
               );

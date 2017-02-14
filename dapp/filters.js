@@ -132,17 +132,15 @@
       };
     })
     .filter('addressCanBeOwner', function (Wallet) {
-      return function (addressCandidate, wallet) {
+      return function (addressCandidate) {
         if (addressCandidate && addressCandidate.indexOf && addressCandidate.indexOf("0x") != -1) {
-          if ( wallet && wallet.owners && wallet.owners[addressCandidate] && wallet.owners[addressCandidate].name){
-            return wallet.owners[addressCandidate].name;
+          for (key in Wallet.wallets) {
+            var wallet = Wallet.wallets[key];
+            if ( wallet && wallet.owners && wallet.owners[addressCandidate] && wallet.owners[addressCandidate].name){
+              return wallet.owners[addressCandidate].name;
+            }
           }
-          else if (Wallet.wallets[addressCandidate]){
-            return Wallet.wallets[addressCandidate].name;
-          }
-          else {
-            return addressCandidate;
-          }
+          return addressCandidate;
         }
         else {
           return addressCandidate;

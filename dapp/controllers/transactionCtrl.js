@@ -17,14 +17,14 @@
             }
             Object.assign($scope.transactionsMap[txKey], storageTransactions[txKey]);
             txArray.push($scope.transactionsMap[txKey]);
-
-            if ($scope.transactionsMap[txKey].info && (!$scope.transactionsMap[txKey].decodedData || $scope.transactionsMap[txKey].decodedData.notDecoded)) {
+            var abis = ABI.get();
+            var savedABI = abis[$scope.transactionsMap[txKey].info.to];
+            if ($scope.transactionsMap[txKey].info && (!$scope.transactionsMap[txKey].decodedData || $scope.transactionsMap[txKey].decodedData.notDecoded || ($scope.transactionsMap[txKey].usedABI && (!savedABI || savedABI.abi )))) {
               if ($scope.transactionsMap[txKey].info.input !== "0x" && $scope.transactionsMap[txKey].info.input.data !== "0x0") {
                 // Decode data
-                var abis = ABI.get();
-                var savedABI = abis[$scope.transactionsMap[txKey].info.to];
                 if (savedABI && savedABI.abi) {
                   $scope.transactionsMap[txKey].decodedData = ABI.decode(savedABI.abi, $scope.transactionsMap[txKey].info.input);
+                  $scope.transactionsMap[txKey].usedABI = true;
                 }
                 else if (Wallet.wallets[$scope.transactionsMap[txKey].info.to]) {
                   $scope.transactionsMap[txKey].toWallet = true;

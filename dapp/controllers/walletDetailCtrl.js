@@ -231,7 +231,9 @@
               if (abis[tx.to] && abis[tx.to].abi) {
                 // Decode
                 var abi = abis[tx.to].abi;
-                return ABI.decode(abi, tx.data);
+                var decoded = ABI.decode(abi, tx.data);
+                decoded.usedABI = true;
+                return decoded;
               }
               else {
                 if (tx.data.length > 20) {
@@ -308,8 +310,10 @@
                       info.from = $scope.wallet.address;
                       Object.assign($scope.transactions[tx], info);
 
+                      var savedABI = ABI.get()[info.to];
+
                       // Get data info if data has not being decoded, because is a new transactions or we don't have the abi to do it
-                      if (!$scope.transactions[tx].dataDecoded || $scope.transactions[tx].dataDecoded.notDecoded) {
+                      if (!$scope.transactions[tx].dataDecoded || $scope.transactions[tx].dataDecoded.notDecoded || ($scope.transactions[tx].dataDecoded.usedABI && (!savedABI || savedABI.abi ))) {
                         $scope.transactions[tx].dataDecoded = $scope.getParam($scope.transactions[tx]);
                       }
                       // If destionation type has not been set

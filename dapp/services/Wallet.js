@@ -344,9 +344,10 @@
       };
 
       wallet.updateWallet = function (w) {
+        var wallets = wallet.getAllWallets();
         var address = w.address.toLowerCase();
-        if (!wallet.wallets[address]) {
-          wallet.wallets[address] = {};
+        if (!wallets[address]) {
+          wallets[address] = {};
         }
         var tokens = {};
         if (w.tokens) {
@@ -369,8 +370,8 @@
           owners[key.toLowerCase()] = w.owners[key];
         }
 
-        Object.assign(wallet.wallets[address], {address: address, name: w.name, owners: owners, tokens: tokens});
-        localStorage.setItem("wallets", JSON.stringify(wallet.wallets));
+        Object.assign(wallets[address], {address: address, name: w.name, owners: owners, tokens: tokens});
+        localStorage.setItem("wallets", JSON.stringify(wallets));
         wallet.updates++;
         try{
           $rootScope.$digest();
@@ -530,8 +531,9 @@
       };
 
       wallet.removeWallet = function (address) {
-        delete wallet.wallets[address];
-        localStorage.setItem("wallets", JSON.stringify(wallet.wallets));
+        var wallets = wallet.getAllWallets();
+        delete wallets[address];
+        localStorage.setItem("wallets", JSON.stringify(wallets));
         wallet.updates++;
         try {
           $rootScope.$digest();
@@ -540,8 +542,9 @@
       };
 
       wallet.update = function (address, name) {
-        wallet.wallets[address].name = name;
-        localStorage.setItem("wallets", JSON.stringify(wallet.wallets));
+        var wallets = wallet.getAllWallets();
+        wallets[address].name = name;
+        localStorage.setItem("wallets", JSON.stringify(wallets));
         wallet.updates++;
         try{
           $rootScope.$digest();
@@ -1175,7 +1178,7 @@
             wallet.offlineTransaction(address, mainData, nonce, cb);
           }
         });
-      };    
+      };
 
       // Works as observer triggering for watch $scope
       wallet.triggerUpdates = function () {

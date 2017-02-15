@@ -52,7 +52,7 @@
               Wallet.getBalance(
                 address,
                 function (e, balance) {
-                  if($scope.wallets[address]){
+                  if(!e && balance && $scope.wallets[address]){
                     $scope.$apply(function () {
                       $scope.wallets[address].balance = balance;
                     });
@@ -78,7 +78,7 @@
               Wallet.getLimit(
                 address,
                 function (e, limit) {
-                  if($scope.wallets[address]){
+                  if(!e && limit && $scope.wallets[address]){
                     $scope.$apply(function () {
                       $scope.wallets[address].limit = limit;
                     });
@@ -91,7 +91,7 @@
               Wallet.calcMaxWithdraw(
                 address,
                 function (e, max) {
-                  if($scope.wallets[address]){
+                  if(!e && max && $scope.wallets[address]){
                     $scope.$apply(function () {
                       $scope.wallets[address].maxWithdraw = max;
                     });

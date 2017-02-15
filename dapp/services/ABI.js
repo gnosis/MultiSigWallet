@@ -20,9 +20,9 @@
       factory.remove = function (to) {
         delete factory.saved[to];
         localStorage.setItem("abis", JSON.stringify(factory.saved));
-      }
+      };
 
-      factory.decode = function (abi, data) {        
+      factory.decode = function (abi, data) {
         if (!abi) {
           if (data.length > 20) {
             return {

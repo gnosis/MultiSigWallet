@@ -21,15 +21,13 @@ module.exports = function(config) {
       'bower_components/angular-route/angular-route.min.js',
       'bower_components/ngclipboard/dist/ngclipboard.min.js',
       'bower_components/web3/dist/web3.min.js',
-      'node_modules/phantomjs-polyfill-object-assign/object-assign-polyfill.js',
-      //'bower_components/ethereum-tx/dist/ethereumjs-tx.js',
       'bower_components/ethjs-abi-denis/dist/ethjs-abi.min.js',
+      'node_modules/phantomjs-polyfill-object-assign/object-assign-polyfill.js',
       'app.js',
       'abi.js',
       'config.js',
       'services/**/*.js',
-      //'controllers/**/*.js',
-      'tests/*',
+      'tests/*'
     ],
 
 
@@ -38,12 +36,11 @@ module.exports = function(config) {
       //'services/Utils.js',
     ],
 
-
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-    },
 
+    },
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
@@ -70,7 +67,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome'], //['PhantomJS'],
+    browsers: ['PhantomJS'], //['PhantomJS'], //['Chrome'],
 
 
     // Continuous Integration mode

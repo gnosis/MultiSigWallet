@@ -10,7 +10,7 @@
   "description": "Angular web app made for Multi Sig Wallet",
   "main": "index.html",
   "scripts": {
-    "test": "karma start config.karma.js",
+    "test": "sh testrpc.sh",
     "dist": "zip -x node_modules/\\* -x npm-debug.log -x tests/\\* -x config.karma.js -x .DS_Store -x .gitignore -r ../multisigWallet.zip ./",
     "postinstall": "./node_modules/bower/bin/bower install && ./node_modules/grunt/bin/grunt ngtemplates",
     "start": "http-server -a 0.0.0.0 -p 5000"
@@ -30,6 +30,7 @@
     "http-server": "^0.9.0"
   },
   "devDependencies": {
+    "ethereumjs-testrpc": "^3.0.2",
     "grunt-angular-templates": "^1.1.0",
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-contrib-watch": "^1.0.0",

@@ -3,6 +3,7 @@ describe('Wallet Service', function(){
   var walletService = {};
   var transactionService = {};
   var utilsService = {};
+  var connectionService = {};
   var accounts = ["0x291d64e40fdc9eb1ae5721e6dc5d60260e61a7b1", "0xcf9428b6257a19eb4f6640ab9ead9a5bb5bae3c1"];
   var destination = "0xE3eB3DA4cae8BE5eFF65886A399e9f8E36a290A5";
   var host = 'http://localhost:4000';
@@ -21,6 +22,8 @@ describe('Wallet Service', function(){
           transactionService = $injector.get('Transaction');
           transactionService.Wallet = walletService;
           utilsService = $injector.get('Utils');
+          connectionService = $injector.get('Connection');
+          connectionService.isConnected = true;
 
           web3 = new Web3(new Web3.providers.HttpProvider(host));
           web3.eth.defaultAccount = web3.eth.accounts[0]; //set default account;
@@ -31,18 +34,21 @@ describe('Wallet Service', function(){
               nonce: web3.eth.getTransactionCount(accounts[0]),
               from: accounts[0],
               gasPrice: 20000000000,
-              gas: '0x47E7C4',
-              gasLimit: txDefault.gasLimit
+              gas: '0x47E7C4', //'0x47E7C4',
+              gasLimit: txDefault.gasLimit,
+              walletFactoryAddress : '0xa6d9c5f7d4de3cef51ad3b7235d79ccc95114de5'
             };
 
             Object.assign(defaultObj, tx);
             return defaultObj;
           };
 
-          spyOn(walletService, ['web3'] ).and.returnValue(web3); //Doesn't work
+          //spyOn(walletService, ['web3'] ).and.returnValue(web3); //Doesn't work
           walletService.web3 = web3;
           spyOn(walletService, ['txParams'] ).and.returnValue(getTxParams);
-          spyOn(utilsService, ['dangerAlert'] ).and.returnValue({});
+          spyOn(walletService, ['updateWallet']).and.callFake(function (w) {
+            console.log("called Wallet.updateWallet");
+          });
 
           var $q = $injector.get('$q');
           var webInitialized = $q(function (resolve, reject) {
@@ -55,6 +61,8 @@ describe('Wallet Service', function(){
           });
 
           spyOn(walletService, ['txDefaults']).and.callFake(getTxParams);
+
+          spyOn(utilsService, ['dangerAlert'] ).and.returnValue({});
 
           var addTx = function(tx) {
             console.log("Called Transaction.add");
@@ -83,7 +91,6 @@ describe('Wallet Service', function(){
             function (e, r) {
               if (r.address) {
 
-                // Deposit
                 web3.currentProvider.sendAsync({
                       jsonrpc: "2.0",
                       method: "evm_snapshot",
@@ -222,31 +229,160 @@ describe('Wallet Service', function(){
     );
   });
 
-  /*var withdrawTx = {};
-  withdrawTx.value = new Web3().toBigNumber(5);
-  withdrawTx.to = account;
-  withdrawTx.data = '0x0';
+  it('Deploy wallet by factory contract', function (done) {
 
-  batch.add(
-    // Withdraw
-    walletService.submitTransaction(
-      r.address,
-      withdrawTx,
-      null,
-      null,
-      null,
-      function (e, tx) {
-        var batch2 = web3.createBatch();
-        batch2.add(
-          web3.eth.getBalance.request(r.address, function (e, rr) {
-            expect(rr.toNumber()).toEqual(5);
-            done();
-          })
-        );
-        batch2.execute();
-      }
-    )
-  );*/
+    walletService.deployWithLimitFactory(accounts, 1, new Web3().toBigNumber(1).mul('1e18'), function (e, tx) {
+      expect(e).toBe(null);
+      expect(typeof(tx)).toBe('string');
+      var res = web3.eth.getTransaction(tx);
+      var owner2 = '0x' + res.input.substring(res.input.length-40, res.input.length)
+      expect(owner2).toBe(accounts[1]);
+      done();
+    });
+  });
+
+  it('Recover wallet', function (done) {
+
+    var info = {'address' : walletAddress};
+    walletService.coinbase = walletAddress;
+    walletService.restore(info, function (e, r) {
+      expect(e).toBe(null);
+      expect(r.address).toBe(walletAddress);
+      done();
+    });
+  });
+
+  it('Increase Daily Limit', function (done) {
+    // Increase Daily Limit, withdraw ether under daily limit,
+    // until limit is reached (withdraw should not be executed), will be pending for confirmations
+
+    // Deposit
+    web3.eth.sendTransaction({
+        to: walletAddress,
+        from: accounts[0],
+        value: web3.toBigNumber(10)
+    });
+
+
+    walletService.updateLimit(walletAddress, new Web3().toBigNumber(2).mul('1e18'), function (e, r){ //.mul('1e18')
+      console.log("##############");
+      if(e){console.log(e.message);}
+
+      var withdrawTx = {};
+      withdrawTx.value = new Web3().toBigNumber(1)
+      withdrawTx.to = accounts[0];
+      withdrawTx.data = '0x0';
+
+      // Withdraw
+      walletService.submitTransaction(
+        walletAddress,
+        withdrawTx,
+        null,
+        null,
+        null,
+        function (e, tx) {
+          console.log("####### Withdraw1 #######");
+          expect(e).toBe(null);
+
+          var batch2 = web3.createBatch();
+          batch2.add(
+            web3.eth.getBalance.request(walletAddress, function (e, response) {
+              console.log("####### Get Balance1 #######");
+              console.log(response.toNumber());
+              expect(response.eq(9)).toEqual(true);
+
+              // Withdraw again
+              withdrawTx.value = new Web3().toBigNumber(2).mul('1e18');
+
+              walletService.submitTransaction(
+                walletAddress,
+                withdrawTx,
+                null,
+                null,
+                null,
+                function (e, tx) {
+                  console.log("####### Withdraw2 #######");
+
+                  var batch3 = web3.createBatch();
+                  batch3.add(
+                    web3.eth.getBalance.request(walletAddress, function (e2, response2) {
+                      console.log("####### Get Balance2 #######");
+                      // Balance should not have changed
+                      console.log(response2.toNumber());
+                      expect(response2.eq(9)).toEqual(true);
+
+                      var batch4 = web3.createBatch();
+                      batch4.add(
+                        /*walletService.getLimit(walletAddress, function (e1, r1) {
+                          console.log(r1.toNumber());
+                          //expect(limit).toBe(r1.div('1e18').toNumber());
+                          done();
+                        })*/
+                        walletService.getTransactionIds(
+                          walletAddress,
+                          0,
+                          3,
+                          true,
+                          false,
+                          function (e, idxs) {
+                            expect(e).toBe(null);                            
+                            idxs.map( function(id) {
+                              if (id.toNumber()==2) {
+                                var batch5 = web3.createBatch();
+                                batch5.add(
+                                  walletService.getConfirmations(walletAddress, id, function (e, r) {
+                                    expect(e).toBe(null);
+                                    expect(r.length).toBe(1);
+                                    done();
+                                  })
+                                );
+                                batch5.execute();
+                              }
+                            });
+                          }
+                        )
+                      );
+                      batch4.execute();
+                      /*var batch4 = web3.createBatch();
+                      batch4.add(
+                        walletService.getLimit(walletAddress, function (e1, r1) {
+                          console.log(r1.toNumber());
+                          //expect(limit).toBe(r1.div('1e18').toNumber());
+                          done();
+                        })
+                      );
+                      batch4.execute();*/
+                    })
+                  );
+                  batch3.execute();
+                });
+
+            })
+          );
+          batch2.execute();
+        }
+      );
+    });
+
+    //  {
+    //   var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+    //   var data = instance.changeDailyLimit.getData(
+    //     limit,
+    //     cb
+    //   );
+    //   // Get nonce
+    //   wallet.getTransactionCount(address, true, true, function (e, count) {
+    //     if (e) {
+    //       cb(e);
+    //     }
+    //     else {
+    //       instance.submitTransaction(address, "0x0", data, count, wallet.txDefaults(), cb);
+    //     }
+    //   }).call();
+    // };
+
+  });
+
 
   /*it('Update required confirmations', function (done) {
 

@@ -8,9 +8,9 @@ describe('Wallet Service', function(){
   var destination = "0xE3eB3DA4cae8BE5eFF65886A399e9f8E36a290A5";
   var host = 'http://localhost:4000';
   var web3;
+  var ethJs;
   var snapId;
   var walletAddress;
-
   jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
 
   beforeEach(function (done) {
@@ -27,9 +27,14 @@ describe('Wallet Service', function(){
 
           web3 = new Web3(new Web3.providers.HttpProvider(host));
           web3.eth.defaultAccount = web3.eth.accounts[0]; //set default account;
+          walletService.web3 = web3;
+
+          /*ethJs = {'Util' : ethUtil};
+          walletService.EthJS = ethJs;*/
 
           // Mock Tx params in a function
           var getTxParams = function (tx) {
+            console.log("getTxParams");
             var defaultObj = {
               nonce: web3.eth.getTransactionCount(accounts[0]),
               from: accounts[0],
@@ -43,9 +48,8 @@ describe('Wallet Service', function(){
             return defaultObj;
           };
 
-          //spyOn(walletService, ['web3'] ).and.returnValue(web3); //Doesn't work
-          walletService.web3 = web3;
-          spyOn(walletService, ['txParams'] ).and.returnValue(getTxParams);
+          spyOn(walletService, ['txParams'] ).and.callFake(getTxParams);
+          spyOn(walletService, ['txDefaults']).and.callFake(getTxParams);
           spyOn(walletService, ['updateWallet']).and.callFake(function (w) {
             console.log("called Wallet.updateWallet");
           });
@@ -59,8 +63,6 @@ describe('Wallet Service', function(){
           spyOn(walletService, ['initParams'] ).and.returnValue(function(){
             console.log("call initParams");
           });
-
-          spyOn(walletService, ['txDefaults']).and.callFake(getTxParams);
 
           spyOn(utilsService, ['dangerAlert'] ).and.returnValue({});
 
@@ -139,29 +141,43 @@ describe('Wallet Service', function(){
     });
   });
 
-  /*it('Deploy new Wallet', function (done) {
+/*
+TO BE REVIEWED
+  it('Send multisig transaction', function (done) {
+    var txObj = {};
+    txObj.to = accounts[1];
+    txObj.value = new Web3().toBigNumber(1).mul('1e18');
 
-    var limit = 1;
-
-    walletService.deployWithLimit([accounts[0]], 1, new Web3().toBigNumber(limit).mul('1e18'),
+    var countBeforeTx = web3.eth.getTransactionCount(walletAddress);
+    console.log(countBeforeTx);
+    var walletInstance = web3.eth.contract(walletService.json.multiSigDailyLimit.abi).at(walletAddress);
+    walletInstance.submitTransaction(
+      txObj.to,
+      txObj.value,
+      '0x0',
+      countBeforeTx,
+      walletService.txDefaults(),
       function (e, r) {
-        console.log(e.message);
-        if (r.address) {
-          var batch = web3.createBatch();
-
-          batch.add(
-            walletService.getLimit(r.address, function (e1, r1) {
-                expect(limit).toBe(r1.div('1e18').toNumber());
-                done();
-            })
-          );
-
-          batch.execute();
-
-        }
+        console.log(e);
+        console.log(r);
+        var countAfterTx = web3.eth.getTransactionCount(walletAddress);
+        console.log(countAfterTx);
+        done();
       }
     );
-  });*/
+
+    // walletService.submitTransaction(walletAddress,  txObj, walletService.json.multiSigDailyLimit.abi, null, [],
+    //   function (e1, tx) {
+    //     console.log('Submit transaction');
+    //     if(e1){console.log(e1.message);}
+    //     console.log(tx);
+    //     var countAfterTx = web3.eth.getTransactionCount(walletAddress);
+    //     console.log(countAfterTx);
+    //     done();
+    //   }
+    // );
+  });
+*/
 
   it('Update required confirmations', function (done) {
     var required = 2;
@@ -246,7 +262,7 @@ describe('Wallet Service', function(){
       expect(e).toBe(null);
       expect(typeof(tx)).toBe('string');
       var res = web3.eth.getTransaction(tx);
-      var owner2 = '0x' + res.input.substring(res.input.length-40, res.input.length);
+      var owner2 = '0x' + res.input.substring(res.input.length-40, res.input.length)
       expect(owner2).toBe(accounts[1]);
       done();
     });
@@ -324,11 +340,6 @@ describe('Wallet Service', function(){
 
                       var batch4 = web3.createBatch();
                       batch4.add(
-                        /*walletService.getLimit(walletAddress, function (e1, r1) {
-                          console.log(r1.toNumber());
-                          //expect(limit).toBe(r1.div('1e18').toNumber());
-                          done();
-                        })*/
                         walletService.getTransactionIds(
                           walletAddress,
                           0,
@@ -354,15 +365,6 @@ describe('Wallet Service', function(){
                         )
                       );
                       batch4.execute();
-                      /*var batch4 = web3.createBatch();
-                      batch4.add(
-                        walletService.getLimit(walletAddress, function (e1, r1) {
-                          console.log(r1.toNumber());
-                          //expect(limit).toBe(r1.div('1e18').toNumber());
-                          done();
-                        })
-                      );
-                      batch4.execute();*/
                     })
                   );
                   batch3.execute();
@@ -374,6 +376,8 @@ describe('Wallet Service', function(){
         }
       );
     });
+
+
 
     //  {
     //   var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
@@ -392,6 +396,95 @@ describe('Wallet Service', function(){
     //   }).call();
     // };
 
+  });
+
+
+  it('Add owner', function (done) {
+    // Deploy new wallet with 1 owner
+    walletService.deployWithLimit([accounts[0]], 1, new Web3().toBigNumber(0).mul('1e18'),
+      function (e, r) {
+        expect(e).toBe(null);
+
+        if (r.address) {
+
+          var walletAddress = r.address;
+
+          walletService.addOwner(walletAddress, {address: accounts[1]},
+            function (e1, tx) {
+              console.log('add owner');
+              if(e1){console.log(e1);}
+              expect(e1).toBe(null);
+              var batch = web3.createBatch();
+
+              batch.add(
+                walletService.getOwners(walletAddress, function(e3, r3) {
+                  expect(r3).toContain(accounts[1].toLowerCase());
+                  done();
+                })
+              );
+
+              batch.execute();
+
+            }
+          );
+        }
+      }
+    );
+  });
+
+  it('Remove owner', function (done) {
+    // Deploy new wallet with 1 owner
+    walletService.deployWithLimit(accounts, 1, new Web3().toBigNumber(0).mul('1e18'),
+      function (e, r) {
+        expect(e).toBe(null);
+
+        if (r.address) {
+
+          var walletAddress = r.address;
+
+          walletService.removeOwner(walletAddress, {'address' : accounts[1]},
+            function (e1, tx) {
+              console.log('remove owner');
+              expect(e1).toBe(null);
+              var batch = web3.createBatch();
+              batch.add(
+                walletService.getOwners(walletAddress, function(e3, r3) {
+                  expect(r3).not.toContain(accounts[1].toLowerCase());
+                  done();
+                })
+              );
+              batch.execute();
+            }
+          );
+        }
+      }
+    );
+  });
+
+  it('Replace owner', function (done) {
+    // Deploy new wallet with 1 owner and then replace it with another one
+    walletService.deployWithLimit([accounts[0]], 1, new Web3().toBigNumber(0).mul('1e18'),
+      function (e, r) {
+        expect(e).toBe(null);
+        if (r.address) {
+          var walletAddress = r.address;
+          walletService.replaceOwner(walletAddress, accounts[0], accounts[1],
+            function (e1, tx) {
+              expect(e1).toBe(null);
+              var batch = web3.createBatch();
+              batch.add(
+                walletService.getOwners(walletAddress, function(e3, r3) {
+                  expect(r3).not.toContain(accounts[0].toLowerCase());
+                  expect(r3).toContain(accounts[1].toLowerCase());
+                  done();
+                })
+              );
+              batch.execute();
+            }
+          );
+        }
+      }
+    );
   });
 
 
@@ -422,57 +515,6 @@ describe('Wallet Service', function(){
     );
 
     batch.execute();
-
-  });*/
-
-  /*it('Send multisig transaction', function (done) {
-    var limit = 100;
-
-    walletService.deployWithLimit([account], 1, new Web3().toBigNumber(limit).mul('1e18'),
-      function (e, r) {
-        if (r.address) {
-          var walletKey = r.address;
-
-          var depositObj = {
-            to : walletKey,
-            from : account,
-            value : new Web3().toBigNumber(100).mul('1e18'),
-            nonce : web3.eth.getTransactionCount(account)
-          };
-
-          // Do deposit from User Account into the wallet
-          transactionService.send(depositObj, function (e1, r1) {
-
-            // Test  has been incremented
-            var balanceAterDeposit = web3.eth.getBalance(walletKey);
-            expect(100).toEqual(balanceAterDeposit.div('1e18').toNumber());
-
-            var tx = {}
-            tx.value = new Web3().toBigNumber(100).mul('1e18');
-            tx.to = account;
-
-            // Send multisig Tx
-            walletService.submitTransaction(
-              walletKey,
-              tx,
-              null,
-              null,
-              [],
-              function (e2, r2) {
-
-                var balanceAterTx = web3.eth.getBalance(walletKey);
-                expect(0).toEqual(balanceAterTx.div('1e18').toNumber());
-
-                done();
-
-              }
-            );
-
-          });
-
-        }
-      }
-    );
 
   });*/
 
@@ -578,41 +620,6 @@ describe('Wallet Service', function(){
     );
   });*/
 
-  // it('Add owner', function (done) {
-  //
-  //   walletService.deployWithLimit([account], 1, new Web3().toBigNumber(0).mul('1e18'),
-  //     function (e, r) {
-  //       if (e) {
-  //         console.log(e.message);
-  //       }
-  //
-  //       if (r.address) {
-  //
-  //         var walletKey = r.address;
-  //
-  //         walletService.addOwner(walletKey, {address: destination},
-  //           function (e, tx) {
-  //             console.log('add owner');
-  //             console.log(e.message);
-  //             var batch = web3.createBatch();
-  //
-  //             batch.add(
-  //               walletService.getOwners(walletKey, function(e2, r2) {
-  //                 expect(r2).toContain(destination.toLowerCase());
-  //                 done();
-  //               })
-  //             );
-  //
-  //             batch.execute();
-  //
-  //           }
-  //         );
-  //
-  //         done();
-  //       }
-  //     }
-  //   );
-  // });
 
 
 });

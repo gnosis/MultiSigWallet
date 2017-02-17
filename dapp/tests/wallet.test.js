@@ -128,6 +128,17 @@ describe('Wallet Service', function(){
       });
   });
 
+  afterAll(function (done) {
+    web3.currentProvider.sendAsync({
+      jsonrpc: "2.0",
+      method: "stop_server",
+      id: 123456,
+      params: []
+    }, function (e, response) {
+      done();
+    });
+  });
+
   /*it('Deploy new Wallet', function (done) {
 
     var limit = 1;
@@ -235,7 +246,7 @@ describe('Wallet Service', function(){
       expect(e).toBe(null);
       expect(typeof(tx)).toBe('string');
       var res = web3.eth.getTransaction(tx);
-      var owner2 = '0x' + res.input.substring(res.input.length-40, res.input.length)
+      var owner2 = '0x' + res.input.substring(res.input.length-40, res.input.length);
       expect(owner2).toBe(accounts[1]);
       done();
     });
@@ -325,7 +336,7 @@ describe('Wallet Service', function(){
                           true,
                           false,
                           function (e, idxs) {
-                            expect(e).toBe(null);                            
+                            expect(e).toBe(null);
                             idxs.map( function(id) {
                               if (id.toNumber()==2) {
                                 var batch5 = web3.createBatch();

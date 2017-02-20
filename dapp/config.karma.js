@@ -21,7 +21,7 @@ module.exports = function(config) {
       'bower_components/angular-route/angular-route.min.js',
       'bower_components/ngclipboard/dist/ngclipboard.min.js',
       'bower_components/web3/dist/web3.min.js',
-      'bower_components/ethjs-abi-denis/dist/ethjs-abi.min.js',
+      'bower_components/abi-decoder/dist/abi-decoder.js',
       'node_modules/phantomjs-polyfill-object-assign/object-assign-polyfill.js',
       'app.js',
       'abi.js',

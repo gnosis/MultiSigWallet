@@ -55,13 +55,13 @@
       return function (log) {
         if (log && Array.isArray(log)) {
           return log.reduce(function (finalString, address) {
-            if (address.indexOf("0x") != -1){
+            if (address.indexOf("0x") == -1){
               return finalString + address + ", ";
             }
             else{
               return finalString + address.slice(0, 20) + "..., ";
             }
-          }, "");
+          }, "").slice(0, -2);
         }
         else if (log === "0x0") {
           return "0x0";

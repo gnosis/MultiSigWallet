@@ -42,17 +42,7 @@
       });
 
       wallet.addMethods = function (abi) {
-        abi.map(function(item){
-          if(item.name){
-            var signature = new Web3().sha3(item.name + "(" + item.inputs.map(function(input) {return input.type;}).join(",") + ")");
-            if(item.type == "event"){
-              wallet.methodIds[signature.slice(2)] = item;
-            }
-            else{
-              wallet.methodIds[signature.slice(2, 6)] = item;
-            }
-          }
-        });
+        abiDecoder.addABI(abi);
       };
 
       wallet.mergedABI = wallet.json.multiSigDailyLimit.abi.concat(wallet.json.multiSigDailyLimitFactory.abi).concat(wallet.json.token.abi);
@@ -1190,58 +1180,7 @@
       * Needs the abi to decode them
       **/
       wallet.decodeLogs = function (logs) {
-
-        var decoded = [];
-        var i = 0;
-        while(i<logs.length){
-          // Event hash matches
-          var id = logs[i].topics[0].slice(2);
-          var method = wallet.methodIds[id];
-          if(method){
-            var logData = logs[i].data;
-            var decodedParams = [];
-            var dataIndex = 2;
-            var topicsIndex = 1;
-            // Loop topic and data to get the params
-            method.inputs.map(function (param) {
-              var decodedP = {
-                name: param.name
-              };
-
-              if (param.indexed) {
-                decodedP.value = logs[i].topics[topicsIndex];
-                topicsIndex++;
-              }
-              else {
-                var dataEndIndex = dataIndex + 64;
-                decodedP.value = "0x" + logData.slice(dataIndex, dataEndIndex);
-                dataIndex = dataEndIndex;
-              }
-
-              if (param.type == "address"){
-                decodedP.value = "0x" + new Web3().toBigNumber(decodedP.value).toString(16);
-              }
-              else if(param.type == "uint256" || param.type == "uint8" || param.type == "int" ){
-                decodedP.value = new Web3().toBigNumber(decodedP.value).toString(10);
-              }
-
-              decodedParams.push(decodedP);
-            });
-
-            decoded.push(
-              {
-                name: method.name,
-                info: decodedParams
-              }
-            );
-
-
-
-          }
-          // Doesn't match, we move i
-          i++;
-        }
-        return decoded;
+        return abiDecoder.decodeLogs(logs);
       };
 
       return wallet;

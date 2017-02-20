@@ -228,15 +228,17 @@
             default:
               // Check abis in cache
               var abis = ABI.get();
+              var decoded = ABI.decode(tx.data);
+
               if (abis[tx.to] && abis[tx.to].abi) {
-                // Decode
-                var abi = abis[tx.to].abi;
-                var decoded = ABI.decode(abi, tx.data);
                 decoded.usedABI = true;
                 return decoded;
               }
               else {
-                if (tx.data.length > 20) {
+                if (decoded) {
+                  return decoded;
+                }
+                else if (tx.data.length > 20) {
                   return {
                     title: tx.data.slice(0, 20) + "...",
                     notDecoded: true

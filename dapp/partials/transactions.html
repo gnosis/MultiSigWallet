@@ -69,7 +69,7 @@
               </li>
             </ul>
             </div>
-            <div class="col-md-4" ng-show="transaction.decodedData.notDecoded || transaction.decodedData.params" ng-hide="transaction.toWallet || transaction.toToken">
+            <div class="col-md-4" ng-show="transaction.decodedData.notDecoded || transaction.decodedData.params" ng-hide="transaction.toWallet">
               <button class="btn btn-default btn-sm pull-right" ng-click="editABI(transaction.info.to)">
                 Edit ABI
               </button>
@@ -94,7 +94,7 @@
             <li ng-repeat="log in transaction.receipt.decodedLogs track by $index">
               {{log.name}}
               <ul>
-                <li ng-repeat="param in log.info track by $index">
+                <li ng-repeat="param in log.events track by $index">
                   {{param.name}}:
                   <span uib-popover="{{param.value}}" popover-enable="param.value && param.value.toString().length > 7" popover-trigger="'mouseenter'">
                     {{param.value|addressCanBeOwner|logParam}}

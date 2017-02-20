@@ -53,7 +53,17 @@
     })
     .filter('logParam', function () {
       return function (log) {
-        if (log === "0x0") {
+        if (log && Array.isArray(log)) {
+          return log.reduce(function (finalString, address) {
+            if (address.indexOf("0x") != -1){
+              return finalString + address + ", ";
+            }
+            else{
+              return finalString + address.slice(0, 20) + "..., ";
+            }
+          }, "");
+        }
+        else if (log === "0x0") {
           return "0x0";
         }
         else if(log && log.indexOf && log.indexOf("0x") != -1){
@@ -133,7 +143,20 @@
     })
     .filter('addressCanBeOwner', function (Wallet) {
       return function (addressCandidate) {
-        if (addressCandidate && addressCandidate.indexOf && addressCandidate.indexOf("0x") != -1) {
+        if (addressCandidate && Array.isArray(addressCandidate)) {
+          for (key in Wallet.wallets) {
+            var wallet = Wallet.wallets[key];
+            return addressCandidate.map(function (address) {
+              if ( wallet && wallet.owners && wallet.owners[address] && wallet.owners[address].name){
+                return wallet.owners[address].name;
+              }
+              else {
+                return address;
+              }
+            });
+          }
+        }
+        else if (addressCandidate && addressCandidate.indexOf && addressCandidate.indexOf("0x") != -1) {
           for (key in Wallet.wallets) {
             var wallet = Wallet.wallets[key];
             if ( wallet && wallet.owners && wallet.owners[addressCandidate] && wallet.owners[addressCandidate].name){

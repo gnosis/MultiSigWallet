@@ -18,32 +18,21 @@
             Object.assign($scope.transactionsMap[txKey], storageTransactions[txKey]);
             txArray.push($scope.transactionsMap[txKey]);
             var abis = ABI.get();
-            var savedABI = abis[$scope.transactionsMap[txKey].info.to];
+            var savedABI = $scope.transactionsMap[txKey].info?abis[$scope.transactionsMap[txKey].info.to]:null;            
             if ($scope.transactionsMap[txKey].info && (!$scope.transactionsMap[txKey].decodedData || $scope.transactionsMap[txKey].decodedData.notDecoded || ($scope.transactionsMap[txKey].usedABI && (!savedABI || savedABI.abi )))) {
               if ($scope.transactionsMap[txKey].info.input !== "0x" && $scope.transactionsMap[txKey].info.input.data !== "0x0") {
                 // Decode data
+                var decoded = ABI.decode($scope.transactionsMap[txKey].info.input);
+                $scope.transactionsMap[txKey].decodedData = decoded;
                 if (savedABI && savedABI.abi) {
-                  $scope.transactionsMap[txKey].decodedData = ABI.decode(savedABI.abi, $scope.transactionsMap[txKey].info.input);
                   $scope.transactionsMap[txKey].usedABI = true;
                 }
                 else if (Wallet.wallets[$scope.transactionsMap[txKey].info.to]) {
                   $scope.transactionsMap[txKey].toWallet = true;
-                  $scope.transactionsMap[txKey].decodedData = ABI.decode(Wallet.json.multiSigDailyLimit.abi, $scope.transactionsMap[txKey].info.input);
                 }
                 else {
-                  // Try to decode it with token ABI
-                  var tokenDecoding = ABI.decode(Wallet.json.token.abi, $scope.transactionsMap[txKey].info.input);
-                  if (tokenDecoding.notDecoded) {
-                    $scope.transactionsMap[txKey].decodedData = {
-                      title: $scope.transactionsMap[txKey].info.input.slice(0, 20) + "...",
-                      notDecoded: true
-                    };
-                  }
-                  else {
-                    $scope.transactionsMap[txKey].decodedData = tokenDecoding;
-                    $scope.transactionsMap[txKey].toToken = true;
-                  }
-
+                  $scope.transactionsMap[txKey].usedABI = false;
+                  $scope.transactionsMap[txKey].toWallet = false;
                 }
               }
               else {

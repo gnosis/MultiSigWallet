@@ -37,7 +37,8 @@
     "clipboard": "^1.5.16",
     "angular-mocks": "^1.6.1",
     "ethjs-abi-denis": "0.1.1",
-    "rlp": "^0.0.1"
+    "rlp": "^0.0.1",
+    "abi-decoder": "^1.0.2"
   },
   "resolutions": {
     "angular": "~1.5.8"

@@ -69,8 +69,7 @@
         factory.updates++;
       };
 
-      /**
-      * TODO Update
+      /**      
       * Remove transaction identified by transaction hash from the transactions collection
       */
       factory.remove = function (txHash) {

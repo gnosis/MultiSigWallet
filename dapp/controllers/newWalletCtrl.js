@@ -68,7 +68,7 @@
                 {
                   txHash: tx,
                   callback: function(receipt){
-                    var walletAddress = receipt.decodedLogs[0].info.instantiation;
+                    var walletAddress = receipt.decodedLogs[0].events[1].value;
                     Utils.success("Wallet deployed at address: " + walletAddress);
                     Wallet.updateWallet({name: $scope.name, address: walletAddress, owners: $scope.owners});
                     Transaction.update(tx, {multisig: walletAddress});

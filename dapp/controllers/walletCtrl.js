@@ -40,6 +40,13 @@
             }
             Object.assign($scope.wallets[wallet], walletsToCopy[wallet]);
           }
+
+          // Remove removed wallets
+          for (wallet in $scope.wallets) {
+            if (!walletsToCopy[wallet]) {
+              delete $scope.wallets[wallet];
+            }
+          }
           $scope.totalItems = Object.keys($scope.wallets).length;
         }
       );

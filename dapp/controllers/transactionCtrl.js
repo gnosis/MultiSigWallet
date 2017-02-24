@@ -4,6 +4,29 @@
     .module('multiSigWeb')
     .controller('transactionCtrl', function ($scope, $sce, Wallet, Utils, Transaction, $uibModal, $filter, ABI) {
       $scope.transactionsMap = {};
+      $scope.currentPage = 1;
+      $scope.itemsPerPage = 10;
+      $scope.wallets = Wallet.wallets;
+
+      // Get Ethereum Chain
+      Wallet.webInitialized.then(
+        function () {
+          Wallet.web3.eth.getBlock(0, function(e, block) {
+            if (e) {
+              return;
+            }
+            else if (block && block.hash == "0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3") {
+              $scope.chain = "mainnet";
+              $scope.etherscan = "https://etherscan.io";
+            }
+            else if (block && block.hash == "0x41941023680923e0fe4d74a34bdac8141f2540e3ae90623718e47d66d1ca4a2d") {
+              $scope.chain = "ropsten";
+              $scope.etherscan = "https://testnet.etherscan.io";
+            }
+          });
+        }
+      );
+
       $scope.$watch(
         function () {
           return Transaction.updates;
@@ -18,7 +41,7 @@
             Object.assign($scope.transactionsMap[txKey], storageTransactions[txKey]);
             txArray.push($scope.transactionsMap[txKey]);
             var abis = ABI.get();
-            var savedABI = $scope.transactionsMap[txKey].info?abis[$scope.transactionsMap[txKey].info.to]:null;            
+            var savedABI = $scope.transactionsMap[txKey].info?abis[$scope.transactionsMap[txKey].info.to]:null;
             if ($scope.transactionsMap[txKey].info && (!$scope.transactionsMap[txKey].decodedData || $scope.transactionsMap[txKey].decodedData.notDecoded || ($scope.transactionsMap[txKey].usedABI && (!savedABI || savedABI.abi )))) {
               if ($scope.transactionsMap[txKey].info.input !== "0x" && $scope.transactionsMap[txKey].info.input.data !== "0x0") {
                 // Decode data
@@ -63,10 +86,6 @@
           $scope.totalItems = Object.keys($scope.transactions).length;
         }
       );
-
-      $scope.currentPage = 1;
-      $scope.itemsPerPage = 10;
-      $scope.wallets = Wallet.wallets;
 
       $scope.remove = function (txHash) {
         Utils.confirmation("Remove transaction", "Are you sure?", function () {

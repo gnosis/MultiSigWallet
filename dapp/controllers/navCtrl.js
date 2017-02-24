@@ -26,7 +26,7 @@
 
       $scope.updateInfo = function (){
         Wallet.initParams().then(function () {
-          $scope.loggedIn = Wallet.web3;
+          $scope.loggedIn = Wallet.coinbase;
           $scope.accounts = Wallet.accounts;
           $scope.coinbase = Wallet.coinbase;
           $scope.nonce = Wallet.txParams.nonce;
@@ -60,6 +60,20 @@
           Connection.checkConnection();
           $scope.updateConnectionStatus();
           $scope.connectionInterval = $interval($scope.updateConnectionStatus, txDefault.connectionChecker.checkInterval);
+
+          if (!Wallet.coinbase) {
+            $uibModal.open({
+              templateUrl: 'partials/modals/web3Wallets.html',
+              size: 'md',
+              backdrop: 'static',
+              windowClass: 'bootstrap-dialog type-danger',
+              controller: function ($scope, $uibModalInstance) {
+                $scope.ok = function () {
+                  $uibModalInstance.close();
+                };
+              }
+            });
+          }
         }
       );
 

@@ -10,7 +10,7 @@
             $scope.batch = Wallet.web3.createBatch();
             $scope.interval = $interval($scope.updateParams, 10000);
             $scope.wallets = Wallet.wallets;
-            if (!$scope.wallets || !Object.keys($scope.wallets).length && !$rootScope.alreadyLogged){
+            if ( Wallet.coinbase && (!$scope.wallets || !Object.keys($scope.wallets).length && !$rootScope.alreadyLogged)){
               $scope.termsInterval = $interval($scope.checkTerms, 500);
             }
             $scope.updateParams();

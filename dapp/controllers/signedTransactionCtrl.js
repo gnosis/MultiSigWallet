@@ -14,7 +14,7 @@
             // Wait for transaction receipt to get contract address
             Transaction.add({txHash: txHash, callback: function (receipt) {
 
-              if (receipt.contractAddress){
+              if (receipt.contractAddress) {
                 Wallet.web3.eth.getCode(receipt.contractAddress, function (e, code){
                   if (code.length > 100 && Wallet.json.multiSigDailyLimit.binHex.slice(-992) == code.slice(-992)){
                     Utils.success("Wallet deployed at address: " + receipt.contractAddress);

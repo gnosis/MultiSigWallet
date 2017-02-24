@@ -291,29 +291,39 @@
                         );
                       }),
                       $q(function (resolve, reject) {
-                        batch.add(
-                          wallet.updateNonce(wallet.coinbase, function (e) {
-                            if (e) {
-                              reject(e);
-                            }
-                            else {
-                              resolve();
-                            }
-                          })
-                        );
+                        if (wallet.coinbase) {
+                          batch.add(
+                            wallet.updateNonce(wallet.coinbase, function (e) {
+                              if (e) {
+                                reject(e);
+                              }
+                              else {
+                                resolve();
+                              }
+                            })
+                          );
+                        }
+                        else {
+                          resolve();
+                        }
                       }),
                       $q(function (resolve, reject) {
-                        batch.add(
-                          wallet.getBalance(wallet.coinbase, function (e, balance) {
-                            if (e) {
-                              reject(e);
-                            }
-                            else {
-                              wallet.balance = balance;
-                              resolve();
-                            }
-                          })
-                        );
+                        if (wallet.coinbase) {
+                          batch.add(
+                            wallet.getBalance(wallet.coinbase, function (e, balance) {
+                              if (e) {
+                                reject(e);
+                              }
+                              else {
+                                wallet.balance = balance;
+                                resolve();
+                              }
+                            })
+                          );
+                        }
+                        else {
+                          resolve();
+                        }
                       })
                     ]
                   ).then(function () {

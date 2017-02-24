@@ -58,9 +58,9 @@
           </button>
         </td>
         <td>
-          <span value-or-dash-by-connectivity="{{wallet.confirmations|bigNumber|dashIfEmpty}}"></span>
+          <span class="col-xs-9" value-or-dash-by-connectivity="{{wallet.confirmations|bigNumber|dashIfEmpty}}"></span>
           <button type="button" disabled-if-no-accounts
-          class="btn btn-default btn-sm pull-right" ng-click="setRequired(wallet)">
+          class="btn btn-default btn-sm col-xs-3" ng-click="setRequired(wallet)">
             Edit
           </button>
         </td>

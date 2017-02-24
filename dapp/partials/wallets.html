@@ -52,25 +52,29 @@
         </td>
         <td>
           <span value-or-dash-by-connectivity="{{wallet.balance|ether}}">{{wallet.balance|ether}}</span>
-          <button type="button" class="btn btn-default btn-sm pull-right" ng-click="deposit(wallet)">
+          <button type="button" disabled-if-no-accounts
+          class="btn btn-default btn-sm pull-right" ng-click="deposit(wallet)">
             Deposit
           </button>
         </td>
         <td>
           <span value-or-dash-by-connectivity="{{wallet.confirmations|bigNumber|dashIfEmpty}}"></span>
-          <button type="button" class="btn btn-default btn-sm pull-right" ng-click="setRequired(wallet)">
+          <button type="button" disabled-if-no-accounts
+          class="btn btn-default btn-sm pull-right" ng-click="setRequired(wallet)">
             Edit
           </button>
         </td>
         <td>
           <span value-or-dash-by-connectivity="{{wallet.limit|ether}}">{{wallet.limit|ether}}</span>
-          <button type="button" class="btn btn-default btn-sm pull-right" ng-click="setLimit(wallet)">
+          <button type="button" disabled-if-no-accounts
+          class="btn btn-default btn-sm pull-right" ng-click="setLimit(wallet)">
             Edit
           </button>
         </td>
         <td>
           <span value-or-dash-by-connectivity="{{wallet.maxWithdraw|ether}}">{{wallet.maxWithdraw|ether}}</span>
-          <button type="button" class="btn btn-default btn-sm pull-right" ng-click="withdrawLimit(wallet)">
+          <button type="button" disabled-if-no-accounts
+          class="btn btn-default btn-sm pull-right" ng-click="withdrawLimit(wallet)">
             Withdraw
           </button>
         </td>
@@ -79,5 +83,5 @@
   </table>
   <div ng-hide="totalItems" class="panel-body text-center">
     No wallets. Add wallet <a href="" ng-click="newWalletSelect()">now</a>.
-  </div>  
+  </div>
 </div>

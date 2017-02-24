@@ -130,7 +130,14 @@
           templateUrl: 'partials/modals/selectNewWallet.html',
           size: 'sm',
           controller: function ($scope, $uibModalInstance) {
-            $scope.walletOption = "create";
+            if (Wallet.coinbase) {
+              $scope.coinbase = Wallet.coinbase;
+              $scope.walletOption = "create";
+            }
+            else {
+              $scope.walletOption = "restore";
+            }
+
 
             $scope.ok = function () {
               $uibModalInstance.close($scope.walletOption);

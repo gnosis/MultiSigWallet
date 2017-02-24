@@ -15,6 +15,20 @@
         }
       };
     })
+    .directive('disabledIfNoAccounts', function (Wallet) {
+      return {
+        link: function(scope, element, attrs){
+          Wallet.webInitialized.then(function () {
+            if(Wallet.coinbase) {
+              element.removeAttr('disabled');
+            }
+            else {              
+              attrs.$set('disabled', 'disabled');
+            }
+          });
+        }
+      };
+    })
     .directive('showHideByConnectivity', function (Connection) {
       return {
         link: function(scope, element, attrs){

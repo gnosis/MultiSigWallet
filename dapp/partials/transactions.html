@@ -1,10 +1,12 @@
 <div class="panel panel-default">
   <div class="panel-heading">
     <div class="pull-right">
-      <button type="button" class="btn btn-default" ng-click="sendTransaction()" show-hide-by-connectivity="online">
+      <button type="button" class="btn btn-default" disabled-if-no-accounts
+       ng-click="sendTransaction()" show-hide-by-connectivity="online">
         Send transaction
       </button>
-      <button type="button" class="btn btn-default" ng-click="sendRawTransaction()" show-hide-by-connectivity="online">
+      <button type="button" class="btn btn-default" disabled-if-no-accounts
+      ng-click="sendRawTransaction()" show-hide-by-connectivity="online">
         Send signed transaction
       </button>
       <button type="button" class="btn btn-default" ng-click="getNonce()" show-hide-by-connectivity="online">

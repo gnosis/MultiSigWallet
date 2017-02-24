@@ -7,13 +7,13 @@
 <div class="panel panel-default">
   <div class="panel-heading">
     <div class="pull-right">
-      <button type="button" ng-click="removeOwnerOffline()" class="btn btn-default" show-hide-by-connectivity="offline">
+      <button type="button" disabled-if-no-accounts ng-click="removeOwnerOffline()" class="btn btn-default" show-hide-by-connectivity="offline">
         Remove offline
       </button>
-      <button type="button" ng-click="replaceOwnerOffline()" class="btn btn-default" show-hide-by-connectivity="offline">
+      <button type="button" disabled-if-no-accounts ng-click="replaceOwnerOffline()" class="btn btn-default" show-hide-by-connectivity="offline">
         Replace offline
       </button>
-      <button type="button" ng-click="addOwner()" class="btn btn-default">
+      <button type="button" disabled-if-no-accounts ng-click="addOwner()" class="btn btn-default">
         Add
       </button>
       <button type="button" ng-click="hideOwners=true" class="btn btn-default" ng-hide="hideOwners">
@@ -48,11 +48,13 @@
             </button>
             <button type="button" ng-click="replaceOwner(owner)"
               class="btn btn-default btn-sm"
+              disabled-if-no-accounts
               show-hide-by-connectivity="online">
               Replace
             </button>
             <button type="button" ng-click="removeOwner(owner)"
               class="btn btn-danger btn-sm"
+              disabled-if-no-accounts
               show-hide-by-connectivity="online"
               ng-hide="owners.length == 1">
               Remove
@@ -116,11 +118,11 @@
         <td>
           {{token|token}}
           <div class="pull-right">
-            <button type="button" class="btn btn-default btn-sm"
+            <button type="button" class="btn btn-default btn-sm" disabled-if-no-accounts
             ng-click="depositToken(token)">
               Deposit
             </button>
-            <button type="button" class="btn btn-default btn-sm"
+            <button type="button" class="btn btn-default btn-sm" disabled-if-no-accounts
             ng-click="withdrawToken(token)">
               Withdraw
             </button>
@@ -140,16 +142,20 @@
 <div class="panel panel-default">
   <div class="panel-heading">
     <div class="pull-right form-inline">
-      <button type="button" class="btn btn-default" ng-click="confirmMultisigTransactionOffline()" show-hide-by-connectivity="offline">
+      <button type="button" class="btn btn-default" disabled-if-no-accounts
+      ng-click="confirmMultisigTransactionOffline()" show-hide-by-connectivity="offline">
         Confirm offline
       </button>
-      <button type="button" class="btn btn-default" ng-click="revokeMultisigTransactionOffline()" show-hide-by-connectivity="offline">
+      <button type="button" class="btn btn-default" disabled-if-no-accounts
+      ng-click="revokeMultisigTransactionOffline()" show-hide-by-connectivity="offline">
         Revoke offline
       </button>
-      <button type="button" class="btn btn-default" ng-click="executeMultisigTransactionOffline()" show-hide-by-connectivity="offline">
+      <button type="button" class="btn btn-default" disabled-if-no-accounts
+      ng-click="executeMultisigTransactionOffline()" show-hide-by-connectivity="offline">
         Execute offline
       </button>
-      <button type="button" class="btn btn-default" ng-click="addTransaction()">
+      <button type="button" class="btn btn-default" disabled-if-no-accounts
+      ng-click="addTransaction()">
         Add
       </button>
       <select class="form-control" ng-model="showTxs" ng-change="updateParams()">
@@ -253,6 +259,7 @@
               <button type="button" class="btn btn-default btn-sm pull-right"
                 ng-hide="transactions[txId].executed || transactions[txId].confirmed"
                 ng-click="confirmTransaction(txId)"
+                disabled-if-no-accounts
                 show-hide-by-connectivity="online">
                 Confirm
               </button>
@@ -261,6 +268,7 @@
               <button type="button" class="btn btn-default btn-sm pull-right"
                   ng-show="transactions[txId].confirmed && !transactions[txId].executed"
                   ng-click="revokeConfirmation(txId)"
+                  disabled-if-no-accounts
                   show-hide-by-connectivity="online">
                 Revoke confirmation
               </button>
@@ -281,6 +289,7 @@
               <button type="button" class="pull-right btn btn-default btn-sm pull-right"
                 ng-show="!transactions[txId].executed && transactions[txId].confirmations.length == confirmations"
                 ng-click="executeTransaction(txId)"
+                disabled-if-no-accounts
                 show-hide-by-connectivity="online">
                 Execute
               </button>

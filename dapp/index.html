@@ -106,9 +106,9 @@
                 </a>
               </li>
             </ul>
-            <ul class="nav navbar-nav pull-right" ng-show="loggedIn">
+            <ul class="nav navbar-nav pull-right">
               <li uib-dropdown>
-               <a href="#" uib-dropdown-toggle>
+               <a href="#" uib-dropdown-toggle ng-show="loggedIn">
                  <!-- <i class="fa fa-address-book-o" aria-hidden="true"></i> -->
                  Account: {{coinbase|limitTo:20}}... <b class="caret"></b>
                </a>
@@ -116,10 +116,10 @@
                   <li ng-repeat="account in accounts"><a href="" ng-click="selectAccount(account)">{{account}}</a></li>
                </ul>
               </li>
-              <li>
+              <li ng-show="loggedIn">
                 <p class="navbar-text"> Balance: {{balance|ether}} </p>
               </li>
-              <li>
+              <li ng-show="loggedIn">
                 <p class="navbar-text"> Nonce: {{nonce}} </p>
               </li>
               <li>

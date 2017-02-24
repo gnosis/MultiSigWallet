@@ -7,7 +7,7 @@
   <div class="modal-body">
     <div class="form-group">
       <label for="limit">Daily limit (ETH)</label>
-      <input id="limit" type="number" step="any" ng-model="limit" class="form-control" required />
+      <input id="limit" type="number" step="any" ng-model="limit" min="0" max="999999999999999" class="form-control" required />
     </div>
   </div>
   <div class="modal-footer">

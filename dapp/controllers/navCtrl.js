@@ -67,7 +67,7 @@
                 templateUrl: 'partials/modals/web3Wallets.html',
                 size: 'md',
                 backdrop: 'static',
-                windowClass: 'bootstrap-dialog type-danger',
+                windowClass: 'bootstrap-dialog type-info',
                 controller: function ($scope, $uibModalInstance) {
                   $scope.ok = function () {
                     $uibModalInstance.close();

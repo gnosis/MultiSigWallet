@@ -217,7 +217,7 @@
               Object.assign(token, $scope.wallet.tokens[tokenAddress]);
               token.balance = new Web3().toBigNumber( "0x" + tx.data.slice(74));
               return {
-                title: $filter("token")(token) + " to " + $filter("addressCanBeOwner")(account, $scope.wallet)
+                title: "Transfer " + $filter("token")(token) + " to " + $filter("addressCanBeOwner")(account, $scope.wallet)
               };
             case "e20056e6":
               var oldOwner = "0x" + tx.data.slice(34, 74);

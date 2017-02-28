@@ -21,11 +21,11 @@ html {
 
 body {
     padding-top: 70px;
-    padding-bottom: 70px;
     background-image: url(../img/gnosis-logo.svg);
     background-repeat: no-repeat;
     background-position: bottom center;
     background-size: 512px;
+    background-attachment: fixed;
 }
 
 .navbar-brand > img {

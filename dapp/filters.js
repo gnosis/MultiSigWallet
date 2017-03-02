@@ -169,6 +169,11 @@
           return addressCandidate;
         }
       };
+    })
+    .filter('formatEventName', function (){
+      return function (text){
+        return text.split(/(?=[A-Z])/).join(' ');
+      };
     });
   }
 )();

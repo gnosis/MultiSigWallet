@@ -1,0 +1,37 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Notifications
+  </h3>
+</div>
+<form class="form" name="addNotifications">
+  <div class="modal-body" id="modal-body">
+    <div class="form-group">
+      <label for="name">Email</label>
+      <input id="name" type="email" class="form-control" ng-model="request.email" />
+    </div>
+    <div class="form-group" ng-repeat="event in events track by $index">
+      <label class="checkbox-inline">
+          <input type="checkbox" value=""
+          ng-model="selectedEvents[event.name]">
+          {{event.name | formatEventName}}
+      </label>
+      <!-- TO BE Handled in another moment
+      <div class="form-group" ng-repeat="param in event.inputs track by $index" >
+          <label ng-attr-for="{{ 'value-' + $parent.$index + '-' + $index }}">{{param.name}}</label>
+          <input ng-attr-id="{{ 'value-' + $parent.$index + '-' + $index }}"
+            type="text"
+            class="form-control"
+            ng-model="params[event.name][param.name]">
+      </div>
+      -->
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-default" type="button" ng-click="ok()" ng-disabled="!request.email">
+      Ok
+    </button>
+    <button class="btn btn-danger" type="button" ng-click="cancel()">
+      Cancel
+    </button>
+  </div>
+</form>

@@ -3,7 +3,7 @@
     angular
     .module("multiSigWeb")
     .service("EthAlerts", function ($http) {
-
+     
       var factory = {};
       var config = {};
       var host = 'http://localhost:8000/' // move to global config

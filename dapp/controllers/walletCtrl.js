@@ -15,6 +15,13 @@
             }
             $scope.updateParams();
             $rootScope.alreadyLogged = true;
+
+            // The localStorage item is setted in
+            // notificationsSignupConfirmationCtrl
+            if (localStorage.getItem("show-signup-success")) {
+              localStorage.removeItem("show-signup-success");
+              Utils.success("Signup was completed successfully.");
+            }
         }
       );
 
@@ -294,6 +301,31 @@
             }
           },
           controller: 'withdrawLimitCtrl'
+        });
+      };
+
+      $scope.openNotifications = function (address) {
+        var authCode = localStorage.getItem("auth-code") || null;
+        var template = 'partials/modals/notificationsSignup.html'
+        var controller = 'notificationsSignupCtrl'
+
+        if (authCode) {
+          controller = 'addNotificationsCtrl'
+          template = 'partials/modals/addNotifications.html'
+        }
+
+        $uibModal.open({
+          templateUrl: template,
+          size: 'md',
+          resolve: {
+            wallet: function () {
+              return $scope.wallets[address];
+            },
+            callback: function () {
+              return $scope.updateParams;
+            }
+          },
+          controller: controller
         });
       };
     });

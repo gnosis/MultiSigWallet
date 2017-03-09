@@ -19,27 +19,47 @@
         'events' : {}
       };
 
+      var getRequest = {
+        'contract' : wallet.address
+      }
+
+      function getAlert () {
+        var data = {'params':$scope.request};
+
+        EthAlerts.get(data).then(
+          function successCallback(response) {
+            for (key in response.data) {
+              $scope.selectedEvents[key] = true;
+            }
+          },
+          function errorCallback(response) {
+            Utils.dangerAlert(response);
+          }
+        );
+      }
+
+      getAlert();
+
       $scope.ok = function () {
-        /* TO BE Handled in another moment
         Object.keys($scope.selectedEvents).map(function (item) {
           if ($scope.selectedEvents[item]==true) {
             $scope.request.events[item] = null;
 
-            if (item in $scope.params) {
+            /*if (item in $scope.params) {
               var paramsDict = {};
               Object.keys($scope.params[item]).map(function (param) {
                 paramsDict[param] = $scope.params[item][param];
               });
               $scope.request.events[item] = paramsDict;
-            }
+            }*/
           }
         });
-        */
+
         EthAlerts.create($scope.request).then(
           function successCallback(response) {
             $uibModalInstance.close();
             callback();
-            Utils.success("The alert was created successfully. An email was sent to " + $scope.request.email + ". Check your inbox and follow the instructions contained in it.");
+            Utils.success("The alert was created successfully.");
           },
           function errorCallback(response) {
             var errorMessage = "";

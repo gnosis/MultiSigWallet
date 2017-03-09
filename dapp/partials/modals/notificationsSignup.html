@@ -1,0 +1,21 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Notifications Signup
+  </h3>
+</div>
+<form class="form" name="signupForm">
+  <div class="modal-body" id="modal-body">
+    <div class="form-group">
+      <label for="name">Email</label>
+      <input name="email" type="email" class="form-control" ng-model="request.email" />      
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-default" type="button" ng-click="ok()" ng-disabled="!request.email && signupForm.email.$error">
+      Ok
+    </button>
+    <button class="btn btn-danger" type="button" ng-click="cancel()">
+      Cancel
+    </button>
+  </div>
+</form>

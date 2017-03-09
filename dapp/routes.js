@@ -20,6 +20,10 @@
         controller: 'settingsCtrl',
         templateUrl: 'partials/settings.html'
       })
+      .when("/signup", {
+        controller: 'notificationsSignupConfirmationCtrl',
+        templateUrl: 'partials/wallets.html'
+      })
       .otherwise({
         redirectTo: '/wallets'
       });

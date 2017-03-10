@@ -19,7 +19,7 @@
 
       $scope.request = {
         'contract' : wallet.address,
-        'abi' : abiJSON.multiSigDailyLimit.abi,
+        'abi' : JSON.stringify(abiJSON.multiSigDailyLimit.abi),
         'events' : {}
       };
 

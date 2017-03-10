@@ -305,7 +305,7 @@
       };
 
       $scope.openNotifications = function (address) {
-        var authCode = localStorage.getItem("auth-code") || null;
+        var authCode = JSON.parse(localStorage.getItem("userConfig")).authCode || null;
         var template = 'partials/modals/notificationsSignup.html'
         var controller = 'notificationsSignupCtrl'
 

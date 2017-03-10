@@ -18,6 +18,8 @@ var txDefaultOrig =
 
 var txDefault = {};
 
+var gnosisAlertsHost = 'http://localhost:8000/';
+
 var userConfig = JSON.parse(localStorage.getItem("userConfig"));
 
 Object.assign(txDefault, txDefaultOrig, userConfig);

@@ -7,6 +7,10 @@
       $scope.selectedEvents = {}
       $scope.params = {};
 
+      // When True, all events are selected. None otherwise.
+      var subscribeUnsubscribe = true;
+      $scope.subscribeUnsubscribeValue = 'Subscribe all';
+
       $scope.events = abiJSON.multiSigDailyLimit.abi.filter(function (item) {
         if (item.type == 'event') {
           return item;
@@ -23,6 +27,9 @@
         'contract' : wallet.address
       }
 
+      /**
+      * Retrieves the user/contract related Alert and its events
+      */
       function getAlert () {
         var data = {'params':$scope.request};
 
@@ -31,8 +38,18 @@
             for (key in response.data) {
               $scope.selectedEvents[key] = true;
             }
+
+            if (Object.keys(response.data).length == $scope.events.length) {
+              subscribeUnsubscribe = false;
+              $scope.subscribeUnsubscribeValue = 'Unsubscribe all';
+            }
           },
           function errorCallback(response) {
+            $uibModalInstance.close();
+            console.log(response);
+            if (response.status == 401) {
+              response.data = 'Wrong authentication code.'
+            }
             Utils.dangerAlert(response);
           }
         );
@@ -40,6 +57,26 @@
 
       getAlert();
 
+      $scope.subscribeUnsubscribe = function () {
+        if (subscribeUnsubscribe) {
+          for (event in $scope.events) {
+            $scope.selectedEvents[$scope.events[event].name] = true;
+          }
+
+          $scope.subscribeUnsubscribeValue = 'Unsubscribe all'
+        }
+        else {
+          $scope.selectedEvents = {};
+          $scope.subscribeUnsubscribeValue = 'Subscribe all'
+        }
+
+        subscribeUnsubscribe = !subscribeUnsubscribe;
+
+      };
+
+      /**
+      * Updates the alert
+      */
       $scope.ok = function () {
         Object.keys($scope.selectedEvents).map(function (item) {
           if ($scope.selectedEvents[item]==true) {
@@ -59,7 +96,7 @@
           function successCallback(response) {
             $uibModalInstance.close();
             callback();
-            Utils.success("The alert was created successfully.");
+            Utils.success("The alert was updated successfully.");
           },
           function errorCallback(response) {
             var errorMessage = "";

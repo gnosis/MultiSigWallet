@@ -2,11 +2,11 @@
   function () {
     angular
     .module("multiSigWeb")
-    .service("EthAlerts", function ($http) {
-     
+    .service("EthAlerts", function ($http, $window) {
+
       var factory = {};
       var config = {};
-      var host = 'http://localhost:8000/' // move to global config
+      var host = gnosisAlertsHost;
       var apiPrefix = 'api/'
       var urls = {
         'getAlert' : apiPrefix + 'alert/',
@@ -20,7 +20,7 @@
 
       function addAuthHeaders (data) {
         data.headers = {
-          'auth-code': localStorage.getItem('auth-code')
+          'auth-code': JSON.parse(localStorage.getItem("userConfig")).authCode
         };
       }
 
@@ -38,7 +38,7 @@
         return $http.get(getUrl('getAlert'), data);
       };
 
-      factory.signupCallback = 'https://wallet.gnosis.pm/#/signup{%auth-code%}';
+      factory.signupCallback = $window.location.origin + '#/signup{%auth-code%}';
 
 
       return factory;

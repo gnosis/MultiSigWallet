@@ -6,7 +6,7 @@
 
       var factory = {};
       var config = {};
-      var host = gnosisAlertsHost;
+      var host = JSON.parse(localStorage.getItem("userConfig")).alertsNode;
       var apiPrefix = 'api/'
       var urls = {
         'getAlert' : apiPrefix + 'alert/',
@@ -15,7 +15,7 @@
       }
 
       function getUrl (action) {
-        return host + urls[action];
+        return host + (host.endsWith('/') ? urls[action] : '/' + urls[action]);
       }
 
       function addAuthHeaders (data) {

@@ -32,7 +32,6 @@
       */
       function getAlert () {
         var data = {'params':$scope.request};
-
         EthAlerts.get(data).then(
           function successCallback(response) {
             for (key in response.data) {
@@ -46,9 +45,12 @@
           },
           function errorCallback(response) {
             $uibModalInstance.close();
-            console.log(response);
+
             if (response.status == 401) {
               response.data = 'Wrong authentication code.'
+            }
+            else if (response.status = -1) {
+              response.data = 'An error occurred. Please verify whether Gnosis Alert Node is setted correctly.';
             }
             Utils.dangerAlert(response);
           }

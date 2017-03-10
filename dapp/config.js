@@ -3,6 +3,7 @@ var txDefaultOrig =
   gasLimit: 3141592,
   gasPrice: 18000000000,
   ethereumNode: "https://mainnet.infura.io:443",
+  alertsNode: 'https://alerts.gnosis.pm',
   connectionChecker:{
     method : "OPTIONS",
     url : "https://www.google.com",
@@ -17,8 +18,6 @@ var txDefaultOrig =
 };
 
 var txDefault = {};
-
-var gnosisAlertsHost = 'http://localhost:8000/';
 
 var userConfig = JSON.parse(localStorage.getItem("userConfig"));
 

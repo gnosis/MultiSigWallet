@@ -46,7 +46,7 @@
         return $http.delete(getUrl('delete'), data);
       };
 
-      factory.signupCallback = $window.location.origin + '#/signup{%auth-code%}';
+      factory.signupCallback = $window.location.origin + '#/signup/?auth-code={%auth-code%}';
 
 
       return factory;

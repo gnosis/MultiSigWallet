@@ -24,12 +24,16 @@
           },
           function errorCallback(response) {
             var errorMessage = "";
-            Object.keys(response.data).map(function (error) {
-              errorMessage += "<b>" + error + "</b>: ";
-              errorMessage += response.data[error];
-              errorMessage += "<br/>";
-            });
-            //callback();
+            if (response.status = -1) {
+              errorMessage = 'An error occurred. Please verify whether Gnosis Alert Node is setted correctly.';
+            }
+            else {
+              Object.keys(response.data).map(function (error) {
+                errorMessage += "<b>" + error + "</b>: ";
+                errorMessage += response.data[error];
+                errorMessage += "<br/>";
+              });
+            }
             Utils.dangerAlert(errorMessage);
           }
         );

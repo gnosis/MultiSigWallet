@@ -6,15 +6,17 @@
 
       var factory = {};
       var config = {};
-      var host = JSON.parse(localStorage.getItem("userConfig")).alertsNode;
+      var host;
       var apiPrefix = 'api/'
       var urls = {
         'getAlert' : apiPrefix + 'alert/',
         'create' : apiPrefix + 'alert/',
-        'signup' : apiPrefix + 'alert/signup/'
+        'signup' : apiPrefix + 'alert/signup/',
+        'delete' : apiPrefix + 'alert/'
       }
 
       function getUrl (action) {
+        host = JSON.parse(localStorage.getItem("userConfig")).alertsNode;
         return host + (host.endsWith('/') ? urls[action] : '/' + urls[action]);
       }
 
@@ -36,6 +38,12 @@
       factory.get = function (data, cb) {
         addAuthHeaders(data);
         return $http.get(getUrl('getAlert'), data);
+      };
+
+      factory.delete = function (cb) {
+        var data = {};
+        addAuthHeaders(data);
+        return $http.delete(getUrl('delete'), data);
       };
 
       factory.signupCallback = $window.location.origin + '#/signup{%auth-code%}';

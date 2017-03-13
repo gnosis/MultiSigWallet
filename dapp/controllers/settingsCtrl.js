@@ -6,7 +6,7 @@
       $scope.config = Object.assign({}, txDefault, JSON.parse(localStorage.getItem("userConfig")));
 
       $scope.update = function () {
-        localStorage.setItem("userConfig", JSON.stringify($scope.config));
+        localStorage.setItem("userConfig", JSON.stringify($scope.config));        
 
         if (!$window.web3) {
           Wallet.web3 = new Web3($scope.config.ethereumNode);

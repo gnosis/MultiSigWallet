@@ -1,14 +1,14 @@
 <div class="modal-header">
   <h3 class="modal-title">
     Notifications
-    <div class="pull-right">
-      <input type="button" class="btn btn-sm btn-primary"
-        ng-value="subscribeUnsubscribeValue" ng-click="subscribeUnsubscribe()">
-    </div>
   </h3>
 </div>
 <form class="form" name="addNotifications">
   <div class="modal-body" id="modal-body">
+    <div class="form-group">
+      <input type="button" class="btn btn-sm btn-primary"
+        ng-value="subscribeUnsubscribeValue" ng-click="subscribeUnsubscribe()">
+    </div>
     <div class="form-group" ng-repeat="event in events track by $index">
       <label class="checkbox-inline">
           <input type="checkbox" value=""
@@ -29,9 +29,6 @@
   <div class="modal-footer">
     <button class="btn btn-default" type="button" ng-click="ok()">
       Ok
-    </button>
-    <button class="btn btn-default" type="button" ng-click="remove()">
-      Delete DAPP
     </button>
     <button class="btn btn-danger" type="button" ng-click="cancel()">
       Cancel

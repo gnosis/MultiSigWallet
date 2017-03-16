@@ -78,35 +78,6 @@
       };
 
       /**
-      * Delete a DAPP and its alerts/notifications
-      */
-      $scope.remove = function () {
-        EthAlerts.delete().then(
-          function successCallback(response) {
-            $uibModalInstance.close();
-            callback();
-            // Remove authCode from configuration JSON
-            var config = JSON.parse(localStorage.getItem("userConfig"));
-            delete config.authCode;
-            delete txDefault.authCode;
-            localStorage.setItem("userConfig", JSON.stringify(config));
-
-            // Show success message
-            Utils.success("The DAPP was deleted successfully.");
-          },
-          function errorCallback(response) {
-            var errorMessage = "";
-            Object.keys(response.data).map(function (error) {
-              errorMessage += "<b>" + error + "</b>: ";
-              errorMessage += response.data[error];
-              errorMessage += "<br/>";
-            });
-            Utils.dangerAlert(errorMessage);
-          }
-        );
-      };
-
-      /**
       * Updates the alert
       */
       $scope.ok = function () {
@@ -141,7 +112,7 @@
                 errorMessage += "<b>" + error + "</b>: ";
                 errorMessage += response.data[error];
                 errorMessage += "<br/>";
-              });              
+              });
             }
             Utils.dangerAlert(errorMessage);
           }

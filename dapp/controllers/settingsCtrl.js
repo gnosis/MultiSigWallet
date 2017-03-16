@@ -5,7 +5,11 @@
     .controller("settingsCtrl", function ($scope, Wallet, Utils, $window, $uibModal) {
       $scope.config = Object.assign({}, txDefault, JSON.parse(localStorage.getItem("userConfig")));
 
-      $scope.showDeleteAuthCodeBtn = $scope.config.authCode ? true : false;
+      function showHideAuthCodeBtn () {
+        $scope.showDeleteAuthCodeBtn = $scope.config.authCode ? true : false;
+      }
+
+      showHideAuthCodeBtn(); // call on page loading
 
       $scope.update = function () {
         localStorage.setItem("userConfig", JSON.stringify($scope.config));
@@ -15,6 +19,7 @@
         }
 
         Utils.success("Configuration updated successfully.");
+        showHideAuthCodeBtn();
       };
 
       $scope.reset = function () {
@@ -76,7 +81,7 @@
             $scope.ok = function () {
               EthAlerts.delete().then(
                 function successCallback(response) {
-                  $uibModalInstance.close();                  
+                  $uibModalInstance.close();
                 },
                 function errorCallback(response) {
                   var errorMessage = "";
@@ -111,7 +116,9 @@
             delete txDefault.authCode;
             localStorage.setItem("userConfig", JSON.stringify(config));
             $scope.config = config;
-            $scope.showDeleteAuthCodeBtn = false;
+
+            // $scope.showDeleteAuthCodeBtn = false;
+            showHideAuthCodeBtn();
           }
         );
       };

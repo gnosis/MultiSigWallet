@@ -5,7 +5,7 @@
        ng-click="sendTransaction()" show-hide-by-connectivity="online">
         Send transaction
       </button>
-      <button type="button" class="btn btn-default" disabled-if-no-accounts
+      <button type="button" class="btn btn-default"
       ng-click="sendRawTransaction()" show-hide-by-connectivity="online">
         Send signed transaction
       </button>
@@ -101,7 +101,7 @@
                   {{param.name}}:
                   <span uib-popover="{{param.value}}" popover-enable="param.value && param.value.toString().length > 7" popover-trigger="'mouseenter'">
                     {{param.value|addressCanBeOwner|logParam}}
-                    <span ng-show="param.name == 'value'">ETH</span>                  
+                    <span ng-show="param.name == 'value'">ETH</span>
                   </span>
                 </li>
               </ul>

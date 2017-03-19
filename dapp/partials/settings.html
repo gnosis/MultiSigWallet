@@ -19,6 +19,17 @@
         <input id="gas-price" type="number" ng-model="config.gasPrice" class="form-control" />
       </div>
       <div class="form-group">
+        <label for="wallet-factory">Web3 wallet</label>
+        <select id="web3-wallet" ng-model="config.wallet" class="form-control" >
+          <option value="injected">
+            Injected (metamask, mist, parity...)
+          </option>
+          <option value="ledger">
+            Ledger Wallet
+          </option>
+        </select>
+      </div>
+      <div class="form-group">
         <label for="wallet-factory">Wallet factory contract</label>
         <input id="wallet-factory" type="text" ng-model="config.walletFactoryAddress" class="form-control" />
       </div>

@@ -9,6 +9,7 @@ var txDefaultOrig =
     url : "https://www.google.com",
     checkInterval: 5000
   },
+  wallet: "injected",
   // Testrpc
   // walletFactoryAddress: "0xd79426bcee5b46fde413ededeb38364b3e666097"
   // Ropsten

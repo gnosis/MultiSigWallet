@@ -41,10 +41,10 @@ module.exports = function(grunt) {
 
             /// Use 'https: true' for default module SSL configuration
             /// (default state is disabled)
-            // https: {
-            //     cert: "cert.pem",
-            //     key : "key.pem"
-            // },
+            https: {
+                cert: "localhost.crt",
+                key : "localhost.key"
+            },
             //
             // // Tell grunt task to open the browser
             // openBrowser : false,

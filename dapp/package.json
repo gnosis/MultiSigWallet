@@ -11,6 +11,7 @@
   "main": "index.html",
   "scripts": {
     "test": "sh testrpc.sh",
+    "certs": "openssl req -x509 -sha256 -nodes -newkey rsa:2048 -days 365 -keyout localhost.key -out localhost.crt",
     "dist": "zip -x node_modules/\\* -x npm-debug.log -x tests/\\* -x config.karma.js -x .DS_Store -x .gitignore -r ../multisigWallet.zip ./",
     "postinstall": "./node_modules/bower/bin/bower install && ./node_modules/grunt/bin/grunt ngtemplates",
     "start": "http-server -a 0.0.0.0 -p 5000"

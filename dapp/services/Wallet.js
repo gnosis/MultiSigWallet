@@ -23,9 +23,19 @@
 
       wallet.webInitialized = $q(function (resolve, reject) {
         window.addEventListener('load', function () {
-          // Set web3 provider (Metamask, mist, etc)
-          if ($window && $window.web3) {
+          // Ledger wallet
+          if (txDefault.wallet == "ledger") {
+            ledgerwallet().then(
+              function(ledgerWeb3){
+                wallet.web3 = ledgerWeb3;
+                resolve();
+              }
+            );
+          }
+          // injected web3 provider (Metamask, mist, etc)
+          else if (txDefault.wallet == "injected" && $window && $window.web3) {
             wallet.web3 = new Web3($window.web3.currentProvider);
+            resolve();
           }
           else {
             wallet.web3 = new Web3(new Web3.providers.HttpProvider(txDefault.ethereumNode));
@@ -35,9 +45,11 @@
                 Utils.dangerAlert("You are not connected to any node.");
                 reject();
               }
+              else{
+                resolve();
+              }
             });
           }
-          resolve();
         });
       });
 

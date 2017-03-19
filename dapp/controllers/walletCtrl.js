@@ -25,7 +25,7 @@
         }
       );
 
-      $scope.checkTerms = function () {
+      $scope.checkTerms = function () {        
         if (localStorage.getItem("termsAccepted")){
           $interval.cancel($scope.termsInterval);
           $scope.newWalletSelect();
@@ -306,12 +306,12 @@
 
       $scope.openNotifications = function (address) {
         var authCode = JSON.parse(localStorage.getItem("userConfig")).authCode || null;
-        var template = 'partials/modals/notificationsSignup.html'
-        var controller = 'notificationsSignupCtrl'
+        var template = 'partials/modals/notificationsSignup.html';
+        var controller = 'notificationsSignupCtrl';
 
         if (authCode) {
-          controller = 'addNotificationsCtrl'
-          template = 'partials/modals/addNotifications.html'
+          controller = 'addNotificationsCtrl';
+          template = 'partials/modals/addNotifications.html';
         }
 
         $uibModal.open({

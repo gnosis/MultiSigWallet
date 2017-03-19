@@ -133,41 +133,47 @@
 
 
       $scope.newWalletSelect = function () {
-        $uibModal.open({
-          templateUrl: 'partials/modals/selectNewWallet.html',
-          size: 'sm',
-          controller: function ($scope, $uibModalInstance) {
-            if (Wallet.coinbase) {
-              $scope.coinbase = Wallet.coinbase;
-              $scope.walletOption = "create";
-            }
-            else {
-              $scope.walletOption = "restore";
-            }
+        if (Wallet.coinbase) {
+          $uibModal.open({
+            templateUrl: 'partials/modals/selectNewWallet.html',
+            size: 'sm',
+            controller: function ($scope, $uibModalInstance) {
+              if (Wallet.coinbase) {
+                $scope.coinbase = Wallet.coinbase;
+                $scope.walletOption = "create";
+              }
+              else {
+                $scope.walletOption = "restore";
+              }
 
 
-            $scope.ok = function () {
-              $uibModalInstance.close($scope.walletOption);
-            };
+              $scope.ok = function () {
+                $uibModalInstance.close($scope.walletOption);
+              };
 
-            $scope.cancel = function () {
-              $uibModalInstance.dismiss();
-            };
-          }
-        })
-        .result
-        .then(
-          function (option) {
-            if (option == "create") {
-              // open create modal
-              $scope.newWallet();
+              $scope.cancel = function () {
+                $uibModalInstance.dismiss();
+              };
             }
-            else {
-              // open recover modal
-              $scope.restoreWallet();
+          })
+          .result
+          .then(
+            function (option) {
+              if (option == "create") {
+                // open create modal
+                $scope.newWallet();
+              }
+              else {
+                // open recover modal
+                $scope.restoreWallet();
+              }
             }
-          }
-        );
+          );
+        }
+        else {
+          // Show restore modal if no account setted
+          $scope.restoreWallet();
+        }
       };
 
       $scope.newWallet = function () {

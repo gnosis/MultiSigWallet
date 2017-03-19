@@ -23,6 +23,10 @@
               $scope.chain = "ropsten";
               $scope.etherscan = "https://testnet.etherscan.io";
             }
+            else if (block && block.hash == "0xa3c565fc15c7478862d50ccd6561e3c06b24cc509bf388941c25ea985ce32cb9") {
+              $scope.chain = "kovan";
+              $scope.etherscan = "https://kovan.etherscan.io";
+            }
           });
         }
       );

@@ -283,9 +283,9 @@
               }
 
               resolve(data);
-            })
+            });
           }
-        )
+        );
       });
 
       Wallet

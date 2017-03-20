@@ -74,7 +74,7 @@
           $scope.connectionInterval = $interval($scope.updateConnectionStatus, txDefault.connectionChecker.checkInterval);
 
           $scope.updateInfo().then(function () {
-            if (!Wallet.coinbase) {
+            if (!Wallet.coinbase && txDefault.wallet !== "ledger") {
               $uibModal.open({
                 templateUrl: 'partials/modals/web3Wallets.html',
                 size: 'md',

@@ -29,6 +29,29 @@
               function(ledgerWeb3){
                 wallet.web3 = ledgerWeb3;
                 resolve();
+                // Open Info Modal
+                $uibModal.open({
+                  templateUrl: 'partials/modals/ledgerHelp.html',
+                  size: 'md',
+                  backdrop: 'static',
+                  windowClass: 'bootstrap-dialog type-info',
+                  controller: function ($scope, $uibModalInstance) {
+                    $scope.ok = function () {
+                      $uibModalInstance.close();
+                    };
+
+                    $scope.checkCoinbase = function () {
+                      if (wallet.coinbase) {
+                        $uibModalInstance.close();
+                      }
+                      else {
+                        setTimeout($scope.checkCoinbase, 1000);
+                      }
+                    };
+
+                    $scope.checkCoinbase();
+                  }
+                });
               }
             );
           }

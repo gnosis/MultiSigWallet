@@ -8,7 +8,8 @@ if ! which eth | grep -q /usr/bin/eth || ! which solc | grep -q /usr/bin/solc; t
     DEBIAN_FRONTEND=noninteractive sudo add-apt-repository -y ppa:ethereum/ethereum-dev
     DEBIAN_FRONTEND=noninteractive sudo apt-get update
 fi
-DEBIAN_FRONTEND=noninteractive sudo apt-get install solc=1:0.4.4-0ubuntu1~trusty
+
+DEBIAN_FRONTEND=noninteractive sudo apt-get install libboost-filesystem1.54.0 libboost-program-options1.54.0 libboost-system1.54.0 solc
 
 SCRIPT
 

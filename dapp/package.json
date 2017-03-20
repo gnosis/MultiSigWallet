@@ -25,7 +25,7 @@
   "license": "ISC",
   "dependencies": {
     "bower": "^1.8.0",
-    "ethereumjs-testrpc": "git+https://github.com/denisgranha/testrpc.git",    
+    "ethereumjs-testrpc": "git+https://github.com/denisgranha/testrpc.git",
     "grunt-angular-templates": "^1.1.0",
     "grunt-http-server": "^2.0.0",
     "http-server": "^0.9.0"
@@ -43,6 +43,7 @@
     "karma-jasmine": "^1.1.0",
     "karma-phantomjs-launcher": "^1.0.2",
     "phantomjs-polyfill-object-assign": "0.0.2",
-    "scrypt": "*"
+    "scrypt": "*",
+    "angular-mocks": "^1.5.8"
   }
 }

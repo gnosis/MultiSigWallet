@@ -62,6 +62,10 @@ $node_dependencies = <<SCRIPT
     apt-get install -y nodejs
     npm install -g git+https://github.com/ethereumjs/testrpc
     npm install -g mocha
+    npm install -g coffee-script
+    npm install -g scrypt
+    npm install -g solc
+    npm install -g esprima
 SCRIPT
 
 Vagrant.configure(2) do |config|

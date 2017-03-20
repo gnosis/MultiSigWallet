@@ -9,25 +9,10 @@
       $scope.wallets = Wallet.wallets;
 
       // Get Ethereum Chain
-      Wallet.webInitialized.then(
-        function () {
-          Wallet.web3.eth.getBlock(0, function(e, block) {
-            if (e) {
-              return;
-            }
-            else if (block && block.hash == "0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3") {
-              $scope.chain = "mainnet";
-              $scope.etherscan = "https://etherscan.io";
-            }
-            else if (block && block.hash == "0x41941023680923e0fe4d74a34bdac8141f2540e3ae90623718e47d66d1ca4a2d") {
-              $scope.chain = "ropsten";
-              $scope.etherscan = "https://testnet.etherscan.io";
-            }
-            else if (block && block.hash == "0xa3c565fc15c7478862d50ccd6561e3c06b24cc509bf388941c25ea985ce32cb9") {
-              $scope.chain = "kovan";
-              $scope.etherscan = "https://kovan.etherscan.io";
-            }
-          });
+      Transaction.getEthereumChain.then(
+        function (data) {
+          $scope.chain = data.chain;
+          $scope.etherscan = data.etherscan;
         }
       );
 

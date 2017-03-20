@@ -19,7 +19,14 @@ var txDefaultOrig =
 };
 
 var txDefault = {};
-
 var userConfig = JSON.parse(localStorage.getItem("userConfig"));
-
 Object.assign(txDefault, txDefaultOrig, userConfig);
+
+/**
+* Reload configuration
+*/
+function loadConfiguration () {
+  var txDefault = {};
+  var userConfig = JSON.parse(localStorage.getItem("userConfig"));
+  Object.assign(txDefault, txDefaultOrig, userConfig);
+}

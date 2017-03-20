@@ -18,14 +18,18 @@
     .directive('disabledIfNoAccounts', function (Wallet) {
       return {
         link: function(scope, element, attrs){
-          Wallet.webInitialized.then(function () {
-            if(Wallet.coinbase) {
-              element.removeAttr('disabled');
+          Wallet.webInitialized.then(
+            function () {
+              Wallet.initParams().then(function () {
+                if(Wallet.coinbase) {
+                  element.removeAttr('disabled');
+                }
+                else {
+                  attrs.$set('disabled', 'disabled');
+                }                
+              });
             }
-            else {              
-              attrs.$set('disabled', 'disabled');
-            }
-          });
+          );
         }
       };
     })

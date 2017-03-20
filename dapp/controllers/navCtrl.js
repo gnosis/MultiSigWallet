@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .controller('navCtrl', function ($scope, Wallet, Connection, $interval, $sce, $location, $uibModal) {
+    .controller('navCtrl', function ($scope, Wallet, Connection, Transaction, $interval, $sce, $location, $uibModal) {
       $scope.navCollapsed = true;
 
       // If not terms acepted, prompt disclaimer
@@ -25,6 +25,18 @@
 
 
       $scope.updateInfo = function (){
+
+        /**
+        * Setup Ethereum Chain infos
+        */
+        Transaction.getEthereumChain.then(
+          function (data) {
+            $scope.ethereumChain = data;
+            txDefaultOrig.walletFactoryAddress = data.walletFactoryAddress;
+            loadConfiguration(); // config.js
+          }
+        );
+
         return Wallet.initParams().then(function () {
           $scope.loggedIn = Wallet.coinbase;
           $scope.accounts = Wallet.accounts;

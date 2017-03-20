@@ -25,14 +25,14 @@
   "license": "ISC",
   "dependencies": {
     "bower": "^1.8.0",
-    "ethereumjs-testrpc": "git+https://github.com/denisgranha/testrpc.git",
-    "grunt": ">=0.4.5 <1.0.1",
+    "ethereumjs-testrpc": "git+https://github.com/denisgranha/testrpc.git",    
     "grunt-angular-templates": "^1.1.0",
     "grunt-http-server": "^2.0.0",
     "http-server": "^0.9.0"
   },
   "devDependencies": {
     "coffee-script": "*",
+    "grunt": "^1.0.0",
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-eslint": "^19.0.0",

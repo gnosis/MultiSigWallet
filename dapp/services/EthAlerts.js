@@ -7,13 +7,13 @@
       var factory = {};
       var config = {};
       var host;
-      var apiPrefix = 'api/'
+      var apiPrefix = 'api/';
       var urls = {
         'getAlert' : apiPrefix + 'alert/',
         'create' : apiPrefix + 'alert/',
         'signup' : apiPrefix + 'alert/signup/',
         'delete' : apiPrefix + 'alert/'
-      }
+      };
 
       function getUrl (action) {
         host = JSON.parse(localStorage.getItem("userConfig")).alertsNode;

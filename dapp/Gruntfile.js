@@ -74,7 +74,15 @@ module.exports = function(grunt) {
     },
     eslint: {
      target: ['Gruntfile.js', 'controllers/**.js', 'services/**.js', '**.js']
-   }
+   },
+   'npm-command': {
+      certs: {
+        options: {
+          args: ["certs"],
+          cmd: "run"
+        }
+      }
+    }
   });
 
   // Load the plugin that provides the http server.
@@ -82,6 +90,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-angular-templates');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-eslint');
+  grunt.loadNpmTasks('grunt-npm-command');
 
-  grunt.registerTask('default', ['ngtemplates', 'http-server']);
+  grunt.registerTask('default', ['npm-command', 'ngtemplates', 'http-server']);
 };

@@ -26,12 +26,13 @@
   "dependencies": {
     "bower": "^1.8.0",
     "ethereumjs-testrpc": "git+https://github.com/denisgranha/testrpc.git",
-    "grunt": "^1.0.1",
+    "grunt": ">=0.4.5 <1.0.1",
     "grunt-angular-templates": "^1.1.0",
     "grunt-http-server": "^2.0.0",
     "http-server": "^0.9.0"
   },
   "devDependencies": {
+    "coffee-script": "*",
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-eslint": "^19.0.0",
@@ -41,7 +42,6 @@
     "karma-chrome-launcher": "^2.0.0",
     "karma-jasmine": "^1.1.0",
     "karma-phantomjs-launcher": "^1.0.2",
-    "phantomjs-prebuilt": "^2.1.14",
     "phantomjs-polyfill-object-assign": "0.0.2",
     "scrypt": "*"
   }

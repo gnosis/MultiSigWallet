@@ -78,7 +78,11 @@
           size: 'md',
           scope: $scope,
           controller: function ($uibModalInstance, $scope, EthAlerts) {
+            $scope.showLoadingSpinner = false;
+
             $scope.ok = function () {
+              $scope.showLoadingSpinner = true;
+              
               EthAlerts.delete().then(
                 function successCallback(response) {
                   $uibModalInstance.close();
@@ -97,7 +101,10 @@
                   }
                   Utils.dangerAlert(errorMessage);
                 }
-              );
+              )
+              .finally(function () {
+                $scope.showLoadingSpinner = false;
+              });
             };
 
             $scope.cancel = function () {

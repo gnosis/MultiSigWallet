@@ -7,6 +7,7 @@
       $scope.selectedEvents = {}
       $scope.params = {};
 
+      $scope.showLoadingSpinner = false;
       // When True, all events are selected. None otherwise.
       var subscribeUnsubscribe = true;
       $scope.subscribeUnsubscribeValue = 'Subscribe all';
@@ -95,6 +96,9 @@
           }
         });
 
+        // Show loading spinner
+        $scope.showLoadingSpinner = true;
+
         EthAlerts.create($scope.request).then(
           function successCallback(response) {
             $uibModalInstance.close();
@@ -116,7 +120,10 @@
             }
             Utils.dangerAlert(errorMessage);
           }
-        );
+        )
+        .finally(function () {
+          $scope.showLoadingSpinner = false;
+        });
       };
 
       $scope.cancel = function () {

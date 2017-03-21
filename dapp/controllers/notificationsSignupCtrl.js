@@ -10,7 +10,10 @@
         'callback' : EthAlerts.signupCallback
       };
 
+      $scope.showLoadingSpinner = false;
+
       $scope.ok = function () {
+        $scope.showLoadingSpinner = true;
 
         EthAlerts.signup($scope.request).then(
           function successCallback(response) {
@@ -36,7 +39,10 @@
             }
             Utils.dangerAlert(errorMessage);
           }
-        );
+        )
+        .finally(function () {
+          $scope.showLoadingSpinner = false;
+        });
       };
 
       $scope.cancel = function () {

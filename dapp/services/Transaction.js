@@ -277,7 +277,7 @@
                 data.walletFactoryAddress = "0x0457874bb0a346962128a0c01310d00fc5bb6a83";
               }
               else {
-                data.chain = "local";
+                data.chain = "privatenet";
                 data.etherscan = "https://testnet.etherscan.io";
                 data.walletFactoryAddress = "0xd79426bcee5b46fde413ededeb38364b3e666097";
               }

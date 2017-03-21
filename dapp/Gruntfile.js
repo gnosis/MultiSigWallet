@@ -26,6 +26,30 @@ module.exports = function(grunt) {
             autoIndex: true,
 
             // server default file extension
+            ext: "html"
+
+        },
+        ssl: {
+
+            // the server root directory
+            root: './',
+
+            // the server port
+            // can also be written as a function, e.g.
+            // port: function() { return 8282; }
+            port: 8282,
+
+            // the host ip address
+            // If specified to, for example, "127.0.0.1" the server will
+            // only be available on that ip.
+            // Specify "0.0.0.0" to be available everywhere
+            host: "0.0.0.0",
+
+            // cache: <sec>,
+            showDir : true,
+            autoIndex: true,
+
+            // server default file extension
             ext: "html",
 
             // run in parallel with other tasks
@@ -54,8 +78,7 @@ module.exports = function(grunt) {
             //     "/readme": "README.md",
             //     "/readme.html": "README.html"
             // }
-
-        }
+          }
     },
     ngtemplates:  {
       multiSigWeb:        {
@@ -85,6 +108,12 @@ module.exports = function(grunt) {
     }
   });
 
+  grunt.registerTask('ssl-cert', function () {
+    if (!grunt.file.exists('./localhost.crt') && !grunt.file.exists('./localhost.key')) {      
+      grunt.task.run(['npm-command']);
+    }
+  });
+
   // Load the plugin that provides the http server.
   grunt.loadNpmTasks('grunt-http-server');
   grunt.loadNpmTasks('grunt-angular-templates');
@@ -92,5 +121,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-npm-command');
 
-  grunt.registerTask('default', ['npm-command', 'ngtemplates', 'http-server']);
+  grunt.registerTask('default', ['ngtemplates', 'http-server']);
+  grunt.registerTask('ledger', ['ssl-cert', 'ngtemplates', 'http-server:ssl']);
 };

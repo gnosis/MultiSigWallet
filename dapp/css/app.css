@@ -69,3 +69,7 @@ textarea.json-config {
   text-decoration: none !important;
   border:none !important;
 }
+
+.list-decimal {
+  list-style-type: decimal;
+}

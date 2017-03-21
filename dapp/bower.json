@@ -38,7 +38,7 @@
     "angular-mocks": "1.5.8",
     "ethjs-abi-denis": "0.1.1",
     "rlp": "^0.0.1",
-    "abi-decoder": "^1.0.3"
+    "abi-decoder": "^1.0.5"
   },
   "resolutions": {
     "angular": "~1.5.8"

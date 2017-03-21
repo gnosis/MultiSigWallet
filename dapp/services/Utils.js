@@ -156,28 +156,6 @@
         });
       };
 
-      factory.showLedgerHelp = function () {
-        $uibModal.open({
-          templateUrl: 'partials/modals/ledgerHelp.html',
-          size: 'md',
-          backdrop: 'static',
-          windowClass: 'bootstrap-dialog type-info',
-          controller: function ($scope, $uibModalInstance) {
-            $scope.ok = function () {
-              $uibModalInstance.close();
-            };
-
-            $scope.checkCoinbase = function () {
-              if (!Wallet.coinbase) {
-                setTimeout($scope.checkCoinbase, 1000);
-              }
-            };
-
-            $scope.checkCoinbase();
-          }
-        });
-      };
-
       return factory;
     });
   }

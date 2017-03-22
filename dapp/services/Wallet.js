@@ -298,18 +298,23 @@
       };
 
       wallet.updateGasLimit = function (cb) {
-        return wallet.web3.eth.getBlock.request(
-          "latest",
-          function (e, block) {
-            if (e) {
-              cb(e);
+        if (Connection.isConnected) {
+          return wallet.web3.eth.getBlock.request(
+            "latest",
+            function (e, block) {
+              if (e) {
+                cb(e);
+              }
+              else {
+                wallet.txParams.gasLimit = Math.floor(block.gasLimit*0.9);
+                cb(null, block.gasLimit);
+              }
             }
-            else {
-              wallet.txParams.gasLimit = Math.floor(block.gasLimit*0.9);
-              cb(null, block.gasLimit);
-            }
-          }
-        );
+          );
+        }
+        else {
+          cb(null, txDefault.gasLimit);
+        }
       };
 
       // Init txParams

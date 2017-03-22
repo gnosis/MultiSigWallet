@@ -108,7 +108,10 @@
           function errorCallback(response) {
             var errorMessage = "";
 
-            if (response.status = -1) {
+            if (response.status == 401) {
+              errorMessage = 'Please select one or more events.';
+            }
+            else if (response.status = -1) {
               errorMessage = 'An error occurred. Please verify whether Gnosis Alert Node is setted correctly.';
             }
             else {

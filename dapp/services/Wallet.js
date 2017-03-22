@@ -107,6 +107,23 @@
         }
       };
 
+      wallet.getGasPrice = function () {
+        return $q(
+          function(resolve, reject){
+            wallet.web3.eth.getGasPrice(
+              function (e, gasPrice) {
+                if (e) {
+                  reject(e);
+                }
+                else {
+                  resolve(gasPrice);
+                }
+              }
+            )
+          }
+        );
+      };
+
 
       /**
       * Return tx object, with default values, overwritted by passed params
@@ -262,17 +279,22 @@
       };
 
       wallet.updateGasPrice = function (cb) {
-        return wallet.web3.eth.getGasPrice.request(
-          function (e, gasPrice) {
-            if (e) {
-              cb(e);
+        if (Connection.isConnected) {
+          return wallet.web3.eth.getGasPrice.request(
+            function (e, gasPrice) {
+              if (e) {
+                cb(e);
+              }
+              else {
+                wallet.txParams.gasPrice = gasPrice.toNumber();
+                cb(null, gasPrice);
+              }
             }
-            else {
-              wallet.txParams.gasPrice = gasPrice.toNumber();
-              cb(null, gasPrice);
-            }
-          }
-        );
+          );
+        }
+        else {
+          cb(null, txDefault.gasPrice);
+        }
       };
 
       wallet.updateGasLimit = function (cb) {

@@ -22,13 +22,13 @@
             Utils.success(
               "Signup succeeded. An email was sent to " +
               $scope.request.email +
-              ". Check your inbox and follow the instructions contained in it."
+              ". Check your inbox and follow the instructions."
             );
           },
           function errorCallback(response) {
             var errorMessage = "";
             if (response.status = -1) {
-              errorMessage = 'An error occurred. Please verify whether Gnosis Alert Node is setted correctly.';
+              errorMessage = 'An error occurred. Please verify the Alert node settings.';
             }
             else {
               Object.keys(response.data).map(function (error) {

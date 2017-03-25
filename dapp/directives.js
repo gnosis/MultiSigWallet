@@ -20,13 +20,13 @@
         link: function(scope, element, attrs){
           Wallet.webInitialized.then(
             function () {
-              Wallet.initParams().then(function () {
+              scope.$watch(function(){
                 if(Wallet.coinbase) {
                   element.removeAttr('disabled');
                 }
                 else {
                   attrs.$set('disabled', 'disabled');
-                }                
+                }
               });
             }
           );

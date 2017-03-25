@@ -119,7 +119,7 @@
                   resolve(gasPrice);
                 }
               }
-            )
+            );
           }
         );
       };

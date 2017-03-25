@@ -38,8 +38,8 @@
     "angular-mocks": "1.5.8",
     "ethjs-abi-denis": "0.1.1",
     "rlp": "^0.0.1",
-    "abi-decoder": "^1.0.6",
-    "ledger-wallet-provider": "^1.0.0"
+    "abi-decoder": "1.0.7",
+    "ledger-wallet-provider": "1.0.4"
   },
   "resolutions": {
     "angular": "~1.5.8"

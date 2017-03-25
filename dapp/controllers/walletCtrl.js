@@ -7,7 +7,6 @@
       .webInitialized
       .then(
         function () {
-            $scope.batch = Wallet.web3.createBatch();
             $scope.interval = $interval($scope.updateParams, 10000);
             $scope.wallets = Wallet.wallets;
             if ( Wallet.coinbase && (!$scope.wallets || !Object.keys($scope.wallets).length && !$rootScope.alreadyLogged)){
@@ -25,7 +24,7 @@
         }
       );
 
-      $scope.checkTerms = function () {        
+      $scope.checkTerms = function () {
         if (localStorage.getItem("termsAccepted")){
           $interval.cancel($scope.termsInterval);
           $scope.newWalletSelect();
@@ -59,6 +58,7 @@
       );
 
       $scope.updateParams = function () {
+        $scope.batch = Wallet.web3.createBatch();
         if ($scope.wallets) {
           // Init wallet balance of each wallet address
           Object.keys($scope.wallets).map(function (address) {

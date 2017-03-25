@@ -30,7 +30,8 @@
     "grunt-http-server": "^2.0.0",
     "http-server": "^0.9.0"
   },
-  "devDependencies": {    
+  "devDependencies": {
+    "babel-register": "^6.24.0",
     "coffee-script": "*",
     "grunt": "^1.0.0",
     "grunt-contrib-jshint": "^1.1.0",

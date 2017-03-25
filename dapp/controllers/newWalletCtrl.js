@@ -25,16 +25,15 @@
               Utils.dangerAlert(e);
             }
             else {
-              if (contract.address) {
-                // Save wallet
-                Wallet.updateWallet({name: $scope.name, address: contract.address, owners: $scope.owners});
-                Utils.success("Wallet deployed at address: " + contract.address);
-                Transaction.update(contract.transactionHash, {multisig: contract.address});
-                callback();
-              }
-              else {
+              if (!contract.address) {
                 $uibModalInstance.close();
-                Transaction.add({txHash: contract.transactionHash});
+                Transaction.add({txHash: contract.transactionHash, callback: function (receipt) {
+                  // Save wallet
+                  Wallet.updateWallet({name: $scope.name, address: receipt.contractAddress, owners: $scope.owners});
+                  Utils.success("Wallet deployed at address: " + receipt.contractAddress);
+                  Transaction.update(contract.transactionHash, {multisig: receipt.contractAddress});
+                  callback();
+                }});
                 Utils.notification("Deployment transaction was sent.");
               }
             }

@@ -14,7 +14,7 @@
           animation: false,
           templateUrl: 'partials/modals/spinner.html',          
           backdrop: false,
-          size: 'md'
+          size: 'sm'
         });
       };
 

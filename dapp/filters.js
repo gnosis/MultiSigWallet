@@ -51,8 +51,8 @@
         }
       };
     })
-    .filter('logParam', function () {
-      return function (log) {
+    .filter('logParam', function ($filter) {
+      return function (log, isEther) {
         if (log && Array.isArray(log)) {
           return log.reduce(function (finalString, address) {
             if (address.indexOf("0x") == -1){
@@ -70,7 +70,10 @@
           return log.slice(0, 10) + "...";
         }
         else if ( log && log.match(/^[0-9]+$/) !== null) {
-          if(log.toString().length < 8){
+          if (isEther) {
+            return $filter('ether')(log);
+          }
+          else if(log.toString().length < 8){
             return log.toString().slice(0, 7);
           }
           else{
@@ -83,21 +86,15 @@
       };
     })
     .filter('ether', function () {
-      return function (big_number) {
-        if (big_number) {
-          var string_split = new Web3().toBigNumber(big_number).div('1e18').toString(10).split('.');
-          var new_string = "";
-          var places = string_split[0].length - 1;
-          for (var i=places; i>=0; i--) {
-            new_string = string_split[0][i] + new_string;
-            if (i > 0 && (places - i + 1) % 3 === 0) {
-              new_string = ',' + new_string;
-            }
+      return function (num) {
+        if (num) {
+          var casted = new Web3().toBigNumber(num).div('1e18');
+          if (casted.gt(0)) {
+            return casted.toPrecision(Math.floor(Math.log(casted.toNumber())/Math.log(10) + 3)).toString(10) + " ETH";
           }
-          if (string_split.length == 2) {
-            new_string += '.' + string_split[1].substring(0, 2);
+          else {
+            return "0.00 ETH";
           }
-          return new_string + " ETH";
         }
         return null;
       };

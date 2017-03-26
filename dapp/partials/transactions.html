@@ -67,8 +67,7 @@
                 {{param.name}}:
                 <span popover-enable="param.value && param.value.toString().length > 10" popover-trigger="'mouseenter'"
                   uib-popover-template="'partials/paramValueData.html'">
-                  {{param.value|addressCanBeOwner:wallet|logParam}}
-                  <span ng-show="param.name == 'value'">ETH</span>
+                  {{param.value|addressCanBeOwner:wallet|logParam:(param.name == 'value')}}                  
                 </span>
               </li>
             </ul>
@@ -101,8 +100,7 @@
                 <li ng-repeat="param in log.events track by $index">
                   {{param.name}}:
                   <span uib-popover="{{param.value}}" popover-enable="param.value && param.value.toString().length > 7" popover-trigger="'mouseenter'">
-                    {{param.value|addressCanBeOwner|logParam}}
-                    <span ng-show="param.name == 'value'">ETH</span>
+                    {{param.value|addressCanBeOwner|logParam:(param.name == 'value')}}
                   </span>
                 </li>
               </ul>

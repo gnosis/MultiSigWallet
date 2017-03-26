@@ -25,7 +25,17 @@
         window.addEventListener('load', function () {
           // Ledger wallet
           if (txDefault.wallet == "ledger") {
-            ledgerwallet(txDefault.ethereumNode).then(
+            ledgerwallet(
+              {
+                rpcUrl: txDefault.ethereumNode,
+                onSubmit: function () {
+                  Utils.showSpinner();
+                },
+                onSigned: function () {
+                  Utils.stopSpinner();
+                }
+              }
+            ).then(
               function(ledgerWeb3){
                 wallet.web3 = ledgerWeb3;
                 resolve();

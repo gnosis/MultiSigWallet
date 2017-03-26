@@ -73,3 +73,7 @@ textarea.json-config {
 .list-decimal {
   list-style-type: decimal;
 }
+
+.sk-circle .sk-child:before{
+  background-color: white !important;
+}

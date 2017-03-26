@@ -7,6 +7,21 @@
 
       factory.rejectedTxErrorMessage = 'Transaction rejected by user';
 
+      factory.spinner = null;
+
+      factory.showSpinner = function () {
+        factory.spinner = $uibModal.open({
+          animation: false,
+          templateUrl: 'partials/modals/spinner.html',          
+          backdrop: false,
+          size: 'md'
+        });
+      };
+
+      factory.stopSpinner = function () {
+        factory.spinner.close();
+      };
+
       factory.errorToHtml = function (error) {
         if (error.status == 500) {
           return 'Internal Server Error';

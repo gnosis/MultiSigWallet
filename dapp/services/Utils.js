@@ -12,7 +12,7 @@
       factory.showSpinner = function () {
         factory.spinner = $uibModal.open({
           animation: false,
-          templateUrl: 'partials/modals/spinner.html',          
+          templateUrl: 'partials/modals/spinner.html',
           backdrop: false,
           size: 'md'
         });
@@ -59,7 +59,29 @@
               return factory.rejectedTxErrorMessage;
             }
             else {
-              return error;
+              if (error.errorCode) {
+                switch (error.errorCode) {
+                  case 1:
+                    return "Ledger Wallet Error";
+                  case 2:
+                    return "Bad request";
+                  case 3:
+                    return "Unsupported configuration";
+                  case 4:
+                    return "Ineligible device";
+                  case 5:
+                    return "Ledger Wallet Timeout";
+
+                  default:
+                    return "U2F Error";
+                }
+              }
+              else if (error.message) {
+                return error.message;
+              }
+              else {
+                return error;
+              }
             }
           }
         }

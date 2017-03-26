@@ -14,6 +14,7 @@
           },
           function (e, tx) {
             if (e) {
+              console.log(e);              
               Utils.dangerAlert(e);
             }
             else if (tx.blockNumber) {

@@ -16,13 +16,13 @@
       };
 
       function getUrl (action) {
-        host = JSON.parse(localStorage.getItem("userConfig")).alertsNode;
+        host = txDefault.alertsNode;
         return host + (host.endsWith('/') ? urls[action] : '/' + urls[action]);
       }
 
       function addAuthHeaders (data) {
         data.headers = {
-          'auth-code': JSON.parse(localStorage.getItem("userConfig")).authCode
+          'auth-code': txDefault.authCode
         };
       }
 

@@ -18,6 +18,8 @@
           Wallet.web3 = new Web3($scope.config.ethereumNode);
         }
 
+        loadConfiguration();
+
         Utils.success("Configuration updated successfully.");
         showHideAuthCodeBtn();
       };
@@ -82,7 +84,7 @@
 
             $scope.ok = function () {
               $scope.showLoadingSpinner = true;
-              
+
               EthAlerts.delete().then(
                 function successCallback(response) {
                   $uibModalInstance.close();

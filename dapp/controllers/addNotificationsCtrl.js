@@ -8,6 +8,7 @@
       $scope.params = {};
 
       $scope.showLoadingSpinner = false;
+      $scope.showAlertData = false;
       // When True, all events are selected. None otherwise.
       var subscribeUnsubscribe = true;
       $scope.subscribeUnsubscribeValue = 'Subscribe all';
@@ -44,6 +45,9 @@
               subscribeUnsubscribe = false;
               $scope.subscribeUnsubscribeValue = 'Unsubscribe all';
             }
+
+            // Show Alert data
+            $scope.showAlertData = true;            
           },
           function errorCallback(response) {
             $uibModalInstance.close();

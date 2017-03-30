@@ -300,7 +300,7 @@
 
             $scope.txIds = ids.slice(0).reverse();
             ids.map(function (tx) {
-              if (!$scope.transactions[tx]) {
+              if (!$scope.transactions[tx]) {
                 $scope.transactions[tx] = {};
               }
               // Get transaction info

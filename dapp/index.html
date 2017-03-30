@@ -13,10 +13,15 @@
     <link href="./bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
     <link href="./bower_components/SpinKit/css/spinkit.css" rel="stylesheet" type="text/css" />
     <!-- 3rd party Script -->
+    <!-- Insert this line above script imports  -->
+    <script>
+      if (typeof module === 'object') {window.module = module; module = undefined;}
+      $ = require('./bower_components/jquery/dist/jquery.min.js');
+    </script>
     <script src="./bower_components/angular/angular.min.js"></script>
     <script src="./bower_components/angular-animate/angular-animate.min.js"></script>
-    <script src="./bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
     <script src="./bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="./bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
     <script src="./bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="./bower_components/angular-route/angular-route.min.js"></script>
     <script src="./bower_components/angular-touch/angular-touch.min.js"></script>
@@ -27,7 +32,7 @@
     <script src="./bower_components/abi-decoder/dist/abi-decoder.js"></script>
     <script src="./bower_components/clipboard/dist/clipboard.min.js"></script>
     <script src="./bower_components/ngclipboard/dist/ngclipboard.min.js"></script>
-    <script src="./bower_components/rlp/dist/rlp.js"></script>
+    <script src="./bower_components/rlp/dist/rlp.js"></script>-->
     <!-- Production -->
     <script src="./bower_components/ledger-wallet-provider/dist/ledgerwallet.js"></script>
     <!-- Testing -->
@@ -87,8 +92,12 @@
     <script src="./controllers/notificationsSignupConfirmationCtrl.js"></script>
 
     <script src="./expose.js"></script>
+    <script>if (window.module) module = window.module;</script>
   </head>
   <body ng-app="multiSigWeb">
+    <script>
+    $(document).ready(function(){alert("OK");})
+    </script>
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation" ng-controller="navCtrl">
         <div class="navbar-header">
             <!-- note the ng-init and ng-click here: -->

@@ -6,11 +6,13 @@ The purpose of multisig wallets is to increase security by requiring multiple pa
 Features
 -------------
 
-- can hold Ether and all kind of tokens with multisig support
-- easy to use offline signing (cold wallet) support
-- interacting with any contracts with UI support
-- hardware wallet support
-- optional email notifications when an event is triggered or you are required to sign a transaction
+- Can hold Ether and all kind of tokens with multisig support
+- Easy to use offline signing (cold wallet) support
+- Integration with web3 wallets (Metamask, Mist, Parity, etc)
+- Transaction data and log decoding, makes transactions more readable
+- Interacting with any contracts with UI support
+- Hardware wallet support (Ledger Wallet)
+- Optional email notifications when an event is triggered or you are required to sign a transaction
 
 Reviewers
 -------------

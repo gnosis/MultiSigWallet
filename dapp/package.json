@@ -24,6 +24,7 @@
   "author": "denis.granha@consensys.net",
   "license": "ISC",
   "dependencies": {
+    "grunt": "^1.0.0",    
     "bower": "^1.8.0",
     "ethereumjs-testrpc": "git+https://github.com/denisgranha/testrpc.git",
     "grunt-angular-templates": "^1.1.0",

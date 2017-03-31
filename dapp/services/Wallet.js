@@ -737,9 +737,11 @@
             else {
               // Add wallet, add My account to the object by default, won't be
               // displayed anyway if user is not an owner, but if it is, name will be used
-              var coinbase = wallet.coinbase.toLowerCase();
-              info.owners = {};
-              info.owners[coinbase] = { address: wallet.coinbase.toLowerCase(), name: 'My Account'};
+              if (wallet.coinbase) {
+                var coinbase = wallet.coinbase.toLowerCase();
+                info.owners = {};
+                info.owners[coinbase] = { address: wallet.coinbase.toLowerCase(), name: 'My Account'};
+              }
               wallet.updateWallet(info);
               cb(null, info);
             }

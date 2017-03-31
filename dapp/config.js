@@ -9,11 +9,7 @@ var txDefaultOrig =
     url : "https://www.google.com",
     checkInterval: 5000
   },
-  wallet: "injected",
-  // Testrpc
-  // walletFactoryAddress: "0xd79426bcee5b46fde413ededeb38364b3e666097"
-  // Ropsten
-  // walletFactoryAddress: "0xa6d9c5f7d4de3cef51ad3b7235d79ccc95114de5"
+  wallet: "injected",  
   // Mainnet
   walletFactoryAddress: "0xA0dbdaDcbCC540be9bF4e9A812035EB1289DaD73"
 };

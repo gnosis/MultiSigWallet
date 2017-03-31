@@ -274,7 +274,7 @@
               else if (block && block.hash == "0xa3c565fc15c7478862d50ccd6561e3c06b24cc509bf388941c25ea985ce32cb9") {
                 data.chain = "kovan";
                 data.etherscan = "https://kovan.etherscan.io";
-                data.walletFactoryAddress = "0x0457874bb0a346962128a0c01310d00fc5bb6a83";
+                data.walletFactoryAddress = "0xa0dbdadcbcc540be9bf4e9a812035eb1289dad73";
               }
               else {
                 data.chain = "privatenet";

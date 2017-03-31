@@ -28,7 +28,7 @@
     "angular-animate": "1.5.8",
     "angular-bootstrap": "2.2.0",
     "bootstrap": "3.3.7",
-    "web3": "0.16.0",
+    "web3": "^0.18.4",
     "font-awesome": "fontawesome#4.7.0",
     "bootstrap3-dialog": "bootstrap-dialog#^1.35.3",
     "ethereum-tx": "*",

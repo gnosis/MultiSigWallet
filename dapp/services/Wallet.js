@@ -182,35 +182,22 @@
       wallet.offlineTransaction = function (address, data, nonce, cb) {
         // Create transaction object
         var txInfo = {
+          from: wallet.coinbase,
           to: address,
           value: EthJS.Util.intToHex(0),
           gasPrice: EthJS.Util.intToHex(wallet.txParams.gasPrice),
-          gasLimit: EthJS.Util.intToHex(wallet.txParams.gasLimit),
+          gas: EthJS.Util.intToHex(wallet.txParams.gasLimit),
           nonce: nonce?nonce:EthJS.Util.intToHex(wallet.txParams.nonce),
           data: data
-        };
-
-        var tx = new EthJS.Tx(txInfo);
-
-        // Get transaction hash
-        var txId = EthJS.Util.bufferToHex(tx.hash(false));
-
-        // Sign transaction hash
-        wallet.web3.eth.sign(wallet.coinbase, txId, function (e, sig) {
+        };        
+        wallet.web3.eth.signTransaction(txInfo, function(e, signed) {
           if (e) {
             cb(e);
           }
-          else {
-            var signature = EthJS.Util.fromRpcSig(sig);
-            tx.v = EthJS.Util.intToHex(signature.v);
-            tx.r = EthJS.Util.bufferToHex(signature.r);
-            tx.s = EthJS.Util.bufferToHex(signature.s);
-
-            // Return raw transaction as hex string
-            cb(null, EthJS.Util.bufferToHex(tx.serialize()));
+          else{
+            cb(e, signed.raw);
           }
         });
-
       };
 
       /**
@@ -339,28 +326,30 @@
                   var promises = $q.all(
                     [
                       $q(function (resolve, reject) {
-                        batch.add(
-                          wallet.updateGasLimit(function (e) {
-                            if (e) {
-                              reject(e);
-                            }
-                            else {
-                              resolve();
-                            }
-                          })
-                        );
+                        var request = wallet.updateGasLimit(function (e) {
+                          if (e) {
+                            reject(e);
+                          }
+                          else {
+                            resolve();
+                          }
+                        });
+                        if (request) {
+                          batch.add(request);
+                        }
                       }),
                       $q(function (resolve, reject) {
-                        batch.add(
-                          wallet.updateGasPrice(function (e) {
-                            if (e) {
-                              reject(e);
-                            }
-                            else {
-                              resolve();
-                            }
-                          })
-                        );
+                        var request = wallet.updateGasPrice(function (e) {
+                          if (e) {
+                            reject(e);
+                          }
+                          else {
+                            resolve();
+                          }
+                        });
+                        if (request) {
+                          batch.add(request);
+                        }
                       }),
                       $q(function (resolve, reject) {
                         if (wallet.coinbase) {

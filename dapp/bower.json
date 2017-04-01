@@ -39,7 +39,7 @@
     "ethjs-abi-denis": "0.1.1",
     "rlp": "^0.0.1",
     "abi-decoder": "1.0.7",
-    "ledger-wallet-provider": "1.0.5",
+    "ledger-wallet-provider": "1.0.6",
     "SpinKit": "spinkit#^1.2.5"
   },
   "resolutions": {

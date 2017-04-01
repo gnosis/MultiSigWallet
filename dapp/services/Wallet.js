@@ -189,12 +189,12 @@
           gas: EthJS.Util.intToHex(wallet.txParams.gasLimit),
           nonce: nonce?nonce:EthJS.Util.intToHex(wallet.txParams.nonce),
           data: data
-        };        
+        };
         wallet.web3.eth.signTransaction(txInfo, function(e, signed) {
           if (e) {
             cb(e);
           }
-          else{
+          else{            
             cb(e, signed.raw);
           }
         });

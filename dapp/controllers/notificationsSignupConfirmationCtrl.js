@@ -10,7 +10,7 @@
           config.authCode = $routeParams['auth-code'];
           localStorage.setItem("userConfig", JSON.stringify(config));
           localStorage.setItem("show-signup-success", true);
-          $window.location.href = '/index.html';
+          $window.location.href = '/';
         }
       }
 

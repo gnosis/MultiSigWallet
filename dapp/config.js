@@ -9,9 +9,9 @@ var txDefaultOrig =
     url : "https://www.google.com",
     checkInterval: 5000
   },
-  wallet: "injected",  
+  wallet: "injected",
   // Mainnet
-  walletFactoryAddress: "0xA0dbdaDcbCC540be9bF4e9A812035EB1289DaD73"
+  walletFactoryAddress: "0xed5a90efa30637606ddaf4f4b3d42bb49d79bd4e"
 };
 
 var txDefault = {};

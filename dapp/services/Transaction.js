@@ -256,7 +256,6 @@
         return $q(function (resolve, reject) {
           Wallet.webInitialized.then(
             function () {
-              console.log("get chain");
               Wallet.web3.eth.getBlock(0, function(e, block) {
                 var data = {};
 
@@ -266,12 +265,12 @@
                 else if (block && block.hash == "0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3") {
                   data.chain = "mainnet";
                   data.etherscan = "https://etherscan.io";
-                  data.walletFactoryAddress = "0xA0dbdaDcbCC540be9bF4e9A812035EB1289DaD73";
+                  data.walletFactoryAddress = "0xed5a90efa30637606ddaf4f4b3d42bb49d79bd4e";
                 }
                 else if (block && block.hash == "0x41941023680923e0fe4d74a34bdac8141f2540e3ae90623718e47d66d1ca4a2d") {
                   data.chain = "ropsten";
-                  data.etherscan = "https://testnet.etherscan.io";
-                  data.walletFactoryAddress = "0xa6d9c5f7d4de3cef51ad3b7235d79ccc95114de5";
+                  data.etherscan = "https://ropsten.etherscan.io";
+                  data.walletFactoryAddress = "0x5cb85db3e237cac78cbb3fd63e84488cac5bd3dd";
                 }
                 else if (block && block.hash == "0xa3c565fc15c7478862d50ccd6561e3c06b24cc509bf388941c25ea985ce32cb9") {
                   data.chain = "kovan";

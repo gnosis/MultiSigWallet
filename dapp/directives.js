@@ -119,6 +119,42 @@
 
         }
       };
+    })
+    .directive('alertEventDescription', function () {
+      return {
+        link: function(scope, element, attrs) {
+          if (attrs.alertEventDescription == 'Submission') {
+            element.html('Submission: a new multisig transaction is submitted');
+          }
+          else if (attrs.alertEventDescription == 'Confirmation') {
+            element.html('Confirmation: a multisig transaction is confirmed');
+          }
+          else if (attrs.alertEventDescription == 'Revocation') {
+            element.html('Revocation: a multisig transaction confirmation is revoked');
+          }
+          else if (attrs.alertEventDescription == 'Execution') {
+            element.html('Execution: a multisig transaction is executed successfully');
+          }
+          else if (attrs.alertEventDescription == 'Deposit') {
+            element.html('Deposit: an ether deposit was made');
+          }
+          else if (attrs.alertEventDescription == 'Owner Addition') {
+            element.html('Owner addition: a new multisgi owner was added');
+          }
+          else if (attrs.alertEventDescription == 'Owner Removal') {
+            element.html('Owner removal: a multisig owner was removed');
+          }
+          else if (attrs.alertEventDescription == 'Requirement Change') {
+            element.html('Requirement change: number of required confirmations was changed');
+          }
+          else if (attrs.alertEventDescription == 'Daily Limit Change') {
+            element.html('Daily limit change: amount for daily withdrawal was changed');
+          }
+          else {
+            element.html(attrs.alertEventDescription);
+          }
+        }
+      }
     });
   }
 )();

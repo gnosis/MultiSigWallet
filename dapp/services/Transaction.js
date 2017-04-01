@@ -242,41 +242,44 @@
         batch.execute();
       };
 
-      factory.getEthereumChain = $q(function (resolve, reject) {
-        Wallet.webInitialized.then(
-          function () {
-            Wallet.web3.eth.getBlock(0, function(e, block) {
-              var data = {};
+      factory.getEthereumChain = function () {
+        return $q(function (resolve, reject) {
+          Wallet.webInitialized.then(
+            function () {
+              console.log("get chain");
+              Wallet.web3.eth.getBlock(0, function(e, block) {
+                var data = {};
 
-              if (e) {
-                reject();
-              }
-              else if (block && block.hash == "0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3") {
-                data.chain = "mainnet";
-                data.etherscan = "https://etherscan.io";
-                data.walletFactoryAddress = "0xA0dbdaDcbCC540be9bF4e9A812035EB1289DaD73";
-              }
-              else if (block && block.hash == "0x41941023680923e0fe4d74a34bdac8141f2540e3ae90623718e47d66d1ca4a2d") {
-                data.chain = "ropsten";
-                data.etherscan = "https://testnet.etherscan.io";
-                data.walletFactoryAddress = "0xa6d9c5f7d4de3cef51ad3b7235d79ccc95114de5";
-              }
-              else if (block && block.hash == "0xa3c565fc15c7478862d50ccd6561e3c06b24cc509bf388941c25ea985ce32cb9") {
-                data.chain = "kovan";
-                data.etherscan = "https://kovan.etherscan.io";
-                data.walletFactoryAddress = "0xa0dbdadcbcc540be9bf4e9a812035eb1289dad73";
-              }
-              else {
-                data.chain = "privatenet";
-                data.etherscan = "https://testnet.etherscan.io";
-                data.walletFactoryAddress = "0xd79426bcee5b46fde413ededeb38364b3e666097";
-              }
+                if (e) {
+                  reject();
+                }
+                else if (block && block.hash == "0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3") {
+                  data.chain = "mainnet";
+                  data.etherscan = "https://etherscan.io";
+                  data.walletFactoryAddress = "0xA0dbdaDcbCC540be9bF4e9A812035EB1289DaD73";
+                }
+                else if (block && block.hash == "0x41941023680923e0fe4d74a34bdac8141f2540e3ae90623718e47d66d1ca4a2d") {
+                  data.chain = "ropsten";
+                  data.etherscan = "https://testnet.etherscan.io";
+                  data.walletFactoryAddress = "0xa6d9c5f7d4de3cef51ad3b7235d79ccc95114de5";
+                }
+                else if (block && block.hash == "0xa3c565fc15c7478862d50ccd6561e3c06b24cc509bf388941c25ea985ce32cb9") {
+                  data.chain = "kovan";
+                  data.etherscan = "https://kovan.etherscan.io";
+                  data.walletFactoryAddress = "0xa0dbdadcbcc540be9bf4e9a812035eb1289dad73";
+                }
+                else {
+                  data.chain = "privatenet";
+                  data.etherscan = "https://testnet.etherscan.io";
+                  data.walletFactoryAddress = "0xd79426bcee5b46fde413ededeb38364b3e666097";
+                }
 
-              resolve(data);
-            });
-          }
-        );
-      });
+                resolve(data);
+              });
+            }
+          );
+        });
+      };
 
       Wallet
       .webInitialized

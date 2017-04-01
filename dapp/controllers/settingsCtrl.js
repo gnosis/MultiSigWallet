@@ -13,12 +13,12 @@
 
       $scope.update = function () {
         localStorage.setItem("userConfig", JSON.stringify($scope.config));
-
-        if (!$window.web3) {
-          Wallet.web3 = new Web3($scope.config.ethereumNode);
+        if (Wallet.web3.currentProvider.constructor.name == "HttpProvider") {
+          Wallet.web3 = new Web3( new Web3.providers.HttpProvider($scope.config.ethereumNode));
+          $window.web3 = Wallet.web3;
         }
 
-        loadConfiguration();
+        loadConfiguration(); // config.js
 
         Utils.success("Configuration updated successfully.");
         showHideAuthCodeBtn();

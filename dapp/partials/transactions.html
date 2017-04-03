@@ -65,9 +65,9 @@
             <ul>
               <li ng-repeat="param in transaction.decodedData.params">
                 {{param.name}}:
-                <span popover-enable="param.value && param.value.toString().length > 10" popover-trigger="'mouseenter'"
+                <span popover-enable="param.value" popover-trigger="'mouseenter'"
                   uib-popover-template="'partials/paramValueData.html'">
-                  {{param.value|addressCanBeOwner:wallet|logParam:(param.name == 'value')}}                  
+                  {{param.value|addressCanBeOwner:wallet|logParam:(param.name == 'value')}}
                 </span>
               </li>
             </ul>

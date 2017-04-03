@@ -69,9 +69,10 @@
               var walletOwnerskeys = Object.keys($scope.wallet.owners);
 
               for (var x=0; x<owners.length; x++){
+                // If owner not in list
                 if (walletOwnerskeys.indexOf($scope.owners[x]) == -1) {
                   $scope.wallet.owners[$scope.owners[x]] = {
-                    'name' : '',
+                    'name' : $scope.owners[x],
                     'address' : $scope.owners[x]
                   };
                 }
@@ -597,6 +598,9 @@
         })
         .result
         .then(function (owner) {
+          if (owner.name == undefined || owner.name == '') {
+            owner.name = owner.address;
+          }
           $scope.wallet.owners[owner.address] = owner;
           Wallet.updateWallet($scope.wallet);
         });

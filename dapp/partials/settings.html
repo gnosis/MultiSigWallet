@@ -8,8 +8,25 @@
     <div class="panel-body">
       <div class="form-group">
         <label for="node">Ethereum node</label>
-        <input id="node" type="url" ng-model="config.ethereumNode" class="form-control" />
+        <!--<input id="node" type="url" ng-model="config.ethereumNode" class="form-control" />-->
+        <ui-select ng-model="config.selectedEthereumNode" title="Choose an Ethereum node" id="node">
+          <ui-select-match placeholder="Choose an Ethereum node...">{{$select.selected.name}}</ui-select-match>
+          <ui-select-choices repeat="node in config.ethereumNodes | selectFilter: {name: $select.search, url: $select.search}">
+            <div ng-bind-html="toHtml(node.name | highlight: $select.search)"></div>
+            <small>
+              Node: {{node.name}}
+              Url: <span ng-bind-html="toHtml(node.url | highlight: $select.search)"></span>
+            </small>
+            <ui-select-match>
+                <span ng-bind-html="toHtml(node.name | highlight: $select.search)"></span>
+            </ui-select-match>
+            <ui-select-choices repeat="node in config.ethereumNodes | selectFilter: {name: $select.search, url: $select.search}">
+                <span ng-bind-html="toHtml(node.url | highlight: $select.search)"></span>
+            </ui-select-choices>
+          </ui-select-choices>
+        </ui-select>
       </div>
+
       <div class="form-group">
         <label for="gas-limit">Gas limit</label>
         <input id="gas-limit" type="number" ng-model="config.gasLimit" class="form-control" />
@@ -33,13 +50,32 @@
         <label for="wallet-factory">Wallet factory contract</label>
         <input id="wallet-factory" type="text" ng-model="config.walletFactoryAddress" class="form-control" />
       </div>
+
       <div class="form-group">
-        <label for="wallet-factory">Alerts node</label>
-        <input id="wallet-factory" type="text" ng-model="config.alertsNode" class="form-control" />
+        <label for="alert-nodes">Alert node</label>
+        <ui-select ng-model="config.alertNode"
+          tagging="addCustomAlertNode"
+          tagging-label="false"
+          title="Choose an Alert node" id="alert-nodes">
+          <ui-select-match placeholder="Choose an Alert node...">{{$select.selected.url}}</ui-select-match>
+          <ui-select-choices repeat="node in config.alertNodes | selectFilter: {url: $select.search, authCode: $select.search}">
+            <div ng-bind-html="toHtml(node.name | highlight: $select.search)"></div>
+            <small>
+              Node: {{node.url}}
+              Authorization code: <span ng-bind-html="toHtml(node.authCode | highlight: $select.search)"></span>
+            </small>
+            <ui-select-match>
+                <span ng-bind-html="toHtml(node.url | highlight: $select.search)"></span>
+            </ui-select-match>
+            <ui-select-choices repeat="node in config.alertNodes | selectFilter: {url: $select.search, authCode: $select.search}">
+                <span ng-bind-html="toHtml(node.authCode | highlight: $select.search)"></span>
+            </ui-select-choices>
+          </ui-select-choices>
+        </ui-select>
       </div>
       <div class="form-group">
         <label for="wallet-factory">Authorization code</label>
-        <input id="wallet-factory" type="text" ng-model="config.authCode" class="form-control" />
+        <input id="wallet-factory" type="text" ng-model="config.alertNode.authCode" class="form-control" />
       </div>
       <div class="form-group">
         <button class="btn btn-danger" type="button" ng-click="remove()" ng-show="showDeleteAuthCodeBtn">
@@ -48,22 +84,12 @@
       </div>
     </div>
     <div class="panel-footer">
-      <input type="submit" class="btn btn-default" value="Update" />
+      <input type="submit" class="btn btn-default" value="Update settings" />
       <button type="button" class="btn btn-default" ng-click="reset()">
-        Reset
+        Reset settings
       </button>
+      <input type="button" class="btn btn-default" value="Import wallets" ng-click="showImportWalletDialog()" />
+      <input type="button" class="btn btn-default" value="Export wallets" ng-click="showExportWalletDialog()" />
     </div>
   </form>
-</div>
-
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h4>
-      Import/export wallets
-    </h4>
-  </div>
-  <div class="panel-footer">
-    <input type="button" class="btn btn-default" value="Import" ng-click="showImportWalletDialog()" />
-    <input type="button" class="btn btn-default" value="Export" ng-click="showExportWalletDialog()" />
-  </div>
 </div>

@@ -135,6 +135,9 @@
           else if (attrs.alertEventDescription == 'Execution') {
             element.html('Execution: a multisig transaction is executed successfully');
           }
+          else if (attrs.alertEventDescription == 'Execution Failure') {
+            element.html('Execution failure: a multisig transaction is executed unsuccessfully');
+          }
           else if (attrs.alertEventDescription == 'Deposit') {
             element.html('Deposit: an ether deposit was made');
           }

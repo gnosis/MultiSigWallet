@@ -2,17 +2,49 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("settingsCtrl", function ($scope, Wallet, Utils, $window, $uibModal) {
-      $scope.config = Object.assign({}, txDefault, JSON.parse(localStorage.getItem("userConfig")));
+    .controller("settingsCtrl", function ($scope, Wallet, Utils, $window, $uibModal, $sce) {
 
-      function showHideAuthCodeBtn () {
-        $scope.showDeleteAuthCodeBtn = $scope.config.authCode ? true : false;
+      // Don't save the following config values to localStorage
+      var notToSaveConfigs = ["alertNodes", "ethereumNodes"];
+
+      /**
+      * Loads configuration
+      */
+      function loadConfig () {
+        $scope.config = Object.assign({}, txDefault, JSON.parse(localStorage.getItem("userConfig")));
       }
 
-      showHideAuthCodeBtn(); // call on page loading
+      loadConfig();
 
+      /**
+      * Shows/hides 'Delete Auth Code' button
+      */
+      function showHideAuthCodeBtn () {
+        $scope.showDeleteAuthCodeBtn = $scope.config.alertNode.authCode ? true : false;
+      }
+
+      showHideAuthCodeBtn(); // called on page loading
+
+      /**
+      * Updates configuration
+      */
       $scope.update = function () {
-        localStorage.setItem("userConfig", JSON.stringify($scope.config));
+        // Wraps selectedEthereumNode.url to ethereumNode
+        if ($scope.config.selectedEthereumNode) {
+            $scope.config.ethereumNode = $scope.config.selectedEthereumNode.url;
+        }
+        // Create a config copy
+        var configCopy = {};
+        angular.copy($scope.config, configCopy);
+
+        // Check values blacklist
+        Object.keys(configCopy).map(function (item) {
+            if (notToSaveConfigs.indexOf(item) !== -1) {
+              delete configCopy[item];
+            }
+        });
+
+        localStorage.setItem("userConfig", JSON.stringify(configCopy));
         if (Wallet.web3.currentProvider.constructor.name == "HttpProvider") {
           Wallet.web3 = new Web3( new Web3.providers.HttpProvider($scope.config.ethereumNode));
           $window.web3 = Wallet.web3;
@@ -24,6 +56,27 @@
         showHideAuthCodeBtn();
       };
 
+      /**
+      * Adds a new custon ui-select item
+      */
+      $scope.addCustomAlertNode = function(param) {
+        var item = {
+           url: param,
+           authCode: null
+         };
+         return item;
+      };
+
+      /**
+      * Sanitizes HTML
+      */
+      $scope.toHtml = function (input) {
+        return $sce.trustAsHtml(input);
+      };
+
+      /**
+      *
+      */
       $scope.reset = function () {
         $uibModal.open({
           templateUrl: 'partials/modals/resetSettings.html',
@@ -121,8 +174,8 @@
             Utils.success("Authorization code was deleted successfully.");
             // Remove authCode from configuration JSON
             var config = JSON.parse(localStorage.getItem("userConfig"));
-            delete config.authCode;
-            delete txDefault.authCode;
+            delete config.alertNode.authCode;
+            delete txDefault.alertNode.authCode;
             localStorage.setItem("userConfig", JSON.stringify(config));
             $scope.config = config;
 

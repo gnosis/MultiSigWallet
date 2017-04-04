@@ -22,6 +22,7 @@ module.exports = function(config) {
       'bower_components/ngclipboard/dist/ngclipboard.min.js',
       'bower_components/web3/dist/web3.min.js',
       'bower_components/abi-decoder/dist/abi-decoder.js',
+      'bower_components/angular-ui-select/dist/select.js',
       'node_modules/phantomjs-polyfill-object-assign/object-assign-polyfill.js',
       'app.js',
       'abi.js',

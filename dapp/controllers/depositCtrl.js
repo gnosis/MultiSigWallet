@@ -13,8 +13,7 @@
             value: new EthJS.BN(new Web3().toWei($scope.amount))
           },
           function (e, tx) {
-            if (e) {
-              console.log(e);              
+            if (e) {                          
               Utils.dangerAlert(e);
             }
             else if (tx.blockNumber) {

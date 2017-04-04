@@ -82,6 +82,18 @@
           )
         );
 
+        // Get ETH Balance
+        batch.add(
+          Wallet.getBalance(
+            $scope.wallet.address,
+            function (e, balance) {
+              if (!e && balance) {
+                $scope.balance = balance;
+              }
+            }
+          )
+        );
+
         // Get required confirmations
         batch.add(
           Wallet

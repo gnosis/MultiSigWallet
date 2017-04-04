@@ -131,8 +131,9 @@
         .result
         .then(
           function () {
+            loadConfig();
             Utils.success("Configuration reseted successfully.");
-            $scope.config = Object.assign({}, txDefault, JSON.parse(localStorage.getItem("userConfig")));
+            //$scope.config = Object.assign({}, txDefault, JSON.parse(localStorage.getItem("userConfig")));
           }
         );
       };

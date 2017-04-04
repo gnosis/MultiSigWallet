@@ -6,10 +6,12 @@
 
       function init() {
         if ($routeParams['auth-code']) {
-          var config = Object.assign({}, JSON.parse(localStorage.getItem("userConfig")));
-          config.authCode = $routeParams['auth-code'];
+          var config = Object.assign(txDefault, JSON.parse(localStorage.getItem("userConfig")));
+          config.alertNode = config.alertNode || {};
+          config.alertNode.authCode = $routeParams['auth-code'];
           localStorage.setItem("userConfig", JSON.stringify(config));
           localStorage.setItem("show-signup-success", true);
+          loadConfiguration(); // config.js
           $window.location.href = '/';
         }
       }

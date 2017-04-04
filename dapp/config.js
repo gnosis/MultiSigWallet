@@ -20,19 +20,15 @@ var txDefaultOrig =
 var txDefault = {
   ethereumNodes : [
     {
-      name : "Infura",
       url : "https://mainnet.infura.io:443"
     },
     {
-      name : "Ropsten",
       url : "https://ropsten.infura.io:443"
     },
     {
-      name : "Kovan",
       url : "https://kovan.infura.io:443"
     },
     {
-      name : "Local",
       url : "http://localhost"
     }
   ],
@@ -40,6 +36,11 @@ var txDefault = {
     {
       url: 'https://alerts.gnosis.pm',
       authCode: null
+    }
+  ],
+  walletFactoryAddresses: [
+    {
+      address: txDefaultOrig.walletFactoryAddress
     }
   ]
 };

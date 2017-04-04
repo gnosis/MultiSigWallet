@@ -76,6 +76,12 @@
                     'address' : $scope.owners[x]
                   };
                 }
+                else {
+                  if (!$scope.wallet.owners[$scope.owners[x]].name) {
+                    // Set owner name with its address
+                    $scope.wallet.owners[$scope.owners[x]].name = $scope.wallet.owners[$scope.owners[x]].address
+                  }
+                }
               }
 
               //Wallet.updateWallet($scope.wallet);

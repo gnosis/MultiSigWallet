@@ -5,13 +5,22 @@
     .controller("settingsCtrl", function ($scope, Wallet, Utils, $window, $uibModal, $sce) {
 
       // Don't save the following config values to localStorage
-      var notToSaveConfigs = ["alertNodes", "ethereumNodes"];
+      var configBlacklist = [
+        "alertNodes", "ethereumNodes", "selectedEthereumNode", "walletFactoryAddresses", "selectedWalletFactoryAddress"
+      ];
 
       /**
       * Loads configuration
       */
       function loadConfig () {
         $scope.config = Object.assign({}, txDefault, JSON.parse(localStorage.getItem("userConfig")));
+        // Maps variables used by ui-select
+        $scope.config.selectedEthereumNode = {
+          url: $scope.config.ethereumNode
+        };
+        $scope.config.selectedWalletFactoryAddress = {
+          address: $scope.config.walletFactoryAddress
+        };
       }
 
       loadConfig();
@@ -30,8 +39,14 @@
       */
       $scope.update = function () {
         // Wraps selectedEthereumNode.url to ethereumNode
+        // See reverse mapping in loadConfig()
         if ($scope.config.selectedEthereumNode) {
             $scope.config.ethereumNode = $scope.config.selectedEthereumNode.url;
+        }
+
+        // Wraps selectedWalletFactoryAddress.address to walletFactoryAddress
+        if ($scope.config.selectedWalletFactoryAddress) {
+          $scope.config.walletFactoryAddress = $scope.config.selectedWalletFactoryAddress.address;
         }
         // Create a config copy
         var configCopy = {};
@@ -39,7 +54,7 @@
 
         // Check values blacklist
         Object.keys(configCopy).map(function (item) {
-            if (notToSaveConfigs.indexOf(item) !== -1) {
+            if (configBlacklist.indexOf(item) !== -1) {
               delete configCopy[item];
             }
         });
@@ -57,7 +72,7 @@
       };
 
       /**
-      * Adds a new custon ui-select item
+      * Adds a new custon ui-select item to Alert Node
       */
       $scope.addCustomAlertNode = function(param) {
         var item = {
@@ -65,6 +80,26 @@
            authCode: null
          };
          return item;
+      };
+
+      /**
+      * Adds a new custon ui-select item to Ethereum Node
+      */
+      $scope.addCustomEthereumNode = function(param) {
+        var item = {
+          url: param
+        };
+        return item;
+      };
+
+      /**
+      * Adds a new custon ui-select item to Wallet Factory Address
+      */
+      $scope.addCustomWalletFactoryAddress = function(param) {
+        var item = {
+          address: param
+        };
+        return item;
       };
 
       /**

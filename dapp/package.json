@@ -15,7 +15,11 @@
     "dist": "zip -x node_modules/\\* -x npm-debug.log -x tests/\\* -x config.karma.js -x .DS_Store -x .gitignore -r ../multisigWallet.zip ./",
     "postinstall": "./node_modules/bower/bin/bower install && ./node_modules/grunt/bin/grunt ngtemplates",
     "start": "http-server -a 0.0.0.0 -p 5000",
-    "start-electron": "electron ."
+    "start-electron": "electron .",
+    "build-linux-x64": "electron-packager . MultisigWallet --ignore=node_modules/electron-* --platform=linux --out=./dist --overwrite=true --asar=true",
+    "build-osx": "electron-packager . MultisigWallet --ignore=node_modules/electron-* --platform=darwin --out=./dist --overwrite=true --asar=true",
+    "build-win": "electron-packager . MultisigWallet --ignore=node_modules/electron-* --platform=win32 --out=./dist --overwrite=true --asar=truer",
+    "build-all": "electron-packager . MultisigWallet --ignore=node_modules/electron-* --platform=all --out=./dist --overwrite=true --asar=true"
   },
   "keywords": [
     "ethereum",
@@ -25,7 +29,7 @@
   "author": "denis.granha@consensys.net",
   "license": "ISC",
   "dependencies": {
-    "grunt": "^1.0.0",    
+    "grunt": "^1.0.0",
     "bower": "^1.8.0",
     "ethereumjs-testrpc": "git+https://github.com/denisgranha/testrpc.git",
     "grunt-angular-templates": "^1.1.0",
@@ -33,8 +37,11 @@
     "http-server": "^0.9.0"
   },
   "devDependencies": {
+    "asar": "^0.13.0",
     "babel-register": "^6.24.0",
     "coffee-script": "*",
+    "electron": "~1.6.2",
+    "electron-packager": "^8.6.0",
     "grunt": "^1.0.0",
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-contrib-watch": "^1.0.0",
@@ -47,7 +54,6 @@
     "karma-jasmine": "^1.1.0",
     "karma-phantomjs-launcher": "^1.0.2",
     "phantomjs-polyfill-object-assign": "0.0.2",
-    "scrypt": "*",
-    "electron": "~1.6.2"
+    "scrypt": "*"
   }
 }

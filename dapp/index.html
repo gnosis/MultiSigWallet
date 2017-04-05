@@ -2,6 +2,10 @@
 <html>
   <head>
     <title>Multisignature Wallet</title>
+    <script>
+      // Detect if it's an Electron app or not
+      var isElectron = (window && window.process && window.process.type) ? true : false;
+    </script>
     <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="any" href="./img/wallet-logo.png" />
     <!-- Custom Stylesheets -->
@@ -16,8 +20,10 @@
     <!-- 3rd party Script -->
     <!-- Insert this line above script imports  -->
     <script>
-      if (typeof module === 'object') {window.module = module; module = undefined;}
-      $ = require('./bower_components/jquery/dist/jquery.min.js');
+      if (isElectron) {
+        if (typeof module === 'object') {window.module = module; module = undefined;}
+        $ = require('./bower_components/jquery/dist/jquery.min.js');
+      }
     </script>
     <script src="./bower_components/angular/angular.min.js"></script>
     <script src="./bower_components/angular-animate/angular-animate.min.js"></script>
@@ -94,9 +100,13 @@
     <script src="./controllers/notificationsSignupConfirmationCtrl.js"></script>
 
     <script src="./expose.js"></script>
-    <script>if (window.module) module = window.module;</script>
+    <script>
+      if (isElectron) {
+        if (window.module) module = window.module;
+      }
+    </script>
   </head>
-  <body ng-app="multiSigWeb">    
+  <body ng-app="multiSigWeb">
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation" ng-controller="navCtrl">
         <div class="navbar-header">
             <!-- note the ng-init and ng-click here: -->

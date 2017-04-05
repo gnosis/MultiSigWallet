@@ -46,7 +46,7 @@
         return $http.delete(getUrl('delete'), data);
       };
 
-      factory.signupCallback = $window.location.origin + '#/signup/?auth-code={%auth-code%}';
+      factory.signupCallback = !isElectron ? $window.location.origin + '#/signup/?auth-code={%auth-code%}' : null;
 
 
       return factory;

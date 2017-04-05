@@ -24,12 +24,12 @@
       }
 
 
-      $scope.updateInfo = function (){
+      $scope.updateInfo = function () {
 
         /**
         * Setup Ethereum Chain infos
         */
-        Transaction.getEthereumChain.then(
+        Transaction.getEthereumChain().then(
           function (data) {
             $scope.ethereumChain = data;
             txDefaultOrig.walletFactoryAddress = data.walletFactoryAddress;
@@ -61,7 +61,7 @@
 
       Wallet.webInitialized.then(
         function () {
-          $scope.interval = $interval($scope.updateInfo, 15000);
+          $scope.interval = $interval($scope.updateInfo, 5000);
           // $scope.updateInfo();
 
           /**

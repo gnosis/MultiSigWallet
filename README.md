@@ -1,7 +1,30 @@
 Ethereum Multisignature Wallet
 ===================
 
-Allows multiple parties to agree on transactions before execution. Allows to add and remove owners and update the number of required confirmations. A web user interface can be found [here](/dapp).
+The purpose of multisig wallets is to increase security by requiring multiple parties to agree on transactions before execution. Transactions can be executed only when confirmed by a predefined number of owners. A web user interface can be found [here](/dapp).
+
+Features
+-------------
+
+- Can hold Ether and all kind of tokens with multisig support
+- Easy to use offline signing (cold wallet) support
+- Integration with web3 wallets (Metamask, Mist, Parity, etc)
+- Transaction data and log decoding, makes transactions more readable
+- Interacting with any contracts with UI support
+- Hardware wallet support (Ledger Wallet)
+- Optional email notifications when an event is triggered or you are required to sign a transaction
+
+Reviewers
+-------------
+The following people have reviewed the code at the time of the linked commit:
+- Stefan George ([Georgi87](https://github.com/Georgi87)): [b9405cc30de4615e325b1d46c71cdef670bdeadc](https://github.com/ConsenSys/MultiSigWallet/tree/b9405cc30de4615e325b1d46c71cdef670bdeadc)
+
+Being used by
+-------------
+- [Golem](https://golem.network/)
+- Brace
+- [Weifund](http://weifund.io/)
+- StabL
 
 Install
 -------------
@@ -46,11 +69,6 @@ Transactions to address 0 cannot be done. Any other transaction can be done.
 Security
 -------------
 All contracts are WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-Reviewers
--------------
-The following people have reviewed the code at the time of the linked commit:
-- Stefan George ([Georgi87](https://github.com/Georgi87)): [b9405cc30de4615e325b1d46c71cdef670bdeadc](https://github.com/ConsenSys/MultiSigWallet/tree/b9405cc30de4615e325b1d46c71cdef670bdeadc)
 
 Deployed instances with significant funds
 -------------

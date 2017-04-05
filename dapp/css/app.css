@@ -77,3 +77,11 @@ textarea.json-config {
 .sk-circle .sk-child:before{
   background-color: white !important;
 }
+
+.ui-select-choices-group {
+  background: #fff;
+}
+
+.ui-select-bootstrap .ui-select-choices-row.active>span {
+  background-color: #00a6c4 !important;
+}

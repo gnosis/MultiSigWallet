@@ -40,7 +40,8 @@
     "rlp": "^0.0.1",
     "abi-decoder": "1.0.7",
     "ledger-wallet-provider": "1.0.5",
-    "SpinKit": "spinkit#^1.2.5"
+    "SpinKit": "spinkit#^1.2.5",
+    "angular-ui-select": "https://github.com/giacomolicari/ui-select.git#v0.19.7"
   },
   "resolutions": {
     "angular": "~1.5.8"

@@ -69,15 +69,34 @@
               var walletOwnerskeys = Object.keys($scope.wallet.owners);
 
               for (var x=0; x<owners.length; x++){
+                // If owner not in list
                 if (walletOwnerskeys.indexOf($scope.owners[x]) == -1) {
                   $scope.wallet.owners[$scope.owners[x]] = {
-                    'name' : '',
+                    'name' : $scope.owners[x],
                     'address' : $scope.owners[x]
                   };
+                }
+                else {
+                  if (!$scope.wallet.owners[$scope.owners[x]].name) {
+                    // Set owner name with its address
+                    $scope.wallet.owners[$scope.owners[x]].name = $scope.wallet.owners[$scope.owners[x]].address
+                  }
                 }
               }
 
               //Wallet.updateWallet($scope.wallet);
+            }
+          )
+        );
+
+        // Get ETH Balance
+        batch.add(
+          Wallet.getBalance(
+            $scope.wallet.address,
+            function (e, balance) {
+              if (!e && balance) {
+                $scope.balance = balance;
+              }
             }
           )
         );
@@ -597,6 +616,9 @@
         })
         .result
         .then(function (owner) {
+          if (owner.name == undefined || owner.name == '') {
+            owner.name = owner.address;
+          }
           $scope.wallet.owners[owner.address] = owner;
           Wallet.updateWallet($scope.wallet);
         });

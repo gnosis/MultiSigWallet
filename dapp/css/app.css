@@ -78,10 +78,23 @@ textarea.json-config {
   background-color: white !important;
 }
 
-.ui-select-choices-group {
-  background: #fff;
+.ui-select-choices-row:hover {
+  background-color: #143e4d !important;
 }
 
-.ui-select-bootstrap .ui-select-choices-row.active>span {
-  background-color: #00a6c4 !important;
+.ui-select-bootstrap .ui-select-choices-row>span:hover {
+  background-color: #143e4d !important;
+}
+
+.ui-select-bootstrap .ui-select-choices-row.active > span {
+  background-color: #143e4d !important;
+  color: #1f7692 !important;
+}
+
+.ui-select-bootstrap .ui-select-choices-row > span {
+  color: #1f7692 !important;
+}
+
+.ui-select-bootstrap .ui-select-choices-row > span:hover {
+  color: #1f7692 !important;
 }

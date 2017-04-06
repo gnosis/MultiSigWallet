@@ -20,16 +20,20 @@ var txDefaultOrig =
 var txDefault = {
   ethereumNodes : [
     {
-      url : "https://mainnet.infura.io:443"
+      url : "https://mainnet.infura.io:443",
+      name: "Mainnet"
     },
     {
-      url : "https://ropsten.infura.io:443"
+      url : "https://ropsten.infura.io:443",
+      name: "Ropsten"
     },
     {
-      url : "https://kovan.infura.io:443"
+      url : "https://kovan.infura.io:443",
+      name: "Kovan"
     },
     {
-      url : "http://localhost"
+      url : "http://localhost:8545",
+      name: "Private node"
     }
   ],
   alertNodes: [

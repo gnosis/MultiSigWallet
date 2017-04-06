@@ -9,6 +9,8 @@
         "alertNodes", "ethereumNodes", "selectedEthereumNode", "walletFactoryAddresses", "selectedWalletFactoryAddress"
       ];
 
+      $scope.web3WalletEnabled = !isElectron;
+
       /**
       * Loads configuration
       */
@@ -18,6 +20,14 @@
         $scope.config.selectedEthereumNode = {
           url: $scope.config.ethereumNode
         };
+
+        $scope.config.ethereumNodes.map(function (item) {
+          if (item.url == $scope.config.ethereumNode) {
+            $scope.config.selectedEthereumNode.name = item.name;
+            return;
+          }
+        });
+
         $scope.config.selectedWalletFactoryAddress = {
           address: $scope.config.walletFactoryAddress
         };
@@ -87,7 +97,8 @@
       */
       $scope.addCustomEthereumNode = function(param) {
         var item = {
-          url: param
+          url: param,
+          name: param
         };
         return item;
       };
@@ -133,7 +144,7 @@
           function () {
             loadConfig();
             Utils.success("Configuration reseted successfully.");
-            //$scope.config = Object.assign({}, txDefault, JSON.parse(localStorage.getItem("userConfig")));                        
+            //$scope.config = Object.assign({}, txDefault, JSON.parse(localStorage.getItem("userConfig")));
             showHideAuthCodeBtn();
           }
         );

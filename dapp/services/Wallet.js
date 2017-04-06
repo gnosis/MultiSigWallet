@@ -34,7 +34,14 @@
                 onSigned: function () {
                   Utils.stopSpinner();
                 },
-                getChainID: txDefault.defaultChainID? function (cb) {cb(null, txDefault.defaultChainID);}:null
+                getChainID: function (cb) {
+                  if (Connection.isConnected) {
+                    cb(null, txDefault.defaultChainID);
+                  }
+                  else {
+                    web3.version.getNetwork(cb);
+                  }
+                }
               }
             ).then(
               function(ledgerWeb3){

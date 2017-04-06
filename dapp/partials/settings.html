@@ -29,6 +29,10 @@
           </option>
         </select>
       </div>
+      <div class="form-group" ng-show="{{config.wallet == 'ledger'}}">
+        <label for="chain-id">Default Chain ID</label>
+        <input id="chain-id" type="number" ng-model="config.defaultChainID" class="form-control" ng-min="0" placeholder="No default"/>
+      </div>
       <div class="form-group">
         <label for="wallet-factory">Wallet factory contract</label>
         <input id="wallet-factory" type="text" ng-model="config.walletFactoryAddress" class="form-control" />

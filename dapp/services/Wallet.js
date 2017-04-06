@@ -33,7 +33,8 @@
                 },
                 onSigned: function () {
                   Utils.stopSpinner();
-                }
+                },
+                getChainID: txDefault.defaultChainID? function (cb) {cb(null, txDefault.defaultChainID);}:null
               }
             ).then(
               function(ledgerWeb3){
@@ -194,7 +195,7 @@
           if (e) {
             cb(e);
           }
-          else{            
+          else{
             cb(e, signed.raw);
           }
         });

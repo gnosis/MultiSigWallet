@@ -10,6 +10,7 @@ var txDefaultOrig =
     checkInterval: 5000
   },
   wallet: "injected",
+  defaultChainID: null,
   // Mainnet
   walletFactoryAddress: "0xed5a90efa30637606ddaf4f4b3d42bb49d79bd4e"
 };

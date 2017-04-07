@@ -36,10 +36,20 @@
                 },
                 getChainID: function (cb) {
                   if (Connection.isConnected) {
-                    cb(null, txDefault.defaultChainID);
+                    if (txDefault.defaultChainID) {
+                      cb("You must set an offline Chain ID in order to sign offline transactions");
+                    }
+                    else {
+                      cb(null, txDefault.defaultChainID);
+                    }
                   }
                   else {
-                    web3.version.getNetwork(cb);
+                    if (web3) {
+                      web3.version.getNetwork(cb);
+                    }
+                    else {
+                      cb("No valid web3 object");
+                    }
                   }
                 }
               }
@@ -70,6 +80,9 @@
                     $scope.checkCoinbase();
                   }
                 });
+              },
+              function (error) {
+                Utils.dangerAlert(error);
               }
             );
           }
@@ -236,7 +249,7 @@
       * Get ethereum accounts and update account list.
       */
       wallet.updateAccounts = function (cb) {
-        return wallet.web3.eth.getAccounts.request(
+        return wallet.web3.eth.getAccounts(
           function (e, accounts) {
             if (e) {
               cb(e);
@@ -325,9 +338,7 @@
       // Init txParams
       wallet.initParams = function () {
         return $q(function (resolve) {
-            var batchAccount = wallet.web3.createBatch();
             var batch = wallet.web3.createBatch();
-            batchAccount.add(
               wallet
               .updateAccounts(
                 function (e, accounts) {
@@ -403,10 +414,7 @@
                   return promises;
                 }
 
-              )
-            );
-            batchAccount.execute();
-
+              );
           }
         );
 

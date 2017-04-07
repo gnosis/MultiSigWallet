@@ -39,7 +39,7 @@
       * Shows/hides 'Delete Auth Code' button
       */
       function showHideAuthCodeBtn () {
-        $scope.showDeleteAuthCodeBtn = $scope.config.alertNode.authCode ? true : false;
+        $scope.showDeleteAuthCodeBtn = $scope.config.alertNode ? $scope.config.alertNode.authCode ? true : false : false;
       }
 
       showHideAuthCodeBtn(); // called on page loading

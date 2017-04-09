@@ -28,19 +28,19 @@
             ledgerwallet(
               {
                 rpcUrl: txDefault.ethereumNode,
-                onSubmit: function () {
+                onSubmit: function () {                  
                   Utils.showSpinner();
                 },
                 onSigned: function () {
                   Utils.stopSpinner();
                 },
                 getChainID: function (cb) {
-                  if (Connection.isConnected) {
+                  if (!Connection.isConnected) {
                     if (txDefault.defaultChainID) {
-                      cb("You must set an offline Chain ID in order to sign offline transactions");
+                      cb(null, txDefault.defaultChainID);
                     }
                     else {
-                      cb(null, txDefault.defaultChainID);
+                      cb("You must set an offline Chain ID in order to sign offline transactions");
                     }
                   }
                   else {
@@ -116,7 +116,6 @@
       // Concat cached abis
       var cachedABIs = ABI.get();
       Object.keys(cachedABIs).map(function(key) {
-        //console.log(cachedABIs[key])
         if (cachedABIs[key].abi) {
           wallet.mergedABI = wallet.mergedABI.concat(cachedABIs[key].abi);
         }
@@ -337,7 +336,7 @@
 
       // Init txParams
       wallet.initParams = function () {
-        return $q(function (resolve) {
+        return $q(function (resolve, reject) {
             var batch = wallet.web3.createBatch();
               wallet
               .updateAccounts(
@@ -408,7 +407,7 @@
                     ]
                   ).then(function () {
                     resolve();
-                  });
+                  }, reject);
 
                   batch.execute();
                   return promises;

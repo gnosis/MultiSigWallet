@@ -19,7 +19,7 @@ describe('Wallet Service', function(){
         function ($injector) {
           // Inject Services
           walletService = $injector.get('Wallet');
-          web3Service = $injector.get('Web3');
+          web3Service = $injector.get('Web3Service');
           transactionService = $injector.get('Transaction');
           transactionService.Wallet = walletService;
           transactionService.Web3 = web3Service;
@@ -382,7 +382,7 @@ TO BE REVIEWED
 
 
     //  {
-    //   var instance = Web3.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+    //   var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
     //   var data = instance.changeDailyLimit.getData(
     //     limit,
     //     cb

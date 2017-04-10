@@ -2,7 +2,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("settingsCtrl", function (Web3, $scope, Wallet, Utils, $window, $uibModal, $sce) {
+    .controller("settingsCtrl", function (Web3Service, $scope, Wallet, Utils, $window, $uibModal, $sce) {
 
       // Don't save the following config values to localStorage
       var configBlacklist = [
@@ -60,9 +60,9 @@
         });
 
         localStorage.setItem("userConfig", JSON.stringify(configCopy));
-        if (Web3.web3.currentProvider.constructor.name == "HttpProvider") {
-          Web3.web3 = new Web3( new Web3.providers.HttpProvider($scope.config.ethereumNode));
-          $window.web3 = Web3.web3;
+        if (Web3Service.web3.currentProvider.constructor.name == "HttpProvider") {
+          Web3Service.web3 = new Web3( new Web3.providers.HttpProvider($scope.config.ethereumNode));
+          $window.web3 = Web3Service.web3;
         }
 
         loadConfiguration(); // config.js

@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .service("Web3", function ($window, $q, Utils, $uibModal) {
+    .service("Web3Service", function ($window, $q, Utils, $uibModal) {
       factory = {};
 
       factory.webInitialized = $q(function (resolve, reject) {
@@ -69,6 +69,26 @@
           }
         });
       });
+
+      factory.sendTransaction = function (method, params, cb) {
+        // Simulate first
+        function sendIfSuccess(e, result) {
+          if (e) {
+            cb(e);
+          }
+          else {            
+            if (result) {
+              method.sendTransaction.apply(method.sendTransaction, params.concat(cb));
+            }
+            else {
+              cb("Simulated transaction failed");
+            }
+          }
+        }
+
+        var args = params.concat(sendIfSuccess);
+        method.call.apply(method.call, args);
+      };
 
       return factory;
     });

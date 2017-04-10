@@ -6,7 +6,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("walletTransactionCtrl", function (Web3, $scope, Wallet, Transaction, Utils, wallet, $uibModalInstance, ABI) {
+    .controller("walletTransactionCtrl", function (Web3Service, $scope, Wallet, Transaction, Utils, wallet, $uibModalInstance, ABI) {
 
       $scope.wallet = wallet;
       $scope.abiArray = null;
@@ -138,7 +138,7 @@
       $scope.getNonce = function () {
         $scope.tx.value = "0x" + new Web3().toBigNumber($scope.tx.value).mul('1e18').toString(16);
         if ($scope.abiArray) {
-          var instance = Web3.web3.eth.contract($scope.abiArray).at($scope.tx.to);
+          var instance = Web3Service.web3.eth.contract($scope.abiArray).at($scope.tx.to);
           $scope.data = instance[$scope.method.name].getData.apply(this, $scope.params);
         }
         else {

@@ -2,10 +2,10 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("nonceCtrl", function (Web3, $scope, Wallet, Utils, $uibModal, $uibModalInstance) {
+    .controller("nonceCtrl", function (Web3Service, $scope, Wallet, Utils, $uibModal, $uibModalInstance) {
 
       $scope.ok = function () {
-        Web3.web3.eth.getTransactionCount(
+        Web3Service.web3.eth.getTransactionCount(
           $scope.address,
           function (e, count) {
             if (e) {

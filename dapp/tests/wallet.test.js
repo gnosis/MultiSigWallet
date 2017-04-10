@@ -19,15 +19,17 @@ describe('Wallet Service', function(){
         function ($injector) {
           // Inject Services
           walletService = $injector.get('Wallet');
+          web3Service = $injector.get('Web3');
           transactionService = $injector.get('Transaction');
           transactionService.Wallet = walletService;
+          transactionService.Web3 = web3Service;
           utilsService = $injector.get('Utils');
           connectionService = $injector.get('Connection');
           connectionService.isConnected = true;
 
           web3 = new Web3(new Web3.providers.HttpProvider(host));
           web3.eth.defaultAccount = web3.eth.accounts[0]; //set default account;
-          walletService.web3 = web3;
+          web3Service.web3 = web3;
 
           /*ethJs = {'Util' : ethUtil};
           walletService.EthJS = ethJs;*/
@@ -59,7 +61,7 @@ describe('Wallet Service', function(){
             console.log("call webInitialized");
           });
 
-          spyOn(walletService, ['webInitialized'] ).and.returnValue(webInitialized);
+          spyOn(web3Service, ['webInitialized'] ).and.returnValue(webInitialized);
           spyOn(walletService, ['initParams'] ).and.returnValue(function(){
             console.log("call initParams");
           });
@@ -88,7 +90,6 @@ describe('Wallet Service', function(){
             console.log('clear localstorage');
             store = {};
           });*/
-
           walletService.deployWithLimit(accounts, 1, new Web3().toBigNumber(1).mul('1e18'),
             function (e, r) {
               if (r.address) {
@@ -118,16 +119,17 @@ describe('Wallet Service', function(){
   });
 
   afterEach(function (done) {
+    console.log("revert snapshot");
     web3.currentProvider.sendAsync({
-            jsonrpc: "2.0",
-            method: "evm_revert",
-            id: 123456,
-            params: [snapId]
-          }, function (e, response) {
-            console.log("after");
-            console.log(response);
-            done();
-      });
+      jsonrpc: "2.0",
+      method: "evm_revert",
+      id: 12345,
+      params: [snapId]
+    }, function (e, response) {
+      console.log("after snapshot");
+      console.log(response);
+      done();
+    });
   });
 
   afterAll(function (done) {
@@ -262,7 +264,7 @@ TO BE REVIEWED
       expect(e).toBe(null);
       expect(typeof(tx)).toBe('string');
       var res = web3.eth.getTransaction(tx);
-      var owner2 = '0x' + res.input.substring(res.input.length-40, res.input.length)
+      var owner2 = '0x' + res.input.substring(res.input.length-40, res.input.length);
       expect(owner2).toBe(accounts[1]);
       done();
     });
@@ -296,7 +298,7 @@ TO BE REVIEWED
       if(e){console.log(e.message);}
 
       var withdrawTx = {};
-      withdrawTx.value = new Web3().toBigNumber(1)
+      withdrawTx.value = new Web3().toBigNumber(1);
       withdrawTx.to = accounts[0];
       withdrawTx.data = '0x0';
 

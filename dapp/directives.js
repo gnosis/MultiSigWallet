@@ -157,7 +157,7 @@
             element.html(attrs.alertEventDescription);
           }
         }
-      }
+      };
     });
   }
 )();

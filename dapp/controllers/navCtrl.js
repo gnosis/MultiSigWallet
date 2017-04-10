@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .controller('navCtrl', function ($scope, Wallet, Connection, Transaction, $interval, $sce, $location, $uibModal) {
+    .controller('navCtrl', function ($scope, Wallet, Web3, Connection, Transaction, $interval, $sce, $location, $uibModal) {
       $scope.navCollapsed = true;
 
       // If not terms acepted, prompt disclaimer
@@ -59,7 +59,7 @@
 
       };
 
-      Wallet.webInitialized.then(
+      Web3.webInitialized.then(
         function () {
           $scope.interval = $interval($scope.updateInfo, 5000);
           // $scope.updateInfo();

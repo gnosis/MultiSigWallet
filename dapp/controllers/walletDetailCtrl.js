@@ -2,7 +2,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("walletDetailCtrl", function ($scope, $filter, $sce, Wallet, $routeParams, Utils, Transaction, $interval, $uibModal, Token, ABI) {
+    .controller("walletDetailCtrl", function (Web3, $scope, $filter, $sce, Wallet, $routeParams, Utils, Transaction, $interval, $uibModal, Token, ABI) {
       $scope.wallet = {};
 
       $scope.$watch(
@@ -46,7 +46,7 @@
 
       $scope.updateParams = function () {
 
-        var batch = Wallet.web3.createBatch();
+        var batch = Web3.web3.createBatch();
 
         $scope.showExecuted = true;
         $scope.showPending = true;
@@ -79,7 +79,7 @@
                 else {
                   if (!$scope.wallet.owners[$scope.owners[x]].name) {
                     // Set owner name with its address
-                    $scope.wallet.owners[$scope.owners[x]].name = $scope.wallet.owners[$scope.owners[x]].address
+                    $scope.wallet.owners[$scope.owners[x]].name = $scope.wallet.owners[$scope.owners[x]].address;
                   }
                 }
               }
@@ -179,7 +179,7 @@
         batch.execute();
       };
 
-      Wallet
+      Web3
       .webInitialized
       .then(
         function () {
@@ -312,7 +312,7 @@
           $scope.showPending,
           $scope.showExecuted,
           function (e, ids) {
-            var txBatch = Wallet.web3.createBatch();
+            var txBatch = Web3.web3.createBatch();
             if (!$scope.transactions) {
               $scope.transactions = {};
             }
@@ -366,7 +366,7 @@
       };
 
       $scope.getOwners = function () {
-        var batch = Wallet.web3.createBatch();
+        var batch = Web3.web3.createBatch();
         $scope.owners = [];
 
         function assignOwner (e, owner) {

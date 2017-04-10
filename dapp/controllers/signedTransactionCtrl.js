@@ -2,7 +2,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("signedTransactionCtrl", function ($scope, Wallet, Utils, Transaction, $uibModalInstance) {
+    .controller("signedTransactionCtrl", function (Web3, $scope, Wallet, Utils, Transaction, $uibModalInstance) {
       $scope.sendRawTransaction = function () {
         Transaction.sendRawTransaction($scope.tx, function (e, txHash) {
           if (e) {
@@ -15,7 +15,7 @@
             Transaction.add({txHash: txHash, callback: function (receipt) {
 
               if (receipt.contractAddress) {
-                Wallet.web3.eth.getCode(receipt.contractAddress, function (e, code){
+                Web3.web3.eth.getCode(receipt.contractAddress, function (e, code){
                   if (code.length > 100 && Wallet.json.multiSigDailyLimit.binHex.slice(-992) == code.slice(-992)){
                     Utils.success("Wallet deployed at address: " + receipt.contractAddress);
                     Wallet.updateWallet({name: "Offline wallet", address: receipt.contractAddress, owners: {}});

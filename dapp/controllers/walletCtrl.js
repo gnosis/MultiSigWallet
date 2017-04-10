@@ -2,8 +2,8 @@
   function () {
     angular
     .module('multiSigWeb')
-    .controller('walletCtrl', function ($rootScope, $scope, Wallet, Utils, Token, Transaction, $uibModal, $interval) {
-      Wallet
+    .controller('walletCtrl', function (Web3, $rootScope, $scope, Wallet, Utils, Token, Transaction, $uibModal, $interval) {
+      Web3
       .webInitialized
       .then(
         function () {
@@ -58,7 +58,7 @@
       );
 
       $scope.updateParams = function () {
-        $scope.batch = Wallet.web3.createBatch();
+        $scope.batch = Web3.web3.createBatch();
         if ($scope.wallets) {
           // Init wallet balance of each wallet address
           Object.keys($scope.wallets).map(function (address) {

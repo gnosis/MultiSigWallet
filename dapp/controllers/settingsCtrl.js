@@ -2,7 +2,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("settingsCtrl", function ($scope, Wallet, Utils, $window, $uibModal, $sce) {
+    .controller("settingsCtrl", function (Web3, $scope, Wallet, Utils, $window, $uibModal, $sce) {
 
       // Don't save the following config values to localStorage
       var configBlacklist = [
@@ -60,9 +60,9 @@
         });
 
         localStorage.setItem("userConfig", JSON.stringify(configCopy));
-        if (Wallet.web3.currentProvider.constructor.name == "HttpProvider") {
-          Wallet.web3 = new Web3( new Web3.providers.HttpProvider($scope.config.ethereumNode));
-          $window.web3 = Wallet.web3;
+        if (Web3.web3.currentProvider.constructor.name == "HttpProvider") {
+          Web3.web3 = new Web3( new Web3.providers.HttpProvider($scope.config.ethereumNode));
+          $window.web3 = Web3.web3;
         }
 
         loadConfiguration(); // config.js
@@ -133,7 +133,7 @@
           function () {
             loadConfig();
             Utils.success("Configuration reseted successfully.");
-            //$scope.config = Object.assign({}, txDefault, JSON.parse(localStorage.getItem("userConfig")));                        
+            //$scope.config = Object.assign({}, txDefault, JSON.parse(localStorage.getItem("userConfig")));
             showHideAuthCodeBtn();
           }
         );

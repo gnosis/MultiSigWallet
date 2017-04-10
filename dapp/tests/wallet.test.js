@@ -380,7 +380,7 @@ TO BE REVIEWED
 
 
     //  {
-    //   var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+    //   var instance = Web3.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
     //   var data = instance.changeDailyLimit.getData(
     //     limit,
     //     cb

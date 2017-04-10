@@ -15,10 +15,10 @@
         }
       };
     })
-    .directive('disabledIfNoAccounts', function (Wallet) {
+    .directive('disabledIfNoAccounts', function (Web3, Wallet) {
       return {
         link: function(scope, element, attrs){
-          Wallet.webInitialized.then(
+          Web3.webInitialized.then(
             function () {
               scope.$watch(function(){
                 if(Wallet.coinbase) {
@@ -56,7 +56,7 @@
         }
       };
     })
-    .directive('showHideByFactoryStatus', function (Wallet, Connection) {
+    .directive('showHideByFactoryStatus', function (Web3, Connection) {
       return {
         link: function(scope, element, attrs){
           /*
@@ -70,7 +70,7 @@
           function(){
             var address = Object.assign({}, txDefault, JSON.parse(localStorage.getItem("userConfig"))).walletFactoryAddress;
             if (address) {
-              Wallet.web3.eth.getCode(address, function (e, factory) {
+              Web3.web3.eth.getCode(address, function (e, factory) {
                 if (!Connection.isConnected) {
                   element.css("display", "none");
                 }

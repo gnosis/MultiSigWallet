@@ -4,6 +4,7 @@
     .module('multiSigWeb')
     .controller('navCtrl', function ($scope, Wallet, Connection, Transaction, $interval, $sce, $location, $uibModal) {
       $scope.navCollapsed = true;
+      $scope.isElectron = isElectron;
 
       // If not terms acepted, prompt disclaimer
       var termsAccepted = localStorage.getItem("termsAccepted");

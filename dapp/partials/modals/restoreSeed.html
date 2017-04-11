@@ -1,0 +1,19 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Restore seed
+  </h3>
+</div>
+<div class="modal-body" id="modal-body">
+  <div class="form-group">
+    <label for="seed">Wallet seed phrase</label>
+    <input id="seed" type="text" class="form-control" ng-model="seed" required />
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-default" type="button" ng-click="ok()" ng-disabled="!seed.length > 0">
+    Ok
+  </button>
+  <button class="btn btn-danger" type="button" ng-click="cancel()">
+    Cancel
+  </button>
+</div>

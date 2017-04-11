@@ -24,6 +24,11 @@
         controller: 'notificationsSignupConfirmationCtrl',
         templateUrl: 'partials/wallets.html'
       })
+      .when("/accounts", {
+        // Only for Electron
+        controller: 'accountCtrl',
+        templateUrl: 'partials/accounts.html'
+      })
       .otherwise({
         redirectTo: '/wallets'
       });

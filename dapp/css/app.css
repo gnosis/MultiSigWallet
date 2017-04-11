@@ -98,3 +98,21 @@ textarea.json-config {
 .ui-select-bootstrap .ui-select-choices-row > span:hover {
   color: #1f7692 !important;
 }
+
+.seed {
+  background-color: #f7d30e;
+  padding: 3rem;
+  color: #1e3749;
+}
+
+.alert-fail {    
+    color: #f7d30e;
+}
+
+.top-10 {
+    margin-top: 10px;
+}
+
+.top-20 {
+    margin-top: 20px;
+}

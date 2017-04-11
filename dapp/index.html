@@ -41,6 +41,11 @@
     <script src="./bower_components/ngclipboard/dist/ngclipboard.min.js"></script>
     <script src="./bower_components/rlp/dist/rlp.js"></script>
     <script src="./bower_components/angular-ui-select/dist/select.js"></script>
+    <script src="./bower_components/eth-lightwallet/dist/lightwallet.min.js"></script>
+    <script src="./bower_components/entropy-collector/entropy-collector.js"></script>
+    <script src="./bower_components/web3-provider-engine/dist/ProviderEngine.js"></script>
+    <script src="./bower_components/hooked-web3-provider/build/hooked-web3-provider.js"></script>
+    <script src="./bower_components/file-saver/FileSaver.min.js"></script>
     <!-- Production -->
     <script src="./bower_components/ledger-wallet-provider/dist/ledgerwallet.js"></script>
     <!-- Testing -->
@@ -64,6 +69,7 @@
     <script src="./services/Connection.js"></script>
     <script src="./services/ABI.js"></script>
     <script src="./services/EthAlerts.js"></script>
+    <script src="./services/LightWallet.js"></script>
     <!-- Controllers -->
     <script src="./controllers/addTokenCtrl.js"></script>
     <script src="./controllers/navCtrl.js"></script>
@@ -98,6 +104,7 @@
     <script src="./controllers/addNotificationsCtrl.js"></script>
     <script src="./controllers/notificationsSignupCtrl.js"></script>
     <script src="./controllers/notificationsSignupConfirmationCtrl.js"></script>
+    <script src="./controllers/accountCtrl.js"></script>
 
     <script src="./expose.js"></script>
     <script>
@@ -130,6 +137,11 @@
               <li ng-class="getMenuItemClass('/transactions')">
                 <a href="#/transactions">
                   Transactions
+                </a>
+              </li>
+              <li ng-if="isElectron" ng-class="getMenuItemClass('/settings')">
+                <a href="#/accounts">
+                  Accounts
                 </a>
               </li>
               <li ng-class="getMenuItemClass('/settings')">

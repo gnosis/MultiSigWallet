@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .service('Wallet', function ($window, $http, $q, $rootScope, $uibModal, Utils, ABI, Connection) {
+    .service('Wallet', function ($window, $http, $q, $rootScope, $uibModal, Utils, ABI, Connection, LightWallet) {
 
       // Init wallet factory object
       var wallet = {
@@ -68,6 +68,10 @@
           // injected web3 provider (Metamask, mist, etc)
           else if (txDefault.wallet == "injected" && $window && $window.web3  && !isElectron) {
             wallet.web3 = new Web3($window.web3.currentProvider);
+            resolve();
+          }
+          else if (txDefault.wallet == 'lightwallet' && isElectron) {
+            wallet.web3 = LightWallet.web3;
             resolve();
           }
           else {

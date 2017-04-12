@@ -170,6 +170,68 @@
           });
         }
       };
+    })
+    .directive('providerList', function($parse) {
+      return {
+        restrict: 'E',
+        template: '<select class="form-control" name="web3-wallet" id="web3-wallet"' +
+        'ng-options="model.value for model in items track by model.name"' +
+        'ng-model="selectedItem"' +
+        'ng-change="changeEvent()"></select>',
+        scope: {          
+          defaultItem: "=",
+          changeEvent: "@",
+          selectedItem: "="
+        },
+        replace: true,
+        link: function(scope, element, attrs) {
+          // Filter items
+          scope.items = [];
+          if (isElectron) {
+            scope.items.push(
+              {
+                name: 'ledger',
+                value: 'Ledger Wallet',
+              },
+              {
+                name: 'lightwallet',
+                value: 'Light Wallet',
+              }
+            );
+          }
+          else {
+              scope.items.push(
+                {
+                  name: 'injected',
+                  value: 'Default (MetaMask, Mist, Parity ...)',
+                },
+                {
+                  name: 'ledger',
+                  value: 'Ledger Wallet',
+                }
+              );
+          }
+
+
+          if (scope.defaultItem) {
+            for(var x in scope.items) {
+              if (scope.items[x].name == scope.defaultItem) {
+                scope.selectedItem = scope.items[x];
+                break;
+              }
+            }
+          }
+          else {
+              scope.selectedItem = null;
+          }
+
+          //scope.model = scope.selectedItem;
+
+          scope.changeEvent = function() {
+            scope.$parent.config.wallet = scope.selectedItem.name;
+          }
+        }
+      };
     });
   }
 )();

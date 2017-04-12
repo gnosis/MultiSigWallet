@@ -10,6 +10,7 @@
       factory.engine = new ProviderEngine();
       factory.web3 = new Web3(factory.engine);
       factory.addresses = [];
+      $window.test = factory.web3;
 
       factory.create = function (password, seed, ctrlCallback) {
 
@@ -49,7 +50,7 @@
             // Set HookedWeb3Provider
             factory.web3.setProvider(new HookedWeb3Provider({
               getAccounts: function (cb) {
-                    cb(null, addresses)
+                    cb(null, ks.getAddresses())
               },
               approveTransaction: function(txParams, cb) {
                 cb(null, true);

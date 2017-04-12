@@ -2,20 +2,18 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("settingsCtrl", function ($scope, Wallet, Utils, $window, $uibModal, $sce) {
+    .controller("settingsCtrl", function ($scope, Wallet, Utils, Config, $window, $uibModal, $sce) {
 
       // Don't save the following config values to localStorage
       var configBlacklist = [
         "alertNodes", "ethereumNodes", "selectedEthereumNode", "walletFactoryAddresses", "selectedWalletFactoryAddress"
       ];
 
-      $scope.web3WalletEnabled = !isElectron;
-
       /**
       * Loads configuration
       */
       function loadConfig () {
-        $scope.config = Object.assign({}, txDefault, JSON.parse(localStorage.getItem("userConfig")));
+        $scope.config = Config.getConfiguration(); //Object.assign({}, txDefault, JSON.parse(localStorage.getItem("userConfig")));
         // Maps variables used by ui-select
         $scope.config.selectedEthereumNode = {
           url: $scope.config.ethereumNode
@@ -69,7 +67,9 @@
             }
         });
 
-        localStorage.setItem("userConfig", JSON.stringify(configCopy));
+        // Update configuration
+        Config.setConfiguration(JSON.stringify(configCopy));
+
         if (Wallet.web3.currentProvider.constructor.name == "HttpProvider") {
           Wallet.web3 = new Web3( new Web3.providers.HttpProvider($scope.config.ethereumNode));
           $window.web3 = Wallet.web3;
@@ -130,7 +130,8 @@
           controller: function ($uibModalInstance, $scope) {
             $scope.ok = function () {
               $uibModalInstance.close();
-              localStorage.removeItem("userConfig");
+              //localStorage.removeItem("userConfig");
+              Config.removeConfiguration();
               Object.assign(txDefault, txDefaultOrig);
             };
 
@@ -224,7 +225,8 @@
             var config = JSON.parse(localStorage.getItem("userConfig"));
             delete config.alertNode.authCode;
             delete txDefault.alertNode.authCode;
-            localStorage.setItem("userConfig", JSON.stringify(config));
+            //localStorage.setItem("userConfig", JSON.stringify(config));
+            Config.setConfiguration(JSON.stringify(config));
             $scope.config = config;
 
             // $scope.showDeleteAuthCodeBtn = false;

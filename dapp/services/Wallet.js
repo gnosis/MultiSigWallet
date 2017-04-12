@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .service('Wallet', function ($window, $http, $q, $rootScope, $uibModal, Utils, ABI, Connection, Web3Service) {
+    .service('Wallet', function ($window, $http, $q, $rootScope, $uibModal, Utils, ABI, Connection, Web3Service, LightWallet) {
 
       // Init wallet factory object
       var wallet = {
@@ -18,6 +18,75 @@
         updates: 0,
         mergedABI: []
       };
+
+      /*wallet.webInitialized = $q(function (resolve, reject) {
+        window.addEventListener('load', function () {
+          // Ledger wallet
+          if (txDefault.wallet == "ledger" && !isElectron) {
+            ledgerwallet(
+              {
+                rpcUrl: txDefault.ethereumNode,
+                onSubmit: function () {
+                  Utils.showSpinner();
+                },
+                onSigned: function () {
+                  Utils.stopSpinner();
+                }
+              }
+            ).then(
+              function(ledgerWeb3){
+                wallet.web3 = ledgerWeb3;
+                resolve();
+                // Open Info Modal
+                $uibModal.open({
+                  templateUrl: 'partials/modals/ledgerHelp.html',
+                  size: 'md',
+                  backdrop: 'static',
+                  windowClass: 'bootstrap-dialog type-info',
+                  controller: function ($scope, $uibModalInstance) {
+                    $scope.ok = function () {
+                      $uibModalInstance.close();
+                    };
+
+                    $scope.checkCoinbase = function () {
+                      if (wallet.coinbase) {
+                        $uibModalInstance.close();
+                      }
+                      else {
+                        setTimeout($scope.checkCoinbase, 1000);
+                      }
+                    };
+
+                    $scope.checkCoinbase();
+                  }
+                });
+              }
+            );
+          }
+          // injected web3 provider (Metamask, mist, etc)
+          else if (txDefault.wallet == "injected" && $window && $window.web3  && !isElectron) {
+            wallet.web3 = new Web3($window.web3.currentProvider);
+            resolve();
+          }
+          else if (txDefault.wallet == 'lightwallet' && isElectron) {
+            wallet.web3 = LightWallet.web3;
+            resolve();
+          }
+          else {
+            wallet.web3 = new Web3(new Web3.providers.HttpProvider(txDefault.ethereumNode));
+            // Check connection
+            wallet.web3.net.getListening(function(e){
+              if (e) {
+                Utils.dangerAlert("You are not connected to any node.");
+                reject();
+              }
+              else{
+                resolve();
+              }
+            });
+          }
+        });
+      });*/
 
       wallet.addMethods = function (abi) {
         abiDecoder.addABI(abi);

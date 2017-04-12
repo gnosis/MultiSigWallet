@@ -2,8 +2,20 @@
   function () {
     angular
     .module('multiSigWeb')
-    .controller('navCtrl', function ($scope, Wallet, Web3Service, Connection, Transaction, $interval, $sce, $location, $uibModal, Utils) {
+    .controller('navCtrl', function ($scope, Wallet, Web3Service, Config, Connection, Transaction, $interval, $sce, $location, $uibModal, Utils) {
       $scope.navCollapsed = true;
+      $scope.isElectron = isElectron;
+      $scope.config = Config.getConfiguration();
+
+      // Reload config when it changes
+      $scope.$watch(
+        function () {
+          return Config.updates;
+        },
+        function () {
+          $scope.config = Config.getConfiguration();
+        }
+      );
 
       // If not terms acepted, prompt disclaimer
       var termsAccepted = localStorage.getItem("termsAccepted");

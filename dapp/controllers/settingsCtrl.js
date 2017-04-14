@@ -13,7 +13,7 @@
       * Loads configuration
       */
       function loadConfig () {
-        $scope.config = Config.getConfiguration(); //Object.assign({}, txDefault, JSON.parse(localStorage.getItem("userConfig")));
+        $scope.config = Config.getUserConfiguration(); //Object.assign({}, txDefault, JSON.parse(localStorage.getItem("userConfig")));
         // Maps variables used by ui-select
         $scope.config.selectedEthereumNode = {
           url: $scope.config.ethereumNode
@@ -68,7 +68,7 @@
         });
 
         // Update configuration
-        Config.setConfiguration(JSON.stringify(configCopy));
+        Config.setConfiguration("userConfig", JSON.stringify(configCopy));
 
         if (Wallet.web3.currentProvider.constructor.name == "HttpProvider") {
           Wallet.web3 = new Web3( new Web3.providers.HttpProvider($scope.config.ethereumNode));
@@ -131,7 +131,7 @@
             $scope.ok = function () {
               $uibModalInstance.close();
               //localStorage.removeItem("userConfig");
-              Config.removeConfiguration();
+              Config.removeConfiguration("userConfig");
               Object.assign(txDefault, txDefaultOrig);
             };
 
@@ -226,7 +226,7 @@
             delete config.alertNode.authCode;
             delete txDefault.alertNode.authCode;
             //localStorage.setItem("userConfig", JSON.stringify(config));
-            Config.setConfiguration(JSON.stringify(config));
+            Config.setConfiguration("userConfig", JSON.stringify(config));
             $scope.config = config;
 
             // $scope.showDeleteAuthCodeBtn = false;

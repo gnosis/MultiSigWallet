@@ -71,6 +71,7 @@
             resolve();
           }
           else if (txDefault.wallet == 'lightwallet' && isElectron) {
+            LightWallet.setup();
             wallet.web3 = LightWallet.web3;
             resolve();
           }

@@ -1,52 +1,54 @@
 <div class="panel panel-default">
   <div class="panel-heading">
-      Lightwallet
-  </div>
-
-  <div ng-if="!hasKeystore" class="panel-body text-center">
-      <p>Use Gnosis LightWallet (it doesn’t require any installation process)</p>
-      <div>
-        <input type="button" class="btn btn-primary" value="Create" ng-click="createSeed()" />
-        <input type="button" class="btn btn-primary" value="Restore from seed" ng-model="account.seed" ng-click="restoreFromSeed()" />
-        <input type="button" class="btn btn-primary" value="Upload" onclick="document.querySelector('.keystore-file-upload').click()" />
-        <input class="keystore-file-upload" type="file" onchange="angular.element(this).scope().uploadKeystore(this)" style="display:none;">
-      </div>
-  </div>
-  <div ng-if="hasSeed" class="panel-body text-center">
-      <p>Your seed is:</p>
-      <div class="seed">{{account.seed}}</div>
-
-      <p class="top-20">Please enter a password to securely encrypt your wallet.</p>
-
-      <form name="password_form" novalidate ng-submit="createWallet()">
-        <div>
-          <input type="password" ng-model="account.password" ng-minlength="8"
-            name="password" required="" placeholder="Password" class="form-control">
-        </div>
-        <div ng-show="password_form.$submitted || password_form.password.$touched">
-          <div class="alert-fail" ng-show="password_form.password.$error.required">A password must be entered.</div>
-          <div class="alert-fail" ng-show="password_form.password.$error.minlength">A password should contain at least 8 characters.</div>
-        </div>
-
-        <div class="top-10">
-          <input type="password" ng-model="account.password_repeat" match="account.password"
-            name="password_repeat" required="" placeholder="Repeat password" class="form-control">
-        </div>
-        <div ng-show="password_form.$submitted || password_form.password_repeat.$touched">
-          <div class="alert-fail" ng-show="password_form.password_repeat.$error.required">Enter the same password again.</div>
-          <div class="alert-fail" ng-show="password_form.password_repeat.$error.mismatch">Passwords do not match.</div>
-        </div>
-        <div>
-          <button type="submit" class="btn btn-success top-10" ng-disabled="password_form.$invalid">Create Wallet</button>
-        </div>
-      </form>
-  </div>
-  <div ng-if="hasKeystore" class="panel-body text-center">
-    <input type="button" class="btn btn-primary" value="Download" ng-click="downloadKeystore()" />
-    <div ng-repeat="address in account.addresses">
-      <h4>{{address}}</h4>
+    <div class="pull-right">
+      <button type="button" class="btn btn-default" ng-click="createWallet()">
+        Add
+      </button>
+      <button type="button" class="btn btn-default" onclick="document.querySelector('.keystore-file-upload').click()">
+        Import
+      </button>
+      <input class="keystore-file-upload" type="file" onchange="angular.element(this).scope().uploadKeystore(this)" style="display:none;">
+      <button type="button" class="btn btn-default" ng-click="downloadKeystore()" ng-show="hasKeystore">
+        Download
+      </button>
     </div>
-    {{account}}
+    <h4>
+      Accounts
+    </h4>
   </div>
-
+  <table class="table table-hover table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>
+          Name
+        </th>
+        <th>
+          Address
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="account in account.addresses|objectToArray|limitTo:itemsPerPage:itemsPerPage*(currentPage-1) track by $index">
+        <td>
+          <a ng-href="#/wallet/{{account.address}}" ng-bind-html="account.name | dashIfEmpty"></a>
+          <div class="pull-right form-inline">
+            <button type="button" class="btn btn-default btn-sm" ng-click="editAccount(account)">
+              Edit
+            </button>
+            <button type="button" class="btn btn-danger btn-sm" ng-click="removeAccount(account)">
+              Remove
+            </button>
+          </div>
+        </td>
+        <td>
+          <div uib-popover="{{account.address}}" popover-trigger="'mouseenter'">
+            {{::account.address|address}}
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <!--<div ng-hide="totalItems" class="panel-body text-center">
+    No wallets. Add wallet <a href="" ng-click="newWalletSelect()">now</a>.
+  </div>-->
 </div>

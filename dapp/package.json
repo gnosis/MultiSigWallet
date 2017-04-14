@@ -29,12 +29,14 @@
   "author": "denis.granha@consensys.net",
   "license": "ISC",
   "dependencies": {
-    "grunt": "^1.0.0",
     "bower": "^1.8.0",
+    "eth-sig-util": "^1.2.1",
     "ethereumjs-testrpc": "git+https://github.com/denisgranha/testrpc.git",
+    "grunt": "^1.0.0",
     "grunt-angular-templates": "^1.1.0",
     "grunt-http-server": "^2.0.0",
-    "http-server": "^0.9.0"
+    "http-server": "^0.9.0",
+    "json-rpc-error": "^2.0.0"
   },
   "devDependencies": {
     "asar": "^0.13.0",

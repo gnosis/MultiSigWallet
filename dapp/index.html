@@ -23,6 +23,8 @@
       if (isElectron) {
         if (typeof module === 'object') {window.module = module; module = undefined;}
         $ = require('./bower_components/jquery/dist/jquery.min.js');
+        var HookedWeb3Provider = require('./bower_components/web3-provider-engine/subproviders/hooked-wallet.js');
+        var RpcSubprovider = require('./bower_components/web3-provider-engine/subproviders/rpc.js');
       }
     </script>
     <script src="./bower_components/angular/angular.min.js"></script>
@@ -44,7 +46,6 @@
     <script src="./bower_components/eth-lightwallet/dist/lightwallet.min.js"></script>
     <script src="./bower_components/entropy-collector/entropy-collector.js"></script>
     <script src="./bower_components/web3-provider-engine/dist/ProviderEngine.js"></script>
-    <script src="./bower_components/hooked-web3-provider/build/hooked-web3-provider.js"></script>
     <script src="./bower_components/file-saver/FileSaver.min.js"></script>
     <!-- Production -->
     <script src="./bower_components/ledger-wallet-provider/dist/ledgerwallet.js"></script>
@@ -135,14 +136,14 @@
                   Wallets
                 </a>
               </li>
-              <li ng-class="getMenuItemClass('/transactions')">
-                <a href="#/transactions">
-                  Transactions
-                </a>
-              </li>
               <li ng-if="isElectron && config.wallet=='lightwallet'" ng-class="getMenuItemClass('/accounts')">
                 <a href="#/accounts">
                   Accounts
+                </a>
+              </li>
+              <li ng-class="getMenuItemClass('/transactions')">
+                <a href="#/transactions">
+                  Transactions
                 </a>
               </li>
               <li ng-class="getMenuItemClass('/settings')">

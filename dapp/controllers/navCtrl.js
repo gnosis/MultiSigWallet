@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .controller('navCtrl', function ($scope, Wallet, Connection, Transaction, Config, $interval, $sce, $location, $uibModal) {
+    .controller('navCtrl', function ($scope, Wallet, Connection, Transaction, Config, LightWallet, $interval, $sce, $location, $uibModal) {
       $scope.navCollapsed = true;
       $scope.isElectron = isElectron;
       $scope.config = Config.getConfiguration();
@@ -13,7 +13,7 @@
           return Config.updates;
         },
         function () {
-          $scope.config = Config.getConfiguration();
+          $scope.config = Config.getUserConfiguration();
         }
       );
 
@@ -51,7 +51,19 @@
 
         return Wallet.initParams().then(function () {
           $scope.loggedIn = Wallet.coinbase;
-          $scope.accounts = Wallet.accounts;
+          if (isElectron) {
+            var accounts = Config.getConfiguration('accounts');
+            if (accounts) {
+              accounts = accounts.map(function(account) {
+                return account.address;
+              });
+            }
+            $scope.accounts = accounts;
+          }
+          else {
+            $scope.accounts = Wallet.accounts;
+          }
+
           $scope.coinbase = Wallet.coinbase;
           $scope.nonce = Wallet.txParams.nonce;
           $scope.balance = Wallet.balance;
@@ -73,6 +85,9 @@
 
       Wallet.webInitialized.then(
         function () {
+          if (isElectron) {
+            LightWallet.setup();
+          }
           $scope.interval = $interval($scope.updateInfo, 5000);
           // $scope.updateInfo();
 

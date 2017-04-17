@@ -35,7 +35,7 @@
                     };
 
                     $scope.checkCoinbase = function () {
-                      if (wallet.coinbase) {
+                      if (wallet && wallet.coinbase) {
                         $uibModalInstance.close();
                       }
                       else {

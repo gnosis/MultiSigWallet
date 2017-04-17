@@ -153,30 +153,20 @@
           else {
             // Create transaction object
             var txInfo = {
+              from: Wallet.coinbase,
               to: txObject.to,
               value: txObject.value,
               gasPrice: EthJS.Util.intToHex(Wallet.txParams.gasPrice),
-              gasLimit: EthJS.Util.intToHex(Wallet.txParams.gasLimit),
+              gas: EthJS.Util.intToHex(Wallet.txParams.gasLimit),
               nonce: EthJS.Util.intToHex(nonce)
             };
-            var tx = new EthJS.Tx(txInfo);
 
-            // Get transaction hash
-            var txHash = EthJS.Util.bufferToHex(tx.hash(false));
-
-            // Sign transaction hash
-            Web3Service.web3.eth.sign(Wallet.coinbase, txHash, function (e, sig) {
+            Web3Service.web3.eth.signTransaction(txInfo, function(e, signed) {
               if (e) {
                 cb(e);
               }
-              else {
-                var signature = EthJS.Util.fromRpcSig(sig);
-                tx.v = EthJS.Util.intToHex(signature.v);
-                tx.r = EthJS.Util.bufferToHex(signature.r);
-                tx.s = EthJS.Util.bufferToHex(signature.s);
-
-                // Return raw transaction as hex string
-                cb(null, EthJS.Util.bufferToHex(tx.serialize()));
+              else{
+                cb(e, signed.raw);
               }
             });
           }

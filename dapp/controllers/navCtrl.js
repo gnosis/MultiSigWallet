@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .controller('navCtrl', function ($scope, Wallet, Web3Service, Connection, Transaction, $interval, $sce, $location, $uibModal) {
+    .controller('navCtrl', function ($scope, Wallet, Web3Service, Connection, Transaction, $interval, $sce, $location, $uibModal, Utils) {
       $scope.navCollapsed = true;
 
       // If not terms acepted, prompt disclaimer
@@ -43,6 +43,16 @@
           $scope.coinbase = Wallet.coinbase;
           $scope.nonce = Wallet.txParams.nonce;
           $scope.balance = Wallet.balance;
+        }, function (error) {
+          if (txDefault.wallet == "ledger") {
+            $scope.loggedIn = true;
+            $scope.accounts = Wallet.accounts;
+            $scope.coinbase = Wallet.coinbase;
+            $scope.nonce = Wallet.txParams.nonce;
+          }
+          else {
+            Utils.dangerAlert(error);
+          }
         });
       };
 

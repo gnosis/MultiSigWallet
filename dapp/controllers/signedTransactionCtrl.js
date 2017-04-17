@@ -26,7 +26,7 @@
                   }
                 });
               }
-              else if( receipt.decodedLogs.length && receipt.decodedLogs[0] && receipt.decodedLogs[0].events && receipt.decodedLogs[0].events[1].name == "instantiation"){
+              else if( receipt.decodedLogs.length && receipt.decodedLogs[0] && receipt.decodedLogs[0].events && receipt.decodedLogs[0].events.length > 1 && receipt.decodedLogs[0].events[1].name == "instantiation"){
                 var walletAddress = receipt.decodedLogs[0].events[1].value;
                 Utils.success("Wallet deployed at address:" + walletAddress);
                 Wallet.updateWallet({name: "Factory wallet", address: walletAddress, owners: {}});

@@ -29,7 +29,6 @@
       // Concat cached abis
       var cachedABIs = ABI.get();
       Object.keys(cachedABIs).map(function(key) {
-        //console.log(cachedABIs[key])
         if (cachedABIs[key].abi) {
           wallet.mergedABI = wallet.mergedABI.concat(cachedABIs[key].abi);
         }
@@ -116,35 +115,23 @@
       wallet.offlineTransaction = function (address, data, nonce, cb) {
         // Create transaction object
         var txInfo = {
+          from: wallet.coinbase,
           to: address,
           value: EthJS.Util.intToHex(0),
           gasPrice: EthJS.Util.intToHex(wallet.txParams.gasPrice),
-          gasLimit: EthJS.Util.intToHex(wallet.txParams.gasLimit),
+          gas: EthJS.Util.intToHex(wallet.txParams.gasLimit),
           nonce: nonce?nonce:EthJS.Util.intToHex(wallet.txParams.nonce),
           data: data
         };
 
-        var tx = new EthJS.Tx(txInfo);
-
-        // Get transaction hash
-        var txId = EthJS.Util.bufferToHex(tx.hash(false));
-
-        // Sign transaction hash
-        Web3Service.web3.eth.sign(wallet.coinbase, txId, function (e, sig) {
+        Web3Service.web3.eth.signTransaction(txInfo, function(e, signed) {
           if (e) {
             cb(e);
           }
-          else {
-            var signature = EthJS.Util.fromRpcSig(sig);
-            tx.v = EthJS.Util.intToHex(signature.v);
-            tx.r = EthJS.Util.bufferToHex(signature.r);
-            tx.s = EthJS.Util.bufferToHex(signature.s);
-
-            // Return raw transaction as hex string
-            cb(null, EthJS.Util.bufferToHex(tx.serialize()));
+          else{
+            cb(e, signed.raw);
           }
         });
-
       };
 
       /**
@@ -175,7 +162,7 @@
       * Get ethereum accounts and update account list.
       */
       wallet.updateAccounts = function (cb) {
-        return Web3Service.web3.eth.getAccounts.request(
+        return Web3Service.web3.eth.getAccounts(
           function (e, accounts) {
             if (e) {
               cb(e);
@@ -263,18 +250,43 @@
 
       // Init txParams
       wallet.initParams = function () {
-        return $q(function (resolve) {
-            var batchAccount = Web3Service.web3.createBatch();
+        return $q(function (resolve, reject) {
             var batch = Web3Service.web3.createBatch();
-            batchAccount.add(
-              wallet
-              .updateAccounts(
-                function (e, accounts) {
-                  var promises = $q.all(
-                    [
-                      $q(function (resolve, reject) {
+            wallet
+            .updateAccounts(
+              function (e, accounts) {
+                var promises = $q.all(
+                  [
+                    $q(function (resolve, reject) {
+                      var request = wallet.updateGasLimit(function (e) {
+                        if (e) {
+                          reject(e);
+                        }
+                        else {
+                          resolve();
+                        }
+                      });
+                      if (request) {
+                        batch.add(request);
+                      }
+                    }),
+                    $q(function (resolve, reject) {
+                      var request = wallet.updateGasPrice(function (e) {
+                        if (e) {
+                          reject(e);
+                        }
+                        else {
+                          resolve();
+                        }
+                      });
+                      if (request) {
+                        batch.add(request);
+                      }
+                    }),
+                    $q(function (resolve, reject) {
+                      if (wallet.coinbase) {
                         batch.add(
-                          wallet.updateGasLimit(function (e) {
+                          wallet.updateNonce(wallet.coinbase, function (e) {
                             if (e) {
                               reject(e);
                             }
@@ -283,67 +295,39 @@
                             }
                           })
                         );
-                      }),
-                      $q(function (resolve, reject) {
+                      }
+                      else {
+                        resolve();
+                      }
+                    }),
+                    $q(function (resolve, reject) {
+                      if (wallet.coinbase) {
                         batch.add(
-                          wallet.updateGasPrice(function (e) {
+                          wallet.getBalance(wallet.coinbase, function (e, balance) {
                             if (e) {
                               reject(e);
                             }
                             else {
+                              wallet.balance = balance;
                               resolve();
                             }
                           })
                         );
-                      }),
-                      $q(function (resolve, reject) {
-                        if (wallet.coinbase) {
-                          batch.add(
-                            wallet.updateNonce(wallet.coinbase, function (e) {
-                              if (e) {
-                                reject(e);
-                              }
-                              else {
-                                resolve();
-                              }
-                            })
-                          );
-                        }
-                        else {
-                          resolve();
-                        }
-                      }),
-                      $q(function (resolve, reject) {
-                        if (wallet.coinbase) {
-                          batch.add(
-                            wallet.getBalance(wallet.coinbase, function (e, balance) {
-                              if (e) {
-                                reject(e);
-                              }
-                              else {
-                                wallet.balance = balance;
-                                resolve();
-                              }
-                            })
-                          );
-                        }
-                        else {
-                          resolve();
-                        }
-                      })
-                    ]
-                  ).then(function () {
-                    resolve();
-                  });
+                      }
+                      else {
+                        resolve();
+                      }
+                    })
+                  ]
+                ).then(function () {
+                  resolve();
+                }, reject);
 
-                  batch.execute();
-                  return promises;
-                }
+                batch.execute();
+                return promises;
+              }
 
-              )
             );
-            batchAccount.execute();
-
           }
         );
 

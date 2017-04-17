@@ -700,7 +700,7 @@
       /**
       * add owner to wallet
       */
-      wallet.addOwner = function (address, owner, cb) {
+      wallet.addOwner = function (address, owner, options, cb) {
         var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         var data = instance.addOwner.getData(owner.address);
 
@@ -719,6 +719,7 @@
                 count,
                 wallet.txDefaults()
               ],
+              options,
               cb
             );
           }
@@ -754,7 +755,7 @@
       /**
       * Remove owner
       */
-      wallet.removeOwner = function (address, owner, cb) {
+      wallet.removeOwner = function (address, owner, options, cb) {
         var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         var data = instance.removeOwner.getData(owner.address);
         // Get nonce
@@ -772,6 +773,7 @@
                 count,
                 wallet.txDefaults()
               ],
+              options,
               cb
             );
           }
@@ -807,7 +809,7 @@
       /**
       * Replace owner
       **/
-      wallet.replaceOwner = function (address, owner, newOwner, cb) {
+      wallet.replaceOwner = function (address, owner, newOwner, options, cb) {
         var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         var data = instance.replaceOwner.getData(owner, newOwner);
 
@@ -826,6 +828,7 @@
                 count,
                 wallet.txDefaults()
               ],
+              options,
               cb
             );
           }
@@ -865,7 +868,7 @@
       /**
       * Update confirmations
       */
-      wallet.updateRequired = function (address, required, cb) {
+      wallet.updateRequired = function (address, required, options, cb) {
         var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         var data = instance.changeRequirement.getData(required);
 
@@ -884,6 +887,7 @@
                 count,
                 wallet.txDefaults()
               ],
+              options,
               cb
             );
           }
@@ -1007,7 +1011,7 @@
       /**
       * Change daily limit
       **/
-      wallet.updateLimit = function (address, limit, cb) {
+      wallet.updateLimit = function (address, limit, options, cb) {
         var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         var data = instance.changeDailyLimit.getData(
           limit,
@@ -1028,6 +1032,7 @@
                 count,
                 wallet.txDefaults()
               ],
+              options,
               cb
             );
           }
@@ -1067,7 +1072,7 @@
       /**
       * Confirm transaction by another wallet owner
       */
-      wallet.confirmTransaction = function (address, txId, cb) {
+      wallet.confirmTransaction = function (address, txId, options, cb) {
         var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         Web3Service.sendTransaction(
           instance.confirmTransaction,
@@ -1099,7 +1104,7 @@
       /**
       * Execute multisig transaction, must be already signed by required owners
       */
-      wallet.executeTransaction = function (address, txId, cb) {
+      wallet.executeTransaction = function (address, txId, options, cb) {
         var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         Web3Service.sendTransaction(
           instance.executeTransaction,
@@ -1107,6 +1112,7 @@
             txId,
             wallet.txDefaults()
           ],
+          options,
           cb
         );
       };
@@ -1162,7 +1168,7 @@
       /**
       * Revoke transaction confirmation
       */
-      wallet.revokeConfirmation = function (address, txId, cb) {
+      wallet.revokeConfirmation = function (address, txId, options, cb) {
         var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         Web3Service.sendTransaction(
           instance.revokeConfirmation,
@@ -1170,6 +1176,7 @@
             txId,
             wallet.txDefaults()
           ],
+          options,
           cb
         );
       };
@@ -1193,7 +1200,7 @@
       /**
       * Submit transaction
       **/
-      wallet.submitTransaction = function (address, tx, abi, method, params, cb) {
+      wallet.submitTransaction = function (address, tx, abi, method, params, options, cb) {
         var data = '0x0';
         if (abi && method) {
           var instance = Web3Service.web3.eth.contract(abi).at(tx.to);
@@ -1215,6 +1222,7 @@
                 count,
                 wallet.txDefaults(),
               ],
+              options,
               cb
             );
           }

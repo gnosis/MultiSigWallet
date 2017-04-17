@@ -99,22 +99,47 @@
       * Send transaction, signed by wallet service provider
       */
       factory.send = function (tx, cb) {
-        Web3Service.web3.eth.sendTransaction(tx, function (e, txHash) {
-          if (e) {
-            cb(e);
-          }
-          else {
-            factory.add(
-              {
-                txHash: txHash,
-                callback: function (receipt) {
-                  cb(null, receipt);
+        Web3Service.sendTransaction(
+          Web3Service.web3.eth,
+          [
+            tx
+          ],
+          { onlySimulate: false },
+          function (e, txHash) {
+            if (e) {
+              cb(e);
+            }
+            else {
+              factory.add(
+                {
+                  txHash: txHash,
+                  callback: function (receipt) {
+                    cb(null, receipt);
+                  }
                 }
-              }
-            );
-            cb(null, txHash);
+              );
+              cb(null, txHash);
+            }
           }
-        });
+        );
+      };
+
+      factory.simulate = function (tx, cb) {
+        Web3Service.sendTransaction(
+          Web3Service.web3.eth,
+          [
+            tx
+          ],
+          { onlySimulate: true },
+          function (e, txHash) {
+            if (e) {
+              cb(e);
+            }
+            else {
+              cb(null, txHash);
+            }
+          }
+        );
       };
 
       /**
@@ -184,6 +209,7 @@
           Web3Service.sendTransaction(
             instance[method],
             params,
+            { onlySimulate: false },
             function (e, txHash) {
               if (e) {
                 cb(e);
@@ -199,6 +225,29 @@
                     }
                   );
                   cb(null, txHash);
+              }
+          });
+        }
+        catch (e) {
+          cb(e);
+        }
+      };
+
+      factory.simulateMethod = function (tx, abi, method, params, cb) {
+        // Instance contract
+        var instance = Web3Service.web3.eth.contract(abi).at(tx.to);
+
+        try {
+          Web3Service.sendTransaction(
+            instance[method],
+            params,
+            { onlySimulate: true },
+            function (e, txHash) {
+              if (e) {
+                cb(e);
+              }
+              else {
+                cb(null, txHash);
               }
           });
         }

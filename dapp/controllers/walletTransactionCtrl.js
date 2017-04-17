@@ -71,6 +71,7 @@
           $scope.abiArray,
           $scope.method && $scope.method.index?$scope.method.name:null,
           params,
+          {onlySimulate: false},
           function (e, tx) {
             if (e) {
               Utils.dangerAlert(e);
@@ -93,6 +94,43 @@
                 }
               );
               $uibModalInstance.close();
+            }
+          }
+        );
+      };
+
+      $scope.simulate = function () {
+        var tx = {};
+        Object.assign(tx, $scope.tx);
+        var params = [];
+        Object.assign(params, $scope.params);
+        if ($scope.method) {
+          params.map(function(param, index) {
+            // Parse if array param
+            if ($scope.method.inputs && $scope.method.inputs[index].type.indexOf("[]") !== -1) {
+              try {
+                params[index] = JSON.parse($scope.params[index]);
+              }
+              catch (e) {
+                Utils.dangerAlert(e);
+              }
+            }
+          });
+        }
+        tx.value = new Web3().toBigNumber($scope.tx.value).mul('1e18');
+        Wallet.submitTransaction(
+          $scope.wallet.address,
+          tx,
+          $scope.abiArray,
+          $scope.method && $scope.method.index?$scope.method.name:null,
+          params,
+          {onlySimulate: true},
+          function (e, tx) {
+            if (e) {
+              Utils.dangerAlert(e);
+            }
+            else {
+              Utils.simulatedTransaction(tx);
             }
           }
         );

@@ -26,6 +26,7 @@
           null,
           null,
           null,
+          {onlySimulate: false},
           function (e, tx) {
             if (e) {
               Utils.dangerAlert(e);
@@ -58,7 +59,7 @@
           null,
           null,
           function (e, tx) {
-            if (e) {              
+            if (e) {
               Utils.dangerAlert(e);
             }
             else{

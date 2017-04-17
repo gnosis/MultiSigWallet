@@ -43,9 +43,18 @@
         );
       };
 
-      factory.transfer = function (tokenAddress, to, value, cb) {
+      factory.transfer = function (tokenAddress, to, value, options, cb) {
         var instance = Web3Service.web3.eth.contract(factory.abi).at(tokenAddress);
-        instance.transfer(to, value, Wallet.txDefaults(), cb);
+        Web3Service.sendTransaction(
+          instance.transfer,
+          [
+            to,
+            value,
+            Wallet.txDefaults()
+          ],
+          options,
+          cb
+        );
       };
 
       factory.transferOffline = function (tokenAddress, to, value, cb) {
@@ -63,7 +72,7 @@
         });
       };
 
-      factory.withdraw = function (tokenAddress, wallet, to, value, cb) {
+      factory.withdraw = function (tokenAddress, wallet, to, value, options, cb) {
         var walletInstance = Web3Service.web3.eth.contract(Wallet.json.multiSigDailyLimit.abi).at(wallet);
         var tokenInstance = Web3Service.web3.eth.contract(factory.abi).at(tokenAddress);
         var data = tokenInstance.transfer.getData(
@@ -76,7 +85,7 @@
             cb(e);
           }
           else {
-            walletInstance.submitTransaction(tokenAddress, "0x0", data, count, Wallet.txDefaults(), cb);
+            walletInstance.submitTransaction(tokenAddress, "0x0", data, count, Wallet.txDefaults(), options, cb);
           }
         }).call();
       };

@@ -70,13 +70,13 @@
         });
       });
 
-      factory.sendTransaction = function (method, params, cb) {
+      factory.sendTransaction = function (method, params, options, cb) {
         // Simulate first
         function sendIfSuccess(e, result) {
           if (e) {
             cb(e);
           }
-          else {            
+          else {
             if (result) {
               method.sendTransaction.apply(method.sendTransaction, params.concat(cb));
             }
@@ -86,8 +86,14 @@
           }
         }
 
-        var args = params.concat(sendIfSuccess);
-        method.call.apply(method.call, args);
+        if ( options && options.onlySimulate) {
+          var args = params.concat(cb);
+          method.call.apply(method.call, args);
+        }
+        else {
+          var args = params.concat(sendIfSuccess);
+          method.call.apply(method.call, args);
+        }
       };
 
       return factory;

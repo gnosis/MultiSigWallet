@@ -75,6 +75,52 @@
         }
       };
 
+      $scope.simulate = function () {
+        var tx = {};
+        Object.assign(tx, $scope.tx);
+        var params = [];
+        Object.assign(params, $scope.params);
+        if ($scope.method) {
+          params.map(function(param, index) {
+            // Parse if array param
+            if ($scope.method.inputs && $scope.method.inputs[index].type.indexOf("[]") !== -1) {
+              try {
+                params[index] = JSON.parse($scope.params[index]);
+              }
+              catch (e) {
+                Utils.dangerAlert(e);
+              }
+            }
+          });
+        }
+        tx.value = new Web3().toBigNumber($scope.tx.value).mul('1e18');
+        // if method, use contract instance method
+        if ($scope.method && $scope.method.index !== undefined && $scope.method.index !== "") {
+          Transaction.simulateMethod(tx, $scope.abiArray, $scope.method.name, params, function (e, tx) {
+            if (e) {
+              Utils.dangerAlert(e);
+            }
+            else {
+              Utils.simulatedTransaction(tx);
+            }
+          });
+        }
+        else {
+          try {
+            Transaction.simulate(tx, function (e, tx) {
+              if (e) {
+                Utils.dangerAlert(e);
+              }
+              else {
+                Utils.simulatedTransaction(tx);
+              }
+            });
+          } catch (error) {
+            Utils.dangerAlert(error);
+          }
+        }
+      };
+
       $scope.signOff = function () {
         $scope.tx.value = "0x" + new Web3().toBigNumber($scope.tx.value).mul('1e18').toString(16);
         var params = [];

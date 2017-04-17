@@ -293,7 +293,7 @@ TO BE REVIEWED
     });
 
 
-    walletService.updateLimit(walletAddress, new Web3().toBigNumber(2).mul('1e18'), function (e, r){ //.mul('1e18')
+    walletService.updateLimit(walletAddress, new Web3().toBigNumber(2).mul('1e18'), {}, function (e, r){ //.mul('1e18')
       console.log("##############");
       if(e){console.log(e.message);}
 
@@ -309,6 +309,7 @@ TO BE REVIEWED
         null,
         null,
         null,
+        {},
         function (e, tx) {
           console.log("####### Withdraw1 #######");
           expect(e).toBe(null);
@@ -329,6 +330,7 @@ TO BE REVIEWED
                 null,
                 null,
                 null,
+                {},
                 function (e, tx) {
                   console.log("####### Withdraw2 #######");
 
@@ -411,7 +413,7 @@ TO BE REVIEWED
 
           var walletAddress = r.address;
 
-          walletService.addOwner(walletAddress, {address: accounts[1]},
+          walletService.addOwner(walletAddress, {address: accounts[1]}, {},
             function (e1, tx) {
               console.log('add owner');
               if(e1){console.log(e1);}
@@ -444,7 +446,7 @@ TO BE REVIEWED
 
           var walletAddress = r.address;
 
-          walletService.removeOwner(walletAddress, {'address' : accounts[1]},
+          walletService.removeOwner(walletAddress, {'address' : accounts[1]}, {},
             function (e1, tx) {
               console.log('remove owner');
               expect(e1).toBe(null);
@@ -470,7 +472,7 @@ TO BE REVIEWED
         expect(e).toBe(null);
         if (r.address) {
           var walletAddress = r.address;
-          walletService.replaceOwner(walletAddress, accounts[0], accounts[1],
+          walletService.replaceOwner(walletAddress, accounts[0], accounts[1], {},
             function (e1, tx) {
               expect(e1).toBe(null);
               var batch = web3.createBatch();

@@ -88,9 +88,9 @@
     .filter('ether', function () {
       return function (num) {
         if (num) {
-          var casted = new Web3().toBigNumber(num).div('1e18');
+          var casted = new Web3().toBigNumber(num);
           if (casted.gt(0)) {
-            return casted.toPrecision(Math.floor(Math.log(casted.toNumber())/Math.log(10) + 3)).toString(10) + " ETH";
+            return casted.div('1e18').toPrecision(Math.floor(Math.log(casted.toNumber())/Math.log(10) + 3)).toString(10) + " ETH";
           }
           else {
             return "0.00 ETH";

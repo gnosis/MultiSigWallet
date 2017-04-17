@@ -153,7 +153,7 @@
           else {
             // Create transaction object
             var txInfo = {
-              from: Wallet.coinbase,
+              from: Web3Service.coinbase,
               to: txObject.to,
               value: txObject.value,
               gasPrice: EthJS.Util.intToHex(Wallet.txParams.gasPrice),

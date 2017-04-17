@@ -30,7 +30,7 @@ var txDefault = {
       url : "https://kovan.infura.io:443"
     },
     {
-      url : "http://localhost"
+      url : "http://localhost:8545"
     }
   ],
   alertNodes: [

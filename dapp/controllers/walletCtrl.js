@@ -9,7 +9,7 @@
         function () {
             $scope.interval = $interval($scope.updateParams, 10000);
             $scope.wallets = Wallet.wallets;
-            if ( Wallet.coinbase && (!$scope.wallets || !Object.keys($scope.wallets).length && !$rootScope.alreadyLogged)){
+            if ( Web3Service.coinbase && (!$scope.wallets || !Object.keys($scope.wallets).length && !$rootScope.alreadyLogged)){
               $scope.termsInterval = $interval($scope.checkTerms, 500);
             }
             $scope.updateParams();
@@ -133,13 +133,13 @@
 
 
       $scope.newWalletSelect = function () {
-        if (Wallet.coinbase) {
+        if (Web3Service.coinbase) {
           $uibModal.open({
             templateUrl: 'partials/modals/selectNewWallet.html',
             size: 'sm',
             controller: function ($scope, $uibModalInstance) {
-              if (Wallet.coinbase) {
-                $scope.coinbase = Wallet.coinbase;
+              if (Web3Service.coinbase) {
+                $scope.coinbase = Web3Service.coinbase;
                 $scope.walletOption = "create";
               }
               else {

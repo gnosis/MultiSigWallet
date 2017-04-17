@@ -165,7 +165,7 @@
               batch.add(
                 Token.balanceOf(
                   token,
-                  Wallet.coinbase,
+                  Web3Service.coinbase,
                   function (e, balance) {
                     $scope.userTokens[token].balance = balance;
                     Wallet.triggerUpdates();
@@ -350,7 +350,7 @@
                 Wallet.getConfirmations($scope.wallet.address, tx, function (e, confirmations) {
                   $scope.$apply(function () {
                     $scope.transactions[tx].confirmations = confirmations;
-                    if (confirmations.indexOf(Wallet.coinbase) != -1) {
+                    if (confirmations.indexOf(Web3Service.coinbase) != -1) {
                       $scope.transactions[tx].confirmed=true;
                     }
                     else {

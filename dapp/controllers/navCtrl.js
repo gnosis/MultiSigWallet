@@ -39,14 +39,14 @@
 
         return Wallet.initParams().then(function () {
           $scope.loggedIn = Web3Service.coinbase;
-          $scope.accounts = Wallet.accounts;
+          $scope.accounts = Web3Service.accounts;
           $scope.coinbase = Web3Service.coinbase;
           $scope.nonce = Wallet.txParams.nonce;
           $scope.balance = Wallet.balance;
         }, function (error) {
           if (txDefault.wallet == "ledger") {
             $scope.loggedIn = true;
-            $scope.accounts = Wallet.accounts;
+            $scope.accounts = Web3Service.accounts;
             $scope.coinbase = Web3Service.coinbase;
             $scope.nonce = Wallet.txParams.nonce;
           }
@@ -106,7 +106,7 @@
       });
 
       $scope.selectAccount = function (account) {
-        Wallet.selectAccount(account);
+        Web3Service.selectAccount(account);
         $scope.updateInfo();
       };
 

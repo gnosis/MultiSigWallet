@@ -2,11 +2,11 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("sendTransactionCtrl", function ($scope, Wallet, Utils, Transaction, $uibModalInstance, ABI) {
+    .controller("sendTransactionCtrl", function ($scope, Wallet, Utils, Transaction, $uibModalInstance, ABI, Web3Service) {
       $scope.methods = [];
       $scope.tx = {
         value: 0,
-        from: Wallet.coinbase
+        from: Web3Service.coinbase
       };
       $scope.params = [];
 

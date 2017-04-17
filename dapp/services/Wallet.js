@@ -1028,6 +1028,7 @@
             txId,
             wallet.txDefaults()
           ],
+          options,
           cb
         );
       };

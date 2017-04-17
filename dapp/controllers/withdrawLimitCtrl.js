@@ -6,12 +6,12 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("withdrawLimitCtrl", function ($scope, Wallet, Transaction, Utils, wallet, $uibModalInstance) {
+    .controller("withdrawLimitCtrl", function ($scope, Wallet, Transaction, Utils, wallet, $uibModalInstance, Web3Service) {
 
       $scope.wallet = wallet;
       $scope.tx = {
         value: 0,
-        to: Wallet.coinbase,
+        to: Web3Service.coinbase,
         data: '0x0'
       };
 

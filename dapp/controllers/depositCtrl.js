@@ -2,18 +2,18 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("depositCtrl", function ($scope, Transaction, $routeParams, $uibModalInstance, Wallet, Utils, wallet) {
+    .controller("depositCtrl", function ($scope, Transaction, $routeParams, $uibModalInstance, Wallet, Utils, wallet, Web3Service) {
       $scope.wallet = wallet;
       $scope.amount = 10;
       $scope.deposit = function () {
         Transaction.send(
           {
             to: $scope.wallet.address,
-            from: Wallet.coinbase,
+            from: Web3Service.coinbase,
             value: new EthJS.BN(new Web3().toWei($scope.amount))
           },
           function (e, tx) {
-            if (e) {                          
+            if (e) {
               Utils.dangerAlert(e);
             }
             else if (tx.blockNumber) {

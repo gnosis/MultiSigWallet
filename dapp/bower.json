@@ -41,7 +41,7 @@
     "abi-decoder": "1.0.7",
     "SpinKit": "spinkit#^1.2.5",
     "angular-ui-select": "https://github.com/giacomolicari/ui-select.git#v0.19.7",
-    "ledger-wallet-provider": "1.0.14"
+    "ledger-wallet-provider": "1.0.15"
   },
   "resolutions": {
     "angular": "~1.5.8"

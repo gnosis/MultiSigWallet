@@ -14,7 +14,6 @@
           gasLimit: txDefault.gasLimit
         },
         accounts: [],
-        coinbase: null,
         methodIds: {},
         updates: 0,
         mergedABI: []
@@ -75,7 +74,7 @@
         var txParams = {
           gasPrice: EthJS.Util.intToHex(wallet.txParams.gasPrice),
           gas: EthJS.Util.intToHex(wallet.txParams.gasLimit),
-          from: wallet.coinbase
+          from: Web3Service.coinbase
         };
 
         Object.assign(txParams, tx);
@@ -115,7 +114,7 @@
       wallet.offlineTransaction = function (address, data, nonce, cb) {
         // Create transaction object
         var txInfo = {
-          from: wallet.coinbase,
+          from: Web3Service.coinbase,
           to: address,
           value: EthJS.Util.intToHex(0),
           gasPrice: EthJS.Util.intToHex(wallet.txParams.gasPrice),
@@ -156,41 +155,6 @@
             cb(e);
           }
         );
-      };
-
-      /**
-      * Get ethereum accounts and update account list.
-      */
-      wallet.updateAccounts = function (cb) {
-        return Web3Service.web3.eth.getAccounts(
-          function (e, accounts) {
-            if (e) {
-              cb(e);
-            }
-            else {
-              wallet.accounts = accounts;
-
-              if (wallet.coinbase && accounts.indexOf(wallet.coinbase) != -1) {
-                // same coinbase
-              }
-              else if (accounts) {
-                  wallet.coinbase = accounts[0];
-              }
-              else {
-                wallet.coinbase = null;
-              }
-
-              cb(null, accounts);
-            }
-          }
-        );
-      };
-
-      /**
-      * Select account
-      **/
-      wallet.selectAccount = function (account) {
-        wallet.coinbase = account;
       };
 
       wallet.updateNonce = function (address, cb) {
@@ -252,7 +216,7 @@
       wallet.initParams = function () {
         return $q(function (resolve, reject) {
             var batch = Web3Service.web3.createBatch();
-            wallet
+            Web3Service
             .updateAccounts(
               function (e, accounts) {
                 var promises = $q.all(
@@ -284,9 +248,9 @@
                       }
                     }),
                     $q(function (resolve, reject) {
-                      if (wallet.coinbase) {
+                      if (Web3Service.coinbase) {
                         batch.add(
-                          wallet.updateNonce(wallet.coinbase, function (e) {
+                          wallet.updateNonce(Web3Service.coinbase, function (e) {
                             if (e) {
                               reject(e);
                             }
@@ -301,9 +265,9 @@
                       }
                     }),
                     $q(function (resolve, reject) {
-                      if (wallet.coinbase) {
+                      if (Web3Service.coinbase) {
                         batch.add(
-                          wallet.getBalance(wallet.coinbase, function (e, balance) {
+                          wallet.getBalance(Web3Service.coinbase, function (e, balance) {
                             if (e) {
                               reject(e);
                             }
@@ -655,10 +619,10 @@
             else {
               // Add wallet, add My account to the object by default, won't be
               // displayed anyway if user is not an owner, but if it is, name will be used
-              if (wallet.coinbase) {
-                var coinbase = wallet.coinbase.toLowerCase();
+              if (Web3Service.coinbase) {
+                var coinbase = Web3Service.coinbase.toLowerCase();
                 info.owners = {};
-                info.owners[coinbase] = { address: wallet.coinbase.toLowerCase(), name: 'My Account'};
+                info.owners[coinbase] = { address: coinbase, name: 'My Account'};
               }
               wallet.updateWallet(info);
               cb(null, info);
@@ -1144,7 +1108,7 @@
         var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         return wallet.callRequest(
           instance.confirmations,
-          [txId, wallet.coinbase],
+          [txId, Web3Service.coinbase],
           cb
         );
       };

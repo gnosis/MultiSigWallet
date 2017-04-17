@@ -15,13 +15,13 @@
         }
       };
     })
-    .directive('disabledIfNoAccounts', function (Web3Service, Wallet) {
+    .directive('disabledIfNoAccounts', function (Web3Service) {
       return {
         link: function(scope, element, attrs){
           Web3Service.webInitialized.then(
             function () {
               scope.$watch(function(){
-                if(Wallet.coinbase) {
+                if(Web3Service.coinbase) {
                   element.removeAttr('disabled');
                 }
                 else {

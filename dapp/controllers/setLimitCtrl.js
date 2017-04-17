@@ -7,8 +7,10 @@
 
       Wallet
       .getLimit($scope.address, function (e, required) {
-        $scope.limit = required.div('1e18').toNumber();
-        $scope.$apply();
+        if (required ) {
+          $scope.limit = required.div('1e18').toNumber();
+          $scope.$apply();
+        }
       }).call();
 
       $scope.setLimit = function () {

@@ -38,16 +38,16 @@
         );
 
         return Wallet.initParams().then(function () {
-          $scope.loggedIn = Wallet.coinbase;
+          $scope.loggedIn = Web3Service.coinbase;
           $scope.accounts = Wallet.accounts;
-          $scope.coinbase = Wallet.coinbase;
+          $scope.coinbase = Web3Service.coinbase;
           $scope.nonce = Wallet.txParams.nonce;
           $scope.balance = Wallet.balance;
         }, function (error) {
           if (txDefault.wallet == "ledger") {
             $scope.loggedIn = true;
             $scope.accounts = Wallet.accounts;
-            $scope.coinbase = Wallet.coinbase;
+            $scope.coinbase = Web3Service.coinbase;
             $scope.nonce = Wallet.txParams.nonce;
           }
           else {
@@ -84,7 +84,7 @@
           $scope.connectionInterval = $interval($scope.updateConnectionStatus, txDefault.connectionChecker.checkInterval);
 
           $scope.updateInfo().then(function () {
-            if (!Wallet.coinbase && txDefault.wallet !== "ledger") {
+            if (!Web3Service.coinbase && txDefault.wallet !== "ledger") {
               $uibModal.open({
                 templateUrl: 'partials/modals/web3Wallets.html',
                 size: 'md',

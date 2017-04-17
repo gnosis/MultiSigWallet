@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .service("Web3Service", function ($window, $q, Utils, $uibModal) {
+    .service("Web3Service", function ($window, $q, Utils, $uibModal, Connection) {
       factory = {};
 
       factory.webInitialized = $q(function (resolve, reject) {
@@ -17,7 +17,25 @@
                 },
                 onSigned: function () {
                   Utils.stopSpinner();
-                }
+                },
+                getChainID: function (cb) {
+                 if (!Connection.isConnected) {
+                   if (txDefault.defaultChainID) {
+                     cb(null, txDefault.defaultChainID);
+                   }
+                   else {
+                     cb("You must set an offline Chain ID in order to sign offline transactions");
+                   }
+                 }
+                 else {
+                   if (factory.web3) {
+                     factory.web3.version.getNetwork(cb);
+                   }
+                   else {
+                     cb("No valid web3 object");
+                   }
+                 }
+               }
               }
             ).then(
               function(ledgerWeb3){
@@ -35,12 +53,13 @@
                     };
 
                     $scope.checkCoinbase = function () {
-                      if (wallet && wallet.coinbase) {
+                      if (factory.coinbase) {
                         $uibModalInstance.close();
                       }
                       else {
                         setTimeout($scope.checkCoinbase, 1000);
                       }
+
                     };
 
                     $scope.checkCoinbase();
@@ -94,6 +113,41 @@
           var args = params.concat(sendIfSuccess);
           method.call.apply(method.call, args);
         }
+      };
+
+      /**
+      * Get ethereum accounts and update account list.
+      */
+      factory.updateAccounts = function (cb) {
+        return factory.web3.eth.getAccounts(
+          function (e, accounts) {
+            if (e) {
+              cb(e);
+            }
+            else {
+              factory.accounts = accounts;
+
+              if (factory.coinbase && accounts.indexOf(factory.coinbase) != -1) {
+                // same coinbase
+              }
+              else if (accounts) {
+                  factory.coinbase = accounts[0];
+              }
+              else {
+                factory.coinbase = null;
+              }
+
+              cb(null, accounts);
+            }
+          }
+        );
+      };
+
+      /**
+      * Select account
+      **/
+      factory.selectAccount = function (account) {
+        factory.coinbase = account;
       };
 
       return factory;

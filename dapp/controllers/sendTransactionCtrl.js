@@ -28,7 +28,7 @@
           });
         }
         tx.value = new Web3().toBigNumber($scope.tx.value).mul('1e18');
-        tx.from = Web3Service.coinbase;        
+        tx.from = Web3Service.coinbase;
         // if method, use contract instance method
         if ($scope.method && $scope.method.index !== undefined && $scope.method.index !== "") {
           Transaction.sendMethod(tx, $scope.abiArray, $scope.method.name, params, function (e, tx) {
@@ -194,8 +194,8 @@
           $scope.method = $scope.methods[0];
           $scope.abiArray = JSON.parse($scope.abi);
           $scope.abiArray.map(function (item, index) {
-            if (!item.constant && item.name && item.type == "function") {
-              $scope.methods.push({name: item.name, index: index, inputs: item.inputs});
+            if (item.name && item.type == "function") {
+              $scope.methods.push({name: item.name, index: index, inputs: item.inputs, constant: item.constant});
             }
           });
         } catch (error) {

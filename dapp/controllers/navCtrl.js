@@ -55,16 +55,22 @@
             var accounts = Config.getConfiguration('accounts');
             if (accounts) {
               accounts = accounts.map(function(account) {
+                if (!account.address.startsWith('0x')) {
+                  return '0x' + account.address;
+                }
                 return account.address;
               });
             }
             $scope.accounts = accounts;
+            if (!Wallet.coinbase.startsWith('0x')) {
+              Wallet.coinbase = '0x' + Wallet.coinbase;
+            }
           }
           else {
             $scope.accounts = Wallet.accounts;
           }
 
-          $scope.coinbase = Wallet.coinbase;
+          $scope.coinbase =  Wallet.coinbase;
           $scope.nonce = Wallet.txParams.nonce;
           $scope.balance = Wallet.balance;
         });

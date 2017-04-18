@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .controller('accountCtrl', function ($window, $rootScope, $scope, LightWallet, Config, $uibModal, Utils) {
+    .controller('accountCtrl', function ($window, $rootScope, $scope, LightWallet, Config, $uibModal, Utils, $location) {
 
       $scope.account = {};
 
@@ -60,7 +60,12 @@
               };
 
               $scope.cancel = function () {
-                $window.location.href = '/';
+                if (isElectron) {
+                  $location.path('wallets');
+                }
+                else {
+                  $window.location.href = '/';
+                }
               };
             }
           })

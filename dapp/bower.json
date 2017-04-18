@@ -45,7 +45,8 @@
     "web3-provider-engine": "https://github.com/denisgranha/provider-engine.git#f737b19803d125500ec8ad5f0907c9e981203406",
     "eth-lightwallet": "https://github.com/ConsenSys/eth-lightwallet.git",
     "file-saver": "^1.3.3",
-    "hooked-web3-provider": "https://github.com/ConsenSys/hooked-web3-provider.git"
+    "hooked-web3-provider": "https://github.com/ConsenSys/hooked-web3-provider.git",
+    "entropy-collector": "https://github.com/vibornoff/entropy-collector.js.git"
   },
   "resolutions": {
     "angular": "~1.5.8"

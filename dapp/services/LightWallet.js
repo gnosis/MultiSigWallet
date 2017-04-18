@@ -2,13 +2,13 @@
   function () {
     angular
     .module("multiSigWeb")
-    .service("LightWallet", function ($http, $window, Config) {
+    .service("LightWallet", function ($http, $window, Config, $uibModal, Utils) {
 
       var factory = {};
 
       factory.keystore = null;
       factory.addresses = [];
-      $window.test = factory.web3;
+      //$window.test = factory.web3;
 
       factory.setup = function () {
         factory.password_provider_callback = null;
@@ -20,17 +20,57 @@
           // Set HookedWeb3Provider
           var web3Provider = new HookedWeb3Provider({
             getAccounts: function (cb) {
-                  cb(null, factory.keystore.getAddresses())
+              cb(null, factory.getAddresses());
             },
             approveTransaction: function(txParams, cb) {
               cb(null, true);
             },
             signTransaction: function(txData, cb) {
+              // Show password modal
 
-            },
-            transaction_signer: factory.keystore,
-            host: txDefault.ethereumNode
+              $uibModal.open({
+                templateUrl: 'partials/modals/askLightWalletPassword.html',
+                size: 'md',
+                backdrop: 'static',
+                controller: function ($scope, $uibModalInstance) {
+
+                  $scope.ok = function () {
+                    //var deserializedKeystore = lightwallet.keystore.deserialize(factory.getKeystore());
+                    factory.keystore.keyFromPassword($scope.password, function (err, pwDerivedKey) {
+                      if (err) throw err;
+                      if (factory.keystore.isDerivedKeyCorrect(pwDerivedKey)) {
+                        // Password valid
+                        txData.gasPrice = parseInt(txData.gasPrice, 16);
+                        txData.nonce = parseInt(txData.nonce, 16);
+                        txData.gasLimit = txData.gas;
+                        var tx = lightwallet.txutils.createContractTx(factory.getAddresses()[0], txData);
+                        //var signed = lightwallet.signing.signTx(factory.keystore, pwDerivedKey, tx.tx, factory.getAddresses());
+                        var signed = lightwallet.signing.signTx(factory.keystore, pwDerivedKey, tx.tx, factory.keystore.getAddresses()[0]);
+                        cb(null, signed);
+                        $uibModalInstance.close();
+                      }
+                      else {
+                        //cb('Invalid password', null);
+                        Utils.dangerAlert({'message': 'Invalid password'});
+                        $uibModalInstance.dismiss();
+                      }
+
+                    });
+                  };
+
+                  $scope.cancel = function () {
+                    $uibModalInstance.dismiss();
+                  };
+
+                }
+              });
+            }
+            /*transaction_signer: factory.keystore,
+            host: txDefault.ethereumNode*/
           });
+
+          web3Provider.transaction_signer = factory.keystore;
+          web3Provider.host = txDefault.ethereumNode;
 
           //factory.web3.setProvider(web3Provider);
           factory.engine.addProvider(web3Provider);
@@ -38,6 +78,12 @@
           factory.engine.addProvider(new RpcSubprovider({
             rpcUrl: txDefault.ethereumNode
           }));
+
+          factory.engine.on('block', function(block){
+            console.log('================================');
+            console.log('BLOCK CHANGED:', '#'+block.number.toString('hex'), '0x'+block.hash.toString('hex'));
+            console.log('================================');
+          })
 
           factory.engine.start();
         }
@@ -61,8 +107,8 @@
             if (err) throw err;
 
             ks.generateNewAddress(pwDerivedKey, 1);
-            var addresses = ks.getAddresses();
-            factory.addresses = addresses;
+            factory.addresses = ks.getAddresses();
+            //factory.addresses = addresses[0].startsWith('0x') ? addresses : '0x' + addresses[0];
             factory.setKeystore(ks.serialize());
 
             ks.passwordProvider = function (callback, pwd) {
@@ -94,47 +140,7 @@
             ctrlCallback(factory.addresses);
 
           });
-
-        })
-
-        /*lightwallet.keystore.deriveKeyFromPassword(password, function (err, pwDerivedKey) {
-
-          factory.keystore = new lightwallet.keystore(seed, pwDerivedKey);
-          // generate five new address/private key pairs
-          // the corresponding private keys are also encrypted
-          factory.keystore.generateNewAddress(pwDerivedKey, 1);
-          var addresses = factory.keystore.getAddresses();
-
-          factory.setKeystore(factory.keystore.serialize());
-
-          // Create a custom passwordProvider to prompt the user to enter their
-          // password whenever the hooked web3 provider issues a sendTransaction
-          // call.
-          factory.keystore.passwordProvider = function (callback, pwd) {
-            callback(null, pwd);
-          };
-
-          // Now set ks as transaction_signer in the hooked web3 provider
-          // and you can start using web3 using the keys/addresses in ks!
-          factory.engine.addProvider(new HookedWalletSubprovider({
-            getAccounts: function (cb) {
-                  cb(null, addresses)
-            },
-            approveTransaction: function(txParams, cb) {
-              cb(null, true);
-            },
-            signTransaction: function(txData, cb) {
-              txData.gasPrice = parseInt(txData.gasPrice, 16);
-              txData.nonce = parseInt(txData.nonce, 16);
-              txData.gasLimit = txData.gas;
-              var tx = lightwallet.txutils.createContractTx(addr, txData);
-              var signed = lightwallet.signing.signTx(ks, pwDerivedKey, tx.tx, addr);
-              cb(null, signed);
-            }
-          }));
-
-        });*/
-
+        });
       };
 
       factory.decrypt = function (password, ctrlCallback) {
@@ -156,6 +162,16 @@
       factory.restore = function () {
         var keystore = factory.getKeystore();
         factory.keystore = lightwallet.keystore.deserialize(keystore);
+        /*var addresses = factory.keystore.getAddresses();
+
+        if (addresses) {
+          for (var x in addresses) {
+            if (!addresses[x].startsWith('0x')) {
+              addresses[x] = '0x' + addresses[x];
+            }
+          }
+        }*/
+
         factory.addresses = factory.keystore.getAddresses();
       };
 
@@ -195,6 +211,17 @@
 
       factory.isSeedValid = function (seed) {
         return lightwallet.keystore.isSeedValid(seed);
+      };
+
+      factory.getAddresses = function () {
+        accounts = factory.keystore.getAddresses().map(function(account) {
+          if (!account.startsWith('0x')) {
+            return '0x' + account;
+          }
+          return account;
+        });
+
+        return accounts;
       };
 
       return factory;

@@ -17,7 +17,7 @@
         if ($scope.method) {
           params.map(function(param, index) {
             // Parse if array param
-            if ($scope.method.inputs && $scope.method.inputs[index].type.indexOf("[]") !== -1) {
+            if ($scope.method.inputs && $scope.method.inputs.length && $scope.method.inputs[index].type.indexOf("[]") !== -1) {
               try {
                 params[index] = JSON.parse($scope.params[index]);
               }
@@ -83,7 +83,7 @@
         if ($scope.method) {
           params.map(function(param, index) {
             // Parse if array param
-            if ($scope.method.inputs && $scope.method.inputs[index].type.indexOf("[]") !== -1) {
+            if ($scope.method.inputs && $scope.method.inputs.length && $scope.method.inputs[index].type.indexOf("[]") !== -1) {
               try {
                 params[index] = JSON.parse($scope.params[index]);
               }

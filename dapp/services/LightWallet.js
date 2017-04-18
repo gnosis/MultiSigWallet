@@ -35,7 +35,6 @@
                 controller: function ($scope, $uibModalInstance) {
 
                   $scope.ok = function () {
-                    //var deserializedKeystore = lightwallet.keystore.deserialize(factory.getKeystore());
                     factory.keystore.keyFromPassword($scope.password, function (err, pwDerivedKey) {
                       if (err) throw err;
                       if (factory.keystore.isDerivedKeyCorrect(pwDerivedKey)) {
@@ -43,16 +42,17 @@
                         txData.gasPrice = parseInt(txData.gasPrice, 16);
                         txData.nonce = parseInt(txData.nonce, 16);
                         txData.gasLimit = txData.gas;
-                        var tx = lightwallet.txutils.createContractTx(factory.getAddresses()[0], txData);
-                        //var signed = lightwallet.signing.signTx(factory.keystore, pwDerivedKey, tx.tx, factory.getAddresses());
-                        var signed = lightwallet.signing.signTx(factory.keystore, pwDerivedKey, tx.tx, factory.keystore.getAddresses()[0]);
-                        cb(null, signed);
+                        //TODO get current account from Wallet
+                        var sendingAddress = factory.getAddresses()[0];
+                        var contractData = lightwallet.txutils.createContractTx(sendingAddress, txData);
+                        var signedTx = lightwallet.signing.signTx(factory.keystore, pwDerivedKey, contractData.tx, sendingAddress, "m/44'/60'/0'/0");
+                        cb(null, signedTx);
                         $uibModalInstance.close();
                       }
                       else {
-                        //cb('Invalid password', null);
-                        Utils.dangerAlert({'message': 'Invalid password'});
                         $uibModalInstance.dismiss();
+                        cb('Invalid password', null);
+                        //Utils.dangerAlert({'message': 'Invalid password'});
                       }
 
                     });
@@ -60,6 +60,7 @@
 
                   $scope.cancel = function () {
                     $uibModalInstance.dismiss();
+                    cb('Deploy canceled', null);
                   };
 
                 }
@@ -78,6 +79,8 @@
           factory.engine.addProvider(new RpcSubprovider({
             rpcUrl: txDefault.ethereumNode
           }));
+
+          //factory.engine.addProvider(new CacheSubprovider());
 
           factory.engine.on('block', function(block){
             console.log('================================');

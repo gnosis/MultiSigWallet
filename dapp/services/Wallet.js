@@ -331,7 +331,7 @@
           $rootScope.$digest();
         }
         catch (e) {}
-      };
+      };      
 
       /**
       * Creates and returns the valid configuration for Import/Export purposes

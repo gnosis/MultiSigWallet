@@ -54,7 +54,7 @@
 
           if (isElectron) {
             var accounts = Config.getConfiguration('accounts');
-            if (accounts) {
+            if (accounts && accounts.length > 0 ) {
               accounts = accounts.map(function(account) {
                 if (!account.address.startsWith('0x')) {
                   return '0x' + account.address;
@@ -62,9 +62,13 @@
                 return account.address;
               });
             }
+            else {
+              Web3Service.coinbase = null;
+            }
+
             $scope.accounts = accounts;
 
-            if (!Web3Service.coinbase.startsWith('0x')) {
+            if (Web3Service.coinbase && !Web3Service.coinbase.startsWith('0x')) {
               Web3Service.coinbase = '0x' + Web3Service.coinbase;
             }
           }

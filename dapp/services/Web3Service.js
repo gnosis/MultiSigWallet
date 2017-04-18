@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .service("Web3Service", function ($window, $q, Utils, $uibModal, Connection, LightWallet) {
+    .service("Web3Service", function ($http, $window, $q, Config, Utils, $uibModal, Connection) {
       factory = {};
 
       factory.webInitialized = $q(function (resolve, reject) {
@@ -73,9 +73,9 @@
             factory.web3 = new Web3($window.web3.currentProvider);
             resolve();
           }
-          else if (txDefault.wallet == 'lightwallet' && isElectron) {            
-            LightWallet.setup();
-            factory.web3 = LightWallet.web3;
+          else if (txDefault.wallet == 'lightwallet' && isElectron) {
+            factory.setup();
+            //factory.web3 = LightWalletFactory.getWeb3();
             resolve();
           }
           else {
@@ -154,6 +154,239 @@
       factory.selectAccount = function (account) {
         factory.coinbase = account;
       };
+
+
+      /**
+      * Light wallet vars
+      */
+      factory.keystore = null;
+      factory.addresses = [];
+
+      /**
+      * Light wallet setup
+      */
+      factory.setup = function () {
+        factory.password_provider_callback = null;
+        factory.engine = new ProviderEngine();
+        factory.web3 = new Web3(factory.engine);
+
+        if (factory.getKeystore()) {
+          factory.restore();
+          // Set HookedWeb3Provider
+          var web3Provider = new HookedWeb3Provider({
+            getAccounts: function (cb) {
+              cb(null, factory.getAddresses());
+            },
+            approveTransaction: function(txParams, cb) {
+              cb(null, true);
+            },
+            signTransaction: function(txData, cb) {
+              // Show password modal
+              $uibModal.open({
+                templateUrl: 'partials/modals/askLightWalletPassword.html',
+                size: 'md',
+                backdrop: 'static',
+                controller: function ($scope, $uibModalInstance) {
+
+                  $scope.ok = function () {
+                    factory.keystore.keyFromPassword($scope.password, function (err, pwDerivedKey) {
+                      if (err) throw err;
+                      if (factory.keystore.isDerivedKeyCorrect(pwDerivedKey)) {
+                        // Password valid
+                        txData.gasPrice = parseInt(txData.gasPrice, 16);
+                        txData.nonce = parseInt(txData.nonce, 16);
+                        txData.gasLimit = txData.gas;
+
+                        var sendingAddress = factory.coinbase;
+                        var contractData = lightwallet.txutils.createContractTx(sendingAddress, txData);
+                        var signedTx = lightwallet.signing.signTx(factory.keystore, pwDerivedKey, contractData.tx, sendingAddress, "m/44'/60'/0'/0");
+                        cb(null, signedTx);
+                        $uibModalInstance.close();
+                      }
+                      else {
+                        $uibModalInstance.dismiss();
+                        cb('Invalid password', null);
+                      }
+
+                    });
+                  };
+
+                  $scope.cancel = function () {
+                    $uibModalInstance.dismiss();
+                    cb('Deploy canceled', null);
+                  };
+
+                }
+              });
+            }
+          });
+
+          web3Provider.transaction_signer = factory.keystore;
+          web3Provider.host = txDefault.ethereumNode;
+
+          factory.engine.addProvider(web3Provider);
+
+          factory.engine.addProvider(new RpcSubprovider({
+            rpcUrl: txDefault.ethereumNode
+          }));
+
+          factory.engine.start();
+        }
+      };
+
+      /**
+      * Creates a new keystore and within one account
+      */
+      factory.create = function (password, seed, ctrlCallback) {
+
+        var opts = {
+          password: password,
+          seedPhrase: seed,
+          hdPathString: "m/44'/60'/0'/0"
+        };
+
+        lightwallet.keystore.createVault(opts, function(err, ks) {
+          if (err) throw err;
+
+          var config = Config.getUserConfiguration();
+
+          // You've got a new vault now.
+          ks.keyFromPassword(password, function (err, pwDerivedKey) {
+            if (err) throw err;
+
+            ks.generateNewAddress(pwDerivedKey, 1);
+            factory.addresses = ks.getAddresses();
+            //factory.addresses = addresses[0].startsWith('0x') ? addresses : '0x' + addresses[0];
+            factory.setKeystore(ks.serialize());
+
+            ks.passwordProvider = function (callback, pwd) {
+              callback(null, pwd);
+            };
+
+            factory.setup();
+
+            ctrlCallback(factory.addresses);
+
+          });
+        });
+      };
+
+      /**
+      * Verify if a provided password can unlock a keystore
+      */
+      factory.decrypt = function (password, ctrlCallback) {
+        var deserializedKeystore = lightwallet.keystore.deserialize(factory.getKeystore());
+        deserializedKeystore.keyFromPassword(password, function (err, pwDerivedKey) {
+          if (err) throw err;
+          if (deserializedKeystore.isDerivedKeyCorrect(pwDerivedKey)) {
+            // Password valid
+            factory.restore();
+            ctrlCallback(true);
+          }
+          else {
+            ctrlCallback(false);
+          }
+
+        });
+      };
+
+      /**
+      * Restore keystore from localStorage
+      */
+      factory.restore = function () {
+        var keystore = factory.getKeystore();
+        factory.keystore = lightwallet.keystore.deserialize(keystore);
+        factory.addresses = factory.keystore.getAddresses();
+      };
+
+      /**
+      * Addes a new account
+      */
+      factory.newAccount = function (password, ctrlCallback) {
+        var deserializedKeystore = lightwallet.keystore.deserialize(factory.getKeystore());
+        deserializedKeystore.keyFromPassword(password, function (err, pwDerivedKey) {
+          if (err) throw err;
+
+          // Verify password is correct
+          if (deserializedKeystore.isDerivedKeyCorrect(pwDerivedKey)) {
+            // Password valid
+            // New address
+            // 1st we check whether exist deleted keystore accounts, or rather
+            // accounts not in 'accounts' localStorage
+            var keystoreAddresses = factory.getAddresses();
+            var storageAddresses = Config.getConfiguration('accounts');
+            var existingAddressToAdd = null;
+            for(var x in keystoreAddresses) {
+              var address = keystoreAddresses[x];
+              var matchingAddresses = storageAddresses.filter(function (item) {
+                return item.address.replace('0x', '') == address.replace('0x', '');
+              });
+
+              if (matchingAddresses.length == 0) {
+                existingAddressToAdd = address;
+                break;
+              }
+            }
+
+            if (existingAddressToAdd && factory.addresses.indexOf(existingAddressToAdd.replace('0x', '')) == -1) {
+              factory.addresses.push(existingAddressToAdd);
+              ctrlCallback(existingAddressToAdd);
+            }
+            if (existingAddressToAdd &&  factory.addresses.indexOf(existingAddressToAdd.replace('0x', '')) !== -1) {
+              ctrlCallback(existingAddressToAdd);
+            }
+            else if (!existingAddressToAdd) {
+              deserializedKeystore.generateNewAddress(pwDerivedKey, 1);
+              // Add new address to addresses list
+              // add 0x prefix to callback address
+              factory.addresses.push(deserializedKeystore.getAddresses().slice(-1)[0]);
+              factory.setKeystore(deserializedKeystore.serialize());
+              ctrlCallback('0x' + deserializedKeystore.getAddresses().slice(-1)[0].replace('0x', ''));
+            }
+          }
+          else {
+            ctrlCallback();
+          }
+
+        });
+      };
+
+      /**
+      * Returns keystore string from localStorage
+      */
+      factory.getKeystore = function () {
+        return localStorage.getItem('keystore');
+      };
+
+      /**
+      * Set keystore localStorage string
+      */
+      factory.setKeystore = function (value) {
+        return localStorage.setItem('keystore', value);
+      };
+
+      /**
+      * Checks whether input seed is valid or not
+      */
+      factory.isSeedValid = function (seed) {
+        return lightwallet.keystore.isSeedValid(seed);
+      };
+
+      /**
+      * Return accounts list, each prefixed with '0x'
+      */
+      factory.getAddresses = function () {
+        accounts = factory.keystore.getAddresses().map(function(account) {
+          if (!account.startsWith('0x')) {
+            return '0x' + account;
+          }
+          return account;
+        });
+
+        return accounts;
+      };
+
+
 
       return factory;
     });

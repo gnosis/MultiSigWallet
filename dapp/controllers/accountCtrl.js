@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .controller('accountCtrl', function ($window, $rootScope, $scope, LightWallet, Config, $uibModal, Utils, $location) {
+    .controller('accountCtrl', function ($window, $rootScope, $scope, Config, $uibModal, Utils, $location, Web3Service) {
 
       $scope.account = {};
 
@@ -13,15 +13,15 @@
 
         if (keystore) {
           // Restore data
-          LightWallet.restore();
+          Web3Service.restore();
         }
 
         if (setAddresses) {
-          //$scope.account.addresses = Object.assign([], LightWallet.addresses, Config.getConfiguration('accounts'));
+          //$scope.account.addresses = Object.assign([], Web3Service.addresses, Config.getConfiguration('accounts'));
           $scope.account.addresses = Config.getConfiguration('accounts');
         }
 
-        $scope.keystore = !keystore ? LightWallet.getKeystore() : keystore;
+        $scope.keystore = !keystore ? Web3Service.getKeystore() : keystore;
         $scope.hasKeystore = $scope.keystore ? true : false;
         $scope.account.seed = seed;
         $scope.hasSeed = $scope.account.seed ? true : false;
@@ -32,7 +32,7 @@
       */
       function login() {
         var accounts = Config.getConfiguration('accounts');
-        if (LightWallet.getKeystore() && accounts && accounts.length > 0) {
+        if (Web3Service.getKeystore() && accounts && accounts.length > 0) {
           $uibModal.open({
             animation: false,
             templateUrl: 'partials/modals/lightWalletPassword.html',
@@ -44,10 +44,10 @@
 
               $scope.ok = function () {
                 // Restore
-                LightWallet.decrypt($scope.account.password, function (canDecrypt) {
+                Web3Service.decrypt($scope.account.password, function (canDecrypt) {
                   if (canDecrypt) {
                     // Reload params
-                    init(null, LightWallet.getKeystore(), true);
+                    init(null, Web3Service.getKeystore(), true);
                     // Unset password
                     delete $scope.account.password;
                     // Close modal
@@ -70,8 +70,8 @@
             }
           })
         }
-        else if (LightWallet.getKeystore()) {
-          init(null, LightWallet.getKeystore(), false);
+        else if (Web3Service.getKeystore()) {
+          init(null, Web3Service.getKeystore(), false);
         }
       }
 
@@ -85,7 +85,7 @@
       * Create seed
       */
       $scope.createSeed = function () {
-        $scope.account.seed = lightwallet.keystore.generateRandomSeed();
+        $scope.account.seed = Web3Service.keystore.generateRandomSeed();
         $scope.hasSeed = true;
       };
 
@@ -104,12 +104,14 @@
           templateUrl: 'partials/modals/addLightWalletAccount.html',
           size: 'md',
           scope: $scope,
-          controller: function ($scope, $uibModalInstance, LightWallet) {
+          controller: function ($scope, $uibModalInstance, Web3Service) {
             $scope.showSetName = false;
+
+            $scope.account.name = '';
 
             $scope.ok = function () {
               try{
-                LightWallet.create($scope.account.password, $scope.account.seed, function (addresses) {
+                Web3Service.create($scope.account.password, $scope.account.seed, function (addresses) {
                   var accounts = Config.getConfiguration('accounts');
                   if (accounts) {
                     accounts.push(
@@ -148,8 +150,11 @@
               }
             };
 
+            /**
+            * Function enabled once keystore is created
+            */
             $scope.newAccount = function () {
-              LightWallet.newAccount($scope.account.password, function (address) {
+              Web3Service.newAccount($scope.account.password, function (address) {
                 if (address) {
                   var accounts = Config.getConfiguration('accounts') || [];
                   accounts.push(
@@ -161,7 +166,7 @@
                   // Load updated accounts
                   Config.setConfiguration('accounts', JSON.stringify(accounts));
                   // Reload data
-                  init(null, LightWallet.getKeystore(), true);
+                  init(null, Web3Service.getKeystore(), true);
                   // Unset password
                   delete $scope.account.password;
                   // Show success modal
@@ -271,7 +276,7 @@
 
             $scope.ok = function () {
               // Restore
-              var isSeedValid = LightWallet.isSeedValid($scope.seed);
+              var isSeedValid = Web3Service.isSeedValid($scope.seed);
               if (isSeedValid) {
                 $uibModalInstance.close($scope.seed);
               }
@@ -298,7 +303,7 @@
       * Download keystore
       */
       $scope.downloadKeystore = function () {
-        var blob = new Blob([LightWallet.getKeystore()], {type: "text/plain;charset=utf-8"});
+        var blob = new Blob([Web3Service.getKeystore()], {type: "text/plain;charset=utf-8"});
         saveAs(blob, "lightwallet.txt");
       };
 
@@ -310,10 +315,27 @@
 
         reader.onload = function() {
           var text = reader.result;
+          var accounts = [];
           try {
-            LightWallet.setKeystore(text);
+            Web3Service.setKeystore(text);
             // Restore data from keystore
-            LightWallet.restore();
+            Web3Service.restore();
+            Web3Service.getAddresses().map(function (address) {
+              accounts.push(
+                {
+                  'name': '',
+                  'address': address
+                }
+              );
+            });
+
+            // Load updated accounts
+            Config.setConfiguration('accounts', JSON.stringify(accounts));
+            // Redo setup
+            Web3Service.setup();
+            // Set web3 provide in Web3Service
+            //Web3Service.web3 = LightWallet.web3;
+            // Init values
             init();
           }
           catch (err) {

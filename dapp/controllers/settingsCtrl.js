@@ -2,7 +2,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("settingsCtrl", function (Web3Service, $scope, Wallet, Utils, $window, $uibModal, $sce) {
+    .controller("settingsCtrl", function (Web3Service, $scope, Config, Wallet, Utils, $window, $uibModal, $sce) {
 
       // Don't save the following config values to localStorage
       var configBlacklist = [
@@ -13,7 +13,7 @@
       * Loads configuration
       */
       function loadConfig () {
-        $scope.config = Object.assign({}, txDefault, JSON.parse(localStorage.getItem("userConfig")));
+        $scope.config = Config.getConfiguration(); //Object.assign({}, txDefault, JSON.parse(localStorage.getItem("userConfig")));
         // Maps variables used by ui-select
         $scope.config.selectedEthereumNode = {
           url: $scope.config.ethereumNode
@@ -59,7 +59,7 @@
             }
         });
 
-        localStorage.setItem("userConfig", JSON.stringify(configCopy));
+        Config.setConfiguration(JSON.stringify(configCopy));
         if (Web3Service.web3.currentProvider.constructor.name == "HttpProvider") {
           Web3Service.web3 = new Web3( new Web3.providers.HttpProvider($scope.config.ethereumNode));
           $window.web3 = Web3Service.web3;
@@ -119,7 +119,8 @@
           controller: function ($uibModalInstance, $scope) {
             $scope.ok = function () {
               $uibModalInstance.close();
-              localStorage.removeItem("userConfig");
+              //localStorage.removeItem("userConfig");
+              Config.removeConfiguration();
               Object.assign(txDefault, txDefaultOrig);
             };
 
@@ -213,7 +214,8 @@
             var config = JSON.parse(localStorage.getItem("userConfig"));
             delete config.alertNode.authCode;
             delete txDefault.alertNode.authCode;
-            localStorage.setItem("userConfig", JSON.stringify(config));
+            //localStorage.setItem("userConfig", JSON.stringify(config));
+            Config.setConfiguration(JSON.stringify(config));
             $scope.config = config;
 
             // $scope.showDeleteAuthCodeBtn = false;

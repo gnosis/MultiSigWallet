@@ -7,18 +7,19 @@
   <form ng-submit="update()">
     <div class="panel-body">
       <div class="form-group">
-        <label for="node">Ethereum node</label>        
+        <label for="node">Ethereum node</label>
         <ui-select ng-model="config.selectedEthereumNode"
           tagging="addCustomEthereumNode"
           tagging-label="false"
-          title="Choose an Ethereum node" id="node">
-          <ui-select-match placeholder="Choose an Ethereum node...">{{$select.selected.url}}</ui-select-match>
-          <ui-select-choices repeat="node in config.ethereumNodes | selectFilter: {url: $select.search}">
+          id="node">
+          <ui-select-match>{{$select.selected.name ? $select.selected.name : $select.selected.url }}</ui-select-match>
+          <ui-select-choices repeat="node in config.ethereumNodes | selectFilter: {url: $select.search, name: $select.search}">
+            <div ng-bind-html="toHtml(node.name | highlight: $select.search)"></div>
             <div ng-bind-html="toHtml(node.url | highlight: $select.search)"></div>
             <ui-select-match>
                 <span ng-bind-html="toHtml(node.name | highlight: $select.search)"></span>
             </ui-select-match>
-            <ui-select-choices repeat="node in config.ethereumNodes | selectFilter: {url: $select.search}">
+            <ui-select-choices repeat="node in config.ethereumNodes | selectFilter: {url: $select.search, name: $select.search}">
                 <span ng-bind-html="toHtml(node.url | highlight: $select.search)"></span>
             </ui-select-choices>
           </ui-select-choices>
@@ -34,26 +35,26 @@
       </div>
       <div class="form-group">
         <label for="wallet-factory">Web3 wallet</label>
-        <select id="web3-wallet" ng-model="config.wallet" class="form-control" >
+        <!--<select id="web3-wallet" ng-model="config.wallet" class="form-control" >
           <option value="injected">
             Default (MetaMask, Mist, Parity ...)
           </option>
           <option value="ledger">
             Ledger Wallet
           </option>
-        </select>
-      </div>
-      <div class="form-group" ng-show="{{config.wallet == 'ledger'}}">
-        <label for="chain-id">Default Chain ID</label>
-        <input id="chain-id" type="number" ng-model="config.defaultChainID" class="form-control" ng-min="0" placeholder="No default"/>
+          <option value="lightwallet">
+            Light Wallet
+          </option>
+        </select>-->
+        <provider-list default-item="config.wallet" selected-item="providers[$index].name"></provider-list>
       </div>
       <div class="form-group">
         <label for="wallet-factory">Wallet factory contract</label>
         <ui-select ng-model="config.selectedWalletFactoryAddress"
           tagging="addCustomWalletFactoryAddress"
           tagging-label="false"
-          title="Choose a Wallet Factory Contract" id="node">
-          <ui-select-match placeholder="Choose a Wallet Factory Contract...">{{$select.selected.address}}</ui-select-match>
+          id="node">
+          <ui-select-match>{{$select.selected.address}}</ui-select-match>
           <ui-select-choices repeat="item in config.walletFactoryAddresses | selectFilter: {address: $select.search}">
             <div ng-bind-html="toHtml(item.address | highlight: $select.search)"></div>
             <ui-select-match>
@@ -70,8 +71,8 @@
         <ui-select ng-model="config.alertNode"
           tagging="addCustomAlertNode"
           tagging-label="false"
-          title="Choose an Alert node" id="alert-nodes">
-          <ui-select-match placeholder="Choose an Alert node...">{{$select.selected.url}}</ui-select-match>
+          id="alert-nodes">
+          <ui-select-match>{{$select.selected.url}}</ui-select-match>
           <ui-select-choices repeat="node in config.alertNodes | selectFilter: {url: $select.search, authCode: $select.search}">
             <div ng-bind-html="toHtml(node.url | highlight: $select.search)"></div>
             <ui-select-match>

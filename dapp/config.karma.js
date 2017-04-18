@@ -23,6 +23,7 @@ module.exports = function(config) {
       'bower_components/web3/dist/web3.min.js',
       'bower_components/abi-decoder/dist/abi-decoder.js',
       'bower_components/angular-ui-select/dist/select.js',
+      'bower_components/web3-provider-engine/dist/ProviderEngine.js',
       'node_modules/phantomjs-polyfill-object-assign/object-assign-polyfill.js',
       'app.js',
       'abi.js',
@@ -68,7 +69,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['PhantomJS'], //['PhantomJS'], //['Chrome'],
+    browsers: ['Chrome'], //['PhantomJS'], //['Chrome'],
 
 
     // Continuous Integration mode

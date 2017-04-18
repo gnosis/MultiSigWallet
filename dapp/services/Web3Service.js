@@ -8,7 +8,7 @@
       factory.webInitialized = $q(function (resolve, reject) {
         window.addEventListener('load', function () {
           // Ledger wallet
-          if (txDefault.wallet == "ledger") {
+          if (txDefault.wallet == "ledger" && !isElectron) {
             ledgerwallet(
               {
                 rpcUrl: txDefault.ethereumNode,
@@ -69,8 +69,12 @@
             );
           }
           // injected web3 provider (Metamask, mist, etc)
-          else if (txDefault.wallet == "injected" && $window && $window.web3) {
+          else if (txDefault.wallet == "injected" && $window && $window.web3 && !isElectron) {
             factory.web3 = new Web3($window.web3.currentProvider);
+            resolve();
+          }
+          else if (txDefault.wallet == 'lightwallet' && isElectron) {
+            factory.web3 = LightWallet.web3;
             resolve();
           }
           else {

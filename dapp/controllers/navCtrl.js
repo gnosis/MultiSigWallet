@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .controller('navCtrl', function ($scope, Wallet, Connection, Transaction, Config, LightWallet, $interval, $sce, $location, $uibModal) {
+    .controller('navCtrl', function ($scope, Wallet, Web3Service, Config, Connection, Transaction, $interval, $sce, $location, $uibModal, Utils) {
       $scope.navCollapsed = true;
       $scope.isElectron = isElectron;
       $scope.config = Config.getConfiguration();
@@ -50,7 +50,8 @@
         );
 
         return Wallet.initParams().then(function () {
-          $scope.loggedIn = Wallet.coinbase;
+          $scope.loggedIn = Web3Service.coinbase;
+
           if (isElectron) {
             var accounts = Config.getConfiguration('accounts');
             if (accounts) {
@@ -62,17 +63,28 @@
               });
             }
             $scope.accounts = accounts;
-            if (!Wallet.coinbase.startsWith('0x')) {
-              Wallet.coinbase = '0x' + Wallet.coinbase;
+
+            if (!Web3Service.coinbase.startsWith('0x')) {
+              Web3Service.coinbase = '0x' + Web3Service.coinbase;
             }
           }
           else {
-            $scope.accounts = Wallet.accounts;
+            $scope.accounts = Web3Service.accounts;
           }
 
-          $scope.coinbase =  Wallet.coinbase;
+          $scope.coinbase = Web3Service.coinbase;
           $scope.nonce = Wallet.txParams.nonce;
           $scope.balance = Wallet.balance;
+        }, function (error) {
+          if (txDefault.wallet == "ledger") {
+            $scope.loggedIn = true;
+            $scope.accounts = Web3Service.accounts;
+            $scope.coinbase = Web3Service.coinbase;
+            $scope.nonce = Wallet.txParams.nonce;
+          }
+          else {
+            Utils.dangerAlert(error);
+          }
         });
       };
 
@@ -89,11 +101,8 @@
 
       };
 
-      Wallet.webInitialized.then(
+      Web3Service.webInitialized.then(
         function () {
-          if (isElectron) {
-            LightWallet.setup();
-          }
           $scope.interval = $interval($scope.updateInfo, 5000);
           // $scope.updateInfo();
 
@@ -107,7 +116,7 @@
           $scope.connectionInterval = $interval($scope.updateConnectionStatus, txDefault.connectionChecker.checkInterval);
 
           $scope.updateInfo().then(function () {
-            if (!Wallet.coinbase && txDefault.wallet !== "ledger") {
+            if (!Web3Service.coinbase && txDefault.wallet !== "ledger") {
               $uibModal.open({
                 templateUrl: 'partials/modals/web3Wallets.html',
                 size: 'md',
@@ -129,7 +138,7 @@
       });
 
       $scope.selectAccount = function (account) {
-        Wallet.selectAccount(account);
+        Web3Service.selectAccount(account);
         $scope.updateInfo();
       };
 

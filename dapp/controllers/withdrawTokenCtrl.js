@@ -2,12 +2,12 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("withdrawTokenCtrl", function ($scope, Wallet, Token, Transaction, Utils, wallet, token, $uibModalInstance) {
+    .controller("withdrawTokenCtrl", function ($scope, Wallet, Token, Transaction, Utils, wallet, token, $uibModalInstance, Web3Service) {
 
       $scope.wallet = wallet;
       $scope.token = token;
       $scope.amount = 10;
-      $scope.to = Wallet.coinbase;
+      $scope.to = Web3Service.coinbase;
 
       $scope.send = function () {
         Token.withdraw(
@@ -16,7 +16,7 @@
           $scope.to,
           new Web3().toBigNumber($scope.amount).mul('1e' + $scope.token.decimals),
           function (e, tx) {
-            if (e) {                            
+            if (e) {
               Utils.dangerAlert(e);
             }
             else {

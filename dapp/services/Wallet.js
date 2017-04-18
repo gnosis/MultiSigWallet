@@ -2,12 +2,11 @@
   function () {
     angular
     .module('multiSigWeb')
-    .service('Wallet', function ($window, $http, $q, $rootScope, $uibModal, Utils, ABI, Connection, LightWallet) {
+    .service('Wallet', function ($window, $http, $q, $rootScope, $uibModal, Utils, ABI, Connection, Web3Service) {
 
       // Init wallet factory object
       var wallet = {
         wallets: JSON.parse(localStorage.getItem("wallets")) || {},
-        web3 : null,
         json : abiJSON,
         txParams: {
           nonce: null,
@@ -15,81 +14,10 @@
           gasLimit: txDefault.gasLimit
         },
         accounts: [],
-        coinbase: null,
         methodIds: {},
         updates: 0,
         mergedABI: []
       };
-
-      wallet.webInitialized = $q(function (resolve, reject) {
-        window.addEventListener('load', function () {
-          // Ledger wallet
-          if (txDefault.wallet == "ledger" && !isElectron) {
-            ledgerwallet(
-              {
-                rpcUrl: txDefault.ethereumNode,
-                onSubmit: function () {
-                  Utils.showSpinner();
-                },
-                onSigned: function () {
-                  Utils.stopSpinner();
-                }
-              }
-            ).then(
-              function(ledgerWeb3){
-                wallet.web3 = ledgerWeb3;
-                resolve();
-                // Open Info Modal
-                $uibModal.open({
-                  templateUrl: 'partials/modals/ledgerHelp.html',
-                  size: 'md',
-                  backdrop: 'static',
-                  windowClass: 'bootstrap-dialog type-info',
-                  controller: function ($scope, $uibModalInstance) {
-                    $scope.ok = function () {
-                      $uibModalInstance.close();
-                    };
-
-                    $scope.checkCoinbase = function () {
-                      if (wallet.coinbase) {
-                        $uibModalInstance.close();
-                      }
-                      else {
-                        setTimeout($scope.checkCoinbase, 1000);
-                      }
-                    };
-
-                    $scope.checkCoinbase();
-                  }
-                });
-              }
-            );
-          }
-          // injected web3 provider (Metamask, mist, etc)
-          else if (txDefault.wallet == "injected" && $window && $window.web3  && !isElectron) {
-            wallet.web3 = new Web3($window.web3.currentProvider);
-            resolve();
-          }
-          else if (txDefault.wallet == 'lightwallet' && isElectron) {
-            LightWallet.setup();
-            wallet.web3 = LightWallet.web3;
-            resolve();
-          }
-          else {
-            wallet.web3 = new Web3(new Web3.providers.HttpProvider(txDefault.ethereumNode));
-            // Check connection
-            wallet.web3.net.getListening(function(e){
-              if (e) {
-                Utils.dangerAlert("You are not connected to any node.");
-                reject();
-              }
-              else{
-                resolve();
-              }
-            });
-          }
-        });
-      });
 
       wallet.addMethods = function (abi) {
         abiDecoder.addABI(abi);
@@ -100,7 +28,6 @@
       // Concat cached abis
       var cachedABIs = ABI.get();
       Object.keys(cachedABIs).map(function(key) {
-        //console.log(cachedABIs[key])
         if (cachedABIs[key].abi) {
           wallet.mergedABI = wallet.mergedABI.concat(cachedABIs[key].abi);
         }
@@ -125,7 +52,7 @@
       wallet.getGasPrice = function () {
         return $q(
           function(resolve, reject){
-            wallet.web3.eth.getGasPrice(
+            Web3Service.web3.eth.getGasPrice(
               function (e, gasPrice) {
                 if (e) {
                   reject(e);
@@ -147,7 +74,7 @@
         var txParams = {
           gasPrice: EthJS.Util.intToHex(wallet.txParams.gasPrice),
           gas: EthJS.Util.intToHex(wallet.txParams.gasLimit),
-          from: wallet.coinbase
+          from: Web3Service.coinbase
         };
 
         Object.assign(txParams, tx);
@@ -187,35 +114,23 @@
       wallet.offlineTransaction = function (address, data, nonce, cb) {
         // Create transaction object
         var txInfo = {
+          from: Web3Service.coinbase,
           to: address,
           value: EthJS.Util.intToHex(0),
           gasPrice: EthJS.Util.intToHex(wallet.txParams.gasPrice),
-          gasLimit: EthJS.Util.intToHex(wallet.txParams.gasLimit),
+          gas: EthJS.Util.intToHex(wallet.txParams.gasLimit),
           nonce: nonce?nonce:EthJS.Util.intToHex(wallet.txParams.nonce),
           data: data
         };
 
-        var tx = new EthJS.Tx(txInfo);
-
-        // Get transaction hash
-        var txId = EthJS.Util.bufferToHex(tx.hash(false));
-
-        // Sign transaction hash
-        wallet.web3.eth.sign(wallet.coinbase, txId, function (e, sig) {
+        Web3Service.web3.eth.signTransaction(txInfo, function(e, signed) {
           if (e) {
             cb(e);
           }
-          else {
-            var signature = EthJS.Util.fromRpcSig(sig);
-            tx.v = EthJS.Util.intToHex(signature.v);
-            tx.r = EthJS.Util.bufferToHex(signature.r);
-            tx.s = EthJS.Util.bufferToHex(signature.s);
-
-            // Return raw transaction as hex string
-            cb(null, EthJS.Util.bufferToHex(tx.serialize()));
+          else{
+            cb(e, signed.raw);
           }
         });
-
       };
 
       /**
@@ -242,43 +157,8 @@
         );
       };
 
-      /**
-      * Get ethereum accounts and update account list.
-      */
-      wallet.updateAccounts = function (cb) {
-        return wallet.web3.eth.getAccounts.request(
-          function (e, accounts) {
-            if (e) {
-              cb(e);
-            }
-            else {
-              wallet.accounts = accounts;
-
-              if (wallet.coinbase && accounts.indexOf(wallet.coinbase) != -1) {
-                // same coinbase
-              }
-              else if (accounts) {
-                  wallet.coinbase = accounts[0];
-              }
-              else {
-                wallet.coinbase = null;
-              }
-
-              cb(null, accounts);
-            }
-          }
-        );
-      };
-
-      /**
-      * Select account
-      **/
-      wallet.selectAccount = function (account) {
-        wallet.coinbase = account;
-      };
-
       wallet.updateNonce = function (address, cb) {
-        return wallet.web3.eth.getTransactionCount.request(
+        return Web3Service.web3.eth.getTransactionCount.request(
           address,
           "pending",
           function (e, count) {
@@ -295,7 +175,7 @@
 
       wallet.updateGasPrice = function (cb) {
         if (Connection.isConnected) {
-          return wallet.web3.eth.getGasPrice.request(
+          return Web3Service.web3.eth.getGasPrice.request(
             function (e, gasPrice) {
               if (e) {
                 cb(e);
@@ -314,7 +194,7 @@
 
       wallet.updateGasLimit = function (cb) {
         if (Connection.isConnected) {
-          return wallet.web3.eth.getBlock.request(
+          return Web3Service.web3.eth.getBlock.request(
             "latest",
             function (e, block) {
               if (e) {
@@ -334,18 +214,43 @@
 
       // Init txParams
       wallet.initParams = function () {
-        return $q(function (resolve) {
-            var batchAccount = wallet.web3.createBatch();
-            var batch = wallet.web3.createBatch();
-            batchAccount.add(
-              wallet
-              .updateAccounts(
-                function (e, accounts) {
-                  var promises = $q.all(
-                    [
-                      $q(function (resolve, reject) {
+        return $q(function (resolve, reject) {
+            var batch = Web3Service.web3.createBatch();
+            Web3Service
+            .updateAccounts(
+              function (e, accounts) {
+                var promises = $q.all(
+                  [
+                    $q(function (resolve, reject) {
+                      var request = wallet.updateGasLimit(function (e) {
+                        if (e) {
+                          reject(e);
+                        }
+                        else {
+                          resolve();
+                        }
+                      });
+                      if (request) {
+                        batch.add(request);
+                      }
+                    }),
+                    $q(function (resolve, reject) {
+                      var request = wallet.updateGasPrice(function (e) {
+                        if (e) {
+                          reject(e);
+                        }
+                        else {
+                          resolve();
+                        }
+                      });
+                      if (request) {
+                        batch.add(request);
+                      }
+                    }),
+                    $q(function (resolve, reject) {
+                      if (Web3Service.coinbase) {
                         batch.add(
-                          wallet.updateGasLimit(function (e) {
+                          wallet.updateNonce(Web3Service.coinbase, function (e) {
                             if (e) {
                               reject(e);
                             }
@@ -354,67 +259,39 @@
                             }
                           })
                         );
-                      }),
-                      $q(function (resolve, reject) {
+                      }
+                      else {
+                        resolve();
+                      }
+                    }),
+                    $q(function (resolve, reject) {
+                      if (Web3Service.coinbase) {
                         batch.add(
-                          wallet.updateGasPrice(function (e) {
+                          wallet.getBalance(Web3Service.coinbase, function (e, balance) {
                             if (e) {
                               reject(e);
                             }
                             else {
+                              wallet.balance = balance;
                               resolve();
                             }
                           })
                         );
-                      }),
-                      $q(function (resolve, reject) {
-                        if (wallet.coinbase) {
-                          batch.add(
-                            wallet.updateNonce(wallet.coinbase, function (e) {
-                              if (e) {
-                                reject(e);
-                              }
-                              else {
-                                resolve();
-                              }
-                            })
-                          );
-                        }
-                        else {
-                          resolve();
-                        }
-                      }),
-                      $q(function (resolve, reject) {
-                        if (wallet.coinbase) {
-                          batch.add(
-                            wallet.getBalance(wallet.coinbase, function (e, balance) {
-                              if (e) {
-                                reject(e);
-                              }
-                              else {
-                                wallet.balance = balance;
-                                resolve();
-                              }
-                            })
-                          );
-                        }
-                        else {
-                          resolve();
-                        }
-                      })
-                    ]
-                  ).then(function () {
-                    resolve();
-                  });
+                      }
+                      else {
+                        resolve();
+                      }
+                    })
+                  ]
+                ).then(function () {
+                  resolve();
+                }, reject);
 
-                  batch.execute();
-                  return promises;
-                }
+                batch.execute();
+                return promises;
+              }
 
-              )
             );
-            batchAccount.execute();
-
           }
         );
 
@@ -656,7 +533,7 @@
       };
 
       wallet.deployWithLimit = function (owners, requiredConfirmations, limit, cb) {
-        var MyContract = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi);
+        var MyContract = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi);
 
         MyContract.new(
           owners,
@@ -670,7 +547,7 @@
       };
 
       wallet.deployWithLimitFactory = function (owners, requiredConfirmations, limit, cb) {
-        var walletFactory = wallet.web3.eth.contract(wallet.json.multiSigDailyLimitFactory.abi).at(txDefault.walletFactoryAddress);
+        var walletFactory = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimitFactory.abi).at(txDefault.walletFactoryAddress);
 
         walletFactory.create(
           owners,
@@ -684,7 +561,7 @@
       };
 
       wallet.deployWithLimitFactoryOffline = function (owners, requiredConfirmations, limit, cb) {
-        var factory = wallet.web3.eth.contract(wallet.json.multiSigDailyLimitFactory.abi).at(txDefault.walletFactoryAddress);
+        var factory = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimitFactory.abi).at(txDefault.walletFactoryAddress);
 
         var data = factory.create.getData(
           owners,
@@ -708,7 +585,7 @@
 
       wallet.deployWithLimitOffline = function (owners, requiredConfirmations, limit, cb) {
         // Get Transaction Data
-        var MyContract = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi);
+        var MyContract = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi);
         var data = MyContract.new.getData(owners, requiredConfirmations, limit, {
           data: wallet.json.multiSigDailyLimit.binHex
         });
@@ -724,11 +601,11 @@
       };
 
       wallet.getBalance = function (address, cb) {
-        return wallet.web3.eth.getBalance.request(address, cb);
+        return Web3Service.web3.eth.getBalance.request(address, cb);
       };
 
       wallet.restore = function (info, cb) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(info.address);
+        var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(info.address);
         // Check contract function works
         instance.MAX_OWNER_COUNT(function (e, count) {
           if (e && Connection.isConnected) {
@@ -742,10 +619,10 @@
             else {
               // Add wallet, add My account to the object by default, won't be
               // displayed anyway if user is not an owner, but if it is, name will be used
-              if (wallet.coinbase) {
-                var coinbase = wallet.coinbase.toLowerCase();
+              if (Web3Service.coinbase) {
+                var coinbase = Web3Service.coinbase.toLowerCase();
                 info.owners = {};
-                info.owners[coinbase] = { address: wallet.coinbase.toLowerCase(), name: 'My Account'};
+                info.owners[coinbase] = { address: coinbase, name: 'My Account'};
               }
               wallet.updateWallet(info);
               cb(null, info);
@@ -760,7 +637,7 @@
       * Get wallet owners
       */
       wallet.getOwners = function (address, cb) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         return wallet.callRequest(
           instance.getOwners,
           [],
@@ -771,8 +648,8 @@
       /**
       * add owner to wallet
       */
-      wallet.addOwner = function (address, owner, cb) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+      wallet.addOwner = function (address, owner, options, cb) {
+        var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         var data = instance.addOwner.getData(owner.address);
 
         // Get nonce
@@ -781,7 +658,18 @@
             cb(e);
           }
           else {
-            instance.submitTransaction(address, "0x0", data, count, wallet.txDefaults(), cb);
+            Web3Service.sendTransaction(
+              instance.submitTransaction,
+              [
+                address,
+                "0x0",
+                data,
+                count,
+                wallet.txDefaults()
+              ],
+              options,
+              cb
+            );
           }
         }).call();
       };
@@ -790,7 +678,7 @@
       * Sign offline Add owner transaction
       */
       wallet.addOwnerOffline = function (address, owner, cb) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         var data = instance.addOwner.getData(owner.address);
         // Get nonce
         wallet.getUserNonce(function (e, nonce) {
@@ -808,15 +696,15 @@
       * Get add owner transaction data
       **/
       wallet.getAddOwnerData = function (address, owner) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         return instance.addOwner.getData(owner.address);
       };
 
       /**
       * Remove owner
       */
-      wallet.removeOwner = function (address, owner, cb) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+      wallet.removeOwner = function (address, owner, options, cb) {
+        var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         var data = instance.removeOwner.getData(owner.address);
         // Get nonce
         wallet.getTransactionCount(address, true, true, function (e, count) {
@@ -824,7 +712,18 @@
             cb(e);
           }
           else {
-            instance.submitTransaction(address, "0x0", data, count, wallet.txDefaults(), cb);
+            Web3Service.sendTransaction(
+              instance.submitTransaction,
+              [
+                address,
+                "0x0",
+                data,
+                count,
+                wallet.txDefaults()
+              ],
+              options,
+              cb
+            );
           }
         }).call();
       };
@@ -833,7 +732,7 @@
       * Get remove owner data
       **/
       wallet.getRemoveOwnerData = function (address, owner) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         return instance.removeOwner.getData(owner.address);
       };
 
@@ -841,7 +740,7 @@
       * Sign offline remove owner transaction
       **/
       wallet.removeOwnerOffline = function (address, owner, cb) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         var data = instance.removeOwner.getData(owner.address);
         // Get nonce
         wallet.getUserNonce(function (e, nonce) {
@@ -858,8 +757,8 @@
       /**
       * Replace owner
       **/
-      wallet.replaceOwner = function (address, owner, newOwner, cb) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+      wallet.replaceOwner = function (address, owner, newOwner, options, cb) {
+        var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         var data = instance.replaceOwner.getData(owner, newOwner);
 
         // Get nonce
@@ -868,7 +767,18 @@
             cb(e);
           }
           else {
-            instance.submitTransaction(address, "0x0", data, count, wallet.txDefaults(), cb);
+            Web3Service.sendTransaction(
+              instance.submitTransaction,
+              [
+                address,
+                "0x0",
+                data,
+                count,
+                wallet.txDefaults()
+              ],
+              options,
+              cb
+            );
           }
         }).call();
       };
@@ -877,7 +787,7 @@
       * Sign replace owner offline
       **/
       wallet.replaceOwnerOffline = function (address, owner, newOwner, cb) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         var data = instance.replaceOwner.getData(owner, newOwner);
         // Get nonce
         wallet.getUserNonce(function (e, nonce) {
@@ -895,7 +805,7 @@
       * Get required confirmations number
       */
       wallet.getRequired = function (address, cb) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         return wallet.callRequest(
           instance.required,
           [],
@@ -906,8 +816,8 @@
       /**
       * Update confirmations
       */
-      wallet.updateRequired = function (address, required, cb) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+      wallet.updateRequired = function (address, required, options, cb) {
+        var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         var data = instance.changeRequirement.getData(required);
 
         // Get nonce
@@ -916,13 +826,24 @@
             cb(e);
           }
           else {
-            instance.submitTransaction(address, "0x0", data, count, wallet.txDefaults(), cb);
+            Web3Service.sendTransaction(
+              instance.submitTransaction,
+              [
+                address,
+                "0x0",
+                data,
+                count,
+                wallet.txDefaults()
+              ],
+              options,
+              cb
+            );
           }
         }).call();
       };
 
       wallet.getUpdateRequiredData = function (address, required) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         return instance.changeRequirement.getData(required);
       };
 
@@ -930,7 +851,7 @@
       * Sign transaction offline
       */
       wallet.signUpdateRequired = function (address, required, cb) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         var data = instance.changeRequirement.getData(required);
         // Get nonce
         wallet.getUserNonce(function (e, nonce) {
@@ -948,7 +869,7 @@
       * Get transaction hashes
       */
       wallet.getTransactionIds = function (address, from, to, pending, executed, cb) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         return wallet.callRequest(
           instance.getTransactionIds,
           [from, to, pending, executed],
@@ -960,7 +881,7 @@
       * Get transaction
       */
       wallet.getTransaction = function (address, txId, cb) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         return wallet.callRequest(
           instance.transactions,
           [txId],
@@ -984,7 +905,7 @@
       * Get confirmations
       */
       wallet.getConfirmations = function (address, txId, cb) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         return wallet.callRequest(
           instance.getConfirmations,
           [txId],
@@ -996,7 +917,7 @@
       * Get transaction count
       **/
       wallet.getTransactionCount = function (address, pending, executed, cb) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         return wallet.callRequest(
           instance.getTransactionCount,
           [pending, executed],
@@ -1015,7 +936,7 @@
       * Get daily limit
       **/
       wallet.getLimit = function (address, cb) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         return wallet.callRequest(
           instance.dailyLimit,
           [],
@@ -1027,7 +948,7 @@
       *
       **/
       wallet.calcMaxWithdraw = function (address, cb) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         return wallet.callRequest(
           instance.calcMaxWithdraw,
           [],
@@ -1038,8 +959,8 @@
       /**
       * Change daily limit
       **/
-      wallet.updateLimit = function (address, limit, cb) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+      wallet.updateLimit = function (address, limit, options, cb) {
+        var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         var data = instance.changeDailyLimit.getData(
           limit,
           cb
@@ -1050,7 +971,18 @@
             cb(e);
           }
           else {
-            instance.submitTransaction(address, "0x0", data, count, wallet.txDefaults(), cb);
+            Web3Service.sendTransaction(
+              instance.submitTransaction,
+              [
+                address,
+                "0x0",
+                data,
+                count,
+                wallet.txDefaults()
+              ],
+              options,
+              cb
+            );
           }
         }).call();
       };
@@ -1059,7 +991,7 @@
       * Get update limit transaction data
       **/
       wallet.getUpdateLimitData = function (address, limit) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         return instance.changeDailyLimit.getData(limit);
       };
 
@@ -1067,7 +999,7 @@
       * Sign update limit transaction
       **/
       wallet.signLimit = function (address, limit, cb) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         var data = instance.changeDailyLimit.getData(
           limit,
           cb
@@ -1088,11 +1020,15 @@
       /**
       * Confirm transaction by another wallet owner
       */
-      wallet.confirmTransaction = function (address, txId, cb) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
-        instance.confirmTransaction(
-          txId,
-          wallet.txDefaults(),
+      wallet.confirmTransaction = function (address, txId, options, cb) {
+        var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        Web3Service.sendTransaction(
+          instance.confirmTransaction,
+          [
+            txId,
+            wallet.txDefaults()
+          ],
+          options,
           cb
         );
       };
@@ -1101,7 +1037,7 @@
       * Sign confirm transaction offline by another wallet owner
       */
       wallet.confirmTransactionOffline = function (address, txId, cb) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
 
         wallet.getUserNonce(function (e, nonce) {
           if (e) {
@@ -1117,11 +1053,15 @@
       /**
       * Execute multisig transaction, must be already signed by required owners
       */
-      wallet.executeTransaction = function (address, txId, cb) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
-        instance.executeTransaction(
-          txId,
-          wallet.txDefaults(),
+      wallet.executeTransaction = function (address, txId, options, cb) {
+        var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        Web3Service.sendTransaction(
+          instance.executeTransaction,
+          [
+            txId,
+            wallet.txDefaults()
+          ],
+          options,
           cb
         );
       };
@@ -1130,7 +1070,7 @@
       * Signs transaction for execute multisig transaction, must be already signed by required owners
       */
       wallet.executeTransactionOffline = function (address, txId, cb) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
 
         wallet.getUserNonce(function (e, nonce) {
           if (e) {
@@ -1147,7 +1087,7 @@
       * Get confirmation count
       */
       wallet.confirmationCount = function (txId, cb) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         return wallet.callRequest(
           instance.transactions,
           [txId],
@@ -1166,10 +1106,10 @@
       * Get confirmations
       */
       wallet.isConfirmed = function (address, txId, cb) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         return wallet.callRequest(
           instance.confirmations,
-          [txId, wallet.coinbase],
+          [txId, Web3Service.coinbase],
           cb
         );
       };
@@ -1177,11 +1117,15 @@
       /**
       * Revoke transaction confirmation
       */
-      wallet.revokeConfirmation = function (address, txId, cb) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
-        instance.revokeConfirmation(
-          txId,
-          wallet.txDefaults(),
+      wallet.revokeConfirmation = function (address, txId, options, cb) {
+        var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        Web3Service.sendTransaction(
+          instance.revokeConfirmation,
+          [
+            txId,
+            wallet.txDefaults()
+          ],
+          options,
           cb
         );
       };
@@ -1190,7 +1134,7 @@
       * Revoke transaction confirmation offline
       */
       wallet.revokeConfirmationOffline = function (address, txId, cb) {
-        var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         wallet.getUserNonce(function (e, nonce) {
           if (e) {
             cb(e);
@@ -1205,25 +1149,29 @@
       /**
       * Submit transaction
       **/
-      wallet.submitTransaction = function (address, tx, abi, method, params, cb) {
+      wallet.submitTransaction = function (address, tx, abi, method, params, options, cb) {
         var data = '0x0';
         if (abi && method) {
-          var instance = wallet.web3.eth.contract(abi).at(tx.to);
+          var instance = Web3Service.web3.eth.contract(abi).at(tx.to);
           data = instance[method].getData.apply(this, params);
         }
-        var walletInstance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        var walletInstance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         // Get nonce
         wallet.getTransactionCount(address, true, true, function (e, count) {
           if (e) {
             cb(e);
           }
           else {
-            walletInstance.submitTransaction(
-              tx.to,
-              tx.value,
-              data,
-              count,
-              wallet.txDefaults(),
+            Web3Service.sendTransaction(
+              walletInstance.submitTransaction,
+              [
+                tx.to,
+                tx.value,
+                data,
+                count,
+                wallet.txDefaults(),
+              ],
+              options,
               cb
             );
           }
@@ -1236,10 +1184,10 @@
       wallet.signTransaction = function (address, tx, abi, method, params, cb) {
         var data = '0x0';
         if (abi && method) {
-          var instance = wallet.web3.eth.contract(abi).at(tx.to);
+          var instance = Web3Service.web3.eth.contract(abi).at(tx.to);
           data = instance[method].getData.apply(this, params);
         }
-        var walletInstance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+        var walletInstance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
         // Get nonce
         wallet.getUserNonce(function (e, nonce) {
           if (e) {

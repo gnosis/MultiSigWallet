@@ -5,7 +5,7 @@
     .controller("addOwnerCtrl", function ($scope, Wallet, Utils, Transaction, wallet, $uibModalInstance) {
       $scope.send = function () {
         try{
-          Wallet.addOwner(wallet.address, $scope.owner, function (e, tx) {
+          Wallet.addOwner(wallet.address, $scope.owner, {onlySimulate: false}, function (e, tx) {
             if (e) {
               Utils.dangerAlert(e);
             }
@@ -25,9 +25,24 @@
         }
       };
 
+      $scope.simulate = function () {
+        try{
+          Wallet.addOwner(wallet.address, $scope.owner, {onlySimulate: true}, function (e, tx) {
+            if (e) {
+              Utils.dangerAlert(e);
+            }
+            else {
+              Utils.simulatedTransaction(tx);
+            }
+          });
+        } catch (error) {
+          Utils.dangerAlert(error);
+        }
+      };
+
       $scope.sign = function () {
         Wallet.addOwnerOffline(wallet.address, $scope.owner, function (e, tx) {
-          if (e) {            
+          if (e) {
             Utils.dangerAlert(e);
           }
           else {

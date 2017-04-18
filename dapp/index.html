@@ -18,7 +18,6 @@
     <link href="./bower_components/SpinKit/css/spinkit.css" rel="stylesheet" type="text/css" />
     <link href="./bower_components/angular-ui-select/dist/select.css" rel="stylesheet" type="text/css" />
     <!-- 3rd party Script -->
-    <!-- Insert this line above script imports  -->
     <script>
       if (isElectron) {
         if (typeof module === 'object') {window.module = module; module = undefined;}
@@ -63,6 +62,7 @@
     <script src="./partials.js"></script>
 
     <!-- Services -->
+    <script src="./services/Web3Service.js"></script>
     <script src="./services/Wallet.js"></script>
     <script src="./services/Utils.js"></script>
     <script src="./services/Transaction.js"></script>
@@ -163,10 +163,10 @@
                </ul>
               </li>
               <li ng-show="loggedIn">
-                <p class="navbar-text"> Balance: {{balance|ether}} </p>
+                <p class="navbar-text" ng-show="balance"> Balance: {{balance|ether}} </p>
               </li>
               <li ng-show="loggedIn">
-                <p class="navbar-text"> Nonce: {{nonce}} </p>
+                <p class="navbar-text" ng-show="nonce"> Nonce: {{nonce}} </p>
               </li>
               <li>
                 <span class="navbar-text">{{ethereumChain.chain.substr(0, 1).toUpperCase() + ethereumChain.chain.substr(1)}}</span>

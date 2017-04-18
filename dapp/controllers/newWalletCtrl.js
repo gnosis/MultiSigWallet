@@ -2,13 +2,13 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("newWalletCtrl", function ($scope, $uibModalInstance, $uibModal, Utils, Transaction, Wallet, callback) {
+    .controller("newWalletCtrl", function ($scope, $uibModalInstance, $uibModal, Utils, Transaction, Wallet, callback, Web3Service) {
 
       $scope.newOwner = {};
       $scope.owners = {};
-      $scope.owners[Wallet.coinbase] = {
+      $scope.owners[Web3Service.coinbase] = {
         name: 'My account',
-        address: Wallet.coinbase
+        address: Web3Service.coinbase
       };
 
       $scope.confirmations = 1;

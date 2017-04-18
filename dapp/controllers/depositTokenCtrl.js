@@ -11,8 +11,9 @@
           $scope.token.address,
           $scope.wallet.address,
           new Web3().toBigNumber($scope.amount).mul('1e' + $scope.token.decimals),
+          {onlySimulate: false},
           function(e, tx){
-            if (e) {              
+            if (e) {
               Utils.dangerAlert(e);
             }
             else {
@@ -24,6 +25,23 @@
                     Utils.success("Deposit transaction was mined.");
                   }
                 });
+            }
+          }
+        );
+      };
+
+      $scope.simulate = function () {
+        Token.transfer(
+          $scope.token.address,
+          $scope.wallet.address,
+          new Web3().toBigNumber($scope.amount).mul('1e' + $scope.token.decimals),
+          {onlySimulate: true},
+          function(e, tx){
+            if (e) {
+              Utils.dangerAlert(e);
+            }
+            else {
+              Utils.simulatedTransaction(tx);
             }
           }
         );

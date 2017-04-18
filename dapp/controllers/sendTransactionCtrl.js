@@ -2,11 +2,11 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("sendTransactionCtrl", function ($scope, Wallet, Utils, Transaction, $uibModalInstance, ABI) {
+    .controller("sendTransactionCtrl", function ($scope, Wallet, Utils, Transaction, $uibModalInstance, ABI, Web3Service) {
       $scope.methods = [];
       $scope.tx = {
         value: 0,
-        from: Wallet.coinbase
+        from: Web3Service.coinbase
       };
       $scope.params = [];
 
@@ -67,6 +67,52 @@
                     ABI.update(undefined, $scope.tx.to, $scope.name);
                   }
                 }
+              }
+            });
+          } catch (error) {
+            Utils.dangerAlert(error);
+          }
+        }
+      };
+
+      $scope.simulate = function () {
+        var tx = {};
+        Object.assign(tx, $scope.tx);
+        var params = [];
+        Object.assign(params, $scope.params);
+        if ($scope.method) {
+          params.map(function(param, index) {
+            // Parse if array param
+            if ($scope.method.inputs && $scope.method.inputs[index].type.indexOf("[]") !== -1) {
+              try {
+                params[index] = JSON.parse($scope.params[index]);
+              }
+              catch (e) {
+                Utils.dangerAlert(e);
+              }
+            }
+          });
+        }
+        tx.value = new Web3().toBigNumber($scope.tx.value).mul('1e18');
+        // if method, use contract instance method
+        if ($scope.method && $scope.method.index !== undefined && $scope.method.index !== "") {
+          Transaction.simulateMethod(tx, $scope.abiArray, $scope.method.name, params, function (e, tx) {
+            if (e) {
+              Utils.dangerAlert(e);
+            }
+            else {
+              Utils.simulatedTransaction(tx);
+            }
+          });
+        }
+        else {
+          try {
+            Transaction.simulate(tx, function (e, tx) {
+              if (e) {
+                Utils.dangerAlert(e);
+              }
+              else {
+                Utils.simulatedTransaction(tx);
               }
             });
           } catch (error) {

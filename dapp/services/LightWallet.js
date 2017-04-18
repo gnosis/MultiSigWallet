@@ -80,14 +80,6 @@
             rpcUrl: txDefault.ethereumNode
           }));
 
-          //factory.engine.addProvider(new CacheSubprovider());
-
-          factory.engine.on('block', function(block){
-            console.log('================================');
-            console.log('BLOCK CHANGED:', '#'+block.number.toString('hex'), '0x'+block.hash.toString('hex'));
-            console.log('================================');
-          })
-
           factory.engine.start();
         }
       };

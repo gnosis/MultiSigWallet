@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .service('Transaction', function(Wallet, $rootScope, $uibModal, $interval, $q) {
+    .service('Transaction', function(Web3Service, Wallet, $rootScope, $uibModal, $interval, $q) {
       var factory = {
         requiredReceipt: {},
         requiredInfo: {},
@@ -48,7 +48,7 @@
           $rootScope.$digest();
         }
         catch (e) {}
-        Wallet.web3.eth.getTransaction(
+        Web3Service.web3.eth.getTransaction(
           tx.txHash,
           getTransactionInfo
         );
@@ -99,22 +99,47 @@
       * Send transaction, signed by wallet service provider
       */
       factory.send = function (tx, cb) {
-        Wallet.web3.eth.sendTransaction(tx, function (e, txHash) {
-          if (e) {
-            cb(e);
-          }
-          else {
-            factory.add(
-              {
-                txHash: txHash,
-                callback: function (receipt) {
-                  cb(null, receipt);
+        Web3Service.sendTransaction(
+          Web3Service.web3.eth,
+          [
+            tx
+          ],
+          { onlySimulate: false },
+          function (e, txHash) {
+            if (e) {
+              cb(e);
+            }
+            else {
+              factory.add(
+                {
+                  txHash: txHash,
+                  callback: function (receipt) {
+                    cb(null, receipt);
+                  }
                 }
-              }
-            );
-            cb(null, txHash);
+              );
+              cb(null, txHash);
+            }
           }
-        });
+        );
+      };
+
+      factory.simulate = function (tx, cb) {
+        Web3Service.sendTransaction(
+          Web3Service.web3.eth,
+          [
+            tx
+          ],
+          { onlySimulate: true },
+          function (e, txHash) {
+            if (e) {
+              cb(e);
+            }
+            else {
+              cb(null, txHash);
+            }
+          }
+        );
       };
 
       /**
@@ -128,30 +153,20 @@
           else {
             // Create transaction object
             var txInfo = {
+              from: Web3Service.coinbase,
               to: txObject.to,
               value: txObject.value,
               gasPrice: EthJS.Util.intToHex(Wallet.txParams.gasPrice),
-              gasLimit: EthJS.Util.intToHex(Wallet.txParams.gasLimit),
+              gas: EthJS.Util.intToHex(Wallet.txParams.gasLimit),
               nonce: EthJS.Util.intToHex(nonce)
             };
-            var tx = new EthJS.Tx(txInfo);
 
-            // Get transaction hash
-            var txHash = EthJS.Util.bufferToHex(tx.hash(false));
-
-            // Sign transaction hash
-            Wallet.web3.eth.sign(Wallet.coinbase, txHash, function (e, sig) {
+            Web3Service.web3.eth.signTransaction(txInfo, function(e, signed) {
               if (e) {
                 cb(e);
               }
-              else {
-                var signature = EthJS.Util.fromRpcSig(sig);
-                tx.v = EthJS.Util.intToHex(signature.v);
-                tx.r = EthJS.Util.bufferToHex(signature.r);
-                tx.s = EthJS.Util.bufferToHex(signature.s);
-
-                // Return raw transaction as hex string
-                cb(null, EthJS.Util.bufferToHex(tx.serialize()));
+              else{
+                cb(e, signed.raw);
               }
             });
           }
@@ -165,7 +180,7 @@
       factory.signMethodOffline = function (tx, abi, method, params, cb) {
 
         // Get data
-        var instance = Wallet.web3.eth.contract(abi).at(tx.to);
+        var instance = Web3Service.web3.eth.contract(abi).at(tx.to);
 
         tx.data = instance[method].getData.apply(this, params);
 
@@ -178,30 +193,53 @@
       */
       factory.sendMethod = function (tx, abi, method, params, cb) {
         // Instance contract
-        var instance = Wallet.web3.eth.contract(abi).at(tx.to);
-        var transactionParams = params.slice();
+        var instance = Web3Service.web3.eth.contract(abi).at(tx.to);
 
-        // sendTransction takes (param1, param2, ..., paramN, txObject, cb)
-        transactionParams.push(tx);
-        transactionParams.push(function (e, txHash) {
-          if (e) {
-            cb(e);
-          }
-          else {
-              // Add transaction
-              factory.add(
-                {
-                  txHash: txHash,
-                  callback: function (receipt) {
-                    cb(null, receipt);
-                  }
-                }
-              );
-              cb(null, txHash);
-          }
-        });
         try {
-          instance[method].apply(instance[method], transactionParams);
+          Web3Service.sendTransaction(
+            instance[method],
+            params,
+            { onlySimulate: false },
+            function (e, txHash) {
+              if (e) {
+                cb(e);
+              }
+              else {
+                  // Add transaction
+                  factory.add(
+                    {
+                      txHash: txHash,
+                      callback: function (receipt) {
+                        cb(null, receipt);
+                      }
+                    }
+                  );
+                  cb(null, txHash);
+              }
+          });
+        }
+        catch (e) {
+          cb(e);
+        }
+      };
+
+      factory.simulateMethod = function (tx, abi, method, params, cb) {
+        // Instance contract
+        var instance = Web3Service.web3.eth.contract(abi).at(tx.to);
+
+        try {
+          Web3Service.sendTransaction(
+            instance[method],
+            params,
+            { onlySimulate: true },
+            function (e, txHash) {
+              if (e) {
+                cb(e);
+              }
+              else {
+                cb(null, txHash);
+              }
+          });
         }
         catch (e) {
           cb(e);
@@ -212,7 +250,7 @@
       * Send signed transaction
       **/
       factory.sendRawTransaction = function (tx, cb) {
-        Wallet.web3.eth.sendRawTransaction(
+        Web3Service.web3.eth.sendRawTransaction(
           tx,
           cb
         );
@@ -224,7 +262,7 @@
       */
       factory.checkReceipts = function () {
         // Create batch object
-        var batch = Wallet.web3.createBatch();
+        var batch = Web3Service.web3.createBatch();
 
         // Add transactions without receipt to batch request
         var transactions = factory.get();
@@ -235,13 +273,13 @@
           // Get transaction receipt
           if (tx && !tx.receipt) {
             batch.add(
-              Wallet.web3.eth.getTransactionReceipt.request(txHashes[i], processReceipt)
+              Web3Service.web3.eth.getTransactionReceipt.request(txHashes[i], processReceipt)
             );
           }
           // Get transaction info
           if (tx && !tx.info) {
             batch.add(
-              Wallet.web3.eth.getTransaction.request(
+              Web3Service.web3.eth.getTransaction.request(
                 txHashes[i],
                 getTransactionInfo
               )
@@ -254,9 +292,9 @@
 
       factory.getEthereumChain = function () {
         return $q(function (resolve, reject) {
-          Wallet.webInitialized.then(
+          Web3Service.webInitialized.then(
             function () {
-              Wallet.web3.eth.getBlock(0, function(e, block) {
+              Web3Service.web3.eth.getBlock(0, function(e, block) {
                 var data = {};
 
                 if (e) {
@@ -290,7 +328,7 @@
         });
       };
 
-      Wallet
+      Web3Service
       .webInitialized
       .then(
         function () {

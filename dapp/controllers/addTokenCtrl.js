@@ -2,7 +2,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("addTokenCtrl", function ($scope, $uibModalInstance, Wallet, Token, token, wallet) {
+    .controller("addTokenCtrl", function (Web3Service, $scope, $uibModalInstance, Wallet, Token, token, wallet) {
 
       $scope.editToken = {}; // Used for editing data
       $scope.token = token;
@@ -12,14 +12,14 @@
       if (!$scope.wallet.tokens) {
         $scope.wallet.tokens = {};
       }
-      
+
       if (Object.keys(token).length) {
         $scope.editMode = true;
       }
 
       // Refresh token info when address changes
       $scope.updateInfo = function () {
-        var batchInfo = Wallet.web3.createBatch();
+        var batchInfo = Web3Service.web3.createBatch();
 
         batchInfo.add(
           Token.name(

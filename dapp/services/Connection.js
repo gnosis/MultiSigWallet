@@ -25,21 +25,8 @@
       * Check config.js for the endpoint configuration
       */
       factory.checkConnection = function () {
-        /*$http({
-          method : txDefault.connectionChecker.method,
-          url : txDefault.connectionChecker.url,
-        })
-        .then(function successCallBack (response) {
-            factory.isConnected = true;
-            callDigest();
-          }, function errorCallBack (response) {
-            factory.isConnected = false;
-            callDigest();
-          }
-        );*/
         factory.isConnected = navigator.onLine; // true | false
         callDigest();
-
       };
 
       setup();

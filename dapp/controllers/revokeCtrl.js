@@ -4,7 +4,7 @@
     .module("multiSigWeb")
     .controller("revokeCtrl", function ($scope, txId, address, Wallet, Transaction, $uibModalInstance, Utils) {
       $scope.send = function () {
-        Wallet.revokeConfirmation(address, txId, function (e, tx) {
+        Wallet.revokeConfirmation(address, txId, {onlySimulate: false}, function (e, tx) {
           if (e) {
             Utils.dangerAlert(e);
           }

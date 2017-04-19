@@ -7,17 +7,21 @@
         updates: 0
       };
 
-      factory.getConfiguration = function () {
+      factory.getUserConfiguration = function () {
         return Object.assign({}, txDefault, JSON.parse(localStorage.getItem("userConfig")));
       };
 
-      factory.setConfiguration = function (value) {
-        localStorage.setItem("userConfig", value);
+      factory.getConfiguration = function (key) {
+        return JSON.parse(localStorage.getItem(key));
+      };
+
+      factory.setConfiguration = function (key, value) {
+        localStorage.setItem(key, value);
         this.updates++;
       };
 
-      factory.removeConfiguration = function (value) {
-        localStorage.removeItem("userConfig");
+      factory.removeConfiguration = function (key) {
+        localStorage.removeItem(key);
         this.updates++;
       };
 

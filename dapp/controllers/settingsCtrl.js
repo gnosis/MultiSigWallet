@@ -15,8 +15,10 @@
       function loadConfig () {
         $scope.config = Config.getUserConfiguration(); //Object.assign({}, txDefault, JSON.parse(localStorage.getItem("userConfig")));
         // Maps variables used by ui-select
+        var selectedEthereumNode = $scope.config.ethereumNodes.filter(function (item) { return item.url == $scope.config.ethereumNode; });
         $scope.config.selectedEthereumNode = {
-          url: $scope.config.ethereumNode
+          url: $scope.config.ethereumNode,
+          name: selectedEthereumNode.length == 1 ? selectedEthereumNode[0] : 'Custom node'
         };
 
         $scope.config.ethereumNodes.map(function (item) {
@@ -66,8 +68,9 @@
               delete configCopy[item];
             }
         });
-
-        Config.setConfiguration(JSON.stringify(configCopy));
+        // Save new configuation
+        Config.setConfiguration("userConfig", JSON.stringify(configCopy));
+        
         if (Web3Service.web3.currentProvider.constructor.name == "HttpProvider") {
           Web3Service.web3 = new Web3( new Web3.providers.HttpProvider($scope.config.ethereumNode));
           $window.web3 = Web3Service.web3;

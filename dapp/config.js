@@ -5,7 +5,8 @@ var txDefaultOrig =
   ethereumNode: "https://mainnet.infura.io:443",
   alertNode: {
     url : "https://alerts.gnosis.pm",
-    authCode: null
+    authCode: null,
+    name: "Mainnet"
   },
   connectionChecker:{
     method : "OPTIONS",
@@ -40,12 +41,31 @@ var txDefault = {
   alertNodes: [
     {
       url: 'https://alerts.gnosis.pm',
-      authCode: null
+      authCode: null,
+      name: 'Mainnet'
+    },
+    {
+      url: 'https://testalerts.gnosis.pm',
+      authCode: null,
+      name: 'Kovan'
     }
   ],
   walletFactoryAddresses: [
     {
+      name: 'Mainnet',
       address: txDefaultOrig.walletFactoryAddress
+    },
+    {
+      name: 'Ropsten',
+      address: '0x5cb85db3e237cac78cbb3fd63e84488cac5bd3dd'
+    },
+    {
+      name: 'Kovan',
+      address: '0xa0dbdadcbcc540be9bf4e9a812035eb1289dad73'
+    },
+    {
+      name: 'Privatenet',
+      address: '0xd79426bcee5b46fde413ededeb38364b3e666097'
     }
   ]
 };

@@ -5,8 +5,7 @@
       [
         'ui.bootstrap',
         'ngRoute',
-        'ngclipboard',
-        'ui.select'
+        'ngclipboard'        
       ]
     );
   }

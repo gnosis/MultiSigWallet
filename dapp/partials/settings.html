@@ -9,22 +9,12 @@
       <div class="row">
         <div class="col-md-6 form-group">
           <label for="node">Ethereum node</label>
-          <ui-select ng-model="config.selectedEthereumNode"
-            tagging="addCustomEthereumNode"
-            tagging-label="false"
-            id="node">
-            <ui-select-match>{{$select.selected.name ? $select.selected.name : $select.selected.url }}</ui-select-match>
-            <ui-select-choices repeat="node in config.ethereumNodes | selectFilter: {url: $select.search, name: $select.search}">
-              <div ng-bind-html="toHtml(node.name | highlight: $select.search)"></div>
-              <div ng-bind-html="toHtml(node.url | highlight: $select.search)"></div>
-              <ui-select-match>
-                  <span ng-bind-html="toHtml(node.name | highlight: $select.search)"></span>
-              </ui-select-match>
-              <ui-select-choices repeat="node in config.ethereumNodes | selectFilter: {url: $select.search, name: $select.search}">
-                  <span ng-bind-html="toHtml(node.url | highlight: $select.search)"></span>
-              </ui-select-choices>
-            </ui-select-choices>
-          </ui-select>
+          <editable-select
+            ng-model="config.selectedEthereumNode"
+            options="config.ethereumNodes"
+            other="Custom node"
+            template-url="editable-select-settings-tpl.html">
+          </editable-select>
         </div>
         <div class="col-md-6 form-group">
           <label for="wallet-factory">Web3 wallet</label>
@@ -55,21 +45,12 @@
       <div class="row">
         <div class="col-md-6 form-group">
           <label for="alert-nodes">Alert node</label>
-          <ui-select ng-model="config.alertNode"
-            tagging="addCustomAlertNode"
-            tagging-label="false"
-            id="alert-nodes">
-            <ui-select-match>{{$select.selected.url}}</ui-select-match>
-            <ui-select-choices repeat="node in config.alertNodes | selectFilter: {url: $select.search, authCode: $select.search}">
-              <div ng-bind-html="toHtml(node.url | highlight: $select.search)"></div>
-              <ui-select-match>
-                  <span ng-bind-html="toHtml(node.url | highlight: $select.search)"></span>
-              </ui-select-match>
-              <ui-select-choices repeat="node in config.alertNodes | selectFilter: {url: $select.search, authCode: $select.search}">
-                  <span ng-bind-html="toHtml(node.url | highlight: $select.search)"></span>
-              </ui-select-choices>
-            </ui-select-choices>
-          </ui-select>
+          <editable-select
+            ng-model="config.alertNode"
+            options="config.alertNodes"
+            other="Custom node"
+            template-url="editable-select-settings-tpl.html">
+          </editable-select>
         </div>
         <div class="col-md-6 form-group">
           <label for="wallet-factory">Authorization code</label>
@@ -87,21 +68,13 @@
       <div class="row">
         <div class="col-md-6 form-group">
           <label for="wallet-factory">Wallet factory contract</label>
-          <ui-select ng-model="config.selectedWalletFactoryAddress"
-            tagging="addCustomWalletFactoryAddress"
-            tagging-label="false"
-            id="node">
-            <ui-select-match>{{$select.selected.address}}</ui-select-match>
-            <ui-select-choices repeat="item in config.walletFactoryAddresses | selectFilter: {address: $select.search}">
-              <div ng-bind-html="toHtml(item.address | highlight: $select.search)"></div>
-              <ui-select-match>
-                  <span ng-bind-html="toHtml(item.address | highlight: $select.search)"></span>
-              </ui-select-match>
-              <ui-select-choices repeat="item in config.walletFactoryAddresses | selectFilter: {address: $select.search}">
-                  <span ng-bind-html="toHtml(item.address | highlight: $select.search)"></span>
-              </ui-select-choices>
-            </ui-select-choices>
-          </ui-select>
+          <editable-select
+            ng-model="config.walletFactoryAddress"
+            options="config.walletFactoryAddresses"
+            other="Custom contract"
+            template-url="editable-select-contract-settings-tpl.html"
+            type="contract-address">
+          </editable-select>          
         </div>
       </div>
     </div>

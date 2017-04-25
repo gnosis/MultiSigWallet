@@ -166,7 +166,7 @@
         'ng-options="model.value for model in items track by model.name"' +
         'ng-model="selectedItem"' +
         'ng-change="changeEvent()"></select>',
-        scope: {          
+        scope: {
           defaultItem: "=",
           changeEvent: "@",
           selectedItem: "="
@@ -184,6 +184,10 @@
               {
                 name: 'lightwallet',
                 value: 'Light Wallet',
+              },
+              {
+                name: 'remotenode',
+                value: 'Remote node',
               }
             );
           }
@@ -196,7 +200,11 @@
                 {
                   name: 'ledger',
                   value: 'Ledger Wallet',
-                }
+                },
+                {
+                  name: 'remotenode',
+                  value: 'Remote node',
+                }                
               );
           }
 
@@ -217,6 +225,89 @@
 
           scope.changeEvent = function() {
             scope.$parent.config.wallet = scope.selectedItem.name;
+          }
+        }
+      };
+    })
+    .directive('editableSelect', function() {
+      return {
+        restrict: 'E',
+        require: '^ngModel',
+        scope: {
+          ngModel: '=',
+          options: '=',
+          other: '@'
+        },
+        replace: true,
+        templateUrl: function (element, attrs) {
+            return 'partials/' + attrs.templateUrl;
+        },
+        link: function(scope, element, attrs) {
+
+          function isDisabled () {
+            return scope.ngModel.name == scope.other ? false : true
+          }
+
+          scope.isDisabled = isDisabled();
+
+          // Wallet factory contract
+          if (attrs.type && attrs.type == 'contract-address') {
+            scope.click = function(option) {
+              if (option.address == undefined) {
+                scope.ngModel = {name: option, address: option};
+              }
+              else {
+                scope.ngModel = option;
+              }
+
+              scope.isDisabled = !scope.other || scope.other !== option;
+              if (!scope.isDisabled) {
+                element[0].querySelector('.editable-select').focus();
+              }
+            };
+
+            var unwatch = scope.$watch('ngModel', function(val) {
+              scope.isDisabled = isDisabled();
+              if (!scope.isDisabled) {
+                if (val.address) {
+                  scope.other = {'name': val.name, 'address': val.address};
+                }
+                else {
+                  scope.other = {'name': val, 'address': val};
+                }
+              }
+            });
+
+            scope.$on('$destroy', unwatch);
+          }
+          else {
+            scope.click = function(option) {
+              if (option.url == undefined) {
+                scope.ngModel = {name: option, url: option};
+              }
+              else {
+                scope.ngModel = option;
+              }
+
+              scope.isDisabled = !scope.other || scope.other !== option;
+              if (!scope.isDisabled) {
+                element[0].querySelector('.editable-select').focus();
+              }
+            };
+
+            var unwatch = scope.$watch('ngModel', function(val) {
+              scope.isDisabled = isDisabled();
+              if (!scope.isDisabled) {
+                if (val.url) {
+                  scope.other = {'name': val.name, 'url': val.url};
+                }
+                else {
+                  scope.other = {'name': val, 'url': val};
+                }
+              }
+            });
+
+            scope.$on('$destroy', unwatch);
           }
         }
       };

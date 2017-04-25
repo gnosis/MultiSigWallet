@@ -20,9 +20,33 @@
           url: $scope.config.ethereumNode,
           name: selectedEthereumNode.length == 1 ? selectedEthereumNode[0].name : 'Custom node'
         };
-        $scope.config.selectedWalletFactoryAddress = {
-          address: $scope.config.walletFactoryAddress
-        };
+
+        for (var x in $scope.config.ethereumNodes) {
+          var item = $scope.config.ethereumNodes[x];
+
+          if (item.url == $scope.config.ethereumNode) {
+            $scope.config.selectedEthereumNode.name = item.name;
+            break;
+          }
+        }
+
+        var walletContractCount = 0;
+        for (var x in $scope.config.walletFactoryAddresses) {
+          var item = $scope.config.walletFactoryAddresses[x];
+
+          if (item.address == $scope.config.walletFactoryAddress) {
+            $scope.config.walletFactoryAddress = {name:item.name, address: item.address};
+            break;
+          }
+
+          if (walletContractCount == $scope.config.walletFactoryAddresses.length-1) {
+            $scope.config.walletFactoryAddress = {name:'Custom contract', address: $scope.config.walletFactoryAddress};
+            break;
+          }
+
+          walletContractCount++;
+        }
+
       }
 
       loadConfig();
@@ -40,21 +64,30 @@
       * Updates configuration
       */
       $scope.update = function () {
-        // Wraps selectedEthereumNode.url to ethereumNode
-        // See reverse mapping in loadConfig()
-        if ($scope.config.selectedEthereumNode) {
-            $scope.config.ethereumNode = $scope.config.selectedEthereumNode.url;
-        }
-
-        // Wraps selectedWalletFactoryAddress.address to walletFactoryAddress
-        if ($scope.config.selectedWalletFactoryAddress) {
-          $scope.config.walletFactoryAddress = $scope.config.selectedWalletFactoryAddress.address;
-        }
         // Create a config copy
         var configCopy = {};
         angular.copy($scope.config, configCopy);
 
-        // Check values blacklist
+        // Wraps selectedEthereumNode.url to ethereumNode
+        // See reverse mapping in loadConfig()
+        if (configCopy.selectedEthereumNode) {
+          if (!configCopy.selectedEthereumNode.url) {
+            Utils.dangerAlert({message:'Please specify an ethereum node.'});
+            return;
+          }
+          configCopy.ethereumNode = configCopy.selectedEthereumNode.url;
+        }
+
+        // Wraps selectedWalletFactoryAddress.address to walletFactoryAddress
+        if (configCopy.walletFactoryAddress) {
+          if (!configCopy.walletFactoryAddress.address) {
+            Utils.dangerAlert({message:'Please specify a wallet factory contract.'});
+            return;
+          }
+          configCopy.walletFactoryAddress = configCopy.walletFactoryAddress.address;
+        }
+
+        // Check blacklist values
         Object.keys(configCopy).map(function (item) {
             if (configBlacklist.indexOf(item) !== -1) {
               delete configCopy[item];
@@ -63,12 +96,15 @@
         // Save new configuation
         Config.setConfiguration("userConfig", JSON.stringify(configCopy));
 
-        if (Web3Service.web3.currentProvider.constructor.name == "HttpProvider") {
+        /*if (Web3Service.web3.currentProvider.constructor.name == "HttpProvider") {
           Web3Service.web3 = new Web3( new Web3.providers.HttpProvider($scope.config.ethereumNode));
           $window.web3 = Web3Service.web3;
-        }
+        }*/
 
         loadConfiguration(); // config.js
+
+        // Reload we3 provider
+        Web3Service.reloadWeb3Provider();
 
         Utils.success("Configuration updated successfully.");
         showHideAuthCodeBtn();
@@ -122,8 +158,7 @@
           controller: function ($uibModalInstance, $scope) {
             $scope.ok = function () {
               $uibModalInstance.close();
-              //localStorage.removeItem("userConfig");
-              Config.removeConfiguration();
+              Config.removeConfiguration("userConfig");
               Object.assign(txDefault, txDefaultOrig);
             };
 
@@ -137,7 +172,6 @@
           function () {
             loadConfig();
             Utils.success("Configuration reseted successfully.");
-            //$scope.config = Object.assign({}, txDefault, JSON.parse(localStorage.getItem("userConfig")));
             showHideAuthCodeBtn();
           }
         );
@@ -221,7 +255,6 @@
             Config.setConfiguration(JSON.stringify(config));
             $scope.config = config;
 
-            // $scope.showDeleteAuthCodeBtn = false;
             showHideAuthCodeBtn();
           }
         );

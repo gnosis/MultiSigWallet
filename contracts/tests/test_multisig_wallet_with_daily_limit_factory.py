@@ -43,7 +43,7 @@ class TestContract(TestCase):
             language='solidity',
             contract_name="MultiSigWalletWithDailyLimitFactory"
         )
-        self.assertLess(self.s.block.gas_used - gas, 2000000)
+        self.assertLess(self.s.block.gas_used - gas, 2500000)
         print "Deployment costs: {}".format(self.s.block.gas_used - gas)
         # Create wallet
         required_accounts = 2

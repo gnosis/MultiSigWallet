@@ -70,8 +70,10 @@ class TestContract(TestCase):
         self.assertEqual(
             self.multisig_wallet.getTransactionIds(0, 1, exclude_pending, include_executed),
             [transaction_id_2])
+        # Execution fails, because sender is not wallet owner
+        self.assertRaises(TransactionFailed, self.multisig_wallet.executeTransaction, transaction_id, sender=keys[9])
         # Because the # required confirmations changed to 1, the addOwner transaction can be executed now
-        self.multisig_wallet.executeTransaction(transaction_id)
+        self.multisig_wallet.executeTransaction(transaction_id, sender=keys[wa_1])
         self.assertEqual(
             self.multisig_wallet.getTransactionIds(0, 2, exclude_pending, include_executed),
             [transaction_id, transaction_id_2])

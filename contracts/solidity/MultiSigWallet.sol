@@ -221,6 +221,7 @@ contract MultiSigWallet {
     /// @param transactionId Transaction ID.
     function executeTransaction(uint transactionId)
         public
+        ownerExists(msg.sender)
         notExecuted(transactionId)
     {
         if (isConfirmed(transactionId)) {

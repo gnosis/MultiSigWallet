@@ -1,6 +1,6 @@
 # ethereum
 from ethereum import tester as t
-from ethereum.tester import keys, accounts
+from ethereum.tester import keys, accounts, TransactionFailed, ContractCreationFailed
 from preprocessor import PreProcessor
 # standard libraries
 from unittest import TestCase
@@ -78,10 +78,19 @@ class TestContract(TestCase):
         self.assertEqual(self.s.block.get_balance(accounts[wa_1]), wa_1_balance + value_2*2)
         self.assertEqual(self.multisig_wallet.calcMaxWithdraw(), daily_limit_updated - value_2*2)
         # Third time fails, because daily limit was reached
-        self.multisig_wallet.submitTransaction(accounts[wa_1], value_2, "", sender=keys[wa_2])
+        transaction_id = self.multisig_wallet.submitTransaction(accounts[wa_1], value_2, "", sender=keys[wa_2])
+        self.assertFalse(self.multisig_wallet.transactions(transaction_id)[3])
         self.assertEqual(self.s.block.get_balance(self.multisig_wallet.address), deposit - value_1 - value_2*2)
         self.assertEqual(self.s.block.get_balance(accounts[wa_1]), wa_1_balance + value_2*2)
         self.assertEqual(self.multisig_wallet.calcMaxWithdraw(), 0)
+        # Let one day pass
+        self.s.block.timestamp += self.TWENTY_FOUR_HOURS + 1
+        self.assertEqual(self.multisig_wallet.calcMaxWithdraw(), daily_limit_updated)
+        # Execute transaction should work now but fails, because it is a wrong sender
+        self.assertRaises(TransactionFailed, self.multisig_wallet.executeTransaction, transaction_id, sender=keys[9])
+        # But it works with the right sender
+        self.multisig_wallet.executeTransaction(transaction_id, sender=keys[wa_1])
+        self.assertTrue(self.multisig_wallet.transactions(transaction_id)[3])
         # Let one day pass
         self.s.block.timestamp += self.TWENTY_FOUR_HOURS + 1
         self.assertEqual(self.multisig_wallet.calcMaxWithdraw(), daily_limit_updated)
@@ -90,12 +99,15 @@ class TestContract(TestCase):
         wa_1_balance = self.s.block.get_balance(accounts[wa_1])
         self.multisig_wallet.submitTransaction(accounts[wa_1], value_3, "", sender=keys[wa_2])
         # Wallet and user balance remain the same.
-        self.assertEqual(self.s.block.get_balance(self.multisig_wallet.address), deposit - value_1 - value_2*2)
+        self.assertEqual(self.s.block.get_balance(self.multisig_wallet.address), deposit - value_1 - value_2*3)
         self.assertEqual(self.s.block.get_balance(accounts[wa_1]), wa_1_balance)
         self.assertEqual(self.multisig_wallet.calcMaxWithdraw(), daily_limit_updated)
         # Daily withdraw is possible again
         self.multisig_wallet.submitTransaction(accounts[wa_1], value_2, "", sender=keys[wa_2])
         # Wallet balance decreases and user balance increases.
-        self.assertEqual(self.s.block.get_balance(self.multisig_wallet.address), deposit - value_1 - value_2*3)
+        self.assertEqual(self.s.block.get_balance(self.multisig_wallet.address), deposit - value_1 - value_2*4)
         self.assertEqual(self.s.block.get_balance(accounts[wa_1]), wa_1_balance + value_2)
         self.assertEqual(self.multisig_wallet.calcMaxWithdraw(), daily_limit_updated - value_2)
+        # Try to execute a transaction tha does not exist fails
+        transaction_id = 999
+        self.assertRaises(TransactionFailed, self.multisig_wallet.executeTransaction, transaction_id, sender=keys[wa_1])

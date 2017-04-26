@@ -4,7 +4,7 @@
     .module("multiSigWeb")
     .controller("executeTransactionCtrl", function ($scope, txId, address, Wallet, Transaction, $uibModalInstance, Utils){
       $scope.send = function () {
-        Wallet.executeTransaction(address, txId, function (e, tx) {
+        Wallet.executeTransaction(address, txId, {onlySimulate: false}, function (e, tx) {
           if (e) {
             Utils.dangerAlert(e);
           }
@@ -14,6 +14,17 @@
               Utils.success("Execution transaction was mined.");
             }});
             $uibModalInstance.close();
+          }
+        });
+      };
+
+      $scope.simulate = function () {
+        Wallet.executeTransaction(address, txId, {onlySimulate: true}, function (e, tx) {
+          if (e) {
+            Utils.dangerAlert(e);
+          }
+          else {
+            Utils.simulatedTransaction(tx);
           }
         });
       };

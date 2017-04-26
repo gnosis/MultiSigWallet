@@ -15,13 +15,13 @@
         }
       };
     })
-    .directive('disabledIfNoAccounts', function (Wallet) {
+    .directive('disabledIfNoAccounts', function (Web3Service) {
       return {
         link: function(scope, element, attrs){
-          Wallet.webInitialized.then(
+          Web3Service.webInitialized.then(
             function () {
               scope.$watch(function(){
-                if(Wallet.coinbase) {
+                if(Web3Service.coinbase) {
                   element.removeAttr('disabled');
                 }
                 else {
@@ -56,7 +56,7 @@
         }
       };
     })
-    .directive('showHideByFactoryStatus', function (Wallet, Connection) {
+    .directive('showHideByFactoryStatus', function (Web3Service, Connection) {
       return {
         link: function(scope, element, attrs){
           /*
@@ -70,7 +70,7 @@
           function(){
             var address = Object.assign({}, txDefault, JSON.parse(localStorage.getItem("userConfig"))).walletFactoryAddress;
             if (address) {
-              Wallet.web3.eth.getCode(address, function (e, factory) {
+              Web3Service.web3.eth.getCode(address, function (e, factory) {
                 if (!Connection.isConnected) {
                   element.css("display", "none");
                 }
@@ -135,6 +135,9 @@
           else if (attrs.alertEventDescription == 'Execution') {
             element.html('Execution: a multisig transaction is executed successfully');
           }
+          else if (attrs.alertEventDescription == 'Execution Failure') {
+            element.html('Execution failure: a multisig transaction is executed unsuccessfully');
+          }
           else if (attrs.alertEventDescription == 'Deposit') {
             element.html('Deposit: an ether deposit was made');
           }
@@ -154,7 +157,69 @@
             element.html(attrs.alertEventDescription);
           }
         }
-      }
+      };
+    })
+    .directive('providerList', function($parse) {
+      return {
+        restrict: 'E',
+        template: '<select class="form-control" name="web3-wallet" id="web3-wallet"' +
+        'ng-options="model.value for model in items track by model.name"' +
+        'ng-model="selectedItem"' +
+        'ng-change="changeEvent()"></select>',
+        scope: {          
+          defaultItem: "=",
+          changeEvent: "@",
+          selectedItem: "="
+        },
+        replace: true,
+        link: function(scope, element, attrs) {
+          // Filter items
+          scope.items = [];
+          if (isElectron) {
+            scope.items.push(
+              {
+                name: 'ledger',
+                value: 'Ledger Wallet',
+              },
+              {
+                name: 'lightwallet',
+                value: 'Light Wallet',
+              }
+            );
+          }
+          else {
+              scope.items.push(
+                {
+                  name: 'injected',
+                  value: 'Default (MetaMask, Mist, Parity ...)',
+                },
+                {
+                  name: 'ledger',
+                  value: 'Ledger Wallet',
+                }
+              );
+          }
+
+
+          if (scope.defaultItem) {
+            for(var x in scope.items) {
+              if (scope.items[x].name == scope.defaultItem) {
+                scope.selectedItem = scope.items[x];
+                break;
+              }
+            }
+          }
+          else {
+              scope.selectedItem = null;
+          }
+
+          //scope.model = scope.selectedItem;
+
+          scope.changeEvent = function() {
+            scope.$parent.config.wallet = scope.selectedItem.name;
+          }
+        }
+      };
     });
   }
 )();

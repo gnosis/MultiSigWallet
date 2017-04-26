@@ -88,9 +88,10 @@
     .filter('ether', function () {
       return function (num) {
         if (num) {
-          var casted = new Web3().toBigNumber(num).div('1e18');
+          var casted = new Web3().toBigNumber(num);
           if (casted.gt(0)) {
-            return casted.toPrecision(Math.floor(Math.log(casted.toNumber())/Math.log(10) + 3)).toString(10) + " ETH";
+            var ether = casted.div('1e18');
+            return ether.toPrecision(Math.floor(Math.log(ether.toNumber())/Math.log(10) + 3)).toString(10) + " ETH";
           }
           else {
             return "0.00 ETH";
@@ -171,6 +172,35 @@
       return function (text){
         return text.split(/(?=[A-Z])/).join(' ');
       };
+    })
+    .filter('selectFilter', function() {
+      return function(items, props) {
+        var out = [];
+
+        if (angular.isArray(items)) {
+          var keys = Object.keys(props);
+
+          items.forEach(function (item) {
+            var itemMatches = false;
+
+            for (var i = 0; i < keys.length; i++) {
+              var prop = keys[i];
+              var text = props[prop].toLowerCase();
+              if (item[prop] && item[prop].toString().toLowerCase().indexOf(text) !== -1) {
+                itemMatches = true;
+                break;
+              }
+            }
+
+            if (itemMatches) {
+              out.push(item);
+            }
+          });
+        }
+
+        return out;
+      };
     });
+
   }
 )();

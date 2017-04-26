@@ -14,7 +14,7 @@
 
 
       $scope.update = function () {
-        Wallet.updateRequired($scope.address, $scope.required, function (e, tx) {
+        Wallet.updateRequired($scope.address, $scope.required, {onlySimulate: false}, function (e, tx) {
           if (e) {
             Utils.dangerAlert(e);
           }
@@ -30,7 +30,7 @@
 
       $scope.signOffline = function () {
         Wallet.signUpdateRequired($scope.address, $scope.required, function (e, tx) {
-          if (e) {            
+          if (e) {
             Utils.dangerAlert(e);
           }
           else {

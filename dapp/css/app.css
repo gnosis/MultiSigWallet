@@ -77,3 +77,42 @@ textarea.json-config {
 .sk-circle .sk-child:before{
   background-color: white !important;
 }
+
+.ui-select-choices-row:hover {
+  background-color: #143e4d !important;
+}
+
+.ui-select-bootstrap .ui-select-choices-row>span:hover {
+  background-color: #143e4d !important;
+}
+
+.ui-select-bootstrap .ui-select-choices-row.active > span {
+  background-color: #143e4d !important;
+  color: #1f7692 !important;
+}
+
+.ui-select-bootstrap .ui-select-choices-row > span {
+  color: #1f7692 !important;
+}
+
+.ui-select-bootstrap .ui-select-choices-row > span:hover {
+  color: #1f7692 !important;
+}
+
+.seed {
+  background-color: #f7d30e;
+  padding: 3rem;
+  color: #1e3749;
+}
+
+.alert-fail {    
+    color: #f7d30e;
+}
+
+.top-10 {
+    margin-top: 10px;
+}
+
+.top-20 {
+    margin-top: 20px;
+}

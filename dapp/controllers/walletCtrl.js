@@ -2,14 +2,14 @@
   function () {
     angular
     .module('multiSigWeb')
-    .controller('walletCtrl', function ($rootScope, $scope, Wallet, Utils, Token, Transaction, $uibModal, $interval) {
-      Wallet
+    .controller('walletCtrl', function (Web3Service, $rootScope, $scope, Wallet, Utils, Token, Transaction, $uibModal, $interval) {
+      Web3Service
       .webInitialized
       .then(
         function () {
             $scope.interval = $interval($scope.updateParams, 10000);
             $scope.wallets = Wallet.wallets;
-            if ( Wallet.coinbase && (!$scope.wallets || !Object.keys($scope.wallets).length && !$rootScope.alreadyLogged)){
+            if ( Web3Service.coinbase && (!$scope.wallets || !Object.keys($scope.wallets).length && !$rootScope.alreadyLogged)){
               $scope.termsInterval = $interval($scope.checkTerms, 500);
             }
             $scope.updateParams();
@@ -58,7 +58,7 @@
       );
 
       $scope.updateParams = function () {
-        $scope.batch = Wallet.web3.createBatch();
+        $scope.batch = Web3Service.web3.createBatch();
         if ($scope.wallets) {
           // Init wallet balance of each wallet address
           Object.keys($scope.wallets).map(function (address) {
@@ -133,13 +133,13 @@
 
 
       $scope.newWalletSelect = function () {
-        if (Wallet.coinbase) {
+        if (Web3Service.coinbase) {
           $uibModal.open({
             templateUrl: 'partials/modals/selectNewWallet.html',
             size: 'sm',
             controller: function ($scope, $uibModalInstance) {
-              if (Wallet.coinbase) {
-                $scope.coinbase = Wallet.coinbase;
+              if (Web3Service.coinbase) {
+                $scope.coinbase = Web3Service.coinbase;
                 $scope.walletOption = "create";
               }
               else {
@@ -311,7 +311,7 @@
       };
 
       $scope.openNotifications = function (address) {
-        var authCode = txDefault.authCode || null;
+        var authCode = txDefault.alertNode.authCode || null;
         var template = 'partials/modals/notificationsSignup.html';
         var controller = 'notificationsSignupCtrl';
 

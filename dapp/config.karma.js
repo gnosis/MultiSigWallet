@@ -22,6 +22,8 @@ module.exports = function(config) {
       'bower_components/ngclipboard/dist/ngclipboard.min.js',
       'bower_components/web3/dist/web3.min.js',
       'bower_components/abi-decoder/dist/abi-decoder.js',
+      'bower_components/angular-ui-select/dist/select.js',
+      'bower_components/web3-provider-engine/dist/ProviderEngine.js',
       'node_modules/phantomjs-polyfill-object-assign/object-assign-polyfill.js',
       'app.js',
       'abi.js',
@@ -58,7 +60,7 @@ module.exports = function(config) {
 
     // level of logging
     // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-    logLevel: config.LOG_INFO,
+    logLevel: config.LOG_DEBUG,
 
 
     // enable / disable watching file and executing tests whenever any file changes
@@ -67,7 +69,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['PhantomJS'], //['PhantomJS'], //['Chrome'],
+    browsers: ['Chrome'], //['PhantomJS'], //['Chrome'],
 
 
     // Continuous Integration mode

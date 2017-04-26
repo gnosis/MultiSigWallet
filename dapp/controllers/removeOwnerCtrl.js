@@ -5,7 +5,7 @@
     .controller("removeOwnerCtrl", function ($scope, Wallet, Utils, Transaction, wallet, owner, $uibModalInstance) {
       $scope.owner = owner;
       $scope.send = function () {
-        Wallet.removeOwner(wallet.address, $scope.owner, function (e, tx) {
+        Wallet.removeOwner(wallet.address, $scope.owner, {onlySimulate: false}, function (e, tx) {
           if (e) {
             Utils.dangerAlert(e);
           }
@@ -17,6 +17,17 @@
               Utils.success("Remove owner transaction was mined.");
             }});
             $uibModalInstance.close();
+          }
+        });
+      };
+
+      $scope.simulate = function () {
+        Wallet.removeOwner(wallet.address, $scope.owner, {onlySimulate: true}, function (e, tx) {
+          if (e) {
+            Utils.dangerAlert(e);
+          }
+          else {
+            Utils.simulatedTransaction(tx);
           }
         });
       };

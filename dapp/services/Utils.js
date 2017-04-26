@@ -193,6 +193,30 @@
         });
       };
 
+      factory.simulatedTransaction = function (result) {
+        $uibModal.open({
+          animation: false,
+          templateUrl: 'partials/modals/simulatedTransaction.html',
+          size: 'sm',
+          resolve: {
+            result: function () {
+              return result;
+            }
+          },
+          controller: function ($scope, $uibModalInstance, result) {
+            $scope.result = result.toString();
+
+            $scope.copy = function () {
+              $uibModalInstance.close();
+            };
+
+            $scope.cancel = function () {
+              $uibModalInstance.dismiss();
+            };
+          }
+        });
+      };
+
       return factory;
     });
   }

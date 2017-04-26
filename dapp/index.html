@@ -2,6 +2,10 @@
 <html>
   <head>
     <title>Multisignature Wallet</title>
+    <script>
+      // Detect if it's an Electron app or not
+      var isElectron = (window && window.process && window.process.type) ? true : false;
+    </script>
     <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="any" href="./img/wallet-logo.png" />
     <!-- Custom Stylesheets -->
@@ -12,7 +16,16 @@
     <!-- 3rd party Stylesheets -->
     <link href="./bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
     <link href="./bower_components/SpinKit/css/spinkit.css" rel="stylesheet" type="text/css" />
+    <link href="./bower_components/angular-ui-select/dist/select.css" rel="stylesheet" type="text/css" />
     <!-- 3rd party Script -->
+    <script>
+      if (isElectron) {
+        if (typeof module === 'object') {window.module = module; module = undefined;}
+        $ = require('./bower_components/jquery/dist/jquery.min.js');
+        var HookedWeb3Provider = require('./bower_components/web3-provider-engine/subproviders/hooked-wallet.js');
+        var RpcSubprovider = require('./bower_components/web3-provider-engine/subproviders/rpc.js');
+      }
+    </script>
     <script src="./bower_components/angular/angular.min.js"></script>
     <script src="./bower_components/angular-animate/angular-animate.min.js"></script>
     <script src="./bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
@@ -28,6 +41,7 @@
     <script src="./bower_components/clipboard/dist/clipboard.min.js"></script>
     <script src="./bower_components/ngclipboard/dist/ngclipboard.min.js"></script>
     <script src="./bower_components/rlp/dist/rlp.js"></script>
+    <script src="./bower_components/angular-ui-select/dist/select.js"></script>
     <!-- Production -->
     <script src="./bower_components/ledger-wallet-provider/dist/ledgerwallet.js"></script>
     <!-- Testing -->
@@ -44,6 +58,7 @@
     <script src="./partials.js"></script>
 
     <!-- Services -->
+    <script src="./services/Web3Service.js"></script>
     <script src="./services/Wallet.js"></script>
     <script src="./services/Utils.js"></script>
     <script src="./services/Transaction.js"></script>
@@ -51,6 +66,8 @@
     <script src="./services/Connection.js"></script>
     <script src="./services/ABI.js"></script>
     <script src="./services/EthAlerts.js"></script>
+    <script src="./services/LightWallet.js"></script>
+    <script src="./services/Config.js"></script>
     <!-- Controllers -->
     <script src="./controllers/addTokenCtrl.js"></script>
     <script src="./controllers/navCtrl.js"></script>
@@ -87,6 +104,11 @@
     <script src="./controllers/notificationsSignupConfirmationCtrl.js"></script>
 
     <script src="./expose.js"></script>
+    <script>
+      if (isElectron) {
+        if (window.module) module = window.module;
+      }
+    </script>    
   </head>
   <body ng-app="multiSigWeb">
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation" ng-controller="navCtrl">
@@ -114,6 +136,11 @@
                   Transactions
                 </a>
               </li>
+              <li ng-if="isElectron && config.wallet=='lightwallet'" ng-class="getMenuItemClass('/accounts')">
+                <a href="#/accounts">
+                  Accounts
+                </a>
+              </li>
               <li ng-class="getMenuItemClass('/settings')">
                 <a href="#/settings">
                   Settings
@@ -131,10 +158,10 @@
                </ul>
               </li>
               <li ng-show="loggedIn">
-                <p class="navbar-text"> Balance: {{balance|ether}} </p>
+                <p class="navbar-text" ng-show="balance"> Balance: {{balance|ether}} </p>
               </li>
               <li ng-show="loggedIn">
-                <p class="navbar-text"> Nonce: {{nonce}} </p>
+                <p class="navbar-text" ng-show="nonce"> Nonce: {{nonce}} </p>
               </li>
               <li>
                 <span class="navbar-text">{{ethereumChain.chain.substr(0, 1).toUpperCase() + ethereumChain.chain.substr(1)}}</span>

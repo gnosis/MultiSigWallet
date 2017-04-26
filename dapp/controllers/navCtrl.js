@@ -2,8 +2,20 @@
   function () {
     angular
     .module('multiSigWeb')
-    .controller('navCtrl', function ($scope, Wallet, Connection, Transaction, $interval, $sce, $location, $uibModal) {
+    .controller('navCtrl', function ($scope, Wallet, Web3Service, Config, Connection, Transaction, $interval, $sce, $location, $uibModal, Utils) {
       $scope.navCollapsed = true;
+      $scope.isElectron = isElectron;
+      $scope.config = Config.getConfiguration();
+
+      // Reload config when it changes
+      $scope.$watch(
+        function () {
+          return Config.updates;
+        },
+        function () {
+          $scope.config = Config.getConfiguration();
+        }
+      );
 
       // If not terms acepted, prompt disclaimer
       var termsAccepted = localStorage.getItem("termsAccepted");
@@ -36,14 +48,29 @@
             loadConfiguration(); // config.js
           }
         );
+        if (!$scope.paramsPromise) {
+          $scope.paramsPromise = Wallet.initParams().then(function () {
+            $scope.loggedIn = Web3Service.coinbase;
+            $scope.accounts = Web3Service.accounts;
+            $scope.coinbase = Web3Service.coinbase;
+            $scope.nonce = Wallet.txParams.nonce;
+            $scope.balance = Wallet.balance;
+            $scope.paramsPromise = null;
+          }, function (error) {
+            if (txDefault.wallet == "ledger") {
+              $scope.loggedIn = true;
+              $scope.accounts = Web3Service.accounts;
+              $scope.coinbase = Web3Service.coinbase;
+              $scope.nonce = Wallet.txParams.nonce;
+              $scope.paramsPromise = null;
+            }
+            else {
+              Utils.dangerAlert(error);
+            }
+          });
+        }
 
-        return Wallet.initParams().then(function () {
-          $scope.loggedIn = Wallet.coinbase;
-          $scope.accounts = Wallet.accounts;
-          $scope.coinbase = Wallet.coinbase;
-          $scope.nonce = Wallet.txParams.nonce;
-          $scope.balance = Wallet.balance;
-        });
+        return $scope.paramsPromise;
       };
 
       /**
@@ -59,7 +86,7 @@
 
       };
 
-      Wallet.webInitialized.then(
+      Web3Service.webInitialized.then(
         function () {
           $scope.interval = $interval($scope.updateInfo, 5000);
           // $scope.updateInfo();
@@ -74,7 +101,7 @@
           $scope.connectionInterval = $interval($scope.updateConnectionStatus, txDefault.connectionChecker.checkInterval);
 
           $scope.updateInfo().then(function () {
-            if (!Wallet.coinbase && txDefault.wallet !== "ledger") {
+            if (!Web3Service.coinbase && txDefault.wallet !== "ledger") {
               $uibModal.open({
                 templateUrl: 'partials/modals/web3Wallets.html',
                 size: 'md',
@@ -96,7 +123,7 @@
       });
 
       $scope.selectAccount = function (account) {
-        Wallet.selectAccount(account);
+        Web3Service.selectAccount(account);
         $scope.updateInfo();
       };
 

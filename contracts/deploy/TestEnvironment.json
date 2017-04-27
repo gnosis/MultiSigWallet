@@ -12,7 +12,7 @@
         "contract": "TestToken",
         "name": "issueTokens",
         "params": [
-            "REPLACE_WITH_ADDRESS", 1000
+            "0x4ec6eebf2efcc0ee74c3887e0b1873ea8b8783f6", 1000
         ]
     },
     {

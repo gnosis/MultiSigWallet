@@ -5,8 +5,7 @@
     .controller("sendTransactionCtrl", function ($scope, Wallet, Utils, Transaction, $uibModalInstance, ABI, Web3Service) {
       $scope.methods = [];
       $scope.tx = {
-        value: 0,
-        from: Web3Service.coinbase
+        value: 0
       };
       $scope.params = [];
 
@@ -18,7 +17,7 @@
         if ($scope.method) {
           params.map(function(param, index) {
             // Parse if array param
-            if ($scope.method.inputs && $scope.method.inputs[index].type.indexOf("[]") !== -1) {
+            if ($scope.method.inputs && $scope.method.inputs.length && $scope.method.inputs[index].type.indexOf("[]") !== -1) {
               try {
                 params[index] = JSON.parse($scope.params[index]);
               }
@@ -29,6 +28,7 @@
           });
         }
         tx.value = new Web3().toBigNumber($scope.tx.value).mul('1e18');
+        tx.from = Web3Service.coinbase;
         // if method, use contract instance method
         if ($scope.method && $scope.method.index !== undefined && $scope.method.index !== "") {
           Transaction.sendMethod(tx, $scope.abiArray, $scope.method.name, params, function (e, tx) {
@@ -83,7 +83,7 @@
         if ($scope.method) {
           params.map(function(param, index) {
             // Parse if array param
-            if ($scope.method.inputs && $scope.method.inputs[index].type.indexOf("[]") !== -1) {
+            if ($scope.method.inputs && $scope.method.inputs.length && $scope.method.inputs[index].type.indexOf("[]") !== -1) {
               try {
                 params[index] = JSON.parse($scope.params[index]);
               }
@@ -94,6 +94,7 @@
           });
         }
         tx.value = new Web3().toBigNumber($scope.tx.value).mul('1e18');
+        tx.from = Web3Service.coinbase;
         // if method, use contract instance method
         if ($scope.method && $scope.method.index !== undefined && $scope.method.index !== "") {
           Transaction.simulateMethod(tx, $scope.abiArray, $scope.method.name, params, function (e, tx) {
@@ -123,6 +124,7 @@
 
       $scope.signOff = function () {
         $scope.tx.value = "0x" + new Web3().toBigNumber($scope.tx.value).mul('1e18').toString(16);
+        $scope.tx.from = Web3Service.coinbase;
         var params = [];
         Object.assign(params, $scope.params);
         if ($scope.method) {
@@ -192,8 +194,8 @@
           $scope.method = $scope.methods[0];
           $scope.abiArray = JSON.parse($scope.abi);
           $scope.abiArray.map(function (item, index) {
-            if (!item.constant && item.name && item.type == "function") {
-              $scope.methods.push({name: item.name, index: index, inputs: item.inputs});
+            if (item.name && item.type == "function") {
+              $scope.methods.push({name: item.name, index: index, inputs: item.inputs, constant: item.constant});
             }
           });
         } catch (error) {

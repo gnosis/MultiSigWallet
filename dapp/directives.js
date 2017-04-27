@@ -196,6 +196,10 @@
               {
                 name: 'lightwallet',
                 value: 'Light Wallet',
+              },
+              {
+                name: 'remotenode',
+                value: 'Remote node',
               }
             );
           }
@@ -208,7 +212,11 @@
                 {
                   name: 'ledger',
                   value: 'Ledger Wallet',
-                }
+                },
+                {
+                  name: 'remotenode',
+                  value: 'Remote node',
+                }                
               );
           }
 

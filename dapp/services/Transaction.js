@@ -194,11 +194,13 @@
       factory.sendMethod = function (tx, abi, method, params, cb) {
         // Instance contract
         var instance = Web3Service.web3.eth.contract(abi).at(tx.to);
+        var transactionParams = params.slice();
+        transactionParams.push(tx);
 
         try {
           Web3Service.sendTransaction(
             instance[method],
-            params,
+            transactionParams,
             { onlySimulate: false },
             function (e, txHash) {
               if (e) {

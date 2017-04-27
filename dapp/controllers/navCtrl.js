@@ -49,47 +49,29 @@
           }
         );
 
-        return Wallet.initParams().then(function () {
-          $scope.loggedIn = Web3Service.coinbase;
-
-          if (isElectron) {
-            var accounts = Config.getConfiguration('accounts');
-            if (accounts && accounts.length > 0 ) {
-              accounts = accounts.map(function(account) {
-                if (!account.address.startsWith('0x')) {
-                  return '0x' + account.address;
-                }
-                return account.address;
-              });
-            }
-            else {
-              Web3Service.coinbase = null;
-            }
-
-            $scope.accounts = accounts;
-
-            if (Web3Service.coinbase && !Web3Service.coinbase.startsWith('0x')) {
-              Web3Service.coinbase = '0x' + Web3Service.coinbase;
-            }
-          }
-          else {
-            $scope.accounts = Web3Service.accounts;
-          }
-
-          $scope.coinbase = Web3Service.coinbase;
-          $scope.nonce = Wallet.txParams.nonce;
-          $scope.balance = Wallet.balance;
-        }, function (error) {
-          if (txDefault.wallet == "ledger") {
-            $scope.loggedIn = true;
+        if (!$scope.paramsPromise) {
+          $scope.paramsPromise = Wallet.initParams().then(function () {
+            $scope.loggedIn = Web3Service.coinbase;
             $scope.accounts = Web3Service.accounts;
             $scope.coinbase = Web3Service.coinbase;
             $scope.nonce = Wallet.txParams.nonce;
-          }
-          else {
-            Utils.dangerAlert(error);
-          }
-        });
+            $scope.balance = Wallet.balance;
+            $scope.paramsPromise = null;
+          }, function (error) {
+            if (txDefault.wallet == "ledger") {
+              $scope.loggedIn = true;
+              $scope.accounts = Web3Service.accounts;
+              $scope.coinbase = Web3Service.coinbase;
+              $scope.nonce = Wallet.txParams.nonce;
+              $scope.paramsPromise = null;
+            }
+            else {
+              Utils.dangerAlert(error);
+            }
+          });
+        }
+
+        return $scope.paramsPromise;
       };
 
       /**

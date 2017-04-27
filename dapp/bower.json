@@ -38,7 +38,7 @@
     "angular-mocks": "1.5.8",
     "ethjs-abi-denis": "0.1.1",
     "rlp": "^0.0.1",
-    "abi-decoder": "1.0.7",
+    "abi-decoder": "1.0.8",
     "SpinKit": "spinkit#^1.2.5",
     "web3-provider-engine": "https://github.com/denisgranha/provider-engine.git#dce3f8d701eb1fcd794c86f2debb6af752aa44b3",
     "eth-lightwallet": "https://github.com/ConsenSys/eth-lightwallet.git",

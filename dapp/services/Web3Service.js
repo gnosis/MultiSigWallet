@@ -154,7 +154,7 @@
             else {
               factory.accounts = accounts;
 
-              if (factory.coinbase && accounts.indexOf(factory.coinbase) != -1) {
+              if (factory.coinbase && accounts && accounts.length && accounts.indexOf(factory.coinbase) != -1) {
                 // same coinbase
               }
               else if (accounts) {

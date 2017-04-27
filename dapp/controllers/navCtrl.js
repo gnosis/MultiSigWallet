@@ -49,14 +49,33 @@
           }
         );
 
-        if (!$scope.paramsPromise) {
+        if (isElectron || !$scope.paramsPromise) {
           $scope.paramsPromise = Wallet.initParams().then(function () {
             $scope.loggedIn = Web3Service.coinbase;
-            $scope.accounts = Web3Service.accounts;
             $scope.coinbase = Web3Service.coinbase;
             $scope.nonce = Wallet.txParams.nonce;
             $scope.balance = Wallet.balance;
             $scope.paramsPromise = null;
+
+            if (!isElectron) {
+              $scope.accounts = Web3Service.accounts;
+            }
+            else {
+              var scopeAccounts = [];
+              var storageAccounts = Config.getConfiguration('accounts').map(function (account) {
+                return account.address;
+              });
+
+              for (var x in Web3Service.accounts) {
+                var account = Web3Service.accounts[x];
+
+                if (storageAccounts.indexOf(account) !== -1) {
+                  scopeAccounts.push(account);
+                }
+              }
+
+              $scope.accounts = scopeAccounts;
+            }
           }, function (error) {
             if (txDefault.wallet == "ledger") {
               $scope.loggedIn = true;
@@ -66,7 +85,11 @@
               $scope.paramsPromise = null;
             }
             else {
-              Utils.dangerAlert(error);
+              var syncErrorShown = Config.getConfiguration('syncErrorShown');
+              if (!syncErrorShown) {
+                Utils.dangerAlert(error);
+                Config.setConfiguration('syncErrorShown', true);
+              }
             }
           });
         }

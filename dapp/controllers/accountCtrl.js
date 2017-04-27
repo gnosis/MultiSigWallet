@@ -5,7 +5,7 @@
     .controller('accountCtrl', function ($window, $rootScope, $scope, Config, $uibModal, Utils, $location, Web3Service) {
 
       $scope.account = {};
-
+      $scope.showLoadingSpinner = false;
       /**
       * Init function
       */
@@ -85,7 +85,7 @@
       * Create seed
       */
       $scope.createSeed = function () {
-        $scope.account.seed = Web3Service.keystore.generateRandomSeed();
+        $scope.account.seed = Web3Service.generateLightWalletSeed();
         $scope.hasSeed = true;
       };
 
@@ -106,12 +106,14 @@
           scope: $scope,
           controller: function ($scope, $uibModalInstance, Web3Service) {
             $scope.showSetName = false;
-
             $scope.account.name = '';
 
             $scope.ok = function () {
               try{
-                Web3Service.create($scope.account.password, $scope.account.seed, function (addresses) {
+                // Show loading spinner
+                $scope.showLoadingSpinner = true;
+
+                Web3Service.createLightWallet($scope.account.password, $scope.account.seed, function (addresses) {
                   var accounts = Config.getConfiguration('accounts');
                   if (accounts) {
                     accounts.push(
@@ -138,7 +140,8 @@
                   Config.setConfiguration('accounts', JSON.stringify(accounts));
                   // Reload data
                   init();
-                  //init(null, null, false);
+                  // Hide spinner
+                  $scope.showLoadingSpinner = false;
                   // Show success modal
                   Utils.success("Account was created.");
                   // Close modal
@@ -154,6 +157,9 @@
             * Function enabled once keystore is created
             */
             $scope.newAccount = function () {
+              // show spinner
+              $scope.showLoadingSpinner = true;
+
               Web3Service.newAccount($scope.account.password, function (address) {
                 if (address) {
                   var accounts = Config.getConfiguration('accounts') || [];
@@ -169,12 +175,17 @@
                   init(null, Web3Service.getKeystore(), true);
                   // Unset password
                   delete $scope.account.password;
+                  // hide spinner
+                  $scope.showLoadingSpinner = false;
                   // Show success modal
                   Utils.success("Account was created.");
                   // Close modal
                   $uibModalInstance.close();
                 }
                 else {
+                  // hide spinner
+                  $scope.showLoadingSpinner = false;
+                  delete $scope.account.password;
                   Utils.dangerAlert({message:'Invalid passwod.'})
                 }
               });
@@ -304,7 +315,7 @@
       */
       $scope.downloadKeystore = function () {
         var blob = new Blob([Web3Service.getKeystore()], {type: "text/plain;charset=utf-8"});
-        saveAs(blob, "lightwallet.txt");
+        FileSaver.saveAs(blob, "lightwallet.txt");
       };
 
       /**
@@ -332,14 +343,14 @@
             // Load updated accounts
             Config.setConfiguration('accounts', JSON.stringify(accounts));
             // Redo setup
-            Web3Service.setup();
-            // Set web3 provide in Web3Service
-            //Web3Service.web3 = LightWallet.web3;
+            Web3Service.lightWalletSetup();
             // Init values
             init();
+
+            Utils.success("Accounts were imported successfully.");
           }
           catch (err) {
-
+            Utils.dangerAlert(err);
           }
         };
 

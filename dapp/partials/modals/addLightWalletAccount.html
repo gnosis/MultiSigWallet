@@ -51,8 +51,15 @@
   <div class="modal-footer">
     <button type="submit" class="btn btn-success"
       ng-disabled="!account.seed || password_form.$invalid"
-      ng-click="ok()">
+      ng-click="ok()"
+      ng-show="!showLoadingSpinner">
       Create Account
+    </button>
+    <button type="button" class="btn btn-success"
+      ng-show="showLoadingSpinner"
+      disabled>
+      <i class="fa fa-spinner fa-spin"></i>
+      Creating...
     </button>
     <button class="btn btn-danger" ng-click="cancel()">
       Cancel
@@ -85,8 +92,15 @@
   <div class="modal-footer">
     <button type="submit" class="btn btn-success"
       ng-disabled="account_form.$invalid"
-      ng-click="newAccount()">
-      Create account
+      ng-click="newAccount()"
+      ng-show="!showLoadingSpinner">
+      Create Account
+    </button>
+    <button type="button" class="btn btn-success"
+      ng-show="showLoadingSpinner"
+      disabled>
+      <i class="fa fa-spinner fa-spin"></i>
+      Creating...
     </button>
     <button class="btn btn-danger" ng-click="cancel()">
       Cancel

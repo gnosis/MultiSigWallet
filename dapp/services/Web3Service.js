@@ -91,7 +91,7 @@
           }
         }
         else if (txDefault.wallet == 'lightwallet' && isElectron) {
-          factory.setup();                    
+          factory.lightWalletSetup();
           if (resolve) {
             resolve();
           }
@@ -177,7 +177,6 @@
         factory.coinbase = account;
       };
 
-
       /**
       * Light wallet vars
       */
@@ -187,7 +186,7 @@
       /**
       * Light wallet setup
       */
-      factory.setup = function () {
+      factory.lightWalletSetup = function () {
         factory.password_provider_callback = null;
         factory.engine = new ProviderEngine();
         factory.web3 = new Web3(factory.engine);
@@ -259,7 +258,7 @@
       /**
       * Creates a new keystore and within one account
       */
-      factory.create = function (password, seed, ctrlCallback) {
+      factory.createLightWallet = function (password, seed, ctrlCallback) {
 
         var opts = {
           password: password,
@@ -285,9 +284,13 @@
               callback(null, pwd);
             };
 
-            factory.setup();
+            factory.lightWalletSetup();
 
-            ctrlCallback(factory.addresses);
+            // Return addresses (in our case just an array containing 1 address)
+            ctrlCallback(factory.addresses.map(function (address) {
+              // Add 0x prefix to address
+              return '0x' + address.replace('0x', '');
+            }));
 
           });
         });
@@ -384,7 +387,14 @@
       * Set keystore localStorage string
       */
       factory.setKeystore = function (value) {
-        return localStorage.setItem('keystore', value);
+        // check wheter valus is a JSON valid format
+        try {
+          JSON.parse(value);
+          localStorage.setItem('keystore', value);
+        }
+        catch (err) {
+          throw err;
+        }
       };
 
       /**
@@ -392,6 +402,10 @@
       */
       factory.isSeedValid = function (seed) {
         return lightwallet.keystore.isSeedValid(seed);
+      };
+
+      factory.generateLightWalletSeed = function () {
+        return lightwallet.keystore.generateRandomSeed();
       };
 
       /**

@@ -42,13 +42,13 @@
         </td>
         <td>
           <div uib-popover="{{account.address}}" popover-trigger="'mouseenter'">
-            {{::account.address|address}}
+            {{account.address|address}}
           </div>
         </td>
       </tr>
     </tbody>
   </table>
-  <!--<div ng-hide="totalItems" class="panel-body text-center">
-    No wallets. Add wallet <a href="" ng-click="newWalletSelect()">now</a>.
-  </div>-->
+  <div ng-if="!account.addresses" class="panel-body text-center">
+    No accounts. Add an account <a href="" ng-click="createWallet()">now</a>.
+  </div>
 </div>

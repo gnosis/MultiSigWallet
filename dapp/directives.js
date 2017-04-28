@@ -157,7 +157,7 @@
             element.html(attrs.alertEventDescription);
           }
         }
-      }
+      };
     })
     .directive('match', function($parse) {
       return {
@@ -216,7 +216,7 @@
                 {
                   name: 'remotenode',
                   value: 'Remote node',
-                }                
+                }
               );
           }
 
@@ -237,7 +237,7 @@
 
           scope.changeEvent = function() {
             scope.$parent.config.wallet = scope.selectedItem.name;
-          }
+          };
         }
       };
     })
@@ -257,7 +257,7 @@
         link: function(scope, element, attrs) {
 
           function isDisabled () {
-            return scope.ngModel.name == scope.other ? false : true
+            return scope.ngModel.name == scope.other ? false : true;
           }
 
           scope.isDisabled = isDisabled();

@@ -6,10 +6,37 @@ const BrowserWindow = electron.BrowserWindow
 
 const path = require('path')
 const url = require('url')
+const express = require('express')
+let restServer, restPort = null
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
+
+function restServerSetup () {
+  let restServer = express()
+  let restPort = 3000
+
+  // Declare routes
+  // @todo to be implemented
+  restServer.route('/eth_accounts')
+  .get(function (req, res) {
+    res.json({'message': 'running'})
+  })
+
+  restServer.route('/eth_sendtransaction')
+  .get(function (req, res) {
+    res.json({'message': 'running'})
+  })
+
+  restServer.route('/eth_signtransaction')
+  .get(function (req, res) {
+    res.json({'message': 'running'})
+  })
+
+  // run rest server
+  restServer.listen(restPort);
+}
 
 function createWindow () {
   // Create the browser window.
@@ -38,6 +65,8 @@ function createWindow () {
     // when you should delete the corresponding element.
     mainWindow = null
   })
+
+  restServerSetup()
 
   /*mainWindow.webContents.executeJavaScript(`
     var path = require('path');

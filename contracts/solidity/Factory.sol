@@ -1,10 +1,19 @@
 contract Factory {
 
+    /*
+     *  Events
+     */
     event ContractInstantiation(address sender, address instantiation);
 
+    /*
+     *  Storage
+     */
     mapping(address => bool) public isInstantiation;
     mapping(address => address[]) public instantiations;
 
+    /*
+     * Public functions
+     */
     /// @dev Returns number of instantiations by creator.
     /// @param creator Contract creator.
     /// @return Returns number of instantiations by creator.
@@ -16,6 +25,9 @@ contract Factory {
         return instantiations[creator].length;
     }
 
+    /*
+     * Internal functions
+     */
     /// @dev Registers contract in factory registry.
     /// @param instantiation Address of contract instantiation.
     function register(address instantiation)

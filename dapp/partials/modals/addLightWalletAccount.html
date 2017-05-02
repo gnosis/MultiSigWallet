@@ -75,20 +75,22 @@
         <input type="text" ng-model="account.name" ng-minlength="1"
           name="name" required="" placeholder="Account name" class="form-control">
       </div>
-      <div ng-show="account_form.$submitted || account_form.name.$touched">
+      <div ng-show="account_form.name.$invalid && !account_form.name.$pristine">
         <div class="alert-fail" ng-show="account_form.name.$error.required">A name for the account must be entered.</div>
         <div class="alert-fail" ng-show="account_form.name.$error.minlength">The name should contain at least 1 character.</div>
       </div>
 
+      <p class="top-20">Provide your password.</p>
       <div class="top-10">
         <input type="password" ng-model="account.password" ng-minlength="8"
           name="password" required="" placeholder="Password" class="form-control">
       </div>
-      <div ng-show="account_form.$submitted || account_form.password.$touched">
+      <div ng-show="account_form.password.$invalid && !account_form.password.$pristine">
         <div class="alert-fail" ng-show="account_form.password.$error.required">A password must be entered.</div>
       </div>
     </form>
   </div>
+
   <div class="modal-footer">
     <button type="submit" class="btn btn-success"
       ng-disabled="account_form.$invalid"

@@ -14,7 +14,7 @@ let mainWindow;
 
 function restServerSetup () {
   let restServer = express()
-  let restPort = 3000
+  let restPort = 8080
 
   // Declare routes
   // @todo to be implemented
@@ -33,8 +33,24 @@ function restServerSetup () {
     res.json({'message': 'running'})
   })
 
+  restServer.use(function(req, res) {
+    res.status(404).send({url: req.originalUrl + ' not found'})
+  });
+
+  function _startRestServer () {
+    restServer.listen(restPort, function () {
+      console.log("Express Rest Server connected to port " + restPort)
+    })
+    .on('error', function (err) {
+      if (restPort < 65536-1) {
+        restPort++
+        _startRestServer()
+      }
+    })
+  }
+
   // run rest server
-  restServer.listen(restPort);
+  _startRestServer()
 }
 
 function createWindow () {

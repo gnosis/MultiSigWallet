@@ -201,7 +201,7 @@
                 cb(e);
               }
               else {
-                wallet.txParams.gasLimit = Math.floor(block.gasLimit*0.9);
+                wallet.txParams.gasLimit = Math.floor(block.gasLimit*0.3);
                 cb(null, block.gasLimit);
               }
             }
@@ -331,7 +331,7 @@
           $rootScope.$digest();
         }
         catch (e) {}
-      };      
+      };
 
       /**
       * Creates and returns the valid configuration for Import/Export purposes

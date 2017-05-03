@@ -139,6 +139,10 @@ input[name="editable-select"]:disabled {
     color: #f7d30e;
 }
 
+.not-on-chain-wallet {
+  margin-right: 10px;
+}
+
 .top-10 {
     margin-top: 10px;
 }

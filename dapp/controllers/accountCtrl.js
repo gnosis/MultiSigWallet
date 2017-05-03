@@ -31,6 +31,8 @@
       * Provide password to unlock accounts
       */
       function login() {
+        init(null, Web3Service.getKeystore(), true);
+        /*
         var accounts = Config.getConfiguration('accounts');
         if (Web3Service.getKeystore() && accounts && accounts.length > 0) {
           $uibModal.open({
@@ -72,7 +74,7 @@
         }
         else if (Web3Service.getKeystore()) {
           init(null, Web3Service.getKeystore(), false);
-        }
+        }*/
       }
 
       /**
@@ -90,10 +92,17 @@
       };
 
       /**
-      * Copy seed to clipboard
+      * Copy seed to clipboard success message
       */
       $scope.copySeed = function () {
         Utils.success("Seed has been copied to clipboard.");
+      };
+
+      /**
+      * Copy account to clipboard success message
+      */
+      $scope.copyAccount = function () {
+        Utils.success("Account has been copied to clipboard.");
       };
 
       /**
@@ -107,6 +116,8 @@
           controller: function ($scope, $uibModalInstance, Web3Service) {
             $scope.showSetName = false;
             $scope.account.name = '';
+            $scope.account.password = '';
+            $scope.account.password_repeat = '';
 
             $scope.ok = function () {
               try{
@@ -115,10 +126,12 @@
 
                 Web3Service.createLightWallet($scope.account.password, $scope.account.seed, function (addresses) {
                   var accounts = Config.getConfiguration('accounts');
+                  var accountName = $scope.account.name;
+
                   if (accounts) {
                     accounts.push(
                       {
-                        'name': $scope.account.name,
+                        'name': accountName,
                         'address': address
                       }
                     );
@@ -127,7 +140,7 @@
                     accounts = [];
                     accounts.push(
                       {
-                        'name': $scope.account.name,
+                        'name': accountName,
                         'address': addresses[0]
                       }
                     );
@@ -163,9 +176,17 @@
               Web3Service.newAccount($scope.account.password, function (address) {
                 if (address) {
                   var accounts = Config.getConfiguration('accounts') || [];
+                  var accountName = $scope.account.name;
+                  // Look for other accounts with the same name
+                  var sameAccountNames = accounts.filter(function (item) {
+                    if (item.name.startsWith(accountName)) {
+                      return item;
+                    }
+                  });
+
                   accounts.push(
                     {
-                      'name': $scope.account.name,
+                      'name': sameAccountNames.length > 0 ? accountName + sameAccountNames.length : accountName,
                       'address': address
                     }
                   );
@@ -323,6 +344,8 @@
       */
       $scope.uploadKeystore = function (element) {
         var reader = new FileReader();
+        var defaultAccountName = 'My Account';
+        var defaultAccountNames = [];
 
         reader.onload = function() {
           var text = reader.result;
@@ -332,9 +355,16 @@
             // Restore data from keystore
             Web3Service.restore();
             Web3Service.getAddresses().map(function (address) {
+              // Check whether exist accounts having defult name
+              defaultAccountNames = Web3Service.getAddresses().filter(function (elem) {
+                if (elem.name == defaultAccountName) {
+                  return elem;
+                }
+              });
+
               accounts.push(
                 {
-                  'name': '',
+                  'name': defaultAccountNames.length == 0 ? defaultAccountName : defaultAccountName + ' ' + defaultAccountNames.length,
                   'address': address
                 }
               );

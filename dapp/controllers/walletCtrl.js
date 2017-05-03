@@ -88,6 +88,19 @@
               )
             );
 
+            /**
+            * Get owners in order to verify whether or not the wallet
+            * was created using the current network
+            */
+            $scope.batch.add(
+              Wallet.getOwners(
+                address,
+                function (e, owners) {
+                  $scope.wallets[address].isOnChain = (!e && owners.length > 0);
+                }
+              )
+            );
+
             $scope.batch.add(
               Wallet.getLimit(
                 address,

@@ -234,7 +234,15 @@
 
                   $scope.cancel = function () {
                     $uibModalInstance.dismiss();
-                    cb('Deploy canceled', null);
+                    cb(
+                      {
+                        toString: function () {
+                          return 'User denied'
+                        }
+                      },
+                      null
+                    );
+                    //cb('Deploy canceled', null);
                   };
 
                 }

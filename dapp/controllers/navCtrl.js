@@ -20,7 +20,7 @@
       // If not terms acepted, prompt disclaimer
       var termsAccepted = localStorage.getItem("termsAccepted");
 
-      if (!termsAccepted) {
+      if (!termsAccepted && !isElectron) {
         $uibModal.open({
           templateUrl: 'partials/modals/disclaimer.html',
           size: 'md',
@@ -62,14 +62,24 @@
             }
             else {
               var scopeAccounts = [];
-              var storageAccounts = Config.getConfiguration('accounts').map(function (account) {
-                return account.address;
-              });
+              var storageAccounts = [];
 
-              for (var x in Web3Service.accounts) {
-                var account = Web3Service.accounts[x];
+              if ($scope.config.wallet == 'lightwallet' && Config.getConfiguration('accounts')) {
+                storageAccounts = Config.getConfiguration('accounts').map(function (account) {
+                  return account.address;
+                });
 
-                if (storageAccounts.indexOf(account) !== -1) {
+                for (var x in Web3Service.accounts) {
+                  var account = Web3Service.accounts[x];
+
+                  if (storageAccounts.indexOf(account) !== -1) {
+                    scopeAccounts.push(account);
+                  }
+                }
+              }
+              else {
+                for (var x in Web3Service.accounts) {
+                  var account = Web3Service.accounts[x];
                   scopeAccounts.push(account);
                 }
               }

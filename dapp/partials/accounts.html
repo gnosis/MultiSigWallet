@@ -4,11 +4,20 @@
       <button type="button" class="btn btn-default" ng-click="createWallet()">
         Add
       </button>
-      <button type="button" class="btn btn-default" onclick="document.querySelector('.keystore-file-upload').click()">
+      <button ng-disabled="hasKeystore && account.addresses.length > 0"
+        type="button"
+        class="btn btn-default"
+        onclick="document.querySelector('.keystore-file-upload').click()">
         Import
       </button>
-      <input class="keystore-file-upload" type="file" onchange="angular.element(this).scope().uploadKeystore(this)" style="display:none;">
-      <button type="button" class="btn btn-default" ng-click="downloadKeystore()" ng-show="hasKeystore">
+      <input class="keystore-file-upload"
+        type="file"
+        style="display:none;"
+        onchange="angular.element(this).scope().uploadKeystore(this)">
+      <button type="button"
+        class="btn btn-default"
+        ng-click="downloadKeystore()"
+        ng-show="hasKeystore && account.addresses.length > 0">
         Download
       </button>
     </div>
@@ -41,14 +50,20 @@
           </div>
         </td>
         <td>
-          <div uib-popover="{{account.address}}" popover-trigger="'mouseenter'">
-            {{account.address|address}}
-          </div>
+          <!--<div uib-popover="{{account.address}}" popover-trigger="'mouseenter'" id="{{$index}}">
+            {{account.address}}
+          </div>-->
+          <span uib-popover="{{account.address}}" popover-trigger="'mouseenter'" id="{{$index}}">
+            {{account.address}}
+          </span>
+          <button class="btn btn-default pull-right" type="button" ngclipboard-success="copyAccount()" ngclipboard data-clipboard-target="[id='{{$index}}']">
+            Copy
+          </button>
         </td>
       </tr>
     </tbody>
   </table>
-  <div ng-if="!account.addresses" class="panel-body text-center">
+  <div ng-if="!account.addresses || account.addresses.length == 0" class="panel-body text-center">
     No accounts. Add an account <a href="" ng-click="createWallet()">now</a>.
   </div>
 </div>

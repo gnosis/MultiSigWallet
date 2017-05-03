@@ -23,19 +23,19 @@ var txDefault = {
   ethereumNodes : [
     {
       url : "https://mainnet.infura.io:443",
-      name: "Mainnet"
+      name: "Remote Mainnet"
     },
     {
       url : "https://ropsten.infura.io:443",
-      name: "Ropsten"
+      name: "Remote Ropsten"
     },
     {
       url : "https://kovan.infura.io:443",
-      name: "Kovan"
+      name: "Remote Kovan"
     },
     {
       url : "http://localhost:8545",
-      name: "Private node"
+      name: "Local node"
     }
   ],
   alertNodes: [

@@ -20,7 +20,7 @@
       // If not terms acepted, prompt disclaimer
       var termsAccepted = localStorage.getItem("termsAccepted");
 
-      if (!termsAccepted) {
+      if (!termsAccepted && !isElectron) {
         $uibModal.open({
           templateUrl: 'partials/modals/disclaimer.html',
           size: 'md',
@@ -79,7 +79,7 @@
               }
               else {
                 for (var x in Web3Service.accounts) {
-                  var account = Web3Service.accounts[x];          
+                  var account = Web3Service.accounts[x];
                   scopeAccounts.push(account);
                 }
               }

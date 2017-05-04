@@ -13,13 +13,13 @@
     "test": "sh testrpc.sh",
     "certs": "openssl req -x509 -sha256 -nodes -newkey rsa:2048 -days 365 -keyout localhost.key -out localhost.crt -subj '/CN=localhost/O=Multisig/C=US'",
     "dist": "zip -x node_modules/\\* -x npm-debug.log -x tests/\\* -x config.karma.js -x .DS_Store -x .gitignore -r ../multisigWallet.zip ./",
-    "postinstall": "./node_modules/bower/bin/bower install && ./node_modules/grunt/bin/grunt ngtemplates && electron-rebuild --pre-gyp-fix --force --module_dir . -w node-hid -e node_modules/electron-prebuilt",
+    "postinstall": "./node_modules/bower/bin/bower install && ./node_modules/grunt/bin/grunt ngtemplates && electron-rebuild --force --module_dir . -w node-hid -e node_modules/electron-prebuilt",
     "start": "http-server -a 0.0.0.0 -p 5000",
     "start-electron": "electron .",
     "build-linux-x64": "electron-packager . MultisigWallet --ignore=node_modules/* --ignore=tests/* --ignore=testrpc.sh --platform=linux --out=./dist --overwrite=true --asar=true",
-    "build-osx": "electron-packager . MultisigWallet --ignore=node_modules/* --ignore=tests/* --ignore=testrpc.sh --platform=darwin --out=./dist --overwrite=true --asar=true",
-    "build-win": "electron-packager . MultisigWallet --ignore=node_modules/* --ignore=tests/* --ignore=testrpc.sh --platform=win32 --out=./dist --overwrite=true --asar=truer",
-    "build-all": "electron-packager . MultisigWallet --ignore=node_modules/* --ignore=tests/* --ignore=testrpc.sh --platform=all --out=./dist --overwrite=true --asar=true"
+    "build-osx": "electron-packager . MultisigWallet --prune --ignore=tests/* --ignore=testrpc.sh --platform=darwin --out=./dist --overwrite=true --asar=true",
+    "build-win": "electron-packager . MultisigWallet --prune --ignore=tests/* --ignore=testrpc.sh --platform=win32 --out=./dist --overwrite=true --asar=truer",
+    "build-all": "electron-packager . MultisigWallet --prune --ignore=tests/* --ignore=testrpc.sh --platform=all --out=./dist --overwrite=true --asar=true"
   },
   "keywords": [
     "ethereum",
@@ -45,7 +45,7 @@
     "asar": "^0.13.0",
     "babel-register": "^6.24.0",
     "coffee-script": "*",
-    "electron": "~1.6.7",
+    "electron": "~1.6.8",
     "electron-rebuild": "^1.5.7",
     "electron-builder": "^17.1.0",
     "electron-packager": "^8.6.0",

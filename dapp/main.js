@@ -39,50 +39,51 @@ function restServerSetup () {
 
   restServer.route('/sign-transaction')
   .get(function (req, res) {
-    ledger
-    .comm_node
-    .create_async()
-    .then(
-      function(comm) {
-    // Encode using ethereumjs-tx
-        let tx = new EthereumTx(txData);
+    if (req.body && req.body.tx && req.body.chain) {
+      ledger
+      .comm_node
+      .create_async()
+      .then(
+        function(comm) {
+          // Encode using ethereumjs-tx
+          let tx = new EthereumTx(req.body.tx);
 
-        if (error) callback(error);
+          if (error) callback(error);
 
-        // Force chain_id to int
-        chain_id = 0 | chain_id;
+          // Set the EIP155 bits
+          tx.raw[6] = Buffer.from([req.body.chain]); // v
+          tx.raw[7] = Buffer.from([]);         // r
+          tx.raw[8] = Buffer.from([]);         // s
 
-        // Set the EIP155 bits
-        tx.raw[6] = Buffer.from([chain_id]); // v
-        tx.raw[7] = Buffer.from([]);         // r
-        tx.raw[8] = Buffer.from([]);         // s
+          // Encode as hex-rlp for Ledger
+          const hex = tx.serialize().toString("hex");
 
-        // Encode as hex-rlp for Ledger
-        const hex = tx.serialize().toString("hex");
+          eth = new ledger.eth(comm);
 
-        eth = new ledger.eth(comm);
+          // Pass to _ledger for signing
+          eth.signTransaction_async("44'/60'/0'/0'/0", hex)
+          .then(result => {
+              // Store signature in transaction
+              tx.v = new Buffer(result.v, "hex");
+              tx.r = new Buffer(result.r, "hex");
+              tx.s = new Buffer(result.s, "hex");
 
-        // Pass to _ledger for signing
-        eth.signTransaction_async("44'/60'/0'/0'/0", hex)
-            .then(result => {
-                // Store signature in transaction
-                tx.v = new Buffer(result.v, "hex");
-                tx.r = new Buffer(result.r, "hex");
-                tx.s = new Buffer(result.s, "hex");
+              // EIP155: v should be chain_id * 2 + {35, 36}
+              const signedChainId = Math.floor((tx.v[0] - 35) / 2);
+              if (signedChainId !== req.body.chain) {
+                  cleanupCallback("Invalid signature received. Please update your Ledger Nano S.");
+              }
 
-                // EIP155: v should be chain_id * 2 + {35, 36}
-                const signed_chain_id = Math.floor((tx.v[0] - 35) / 2);
-                if (signed_chain_id !== chain_id) {
-                    cleanupCallback("Invalid signature received. Please update your Ledger Nano S.");
-                }
-
-                // Return the signed raw transaction
-                const rawTx = "0x" + tx.serialize().toString("hex");
-                res.json({signed: rawTx});
-            })
-            .catch(error => res.status(400));
-          });
-
+              // Return the signed raw transaction
+              const rawTx = "0x" + tx.serialize().toString("hex");
+              res.json({signed: rawTx});
+          })
+          .catch(error => res.status(400));
+      });
+    }
+    else {
+      res.status(400).send();
+    }
   });
 
   restServer.use(function(req, res) {

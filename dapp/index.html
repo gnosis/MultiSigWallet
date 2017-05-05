@@ -45,12 +45,20 @@
       if (isElectron) {
         var lightwallet = require("./bower_components/eth-lightwallet/dist/lightwallet.min.js");
         var FileSaver = require("./bower_components/file-saver/FileSaver.min.js");
+        //var keythereum = require("keythereum");
+        var ethereumWallet = require('ethereumjs-wallet');
+        var hdEthereumWallet = require('ethereumjs-wallet/hdkey');
+        var hdkeyring = require('eth-hd-keyring');
+        var encryptor = require('browser-passworder');
+      }
+      else {
+        document.write('<script src="./bower_components/ledger-wallet-provider/dist/ledgerwallet.js"><' + '/script>');
       }
     </script>
     <!-- <script src="./bower_components/entropy-collector/entropy-collector.js"></script> -->
     <script src="./bower_components/web3-provider-engine/dist/ProviderEngine.js"></script>
     <!-- Production -->
-    <script src="./bower_components/ledger-wallet-provider/dist/ledgerwallet.js"></script>
+    <!-- <script src="./bower_components/ledger-wallet-provider/dist/ledgerwallet.js"></script> -->
     <!-- Testing -->
     <!--
     <script src="./ledgerwallet.js"></script>

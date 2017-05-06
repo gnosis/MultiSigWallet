@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .service("Web3Service", function ($window, $q, Utils, $uibModal, Connection, Config) {
+    .service("Web3Service", function ($window, $q, Utils, $uibModal, Connection, Config, $http) {
 
       factory = {};
 
@@ -20,68 +20,19 @@
       **/
       factory.reloadWeb3Provider = function (resolve, reject) {
         // Ledger wallet
-        if (txDefault.wallet == "ledger" && !isElectron) {
-          ledgerwallet(
-            {
-              rpcUrl: txDefault.ethereumNode,
-              onSubmit: function () {
-                Utils.showSpinner();
-              },
-              onSigned: function () {
-                Utils.stopSpinner();
-              },
-              getChainID: function (cb) {
-               if (!Connection.isConnected) {
-                 if (txDefault.defaultChainID) {
-                   cb(null, txDefault.defaultChainID);
-                 }
-                 else {
-                   cb("You must set an offline Chain ID in order to sign offline transactions");
-                 }
-               }
-               else {
-                 if (factory.web3) {
-                   factory.web3.version.getNetwork(cb);
-                 }
-                 else {
-                   cb("No valid web3 object");
-                 }
-               }
-             }
+        if (txDefault.wallet == "ledger") {
+          if (isElectron) {
+            factory.ledgerElectronSetup();
+            if (resolve) {
+              resolve();
             }
-          ).then(
-            function(ledgerWeb3){
-              factory.web3 = ledgerWeb3;
-
-              if (resolve) {
-                resolve();
-              }
-              // Open Info Modal
-              $uibModal.open({
-                templateUrl: 'partials/modals/ledgerHelp.html',
-                size: 'md',
-                backdrop: 'static',
-                windowClass: 'bootstrap-dialog type-info',
-                controller: function ($scope, $uibModalInstance) {
-                  $scope.ok = function () {
-                    $uibModalInstance.close();
-                  };
-
-                  $scope.checkCoinbase = function () {
-                    if (factory.coinbase) {
-                      $uibModalInstance.close();
-                    }
-                    else {
-                      setTimeout($scope.checkCoinbase, 1000);
-                    }
-
-                  };
-
-                  $scope.checkCoinbase();
-                }
-              });
+          }
+          else {
+            factory.ledgerSetup();
+            if (resolve) {
+              resolve();
             }
-          );
+          }
         }
         // injected web3 provider (Metamask, mist, etc)
         else if (txDefault.wallet == "injected" && $window && $window.web3 && !isElectron) {
@@ -170,6 +121,160 @@
         );
       };
 
+      /* Ledger setup on browser*/
+      factory.ledgerSetup = function () {
+        ledgerwallet(
+          {
+            rpcUrl: txDefault.ethereumNode,
+            onSubmit: function () {
+              Utils.showSpinner();
+            },
+            onSigned: function () {
+              Utils.stopSpinner();
+            },
+            getChainID: function (cb) {
+             if (!Connection.isConnected) {
+               if (txDefault.defaultChainID) {
+                 cb(null, txDefault.defaultChainID);
+               }
+               else {
+                 cb("You must set an offline Chain ID in order to sign offline transactions");
+               }
+             }
+             else {
+               if (factory.web3) {
+                 factory.web3.version.getNetwork(cb);
+               }
+               else {
+                 cb("No valid web3 object");
+               }
+             }
+           }
+          }
+        ).then(
+          function(ledgerWeb3){
+            factory.web3 = ledgerWeb3;
+
+            if (resolve) {
+              resolve();
+            }
+            // Open Info Modal
+            $uibModal.open({
+              templateUrl: 'partials/modals/ledgerHelp.html',
+              size: 'md',
+              backdrop: 'static',
+              windowClass: 'bootstrap-dialog type-info',
+              controller: function ($scope, $uibModalInstance) {
+                $scope.ok = function () {
+                  $uibModalInstance.close();
+                };
+
+                $scope.checkCoinbase = function () {
+                  if (factory.coinbase) {
+                    $uibModalInstance.close();
+                  }
+                  else {
+                    setTimeout($scope.checkCoinbase, 1000);
+                  }
+
+                };
+
+                $scope.checkCoinbase();
+              }
+            });
+          }
+        );
+      };
+
+      /* Ledger wallet electron setup */
+      factory.ledgerElectronSetup = function () {
+        factory.engine = new ProviderEngine();
+        factory.web3 = new Web3(factory.engine);
+
+        var web3Provider = new HookedWeb3Provider({
+          getAccounts: function (cb) {
+            $http.get(txDefault.ledgerAPI + "/accounts").success(function (accounts) {
+              cb(null, accounts);
+            }).error(cb);
+          },
+          approveTransaction: function(txParams, cb) {
+            Utils.showSpinner();
+            cb(null, true);
+          },
+          signTransaction: function(txData, cb) {
+            function sendToLedger(chainID) {
+              $http.post(txDefault.ledgerAPI + "/sign-transaction", {tx: txData, chain: chainID}).then(function (tx) {
+                Utils.stopSpinner();
+                cb(null, tx.data.signed);
+              }, function(e){
+                Utils.stopSpinner(); cb(e);
+              });
+            }
+
+            if (!Connection.isConnected) {
+              if (txDefault.defaultChainID) {
+                sendToLedger(txDefault.defaultChainID);
+              }
+              else {
+                Utils.stopSpinner();
+                cb("You must set an offline Chain ID in order to sign offline transactions");
+              }
+            }
+            else {
+              if (factory.web3) {
+                factory.web3.version.getNetwork(function (e, chainID) {
+                  if (e) {
+                    Utils.stopSpinner();
+                    cb(e);
+                  }
+                  else {
+                    sendToLedger(chainID);
+                  }
+                });
+              }
+              else {
+                Utils.stopSpinner();
+                cb("No valid web3 object");
+              }
+            }
+          }
+        });
+
+        factory.web3 = new Web3(factory.engine);
+
+        factory.engine.addProvider(web3Provider);
+
+        factory.engine.addProvider(new RpcSubprovider({
+          rpcUrl: txDefault.ethereumNode
+        }));
+        factory.engine.start();
+
+        // Open Info Modal
+        $uibModal.open({
+          templateUrl: 'partials/modals/ledgerHelp.html',
+          size: 'md',
+          backdrop: 'static',
+          windowClass: 'bootstrap-dialog type-info',
+          controller: function ($scope, $uibModalInstance) {
+            $scope.ok = function () {
+              $uibModalInstance.close();
+            };
+
+            $scope.checkCoinbase = function () {
+              if (factory.coinbase) {
+                $uibModalInstance.close();
+              }
+              else {
+                setTimeout($scope.checkCoinbase, 1000);
+              }
+
+            };
+
+            $scope.checkCoinbase();
+          }
+        });
+      };
+
       /**
       * Select account
       **/
@@ -237,7 +342,7 @@
                     cb(
                       {
                         toString: function () {
-                          return 'User denied'
+                          return 'User denied';
                         }
                       },
                       null

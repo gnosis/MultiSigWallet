@@ -8,7 +8,9 @@ const url = require('url');
 const express = require('express');
 const ledger = require('ledgerco');
 const EthereumTx = require('ethereumjs-tx');
+const bodyParser = require('body-parser');
 let restServer, restPort = null;
+let ledgerAddresses = null;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -18,50 +20,117 @@ function restServerSetup () {
 
   let restServer = express();
   let restPort = 8080;
+  let connection = null;
+
+  restServer.use(bodyParser.json());
+
+
+
+  function getLedgerConnection() {
+    const connectionPromise = new Promise( (resolve, reject) => {
+      if (!connection) {
+        ledger.comm_node.create_async().then(function (comm) {
+          connection = new ledger.eth(comm);
+          resolve(connection);
+        });
+      }
+      else {
+        const checkPromise = new Promise( function (resolve, reject) {
+          connection
+          .getAppConfiguration_async()
+          .then(function (version) {
+            resolve(connection);
+          });
+        });
+
+        Promise.race([
+          checkPromise,
+          new Promise(
+            (_, reject) => {
+              setTimeout(
+              () => {
+                ledger.comm_node.create_async().then(function (comm) {
+                  connection = new ledger.eth(comm);
+                  resolve(connection);
+                });
+              },
+              3000);
+            })
+        ]).then(function () {
+          resolve(connection);
+        });
+
+      }
+    });
+
+    return Promise.race([
+      connectionPromise,
+      new Promise(
+        (_, reject) => {
+          setTimeout(
+          () => {
+            connectionOpened = false;
+            reject({error: 'timeout'});
+          },
+          10000);
+        })
+    ]);
+  }
 
   // Declare routes
   // @todo to be implemented
   restServer.route('/accounts')
   .get(function (req, res) {
-    ledger
-    .comm_node
-    .create_async()
-    .then(
-      function(comm) {
-        eth = new ledger.eth(comm);
-        eth
-        .getAddress_async("44'/60'/0'/0'/0", true)
-        .then(function(address) {
-          res.json([address.address]);
+    if (ledgerAddresses) {
+      res.json(ledgerAddresses);
+    }
+    else {
+      getLedgerConnection()
+      .then(
+        function(eth) {
+          Promise.race([
+            eth.getAddress_async("44'/60'/0'/0", true),
+            new Promise(
+              (_, reject) => {
+                setTimeout(
+                () => {
+                  reject({error: 'timeout'});
+                },
+                5000);
+              })
+          ])
+          .then(function(addresses) {
+            ledgerAddresses = [addresses.address];
+            res.json([addresses.address]);
+          }, function (){
+            res.status(500).send();
+          });
+        }, function (e) {
+          res.status(500).json(e);
         });
-      });
+    }
   });
 
   restServer.route('/sign-transaction')
-  .get(function (req, res) {
+  .post(function (req, res) {
     if (req.body && req.body.tx && req.body.chain) {
-      ledger
-      .comm_node
-      .create_async()
+      getLedgerConnection()
       .then(
-        function(comm) {
+        function(eth) {
           // Encode using ethereumjs-tx
+          req.body.tx.gasLimit = req.body.tx.gas;
           let tx = new EthereumTx(req.body.tx);
 
-          if (error) callback(error);
-
           // Set the EIP155 bits
-          tx.raw[6] = Buffer.from([req.body.chain]); // v
+          tx.raw[6] = Buffer.from([parseInt(req.body.chain)]); // v
           tx.raw[7] = Buffer.from([]);         // r
           tx.raw[8] = Buffer.from([]);         // s
 
           // Encode as hex-rlp for Ledger
           const hex = tx.serialize().toString("hex");
 
-          eth = new ledger.eth(comm);
-
           // Pass to _ledger for signing
-          eth.signTransaction_async("44'/60'/0'/0'/0", hex)
+          eth.signTransaction_async("44'/60'/0'/0", hex)
           .then(result => {
               // Store signature in transaction
               tx.v = new Buffer(result.v, "hex");
@@ -70,19 +139,20 @@ function restServerSetup () {
 
               // EIP155: v should be chain_id * 2 + {35, 36}
               const signedChainId = Math.floor((tx.v[0] - 35) / 2);
-              if (signedChainId !== req.body.chain) {
-                  cleanupCallback("Invalid signature received. Please update your Ledger Nano S.");
+
+              if (signedChainId !== parseInt(req.body.chain)) {
+                  res.status(400).json({error: "Invalid signature received. Please update your Ledger Nano S."});
               }
 
               // Return the signed raw transaction
               const rawTx = "0x" + tx.serialize().toString("hex");
               res.json({signed: rawTx});
           })
-          .catch(error => res.status(400));
+          .catch(error => res.status(400).send(error));
       });
     }
     else {
-      res.status(400).send();
+      res.status(400).json({error: "Missing params"});
     }
   });
 

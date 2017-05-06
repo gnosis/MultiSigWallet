@@ -10,6 +10,15 @@
       ];
 
       /**
+      * Sets the complete url to the Alert (notifications) management page
+      */
+      function setAlertManagementPage () {
+        if ($scope.config.alertNode && $scope.config.alertNode.authCode) {
+          $scope.alertManagementPage = $scope.config.alertNode.managementPage.replace('{auth-code}', $scope.config.alertNode.authCode);
+        }
+      }
+
+      /**
       * Loads configuration
       */
       function loadConfig () {
@@ -47,6 +56,8 @@
           walletContractCount++;
         }
 
+        setAlertManagementPage();
+
       }
 
       loadConfig();
@@ -56,6 +67,10 @@
       */
       function showHideAuthCodeBtn () {
         $scope.showDeleteAuthCodeBtn = $scope.config.alertNode ? $scope.config.alertNode.authCode ? true : false : false;
+
+        if ($scope.showDeleteAuthCodeBtn) {
+          setAlertManagementPage();
+        }
       }
 
       showHideAuthCodeBtn(); // called on page loading

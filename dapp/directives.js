@@ -276,8 +276,6 @@
               scope.selectedItem = null;
           }
 
-          //scope.model = scope.selectedItem;
-
           scope.changeEvent = function() {
             scope.$parent.config.wallet = scope.selectedItem.name;
           };

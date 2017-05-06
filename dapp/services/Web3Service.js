@@ -53,9 +53,12 @@
               controller: function ($scope, $uibModalInstance) {
                 $scope.title = 'Unlock your account';
                 $scope.password = '';
+                $scope.showLoadingSpinner = false;
 
                 $scope.ok = function () {
-                  //
+                  // show spinner
+                  $scope.showLoadingSpinner = true;
+
                   factory.canDecryptLightWallet($scope.password, function (response) {
                     if (!response) {
                       if (reject) {
@@ -63,20 +66,34 @@
                       }
 
                       Utils.dangerAlert({message: "Invalid password."});
+                      $scope.showLoadingSpinner = false;
                     }
                     else {
                       factory.lightWalletSetup(true, $scope.password);
                       if (resolve) {
                         resolve();
                       }
+                      $scope.showLoadingSpinner = false;
                       $uibModalInstance.close();
                     }
                   });
                 };
 
                 $scope.cancel = function () {
-                  // TODO set remote node
+                  // set remote node wallet
+                  var userConfig = Config.getUserConfiguration();
+                  userConfig.wallet = 'remotenode';
+                  Config.setConfiguration("userConfig", JSON.stringify(userConfig));
+                  // Reload configuration
+                  loadConfiguration(); // config.js
                   $uibModalInstance.dismiss();
+                  // Reload web3 provider
+                  if (resolve) {
+                    factory.reloadWeb3Provider(resolve, reject);
+                  }
+                  else {
+                    factory.reloadWeb3Provider();
+                  }
                 };
 
               }
@@ -332,7 +349,8 @@
 
       /**
       * Light wallet setup
-      * @param passwrod | optional
+      * @param restore, default false
+      * @param password, default null
       */
       factory.lightWalletSetup = function (restore=false, password=null) {
         factory.password_provider_callback = null;
@@ -418,19 +436,12 @@
       * Creates a new keystore and within one account
       */
       factory.createLightWallet = function (password, seed, ctrlCallback) {
-
-        //var hdEthWallet = hdEthereumWallet.fromMasterSeed(seed);
-        //var wallet = ethWallet.getWallet();
-        //var address = wallet.getAddressString();
-        var jsonKeystore = null;
         var keystore = new hdkeyring({
           mnemonic: seed,
           numberOfAccounts: 1,
         });
 
         factory.keystore = keystore;
-        //jsonKeystore = keystore.hdWallet.getWallet().toV3String(password);
-        // Save keystore to localStorage
         factory.keystore.serialize()
         .then(function (serializedKeystore) {
           encryptor.encrypt(password, serializedKeystore)

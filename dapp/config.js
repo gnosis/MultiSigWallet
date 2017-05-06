@@ -6,7 +6,8 @@ var txDefaultOrig =
   alertNode: {
     url : "https://alerts.gnosis.pm",
     authCode: null,
-    name: "Mainnet"
+    name: "Mainnet",
+    managementPage: "https://alerts.gnosis.pm/api/alert/manage/?code={auth-code}"
   },
   connectionChecker:{
     method : "OPTIONS",
@@ -43,12 +44,14 @@ var txDefault = {
     {
       url: 'https://alerts.gnosis.pm',
       authCode: null,
-      name: 'Mainnet'
+      name: 'Mainnet',
+      managementPage: "https://alerts.gnosis.pm/api/alert/manage/?code={auth-code}"
     },
     {
       url: 'https://testalerts.gnosis.pm',
       authCode: null,
-      name: 'Kovan'
+      name: 'Kovan',
+      managementPage: "https://testalerts.gnosis.pm/api/alert/manage/?code={auth-code}"
     }
   ],
   walletFactoryAddresses: [

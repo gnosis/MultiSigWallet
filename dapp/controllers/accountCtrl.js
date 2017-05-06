@@ -13,7 +13,7 @@
 
         if (keystore) {
           // Restore data
-          Web3Service.restore();
+          Web3Service.restoreLightWallet();
         }
 
         if (setAddresses) {
@@ -173,7 +173,7 @@
               // show spinner
               $scope.showLoadingSpinner = true;
 
-              Web3Service.newAccount($scope.account.password, function (address) {
+              Web3Service.newLightWalletAccount($scope.account.password, function (address) {
                 if (address) {
                   var accounts = Config.getConfiguration('accounts') || [];
                   var accountName = $scope.account.name;
@@ -207,7 +207,7 @@
                   // hide spinner
                   $scope.showLoadingSpinner = false;
                   delete $scope.account.password;
-                  Utils.dangerAlert({message:'Invalid passwod.'})
+                  Utils.dangerAlert({message:'Invalid password.'});
                 }
               });
             };
@@ -335,8 +335,36 @@
       * Download keystore
       */
       $scope.downloadKeystore = function () {
-        var blob = new Blob([Web3Service.getKeystore()], {type: "text/plain;charset=utf-8"});
-        FileSaver.saveAs(blob, "lightwallet.txt");
+
+        $uibModal.open({
+          templateUrl: 'partials/modals/askLightWalletPassword.html',
+          size: 'md',
+          backdrop: 'static',
+          windowClass: 'bootstrap-dialog type-info',
+          controller: function ($scope, $uibModalInstance) {
+            $scope.title = 'Unlock your account';
+            $scope.password = '';
+
+            $scope.ok = function () {
+              try {
+                var v3Instance = Web3Service.keystore.hdWallet.getWallet();
+                var fileString = v3Instance.toV3String($scope.password);
+                var filename = v3Instance.getV3Filename();
+                var blob = new Blob([fileString], {type: "text/plain;charset=utf-8"});
+                FileSaver.saveAs(blob, filename);
+                $uibModalInstance.close();
+              }
+              catch (error) {
+                Utils.dangerAlert({message:'Invalid password.'});
+              }
+            };
+
+            $scope.cancel = function () {
+              $uibModalInstance.dismiss();
+            };
+
+          }
+        });
       };
 
       /**
@@ -353,7 +381,7 @@
           try {
             Web3Service.setKeystore(text);
             // Restore data from keystore
-            Web3Service.restore();
+            Web3Service.restoreLightWallet();
             Web3Service.getAddresses().map(function (address) {
               // Check whether exist accounts having defult name
               defaultAccountNames = Web3Service.getAddresses().filter(function (elem) {

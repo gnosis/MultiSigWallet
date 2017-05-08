@@ -358,80 +358,80 @@
         factory.web3 = new Web3(factory.engine);
 
         function _web3Setup () {
-          // Set HookedWeb3Provider          
+          // Set HookedWeb3Provider
           const ethUtil = require('ethereumjs-util');
           const EthTx = require('ethereumjs-tx');
+          var options = {
+            getAccounts: function (cb) {
+              cb(null, factory.getLightWalletAddresses());
+            },
+            getPrivateKey: function (address, cb) {
+              var idx = factory.getLightWalletAddresses().indexOf(address);
+              if (idx == -1) {
+                return cb('Account not found');
+              }
 
-          let web3Provider = new HookedWalletEthTxSubprovider(factory.keystore.hdWallet.getWallet());
-          web3Provider.getAccounts = function (cb) {
-            cb(null, factory.getLightWalletAddresses());
-          };
+              cb(null, factory.keystore.wallets[idx].getPrivateKey());
+            },
+            signTransaction: function(txData, cb) {
+              // Show password modal
+              $uibModal.open({
+                templateUrl: 'partials/modals/askLightWalletPassword.html',
+                size: 'md',
+                backdrop: 'static',
+                controller: function ($scope, $uibModalInstance) {
+                  $scope.title = 'Confirm transaction';
 
-          web3Provider.getPrivateKey = function (address, cb) {
-            var idx = factory.getLightWalletAddresses().indexOf(address);
-            if (idx == -1) {
-              return cb('Account not found');
-            }
+                  $scope.ok = function () {
+                    // Enable spinner
+                    $scope.showLoadingSpinner = true;
 
-            cb(null, factory.keystore.wallets[idx].getPrivateKey());
-          };
-
-          web3Provider.signTransaction = function(txData, cb) {
-            // Show password modal
-            $uibModal.open({
-              templateUrl: 'partials/modals/askLightWalletPassword.html',
-              size: 'md',
-              backdrop: 'static',
-              controller: function ($scope, $uibModalInstance) {
-                $scope.title = 'Confirm transaction';
-
-                $scope.ok = function () {
-                  // Enable spinner
-                  $scope.showLoadingSpinner = true;
-
-                  factory.canDecryptLightWallet($scope.password, function (response) {
-                    if (!response) {
-                      // Disable spinner
-                      $scope.showLoadingSpinner = false;
-                      $uibModalInstance.dismiss();
-                      cb('Invalid password', null);
-                    }
-                    else {
-                      txData.value = txData.value || '0x00';
-                      txData.data = ethUtil.addHexPrefix(txData.data);
-                      txData.gasPrice = parseInt(txData.gasPrice, 16);
-                      txData.nonce = parseInt(txData.nonce, 16);
-                      txData.gasLimit = txData.gas;
-
-                      web3Provider.getPrivateKey(txData.from, function(err, privateKey) {
-                        if (err) return cb(err);
-                        // Sign Tx
-                        var tx = new EthTx(txData);
-                        tx.sign(privateKey);
+                    factory.canDecryptLightWallet($scope.password, function (response) {
+                      if (!response) {
                         // Disable spinner
                         $scope.showLoadingSpinner = false;
-                        cb(null, '0x' + tx.serialize().toString('hex'));
-                        $uibModalInstance.close();
-                      });
-                    }
-                  });
-                };
-
-                $scope.cancel = function () {
-                  $uibModalInstance.dismiss();
-                  cb(
-                    {
-                      toString: function () {
-                        return 'User denied';
+                        $uibModalInstance.dismiss();
+                        cb('Invalid password', null);
                       }
-                    },
-                    null
-                  );
-                };
+                      else {
+                        txData.value = txData.value || '0x00';
+                        txData.data = ethUtil.addHexPrefix(txData.data);
+                        txData.gasPrice = parseInt(txData.gasPrice, 16);
+                        txData.nonce = parseInt(txData.nonce, 16);
+                        txData.gasLimit = txData.gas;
 
-              }
-            });
+                        options.getPrivateKey(txData.from, function(err, privateKey) {
+                          if (err) return cb(err);
+                          // Sign Tx
+                          var tx = new EthTx(txData);
+                          tx.sign(privateKey);
+                          // Disable spinner
+                          $scope.showLoadingSpinner = false;
+                          cb(null, '0x' + tx.serialize().toString('hex'));
+                          $uibModalInstance.close();
+                        });
+                      }
+                    });
+                  };
+
+                  $scope.cancel = function () {
+                    $uibModalInstance.dismiss();
+                    cb(
+                      {
+                        toString: function () {
+                          return 'User denied';
+                        }
+                      },
+                      null
+                    );
+                  };
+
+                }
+              });
+            }
           };
+
+          let web3Provider = new HookedWalletProvider(options);
 
             //WalletSubprovider.signTransaction = opts.signTransaction;
             //WalletSubprovider.super_.call(this, opts);
@@ -673,12 +673,12 @@
               }
             }
 
-            if (existingAddressToAdd && factory.addresses.indexOf(existingAddressToAdd.replace('0x', '')) == -1) {
+            if (existingAddressToAdd && factory.addresses.indexOf(existingAddressToAdd) == -1) {
               factory.addresses.push(existingAddressToAdd);
-              ctrlCallback(existingAddressToAdd);
+              ctrlCallback(factory.addresses);
             }
-            if (existingAddressToAdd &&  factory.addresses.indexOf(existingAddressToAdd.replace('0x', '')) !== -1) {
-              ctrlCallback(existingAddressToAdd);
+            if (existingAddressToAdd &&  factory.addresses.indexOf(existingAddressToAdd) !== -1) {
+              ctrlCallback(factory.addresses);
             }
             else if (!existingAddressToAdd) {
               factory.keystore.addAccounts();

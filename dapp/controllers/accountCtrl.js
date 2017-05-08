@@ -132,7 +132,7 @@
                     accounts.push(
                       {
                         'name': accountName,
-                        'address': address
+                        'address': addresses[0]
                       }
                     );
                   }
@@ -173,8 +173,8 @@
               // show spinner
               $scope.showLoadingSpinner = true;
 
-              Web3Service.newLightWalletAccount($scope.account.password, function (address) {
-                if (address) {
+              Web3Service.newLightWalletAccount($scope.account.password, function (addresses) {
+                if (addresses) {
                   var accounts = Config.getConfiguration('accounts') || [];
                   var accountName = $scope.account.name;
                   // Look for other accounts with the same name
@@ -187,7 +187,7 @@
                   accounts.push(
                     {
                       'name': sameAccountNames.length > 0 ? accountName + sameAccountNames.length : accountName,
-                      'address': address
+                      'address': addresses[addresses.length-1]
                     }
                   );
                   // Load updated accounts
@@ -276,8 +276,17 @@
                 if (accounts[x].address == $scope.account.address) {
                   // Set new account name
                   accounts.splice(x, 1);
-                  // Save accounts
-                  Config.setConfiguration('accounts', JSON.stringify(accounts));
+
+                  if (accounts.length==0) {
+                    // remove keystore
+                    Config.removeConfiguration('keystore');
+                    Config.removeConfiguration('accounts');
+                  }
+                  else {
+                    // Save accounts
+                    Config.setConfiguration('accounts', JSON.stringify(accounts));
+                  }
+
                   // Reload data
                   init();
                   // Show success modal
@@ -414,6 +423,71 @@
 
         var file = element.files[0];
         reader.readAsText(file);
+      };
+
+      /**
+      * Retrieves the keystore seed
+      */
+      $scope.showSeed = function () {
+        $uibModal.open({
+          templateUrl: 'partials/modals/showSeed.html',
+          size: 'md',
+          controller: function ($scope, $uibModalInstance) {
+            $scope.seed = Web3Service.keystore.mnemonic;
+
+            $scope.close = function () {
+              $uibModalInstance.dismiss();
+            };
+          }
+        });
+      };
+
+      /**
+      * Exports a wallet address in a V3 format
+      */
+      $scope.exportV3 = function (address) {
+        $uibModal.open({
+          templateUrl: 'partials/modals/askLightWalletPassword.html',
+          size: 'md',
+          backdrop: 'static',
+          windowClass: 'bootstrap-dialog type-info',
+          controller: function ($scope, $uibModalInstance) {
+            $scope.title = 'Export account';
+            $scope.password = '';
+            $scope.showLoadingSpinner = false;
+
+            $scope.ok = function () {
+              // show spinner
+              $scope.showLoadingSpinner = true;
+
+              factory.canDecryptLightWallet($scope.password, function (response) {
+                if (!response) {
+                  Utils.dangerAlert({message: "Invalid password."});
+                  $scope.showLoadingSpinner = false;
+                }
+                else {
+                  // Get wallet instance
+                  var v3Instance = factory.keystore.wallets.filter(function (item) {
+                    return item.getAddressString() == address;
+                  })[0];
+                  // Get V3 JSON format
+                  var fileString = v3Instance.toV3String($scope.password);
+                  var filename = v3Instance.getV3Filename();
+                  var blob = new Blob([fileString], {type: "text/plain;charset=utf-8"});
+                  // Download
+                  FileSaver.saveAs(blob, filename);
+                  // Hide spinner
+                  $scope.showLoadingSpinner = false;
+                  $uibModalInstance.close();
+                }
+              });
+            };
+
+            $scope.cancel = function () {
+              $uibModalInstance.dismiss();
+            };
+          }
+        });
       };
 
     });

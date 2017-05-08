@@ -56,6 +56,12 @@
         <td>
           <div uib-popover="{{wallet.address}}" popover-trigger="'mouseenter'">
             {{::wallet.address|address}}
+            <button type="button" class="btn btn-default btn-sm pull-right"
+              disabled-if-no-accounts-or-wallet-available="{{wallet.address}}"
+              data-clipboard-text="{{wallet.address}}"
+              ngclipboard>
+              Copy
+            </button>
           </div>
         </td>
         <td>

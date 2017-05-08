@@ -21,6 +21,10 @@ var txDefaultOrig =
   ledgerAPI: "http://localhost:8080"
 };
 
+if (isElectron) {
+  txDefaultOrig.wallet = "remotenode";
+}
+
 var txDefault = {
   ethereumNodes : [
     {

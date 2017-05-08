@@ -357,67 +357,146 @@
         factory.engine = new ProviderEngine();
         factory.web3 = new Web3(factory.engine);
 
-        if (factory.getKeystore()) {
-          if (restore) {
-            factory.restoreLightWallet(password);
-          }
+        function _web3Setup () {
+          // Set HookedWeb3Provider          
+          const ethUtil = require('ethereumjs-util');
+          const EthTx = require('ethereumjs-tx');
 
-          // Set HookedWeb3Provider
-          var web3Provider = new HookedWeb3Provider({
-            getAccounts: function (cb) {
-              cb(null, factory.getLightWalletAddresses());
-            },
-            approveTransaction: function(txParams, cb) {
-              cb(null, true);
-            },
-            signTransaction: function(txData, cb) {
-              // Show password modal
-              $uibModal.open({
-                templateUrl: 'partials/modals/askLightWalletPassword.html',
-                size: 'md',
-                backdrop: 'static',
-                controller: function ($scope, $uibModalInstance) {
+          let web3Provider = new HookedWalletEthTxSubprovider(factory.keystore.hdWallet.getWallet());
+          web3Provider.getAccounts = function (cb) {
+            cb(null, factory.getLightWalletAddresses());
+          };
 
-                  $scope.ok = function () {
-                    factory.keystore.keyFromPassword($scope.password, function (err, pwDerivedKey) {
-                      if (err) throw err;
-                      if (factory.keystore.isDerivedKeyCorrect(pwDerivedKey)) {
-                        // Password valid
-                        txData.gasPrice = parseInt(txData.gasPrice, 16);
-                        txData.nonce = parseInt(txData.nonce, 16);
-                        txData.gasLimit = txData.gas;
-
-                        var sendingAddress = factory.coinbase;
-                        var contractData = lightwallet.txutils.createContractTx(sendingAddress, txData);
-                        var signedTx = lightwallet.signing.signTx(factory.keystore, pwDerivedKey, contractData.tx, sendingAddress, "m/44'/60'/0'/0");
-                        cb(null, signedTx);
-                        $uibModalInstance.close();
-                      }
-                      else {
-                        $uibModalInstance.dismiss();
-                        cb('Invalid password', null);
-                      }
-
-                    });
-                  };
-
-                  $scope.cancel = function () {
-                    $uibModalInstance.dismiss();
-                    cb(
-                      {
-                        toString: function () {
-                          return 'User denied';
-                        }
-                      },
-                      null
-                    );
-                    //cb('Deploy canceled', null);
-                  };
-
-                }
-              });
+          web3Provider.getPrivateKey = function (address, cb) {
+            var idx = factory.getLightWalletAddresses().indexOf(address);
+            if (idx == -1) {
+              return cb('Account not found');
             }
-          });
+
+            cb(null, factory.keystore.wallets[idx].getPrivateKey());
+          };
+
+          web3Provider.signTransaction = function(txData, cb) {
+            // Show password modal
+            $uibModal.open({
+              templateUrl: 'partials/modals/askLightWalletPassword.html',
+              size: 'md',
+              backdrop: 'static',
+              controller: function ($scope, $uibModalInstance) {
+                $scope.title = 'Confirm transaction';
+
+                $scope.ok = function () {
+                  // Enable spinner
+                  $scope.showLoadingSpinner = true;
+
+                  factory.canDecryptLightWallet($scope.password, function (response) {
+                    if (!response) {
+                      // Disable spinner
+                      $scope.showLoadingSpinner = false;
+                      $uibModalInstance.dismiss();
+                      cb('Invalid password', null);
+                    }
+                    else {
+                      txData.value = txData.value || '0x00';
+                      txData.data = ethUtil.addHexPrefix(txData.data);
+                      txData.gasPrice = parseInt(txData.gasPrice, 16);
+                      txData.nonce = parseInt(txData.nonce, 16);
+                      txData.gasLimit = txData.gas;
+
+                      web3Provider.getPrivateKey(txData.from, function(err, privateKey) {
+                        if (err) return cb(err);
+                        // Sign Tx
+                        var tx = new EthTx(txData);
+                        tx.sign(privateKey);
+                        // Disable spinner
+                        $scope.showLoadingSpinner = false;
+                        cb(null, '0x' + tx.serialize().toString('hex'));
+                        $uibModalInstance.close();
+                      });
+                    }
+                  });
+                };
+
+                $scope.cancel = function () {
+                  $uibModalInstance.dismiss();
+                  cb(
+                    {
+                      toString: function () {
+                        return 'User denied';
+                      }
+                    },
+                    null
+                  );
+                };
+
+              }
+            });
+          };
+
+            //WalletSubprovider.signTransaction = opts.signTransaction;
+            //WalletSubprovider.super_.call(this, opts);
+          //}
+
+          /*var web3Provider = new WalletSubprovider(
+            factory.keystore.hdWallet.getWallet(),
+            {}
+          );*/
+
+            /*{
+              getAccounts: function (cb) {
+                cb(null, factory.getLightWalletAddresses());
+              },
+              approveTransaction: function(txParams, cb) {
+                cb(null, true);
+              },
+              signTransaction: function(txData, cb) {
+                // Show password modal
+                $uibModal.open({
+                  templateUrl: 'partials/modals/askLightWalletPassword.html',
+                  size: 'md',
+                  backdrop: 'static',
+                  controller: function ($scope, $uibModalInstance) {
+
+                    $scope.ok = function () {
+                      factory.keystore.keyFromPassword($scope.password, function (err, pwDerivedKey) {
+                        if (err) throw err;
+                        if (factory.keystore.isDerivedKeyCorrect(pwDerivedKey)) {
+                          // Password valid
+                          txData.gasPrice = parseInt(txData.gasPrice, 16);
+                          txData.nonce = parseInt(txData.nonce, 16);
+                          txData.gasLimit = txData.gas;
+
+                          var sendingAddress = factory.coinbase;
+                          var contractData = lightwallet.txutils.createContractTx(sendingAddress, txData);
+                          var signedTx = lightwallet.signing.signTx(factory.keystore, pwDerivedKey, contractData.tx, sendingAddress, "m/44'/60'/0'/0");
+                          cb(null, signedTx);
+                          $uibModalInstance.close();
+                        }
+                        else {
+                          $uibModalInstance.dismiss();
+                          cb('Invalid password', null);
+                        }
+
+                      });
+                    };
+
+                    $scope.cancel = function () {
+                      $uibModalInstance.dismiss();
+                      cb(
+                        {
+                          toString: function () {
+                            return 'User denied';
+                          }
+                        },
+                        null
+                      );
+                      //cb('Deploy canceled', null);
+                    };
+
+                  }
+                });
+              }
+            }*/
 
           web3Provider.transaction_signer = factory.keystore;
           web3Provider.host = txDefault.ethereumNode;
@@ -429,6 +508,15 @@
           }));
 
           factory.engine.start();
+        }
+
+        if (factory.getKeystore()) {
+          if (restore) {
+            factory.restoreLightWallet(password, _web3Setup);
+          }
+          else {
+            _web3Setup();
+          }
         }
       };
 
@@ -530,7 +618,7 @@
       * Restore keystore from localStorage
       * @param password,
       */
-      factory.restoreLightWallet = function (password) {
+      factory.restoreLightWallet = function (password, web3SetupCb) {
         factory.addresses = [];
         if (factory.getKeystore() && password) {
           try {
@@ -542,6 +630,8 @@
               factory.keystore.wallets.map(function (address) {
                 factory.addresses.push('0x' + address.getAddressString().replace('0x', ''));
               });
+
+              web3SetupCb();
             });
           }
           catch (error) {

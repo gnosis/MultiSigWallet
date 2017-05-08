@@ -21,7 +21,7 @@
       if (isElectron) {
         if (typeof module === 'object') {window.module = module; module = undefined;}
         $ = require('./bower_components/jquery/dist/jquery.min.js');
-        var HookedWeb3Provider = require('./bower_components/web3-provider-engine/subproviders/hooked-wallet.js');
+        //var HookedWeb3Provider = require('./bower_components/web3-provider-engine/subproviders/hooked-wallet.js');
         var RpcSubprovider = require('./bower_components/web3-provider-engine/subproviders/rpc.js');
       }
     </script>
@@ -47,12 +47,14 @@
         //var keythereum = require("keythereum");
         var ethereumWallet = require('ethereumjs-wallet');
         var hdEthereumWallet = require('ethereumjs-wallet/hdkey');
+        //var HookedWeb3Provider = require('ethereumjs-wallet/provider-engine');
+        var HookedWalletEthTxSubprovider = require('web3-provider-engine/subproviders/hooked-wallet-ethtx');
         var hdkeyring = require('eth-hd-keyring');
         var encryptor = require('browser-passworder');
       }
       else {
         document.write('<script src="./bower_components/ledger-wallet-provider/dist/ledgerwallet.js"><' + '/script>');
-      }      
+      }
     </script>
     <!-- <script src="./bower_components/entropy-collector/entropy-collector.js"></script> -->
     <script src="./bower_components/web3-provider-engine/dist/ProviderEngine.js"></script>

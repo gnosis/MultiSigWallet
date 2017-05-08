@@ -38,35 +38,42 @@
       // or a wallet has not been created on the current network
       return {
         link: function(scope, element, attrs){
-          Web3Service.webInitialized.then(
+          scope.$watch(
             function () {
-              if (scope.wallet && scope.wallet.isOnChain == true) {
-                element.removeAttr('disabled');
-              }
-              else if (attrs.disabledIfNoAccountsOrWalletAvailable) {
-                var address = attrs.disabledIfNoAccountsOrWalletAvailable;
-                Wallet.getOwners(
-                  address,
-                  function (e, owners) {
-                    if (!e && owners.length > 0 && Web3Service.coinbase) {
-                      element.removeAttr('disabled');
-                    }
-                    else {
-                      attrs.$set('disabled', 'disabled');
-                    }
-                  }
-                ).call();
-              }
-              else {
-                scope.$watch(function(){
-                  if(Web3Service.coinbase) {
+              return Web3Service.web3;
+            },
+            function () {
+              Web3Service.webInitialized.then(
+                function () {
+                  if (scope.wallet && scope.wallet.isOnChain == true) {
                     element.removeAttr('disabled');
                   }
-                  else {
-                    attrs.$set('disabled', 'disabled');
+                  else if (attrs.disabledIfNoAccountsOrWalletAvailable) {
+                    var address = attrs.disabledIfNoAccountsOrWalletAvailable;
+                    Wallet.getOwners(
+                      address,
+                      function (e, owners) {
+                        if (!e && owners.length > 0 && Web3Service.coinbase) {
+                          element.removeAttr('disabled');
+                        }
+                        else {
+                          attrs.$set('disabled', 'disabled');
+                        }
+                      }
+                    ).call();
                   }
-                });
-              }
+                  else {
+                    scope.$watch(function(){
+                      if(Web3Service.coinbase) {
+                        element.removeAttr('disabled');
+                      }
+                      else {
+                        attrs.$set('disabled', 'disabled');
+                      }
+                    });
+                  }
+                }
+              );
             }
           );
         }

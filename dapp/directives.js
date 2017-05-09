@@ -115,7 +115,7 @@
           },
           function(){
             var address = Object.assign({}, txDefault, JSON.parse(localStorage.getItem("userConfig"))).walletFactoryAddress;
-            if (address) {
+            if (address && web3.isAddress(address)) {
               Web3Service.web3.eth.getCode(address, function (e, factory) {
                 if (!Connection.isConnected) {
                   element.css("display", "none");

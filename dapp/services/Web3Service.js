@@ -60,21 +60,23 @@
                   $scope.showLoadingSpinner = true;
 
                   factory.canDecryptLightWallet($scope.password, function (response) {
-                    if (!response) {
-                      if (reject) {
-                        reject();
-                      }
+                    
+                    $scope.showLoadingSpinner = false;
 
+                    if (!response) {
                       Utils.dangerAlert({message: "Invalid password."});
-                      $scope.showLoadingSpinner = false;
+
+                      /*if (reject) {
+                        reject();
+                      }*/
                     }
                     else {
                       factory.lightWalletSetup(true, $scope.password);
+                      $uibModalInstance.close();
+
                       if (resolve) {
                         resolve();
                       }
-                      $scope.showLoadingSpinner = false;
-                      $uibModalInstance.close();
                     }
                   });
                 };

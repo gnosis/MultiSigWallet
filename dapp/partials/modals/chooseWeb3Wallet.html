@@ -1,0 +1,16 @@
+<div class="modal-header">
+  <div class="bootstrap-dialog-header">
+    <div class="bootstrap-dialog-title">
+      Select a Web3 wallet provider
+    </div>
+  </div>
+</div>
+<div class="modal-body">
+  <provider-list default-item="wallet" selected-item="providers[$index].name"></provider-list>
+</div>
+{{wallet}}
+<div class="modal-footer">
+  <button type="button" ng-click="ok()" class="btn btn-default">
+    Ok
+  </button>
+</div>

@@ -135,7 +135,31 @@
           $scope.connectionInterval = $interval($scope.updateConnectionStatus, txDefault.connectionChecker.checkInterval);
 
           $scope.updateInfo().then(function () {
-            if (!Web3Service.coinbase && txDefault.wallet !== "ledger") {
+            var chooseWeb3ProviderShown = Config.getConfiguration('chooseWeb3ProviderShown');
+            if (!chooseWeb3ProviderShown) {
+              $uibModal.open({
+                templateUrl: 'partials/modals/chooseWeb3Wallet.html',
+                size: 'md',
+                backdrop: 'static',
+                windowClass: 'bootstrap-dialog type-info',
+                controller: function ($scope, $uibModalInstance) {
+                  $scope.config = Config.getUserConfiguration();
+
+                  $scope.ok = function () {
+                    //config.wallet = $scope.wallet;
+                    // Save new configuation
+                    Config.setConfiguration("userConfig", JSON.stringify($scope.config));
+                    loadConfiguration(); // config.js
+                    // Reload we3 provider
+                    Web3Service.reloadWeb3Provider();
+                    Utils.success("Welcome, you can start using your Multisignature Wallet.");
+                    $uibModalInstance.close();
+                  };
+                }
+              });
+              Config.setConfiguration('chooseWeb3ProviderShown', true);
+            }
+            else if (!Web3Service.coinbase && txDefault.wallet !== "ledger" && txDefault.wallet !== 'lightwallet') {
               $uibModal.open({
                 templateUrl: 'partials/modals/web3Wallets.html',
                 size: 'md',

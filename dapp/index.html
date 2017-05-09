@@ -46,10 +46,11 @@
         var FileSaver = require("./bower_components/file-saver/FileSaver.min.js");
         //var keythereum = require("keythereum");
         var ethereumWallet = require('ethereumjs-wallet');
-        var hdEthereumWallet = require('ethereumjs-wallet/hdkey');        
+        var hdEthereumWallet = require('ethereumjs-wallet/hdkey');
         var HookedWalletProvider = require('web3-provider-engine/subproviders/hooked-wallet');
         var hdkeyring = require('eth-hd-keyring');
         var encryptor = require('browser-passworder');
+        var bip39 = require('bip39');
       }
       else {
         document.write('<script src="./bower_components/ledger-wallet-provider/dist/ledgerwallet.js"><' + '/script>');

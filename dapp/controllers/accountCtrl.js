@@ -83,7 +83,7 @@
       */
       login();
 
-      $scope.isObjectEmpty = function (obj){        
+      $scope.isObjectEmpty = function (obj){
         for(var key in obj) {
           if(obj.hasOwnProperty(key)) {
             return false;
@@ -290,6 +290,14 @@
                     // remove keystore
                     Config.removeConfiguration('keystore');
                     Config.removeConfiguration('accounts');
+                    Web3Service.addresses = [];
+                    // setting remotenoe by default
+                    var userConfig = Config.getUserConfiguration();
+                    userConfig.wallet = 'remotenode';
+                    Config.setConfiguration("userConfig", JSON.stringify(userConfig));
+                    // Reload configuration
+                    loadConfiguration(); // config.js
+                    Web3Service.reloadWeb3Provider();
                   }
                   else {
                     // Save accounts
@@ -323,29 +331,62 @@
           templateUrl: 'partials/modals/restoreSeed.html',
           size: 'md',
           controller: function ($scope, $uibModalInstance) {
+            $scope.account = {};
+            $scope.account.password = '';
 
             $scope.ok = function () {
               // Restore
-              var isSeedValid = Web3Service.isSeedValid($scope.seed);
+              Web3Service.restoreFromSeed($scope.account.password, $scope.account.seed, function (addresses) {
+                if (!addresses) {
+                  Utils.dangerAlert({message:'Invalid seed phrase.'});
+                }
+                else {
+                  var accountName = 'My account';
+                  var accounts = [];
+                  accounts.push(
+                    {
+                      'name': accountName,
+                      'address': addresses[0]
+                    }
+                  );
+
+
+                  // Unset password
+                  delete $scope.account.password;
+
+                  // Load updated accounts
+                  Config.setConfiguration('accounts', JSON.stringify(accounts));
+                  // Reload data
+                  init();
+                  // Hide spinner
+                  $scope.showLoadingSpinner = false;
+                  // Show success modal
+                  Utils.success("Account was restored.");
+                  // Close modal
+                  $uibModalInstance.close();
+                }
+              });
+
+              /*var isSeedValid = Web3Service.isSeedValid($scope.seed);
               if (isSeedValid) {
                 $uibModalInstance.close($scope.seed);
               }
               else {
                 Utils.dangerAlert({message:'Invalid seed phrase.'})
-              }
+              }*/
             };
 
             $scope.cancel = function () {
               $uibModalInstance.dismiss();
             };
           }
-        })
-        .result
+        });
+        /*.result
         .then(
           function (seed) {
             init(seed);
           }
-        );
+        );*/
 
       };
 

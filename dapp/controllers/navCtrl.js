@@ -50,6 +50,7 @@
         );
 
         if (isElectron || !$scope.paramsPromise) {
+          // init params
           $scope.paramsPromise = Wallet.initParams().then(function () {
             $scope.loggedIn = Web3Service.coinbase;
             $scope.coinbase = Web3Service.coinbase;
@@ -81,6 +82,10 @@
                 for (var x in Web3Service.addresses) {
                   var account = Web3Service.addresses[x];
                   scopeAccounts.push(account);
+                }
+
+                if (scopeAccounts.length == 0) {
+                  scopeAccounts = Web3Service.accounts.length > 0 ? Web3Service.accounts : [];
                 }
               }
 

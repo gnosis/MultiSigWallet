@@ -60,7 +60,7 @@
                   $scope.showLoadingSpinner = true;
 
                   factory.canDecryptLightWallet($scope.password, function (response) {
-                    
+
                     $scope.showLoadingSpinner = false;
 
                     if (!response) {
@@ -777,8 +777,43 @@
         return lightwallet.keystore.isSeedValid(seed);
       };
 
+      /**
+      * Generates a new random seed
+      */
       factory.generateLightWalletSeed = function () {
         return lightwallet.keystore.generateRandomSeed();
+      };
+
+      /**
+      *
+      */
+      factory.restoreFromSeed = function (password, seed, ctrlCallback) {
+        if (bip39.validateMnemonic(seed)) {
+          var keystore = new hdkeyring({
+            mnemonic: seed,
+            numberOfAccounts: 1,
+          });
+
+          factory.keystore = keystore;
+
+          factory.keystore.serialize()
+          .then(function (serializedKeystore) {
+            encryptor.encrypt(password, serializedKeystore)
+            .then(function (encryptedString) {
+              factory.setKeystore(encryptedString);
+              factory.addresses = [factory.keystore.wallets[0].getAddressString()];
+              factory.lightWalletSetup(false);
+              // Return addresses (in our case just an array containing 1 address)
+              ctrlCallback(factory.addresses.map(function (address) {
+                // Add 0x prefix to address
+                return '0x' + address.replace('0x', '');
+              }));
+            });
+          });
+        }
+        else {
+          return ctrlCallback(false);
+        }
       };
 
       /**

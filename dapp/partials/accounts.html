@@ -4,7 +4,7 @@
       <button type="button" class="btn btn-default" ng-click="createWallet()">
         Add
       </button>
-      <button ng-disabled="hasKeystore && account.addresses.length > 0"
+      <!--<button ng-disabled="hasKeystore && account.addresses.length > 0"
         type="button"
         class="btn btn-default"
         onclick="document.querySelector('.keystore-file-upload').click()">
@@ -13,13 +13,19 @@
       <input class="keystore-file-upload"
         type="file"
         style="display:none;"
-        onchange="angular.element(this).scope().uploadKeystore(this)">
+        onchange="angular.element(this).scope().uploadKeystore(this)">-->
       <!--<button type="button"
         class="btn btn-default"
         ng-click="downloadKeystore()"
         ng-show="hasKeystore && account.addresses.length > 0">
         Download
       </button>-->
+      <button ng-disabled="hasKeystore && account.addresses.length > 0"
+        type="button"
+        class="btn btn-default"
+        ng-click="restoreFromSeed()">
+        Import
+      </button>
       <button type="button"
         class="btn btn-default"
         ng-click="showSeed()"

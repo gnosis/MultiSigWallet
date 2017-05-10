@@ -15,6 +15,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+      'tests/globalvars.js',
       'bower_components/angular/angular.js',
       'bower_components/angular-mocks/angular-mocks.js',
       'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
@@ -29,7 +30,7 @@ module.exports = function(config) {
       'abi.js',
       'config.js',
       'services/**/*.js',
-      'tests/*'
+      'tests/*.test*'
     ],
 
 

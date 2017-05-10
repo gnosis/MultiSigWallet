@@ -84,7 +84,7 @@
                   scopeAccounts.push(account);
                 }
 
-                if (scopeAccounts.length == 0) {
+                if (scopeAccounts.length == 0 && Web3Service.accounts) {
                   scopeAccounts = Web3Service.accounts.length > 0 ? Web3Service.accounts : [];
                 }
               }
@@ -149,19 +149,19 @@
                 controller: function ($scope, $uibModalInstance) {
                   $scope.config = Config.getUserConfiguration();
 
-                  $scope.ok = function () {
-                    //config.wallet = $scope.wallet;
+                  $scope.ok = function (option) {
+                    $scope.config.wallet = option;
                     // Save new configuation
                     Config.setConfiguration("userConfig", JSON.stringify($scope.config));
                     loadConfiguration(); // config.js
                     // Reload we3 provider
                     Web3Service.reloadWeb3Provider();
                     Utils.success("Welcome, you can start using your Multisignature Wallet.");
+                    Config.setConfiguration('chooseWeb3ProviderShown', true);
                     $uibModalInstance.close();
                   };
                 }
               });
-              Config.setConfiguration('chooseWeb3ProviderShown', true);
             }
             else if (!Web3Service.coinbase && txDefault.wallet !== "ledger" && txDefault.wallet !== 'lightwallet') {
               $uibModal.open({

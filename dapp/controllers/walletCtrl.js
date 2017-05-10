@@ -20,7 +20,7 @@
             if (localStorage.getItem("show-signup-success")) {
               localStorage.removeItem("show-signup-success");
               Utils.success("Signup was completed successfully.");
-            }
+            }            
         }
       );
 

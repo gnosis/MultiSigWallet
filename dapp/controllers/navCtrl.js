@@ -128,7 +128,6 @@
       Web3Service.webInitialized.then(
         function () {
           $scope.interval = $interval($scope.updateInfo, 5000);
-          // $scope.updateInfo();
 
           /**
           * Lookup connection status

@@ -38,12 +38,13 @@
       // or a wallet has not been created on the current network
       return {
         link: function(scope, element, attrs){
+
           scope.$watch(
             function () {
               return scope.wallet.maxWithdraw;
             },
             function () {
-              Web3Service.webInitialized.then(
+              Wallet.initParams().then(
                 function () {
                   // Check withdraw with value 0
                   var validWithdraw = true;

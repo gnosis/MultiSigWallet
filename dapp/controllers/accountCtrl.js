@@ -101,9 +101,9 @@
       };
 
       /**
-      * Copy seed to clipboard success message
+      * Copy seed to clipboard generic success message
       */
-      $scope.copySeed = function () {
+      $scope.copySeedSuccessMessage = function () {
         Utils.success("Seed has been copied to clipboard.");
       };
 
@@ -111,7 +111,7 @@
       * Copy account to clipboard success message
       */
       $scope.copyAccount = function () {
-        Utils.success("Account has been copied to clipboard.");
+        Utils.success("Account address has been copied to clipboard.");
       };
 
       /**
@@ -482,8 +482,14 @@
         $uibModal.open({
           templateUrl: 'partials/modals/showSeed.html',
           size: 'md',
+          scope: $scope,
           controller: function ($scope, $uibModalInstance) {
             $scope.seed = Web3Service.keystore.mnemonic;
+
+            $scope.copySeedSuccessMessage = function () {
+              Utils.success("Seed has been copied to clipboard.");
+              $uibModalInstance.close();
+            };
 
             $scope.close = function () {
               $uibModalInstance.dismiss();

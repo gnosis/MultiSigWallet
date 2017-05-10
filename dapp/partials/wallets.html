@@ -91,6 +91,7 @@
           <span value-or-dash-by-connectivity="{{wallet.maxWithdraw|ether}}">{{wallet.maxWithdraw|ether}}</span>
           <button type="button" disabled-if-no-accounts-or-wallet-available="{{wallet.address}}"
             class="btn btn-default btn-sm pull-right"
+            data-action="withdraw"            
             ng-click="withdrawLimit(wallet)">
             Withdraw
           </button>

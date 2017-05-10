@@ -40,12 +40,20 @@
         link: function(scope, element, attrs){
           scope.$watch(
             function () {
-              return Web3Service.web3;
+              return scope.wallet.maxWithdraw;
             },
             function () {
               Web3Service.webInitialized.then(
                 function () {
-                  if (scope.wallet && scope.wallet.isOnChain == true) {
+                  // Check withdraw with value 0
+                  var validWithdraw = true;
+                  if (element.length && element[0].attributes && element[0].attributes['data-action'] && element[0].attributes['data-action'].nodeValue == "withdraw") {
+                    if (scope.wallet && scope.wallet.maxWithdraw && scope.wallet.maxWithdraw.eq(0)) {
+                      validWithdraw = false;
+                    }
+                  }
+
+                  if (scope.wallet && scope.wallet.isOnChain == true && validWithdraw) {
                     element.removeAttr('disabled');
                   }
                   else if (attrs.disabledIfNoAccountsOrWalletAvailable) {
@@ -53,7 +61,7 @@
                     Wallet.getOwners(
                       address,
                       function (e, owners) {
-                        if (!e && owners.length > 0 && Web3Service.coinbase) {
+                        if (!e && owners.length > 0 && Web3Service.coinbase && validWithdraw) {
                           element.removeAttr('disabled');
                         }
                         else {
@@ -64,7 +72,7 @@
                   }
                   else {
                     scope.$watch(function(){
-                      if(Web3Service.coinbase) {
+                      if(Web3Service.coinbase && validWithdraw) {
                         element.removeAttr('disabled');
                       }
                       else {

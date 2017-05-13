@@ -43,7 +43,7 @@
         }
         else if (txDefault.wallet == 'lightwallet' && isElectron) {
           // Ask for password
-          if (factory.getKeystore()) {
+          /*if (factory.getKeystore()) {
 
             $uibModal.open({
               templateUrl: 'partials/modals/askLightWalletPassword.html',
@@ -65,10 +65,6 @@
 
                     if (!response) {
                       Utils.dangerAlert({message: "Invalid password."});
-
-                      /*if (reject) {
-                        reject();
-                      }*/
                     }
                     else {
                       factory.lightWalletSetup(true, $scope.password);
@@ -101,12 +97,12 @@
               }
             });
           }
-          else {
-            factory.lightWalletSetup();
-            if (resolve) {
-              resolve();
-            }
+          else {*/
+          factory.lightWalletSetup();
+          if (resolve) {
+            resolve();
           }
+          //}
         }
         else {
           // Connect to Ethereum Node
@@ -361,13 +357,16 @@
           getAccounts: function (cb) {
             cb(null, factory.getLightWalletAddresses());
           },
-          getPrivateKey: function (address, cb) {
+          /*getPrivateKey: function (address, cb) {
             var idx = factory.getLightWalletAddresses().indexOf(address);
             if (idx == -1) {
               return cb('Account not found');
             }
 
             cb(null, factory.keystore.wallets[idx].getPrivateKey());
+          },*/
+          approveTransaction: function(txParams, cb){
+            cb(null, true);
           },
           signTransaction: function(txData, cb) {
             // Show password modal
@@ -382,7 +381,7 @@
                   // Enable spinner
                   $scope.showLoadingSpinner = true;
 
-                  factory.canDecryptLightWallet($scope.password, function (response) {
+                  factory.decryptLightWallet(txData.from, $scope.password, function (response, v3Instance) {
                     if (!response) {
                       // Disable spinner
                       $scope.showLoadingSpinner = false;
@@ -390,22 +389,21 @@
                       cb('Invalid password', null);
                     }
                     else {
+                      // Retrieve wallet private key
+                      var privateKey = v3Instance.getPrivateKey();
                       txData.value = txData.value || '0x00';
                       txData.data = ethUtil.addHexPrefix(txData.data);
                       txData.gasPrice = parseInt(txData.gasPrice, 16);
                       txData.nonce = parseInt(txData.nonce, 16);
                       txData.gasLimit = txData.gas;
 
-                      options.getPrivateKey(txData.from, function(err, privateKey) {
-                        if (err) return cb(err);
-                        // Sign Tx
-                        var tx = new EthTx(txData);
-                        tx.sign(privateKey);
-                        // Disable spinner
-                        $scope.showLoadingSpinner = false;
-                        cb(null, '0x' + tx.serialize().toString('hex'));
-                        $uibModalInstance.close();
-                      });
+                      // Sign transaction
+                      var tx = new EthTx(txData);
+                      tx.sign(privateKey);
+                      // Disable spinner
+                      $scope.showLoadingSpinner = false;
+                      cb(null, '0x' + tx.serialize().toString('hex'));
+                      $uibModalInstance.close();
                     }
                   });
                 };
@@ -428,7 +426,7 @@
         };
 
         web3Provider = new HookedWalletProvider(options);
-        web3Provider.transaction_signer = factory.keystore;
+        //web3Provider.transaction_signer = factory.keystore;
         web3Provider.host = txDefault.ethereumNode;
         // Setup engine
         factory.engine = new ProviderEngine();
@@ -465,95 +463,106 @@
       /**
       * Creates a new keystore and within one account
       */
-      factory.createLightWallet = function (password, seed, ctrlCallback) {
-        var keystore = new hdkeyring({
+      factory.createLightWallet = function (password, ctrlCallback) {
+        var v3String = null;
+        // key => value object (address => V3)
+        var keystoreObj = JSON.parse(factory.getKeystore()) || {};
+        var seed = factory.generateLightWalletSeed();
+        // Create hd keystore
+        var keyring = new hdkeyring({
           mnemonic: seed,
           numberOfAccounts: 1,
         });
 
-        factory.keystore = keystore;
-        factory.keystore.serialize()
-        .then(function (serializedKeystore) {
-          encryptor.encrypt(password, serializedKeystore)
-          .then(function (encryptedString) {
-            factory.setKeystore(encryptedString);
-            factory.addresses = [factory.keystore.wallets[0].getAddressString()];
-            factory.lightWalletSetup(false);
-            // Return addresses (in our case just an array containing 1 address)
-            ctrlCallback(factory.addresses.map(function (address) {
-              // Add 0x prefix to address
-              return '0x' + address.replace('0x', '');
-            }));
-          });
+        v3String = keyring.wallets[0].toV3String(password);
+
+        // Set keystore in V3 format
+        factory.keystore = keyring.wallets[0].toV3(password);
+        // Encrypt V3
+        encryptor.encrypt(password, v3String)
+        .then(function (encryptedV3String) {
+          var generatedAddress = keyring.wallets[0].getAddressString();
+
+          if (!generatedAddress.startsWith('0x')) {
+            generatedAddress =  '0x' + generatedAddress;
+          }
+
+          // Add address => encrypted V3 to keystore object
+          keystoreObj[generatedAddress] = encryptedV3String;
+          // Save the global keystore object
+          factory.setKeystore(keystoreObj);
+          // Add the new address to the list of available addresses
+          factory.addresses.push(generatedAddress);
+          // Set the new account as selected
+          factory.selectAccount(generatedAddress);
+          // Do web3 setup
+          factory.lightWalletSetup(false);
+
+          ctrlCallback(generatedAddress);
         });
-
-        /*var opts = {
-          password: password,
-          seedPhrase: seed
-          //hdPathString: "m/44'/60'/0'/0/x"
-        };
-
-        lightwallet.keystore.createVault(opts, function(err, ks) {
-          if (err) throw err;
-
-          var config = Config.getUserConfiguration();
-
-          // You've got a new vault now.
-          ks.keyFromPassword(password, function (err, pwDerivedKey) {
-            if (err) throw err;
-
-            ks.generateNewAddress(pwDerivedKey, 1);
-            factory.addresses = ks.getAddresses();
-
-            //factory.addresses = addresses[0].startsWith('0x') ? addresses : '0x' + addresses[0];
-            factory.setKeystore(ks.serialize());
-
-            ks.passwordProvider = function (callback, pwd) {
-              callback(null, pwd);
-            };
-
-            factory.lightWalletSetup();
-
-            // Return addresses (in our case just an array containing 1 address)
-            ctrlCallback(factory.addresses.map(function (address) {
-              // Add 0x prefix to address
-              return '0x' + address.replace('0x', '');
-            }));
-
-          });
-        });*/
       };
+
+      factory.importLightWalletAccount = function (v3, password, ctrlCallback) {
+        var v3String = JSON.stringify(v3);
+        // key => value object (address => V3)
+        var keystoreObj = JSON.parse(factory.getKeystore()) || {};
+        // Set keystore in V3 format
+        factory.keystore = v3;
+        // Encrypt V3
+        encryptor.encrypt(password, v3String)
+        .then(function (encryptedV3String) {
+          var generatedAddress = v3.address;
+
+          if (!generatedAddress.startsWith('0x')) {
+            generatedAddress =  '0x' + generatedAddress;
+          }
+
+          // Add address => encrypted V3 to keystore object
+          keystoreObj[generatedAddress] = encryptedV3String;
+          // Save the global keystore object
+          factory.setKeystore(keystoreObj);
+          // Add the new address to the list of available addresses
+          factory.addresses.push(generatedAddress);
+          // Set the new account as selected
+          factory.selectAccount(generatedAddress);
+          // Do web3 setup
+          factory.lightWalletSetup(false);
+
+          ctrlCallback(generatedAddress);
+        });
+      };
+
 
       /**
       * Verify if a provided password can unlock a keystore
       */
-      factory.canDecryptLightWallet = function (password, callback) {
-        //var deserializedKeystore = lightwallet.keystore.deserialize(factory.getKeystore());
-        encryptor.decrypt(password, factory.getKeystore())
-        .then(function (decryptedKeystore) {
-          var keystore = new hdkeyring();
-          keystore.deserialize(decryptedKeystore);
-          keystore.hdWallet.getWallet().toV3(password);
-
+      /*factory.canDecryptLightWallet = function (address, password, callback) {
+        var keystore = JSON.parse(factory.getKeystore() || '{}');
+        // Decript address related V3
+        encryptor.decrypt(password, keystore[address])
+        .then(function (decryptedV3String) {
+          ethereumWallet.fromV3(decryptedV3String, password);
           callback(true);
         })
         .catch(function (error) {
           callback(false);
         });
+      };*/
 
-
-        /*deserializedKeystore.keyFromPassword(password, function (err, pwDerivedKey) {
-          if (err) throw err;
-          if (deserializedKeystore.isDerivedKeyCorrect(pwDerivedKey)) {
-            // Password valid
-            factory.restore();
-            ctrlCallback(true);
-          }
-          else {
-            ctrlCallback(false);
-          }
-
-        });*/
+      /**
+      * Decrypts a V3 keystore
+      */
+      factory.decryptLightWallet = function (address, password, callback) {
+        var keystore = JSON.parse(factory.getKeystore());
+        var encryptedV3String = keystore[address];
+        encryptor.decrypt(password, encryptedV3String)
+        .then(function (decryptedV3String) {
+          v3Instance = ethereumWallet.fromV3(decryptedV3String, password);
+          callback(true, v3Instance);
+        })
+        .catch(function (error) {
+          callback(false);
+        });
       };
 
       /**
@@ -565,14 +574,9 @@
         if (factory.getKeystore() && password) {
           try {
             encryptor.decrypt(password, factory.getKeystore())
-            .then(function (decryptedString) {
-              factory.keystore = new hdkeyring();
-              factory.keystore.deserialize(decryptedString);
-
-              factory.keystore.wallets.map(function (address) {
-                factory.addresses.push('0x' + address.getAddressString().replace('0x', ''));
-              });
-
+            .then(function (decryptedV3String) {
+              factory.keystore = JSON.parse(decryptedV3String); //ethereumWallet.fromV3(decryptedV3String, password);
+              factory.addresses = factory.getLightWalletAddresses();
               _web3Setup();
             });
           }
@@ -592,7 +596,7 @@
       * @param password
       * @param callback
       */
-      factory.newLightWalletAccount = function (password, ctrlCallback) {
+      /*factory.newLightWalletAccount = function (password, ctrlCallback) {
 
         factory.canDecryptLightWallet(password, function (response) {
           if (!response) {
@@ -639,58 +643,10 @@
             }
           }
         });
-
-        //
-        /*var deserializedKeystore = lightwallet.keystore.deserialize(factory.getKeystore());
-        deserializedKeystore.keyFromPassword(password, function (err, pwDerivedKey) {
-          if (err) throw err;
-
-          // Verify password is correct
-          if (deserializedKeystore.isDerivedKeyCorrect(pwDerivedKey)) {
-            // Password valid
-            // New address
-            // 1st we check whether exist deleted keystore accounts, or rather
-            // accounts not in 'accounts' localStorage
-            var keystoreAddresses = factory.getAddresses();
-            var storageAddresses = Config.getConfiguration('accounts');
-            var existingAddressToAdd = null;
-            for(var x in keystoreAddresses) {
-              var address = keystoreAddresses[x];
-              var matchingAddresses = storageAddresses.filter(function (item) {
-                return item.address.replace('0x', '') == address.replace('0x', '');
-              });
-
-              if (matchingAddresses.length == 0) {
-                existingAddressToAdd = address;
-                break;
-              }
-            }
-
-            if (existingAddressToAdd && factory.addresses.indexOf(existingAddressToAdd.replace('0x', '')) == -1) {
-              factory.addresses.push(existingAddressToAdd);
-              ctrlCallback(existingAddressToAdd);
-            }
-            if (existingAddressToAdd &&  factory.addresses.indexOf(existingAddressToAdd.replace('0x', '')) !== -1) {
-              ctrlCallback(existingAddressToAdd);
-            }
-            else if (!existingAddressToAdd) {
-              deserializedKeystore.generateNewAddress(pwDerivedKey, 1);
-              // Add new address to addresses list
-              // add 0x prefix to callback address
-              factory.addresses.push(deserializedKeystore.getAddresses().slice(-1)[0]);
-              factory.setKeystore(deserializedKeystore.serialize());
-              ctrlCallback('0x' + deserializedKeystore.getAddresses().slice(-1)[0].replace('0x', ''));
-            }
-          }
-          else {
-            ctrlCallback();
-          }
-
-        });*/
-      };
+      };*/
 
       /**
-      * Returns keystore string from localStorage
+      * Returns keystore string from localStorage or null
       */
       factory.getKeystore = function () {
         return localStorage.getItem('keystore');
@@ -701,9 +657,10 @@
       */
       factory.setKeystore = function (value) {
         // check wheter valus is a JSON valid format
+        var valueToStore;
         try {
-          JSON.parse(value);
-          localStorage.setItem('keystore', value);
+          valueToStore = JSON.stringify(value);
+          localStorage.setItem('keystore', valueToStore);
         }
         catch (err) {
           throw err;
@@ -727,7 +684,7 @@
       /**
       *
       */
-      factory.restoreFromSeed = function (password, seed, ctrlCallback) {
+      /*factory.restoreFromSeed = function (password, seed, ctrlCallback) {
         if (bip39.validateMnemonic(seed)) {
           var keystore = new hdkeyring({
             mnemonic: seed,
@@ -754,20 +711,19 @@
         else {
           return ctrlCallback(false);
         }
-      };
+      };*/
 
       /**
-      * Return accounts list, each prefixed with '0x'
+      * Return accounts list
       */
       factory.getLightWalletAddresses = function () {
-        accounts = factory.keystore.wallets.map(function(wallet) {
-          if (!wallet.getAddressString().startsWith('0x')) {
-            return '0x' + wallet.getAddressString();
-          }
-          return wallet.getAddressString();
+        var addresses = [];
+        Config.getConfiguration('accounts').map(function (item) {
+          addresses.push(item.address);
         });
 
-        return accounts;
+        return addresses;
+        //return [Config.getConfiguration('selectedAccount')];
       };
 
 

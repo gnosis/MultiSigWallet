@@ -23,8 +23,6 @@
 
         $scope.keystore = !keystore ? Web3Service.getKeystore() : keystore;
         $scope.hasKeystore = $scope.keystore ? true : false;
-        $scope.account.seed = seed;
-        $scope.hasSeed = $scope.account.seed ? true : false;
       }
 
       /**
@@ -93,14 +91,6 @@
       };
 
       /**
-      * Create seed
-      */
-      $scope.createSeed = function () {
-        $scope.account.seed = Web3Service.generateLightWalletSeed();
-        $scope.hasSeed = true;
-      };
-
-      /**
       * Copy seed to clipboard generic success message
       */
       $scope.copySeedSuccessMessage = function () {
@@ -133,7 +123,7 @@
                 // Show loading spinner
                 $scope.showLoadingSpinner = true;
 
-                Web3Service.createLightWallet($scope.account.password, $scope.account.seed, function (addresses) {
+                Web3Service.createLightWallet($scope.account.password, function (newAddress) {
                   var accounts = Config.getConfiguration('accounts');
                   var accountName = $scope.account.name;
 
@@ -141,7 +131,7 @@
                     accounts.push(
                       {
                         'name': accountName,
-                        'address': addresses[0]
+                        'address': newAddress
                       }
                     );
                   }
@@ -150,7 +140,7 @@
                     accounts.push(
                       {
                         'name': accountName,
-                        'address': addresses[0]
+                        'address': newAddress
                       }
                     );
                   }
@@ -160,6 +150,7 @@
 
                   // Load updated accounts
                   Config.setConfiguration('accounts', JSON.stringify(accounts));
+                  Config.setConfiguration('selectedAccount', JSON.stringify(newAddress));
                   // Reload data
                   init();
                   // Hide spinner
@@ -290,6 +281,7 @@
                     // remove keystore
                     Config.removeConfiguration('keystore');
                     Config.removeConfiguration('accounts');
+                    Config.removeConfiguration('selectedAccount');
                     Web3Service.addresses = [];
                     // setting remotenoe by default
                     var userConfig = Config.getUserConfiguration();
@@ -302,6 +294,12 @@
                   else {
                     // Save accounts
                     Config.setConfiguration('accounts', JSON.stringify(accounts));
+
+                    if ($scope.account.address == Config.getConfiguration('selectedAccount')) {
+                      // Set the first account as selected
+                      Config.setConfiguration('selectedAccount', accounts[0]);
+                      Web3Service.selectAccount($scope.account.address);
+                    }
                   }
 
                   // Reload data
@@ -325,7 +323,7 @@
       /**
       * Restore account from seed
       */
-      $scope.restoreFromSeed = function () {
+      /*$scope.restoreFromSeed = function () {
         $uibModal.open({
           animation: false,
           templateUrl: 'partials/modals/restoreSeed.html',
@@ -350,7 +348,6 @@
                     }
                   );
 
-
                   // Unset password
                   delete $scope.account.password;
 
@@ -366,14 +363,6 @@
                   $uibModalInstance.close();
                 }
               });
-
-              /*var isSeedValid = Web3Service.isSeedValid($scope.seed);
-              if (isSeedValid) {
-                $uibModalInstance.close($scope.seed);
-              }
-              else {
-                Utils.dangerAlert({message:'Invalid seed phrase.'})
-              }*/
             };
 
             $scope.cancel = function () {
@@ -381,14 +370,7 @@
             };
           }
         });
-        /*.result
-        .then(
-          function (seed) {
-            init(seed);
-          }
-        );*/
-
-      };
+      };*/
 
       /**
       * Download keystore
@@ -426,53 +408,103 @@
         });
       };
 
-      /**
-      * Upload keystore
-      */
-      $scope.uploadKeystore = function (element) {
-        var reader = new FileReader();
-        var defaultAccountName = 'My Account';
-        var defaultAccountNames = [];
+      $scope.openImportLightWallet = function () {
+        $uibModal.open({
+          templateUrl: 'partials/modals/importLightWalletAccount.html',
+          size: 'md',
+          scope: $scope,
+          controller: function ($scope, $uibModalInstance) {
 
-        reader.onload = function() {
-          var text = reader.result;
-          var accounts = [];
-          try {
-            Web3Service.setKeystore(text);
-            // Restore data from keystore
-            Web3Service.restoreLightWallet();
-            Web3Service.getAddresses().map(function (address) {
-              // Check whether exist accounts having defult name
-              defaultAccountNames = Web3Service.getAddresses().filter(function (elem) {
-                if (elem.name == defaultAccountName) {
-                  return elem;
+            $scope.account.password = '';
+            $scope.account.name = '';
+            $scope.fileContent = null;
+            $scope.fileValid = false;
+
+            $scope.isFileValid = function(element) {
+              var reader = new FileReader();
+
+              reader.onload = function() {
+                try {
+                  $scope.fileContent = JSON.parse(reader.result);
+                  $scope.fileValid = true;
                 }
-              });
-
-              accounts.push(
-                {
-                  'name': defaultAccountNames.length == 0 ? defaultAccountName : defaultAccountName + ' ' + defaultAccountNames.length,
-                  'address': address
+                catch (err) {
+                  $scope.fileValid = false;
                 }
-              );
-            });
+              };
 
-            // Load updated accounts
-            Config.setConfiguration('accounts', JSON.stringify(accounts));
-            // Redo setup
-            Web3Service.lightWalletSetup();
-            // Init values
-            init();
+              var file = element.files[0];
+              reader.readAsText(file);
 
-            Utils.success("Accounts were imported successfully.");
+            };
+
+            $scope.uploadKeystore = function () {
+              // Show loading spinner
+              $scope.showLoadingSpinner = true;
+
+              try {
+                var address = $scope.fileContent.address;
+                if (!address.startsWith('0x')) {
+                  address = '0x' + address;
+                }
+                // check if address already imported or created
+                if (Object.keys(JSON.parse(Web3Service.getKeystore() || '{}')).indexOf(address) == -1) {
+                  // Import light wallet account
+                  Web3Service.importLightWalletAccount($scope.fileContent, $scope.account.password, function (newAddress) {
+                    var accounts = Config.getConfiguration('accounts');
+                    var accountName = $scope.account.name;
+
+                    if (accounts) {
+                      accounts.push(
+                        {
+                          'name': accountName,
+                          'address': newAddress
+                        }
+                      );
+                    }
+                    else {
+                      accounts = [];
+                      accounts.push(
+                        {
+                          'name': accountName,
+                          'address': newAddress
+                        }
+                      );
+                    }
+
+                    // Unset password
+                    // delete $scope.account.password;
+
+                    // Load updated accounts
+                    Config.setConfiguration('accounts', JSON.stringify(accounts));
+                    Config.setConfiguration('selectedAccount', JSON.stringify(newAddress));
+                    // Reload data
+                    init();
+                    // Hide spinner
+                    $scope.showLoadingSpinner = false;
+                    // Show success modal
+                    Utils.success("Account was imported.");
+                    // Close modal
+                    $uibModalInstance.close();
+                  });
+                }
+                else {
+                  Utils.dangerAlert({message:'The account already exists.'});
+                }
+              }
+              catch (err) {
+                Utils.dangerAlert(err);
+              }
+              finally {
+                $scope.showLoadingSpinner = false;
+              }
+            };
+
+            $scope.cancel = function () {
+              $uibModalInstance.dismiss();
+            };
           }
-          catch (err) {
-            Utils.dangerAlert(err);
-          }
-        };
-
-        var file = element.files[0];
-        reader.readAsText(file);
+        });
       };
 
       /**
@@ -516,16 +548,12 @@
               // show spinner
               $scope.showLoadingSpinner = true;
 
-              factory.canDecryptLightWallet($scope.password, function (response) {
+              factory.decryptLightWallet(address, $scope.password, function (response, v3Instance) {
                 if (!response) {
                   Utils.dangerAlert({message: "Invalid password."});
                   $scope.showLoadingSpinner = false;
                 }
                 else {
-                  // Get wallet instance
-                  var v3Instance = factory.keystore.wallets.filter(function (item) {
-                    return item.getAddressString() == address;
-                  })[0];
                   // Get V3 JSON format
                   var fileString = v3Instance.toV3String($scope.password);
                   var filename = v3Instance.getV3Filename();

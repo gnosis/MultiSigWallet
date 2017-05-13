@@ -62,34 +62,15 @@
               $scope.accounts = Web3Service.accounts;
             }
             else {
-              var scopeAccounts = [];
-              var storageAccounts = [];
-
-              if ($scope.config.wallet == 'lightwallet' && Config.getConfiguration('accounts')) {
-                storageAccounts = Config.getConfiguration('accounts').map(function (account) {
+              // Retrieves accounts from localStorage
+              if (Config.getConfiguration('accounts')) {
+                $scope.accounts = Config.getConfiguration('accounts').map(function (account) {
                   return account.address;
                 });
-
-                for (var x in Web3Service.addresses) {
-                  var account = Web3Service.addresses[x];
-
-                  if (storageAccounts.indexOf(account) !== -1) {
-                    scopeAccounts.push(account);
-                  }
-                }
               }
               else {
-                for (var x in Web3Service.addresses) {
-                  var account = Web3Service.addresses[x];
-                  scopeAccounts.push(account);
-                }
-
-                if (scopeAccounts.length == 0 && Web3Service.accounts) {
-                  scopeAccounts = Web3Service.accounts.length > 0 ? Web3Service.accounts : [];
-                }
+                $scope.accounts = [];
               }
-
-              $scope.accounts = scopeAccounts;
             }
           }, function (error) {
             if (txDefault.wallet == "ledger") {

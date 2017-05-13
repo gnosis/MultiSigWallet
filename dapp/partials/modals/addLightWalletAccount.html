@@ -3,19 +3,8 @@
     Add wallet
   </h3>
 </div>
-<div ng-if="!hasKeystore">
+<div>
   <div class="modal-body">
-    <div>
-      <input type="button" class="btn btn-primary" value="Create seed" ng-click="createSeed()" />
-      <input ng-show="hasSeed" ngclipboard-success="copySeedSuccessMessage()"
-        ngclipboard data-clipboard-target="#seed"
-        type="button" class="btn btn-primary" value="Copy seed" />
-
-      <div ng-show="hasSeed" class="top-10">
-        <p>Your seed is:</p>
-        <div class="seed" id="seed">{{account.seed}}</div>
-      </div>
-    </div>
 
     <p class="top-20">Please enter a password to securely encrypt your wallet.</p>
 
@@ -54,7 +43,7 @@
   </div>
   <div class="modal-footer">
     <button type="submit" class="btn btn-success"
-      ng-disabled="!account.seed || password_form.$invalid"
+      ng-disabled="password_form.$invalid"
       ng-click="ok()"
       ng-show="!showLoadingSpinner">
       Create Account
@@ -70,8 +59,7 @@
     </button>
   </div>
 </div>
-
-<div ng-if="hasKeystore">
+<!--<div ng-if="hasKeystore">
   <div class="modal-body">
     <form name="account_form" novalidate>
       <p class="top-20">Please enter a name for the account.</p>
@@ -113,4 +101,4 @@
       Cancel
     </button>
   </div>
-</div>
+</div>-->

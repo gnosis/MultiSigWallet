@@ -221,14 +221,14 @@
               size: 'md',
               backdrop: 'static',
               windowClass: 'bootstrap-dialog type-info',
-              controller: function ($scope, $uibModalInstance) {
+              controller: function ($scope, $uibModalInstance, Web3Service) {
                 $scope.isElectron = false;
                 $scope.ok = function () {
                   $uibModalInstance.close();
                 };
 
                 $scope.checkCoinbase = function () {
-                  if (factory.coinbase) {
+                  if (Web3Service.coinbase) {
                     $uibModalInstance.close();
                   }
                   else {
@@ -313,15 +313,15 @@
           size: 'md',
           backdrop: 'static',
           windowClass: 'bootstrap-dialog type-info',
-          controller: function ($scope, $uibModalInstance) {
+          controller: function ($scope, $uibModalInstance, Web3Service) {
             $scope.isElectron = true;
             $scope.ok = function () {
               $uibModalInstance.close();
             };
 
             $scope.checkCoinbase = function () {
-              if (factory.coinbase) {
-                $uibModalInstance.close();
+              if (Web3Service.coinbase) {
+                setTimeout($uibModalInstance.close, 1000);
               }
               else {
                 setTimeout($scope.checkCoinbase, 1000);

@@ -222,6 +222,7 @@
               backdrop: 'static',
               windowClass: 'bootstrap-dialog type-info',
               controller: function ($scope, $uibModalInstance) {
+                $scope.isElectron = false;
                 $scope.ok = function () {
                   $uibModalInstance.close();
                 };
@@ -313,6 +314,7 @@
           backdrop: 'static',
           windowClass: 'bootstrap-dialog type-info',
           controller: function ($scope, $uibModalInstance) {
+            $scope.isElectron = true;
             $scope.ok = function () {
               $uibModalInstance.close();
             };

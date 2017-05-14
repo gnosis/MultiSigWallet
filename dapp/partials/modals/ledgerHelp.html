@@ -23,8 +23,11 @@
       <li>
         Install the Ethereum app on your Ledger wallet
       </li>
-      <li>
+      <li ng-hide="isElectron">
         Enable Browser support and contract data on settings
+      </li>
+      <li ng-show="isElectron">
+        Disable Browser support and enable contract data on settings
       </li>
       <li>
         Allow the multisig DApp to access your accounts on the Ledger wallet
@@ -34,6 +37,6 @@
 </div>
 <div class="modal-footer">
   <button type="button" ng-click="ok()" class="btn btn-default" id="terms-button" >
-    Ok
+    Cancel
   </button>
 </div>

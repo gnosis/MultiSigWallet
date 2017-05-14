@@ -23,6 +23,7 @@
         $ = require('./bower_components/jquery/dist/jquery.min.js');
         var HookedWeb3Provider = require('./bower_components/web3-provider-engine/subproviders/hooked-wallet.js');
         var RpcSubprovider = require('./bower_components/web3-provider-engine/subproviders/rpc.js');
+        var ledgerPort = require('electron').remote.getGlobal('ledgerPort');
       }
     </script>
     <script src="./bower_components/angular/angular.min.js"></script>

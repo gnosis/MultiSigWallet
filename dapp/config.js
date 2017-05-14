@@ -18,7 +18,7 @@ var txDefaultOrig =
   defaultChainID: null,
   // Mainnet
   walletFactoryAddress: "0xed5a90efa30637606ddaf4f4b3d42bb49d79bd4e",
-  ledgerAPI: "http://localhost:8080"
+  ledgerAPI: "http://localhost:" + ledgerPort
 };
 
 if (isElectron) {

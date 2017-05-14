@@ -163,6 +163,7 @@ function restServerSetup () {
   function _startRestServer () {
     restServer.listen(restPort, function () {
       console.log("Express Rest Server connected to port " + restPort);
+      global['ledgerPort'] = restPort;
     })
     .on('error', function (err) {
       if (restPort < 65536-1) {

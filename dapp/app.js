@@ -5,7 +5,8 @@
       [
         'ui.bootstrap',
         'ngRoute',
-        'ngclipboard'        
+        'ngclipboard',
+        'ui-notification'     
       ]
     );
   }

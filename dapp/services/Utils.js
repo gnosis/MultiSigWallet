@@ -2,7 +2,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .service("Utils", function ($uibModal) {
+    .service("Utils", function ($uibModal, Notification) {
       var factory = {};
 
       factory.rejectedTxErrorMessage = 'Transaction rejected by user';
@@ -127,21 +127,11 @@
       };
 
       factory.notification = function (info) {
-        BootstrapDialog.show({
-            message: info,
-            onshown: function (dialogRef) {
-              setTimeout(function () {
-                dialogRef.close();
-              }, 5000);
-            }
-          });
+        Notification.primary(info);
       };
 
       factory.success = function (info) {
-        BootstrapDialog.show({
-          type: BootstrapDialog.TYPE_SUCCESS,
-          message: info
-        });
+        Notification.success(info);        
       };
 
       factory.signed = function (tx) {

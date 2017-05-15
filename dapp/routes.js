@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .config(function($routeProvider){
+    .config(function($routeProvider, NotificationProvider){
       $routeProvider
       .when("/wallets", {
         controller: 'walletCtrl',
@@ -31,6 +31,11 @@
       })
       .otherwise({
         redirectTo: '/wallets'
+      });
+
+      NotificationProvider.setOptions({
+        delay: 3000,
+        horizontalSpacing: 60
       });
     });
   }

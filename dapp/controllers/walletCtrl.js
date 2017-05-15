@@ -20,7 +20,7 @@
             if (localStorage.getItem("show-signup-success")) {
               localStorage.removeItem("show-signup-success");
               Utils.success("Signup was completed successfully.");
-            }            
+            }
         }
       );
 
@@ -96,7 +96,12 @@
               Wallet.getOwners(
                 address,
                 function (e, owners) {
-                  $scope.wallets[address].isOnChain = (!e && owners.length > 0);
+                  // $scope.wallets[address] is undefined
+                  // when deleting a wallet and executing
+                  // Wallet.getOwners in the meantime                   
+                  if ($scope.wallets[address]) {
+                    $scope.wallets[address].isOnChain = (!e && owners.length > 0);
+                  }
                 }
               )
             );

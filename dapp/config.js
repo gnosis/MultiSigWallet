@@ -7,7 +7,8 @@ var txDefaultOrig =
     url : "https://alerts.gnosis.pm",
     authCode: null,
     name: "Mainnet",
-    managementPage: "https://alerts.gnosis.pm/api/alert/manage/?code={auth-code}"
+    managementPage: "https://alerts.gnosis.pm/api/alert/manage/?code={auth-code}",
+    managementRoute: "api/alert/manage"
   },
   connectionChecker:{
     method : "OPTIONS",

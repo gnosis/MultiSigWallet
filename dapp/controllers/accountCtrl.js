@@ -16,7 +16,7 @@
           Web3Service.restoreLightWallet();
         }
 
-        if (setAddresses) {          
+        if (setAddresses) {
           $scope.account.addresses = Config.getConfiguration('accounts');
         }
 
@@ -369,6 +369,7 @@
             $scope.account.name = '';
             $scope.fileContent = null;
             $scope.fileValid = false;
+            $scope.fileName = '';
 
             $scope.isFileValid = function(element) {
               var reader = new FileReader();
@@ -384,6 +385,7 @@
               };
 
               var file = element.files[0];
+              $scope.fileName = file.name;
               reader.readAsText(file);
 
             };

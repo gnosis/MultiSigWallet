@@ -14,6 +14,15 @@
       */
       function setAlertManagementPage () {
         if ($scope.config.alertNode && $scope.config.alertNode.authCode) {
+          if (!$scope.config.alertNode.managementPage) {
+            if ($scope.config.alertNode.url.endsWith('/')) {
+              $scope.config.alertNode.managementPage = $scope.config.alertNode.url + txDefaultOrig.alertNode.managementRoute + '/?code={auth-code}';
+            }
+            else {
+              $scope.config.alertNode.managementPage = $scope.config.alertNode.url + '/' + txDefaultOrig.alertNode.managementRoute + '/?code={auth-code}';
+            }
+
+          }
           $scope.alertManagementPage = $scope.config.alertNode.managementPage.replace('{auth-code}', $scope.config.alertNode.authCode);
         }
       }
@@ -273,13 +282,12 @@
           function () {
             // Show success message
             Utils.success("Authorization code was deleted successfully.");
-            // Remove authCode from configuration JSON
-            var config = JSON.parse(localStorage.getItem("userConfig"));
+            // Remove authCode from configuration JSON            
+            var config = Config.getUserConfiguration();
             delete config.alertNode.authCode;
             delete txDefault.alertNode.authCode;
-            //localStorage.setItem("userConfig", JSON.stringify(config));
             Config.setConfiguration("userConfig", JSON.stringify(config));
-            $scope.config = config;
+            loadConfig();
 
             showHideAuthCodeBtn();
           }

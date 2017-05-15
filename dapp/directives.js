@@ -314,7 +314,10 @@
         link: function(scope, element, attrs) {
 
           function isDisabled () {
-            return scope.ngModel.name == scope.other ? false : true;
+            if (scope.ngModel) {
+              return scope.ngModel.name == scope.other ? false : true;
+            }
+            return true;
           }
 
           scope.isDisabled = isDisabled();

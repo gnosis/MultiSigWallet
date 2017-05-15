@@ -2,7 +2,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("settingsCtrl", function (Web3Service, $scope, Config, Wallet, Utils, $window, $uibModal, $sce) {
+    .controller("settingsCtrl", function (Web3Service, $scope, Config, Wallet, Utils, $window, $uibModal, $sce, $location) {
 
       // Don't save the following config values to localStorage
       var configBlacklist = [
@@ -14,6 +14,15 @@
       */
       function setAlertManagementPage () {
         if ($scope.config.alertNode && $scope.config.alertNode.authCode) {
+          if (!$scope.config.alertNode.managementPage) {
+            if ($scope.config.alertNode.url.endsWith('/')) {
+              $scope.config.alertNode.managementPage = $scope.config.alertNode.url + txDefaultOrig.alertNode.managementRoute + '/?code={auth-code}';
+            }
+            else {
+              $scope.config.alertNode.managementPage = $scope.config.alertNode.url + '/' + txDefaultOrig.alertNode.managementRoute + '/?code={auth-code}';
+            }
+
+          }
           $scope.alertManagementPage = $scope.config.alertNode.managementPage.replace('{auth-code}', $scope.config.alertNode.authCode);
         }
       }
@@ -79,6 +88,8 @@
       * Updates configuration
       */
       $scope.update = function () {
+        // Current saved configuration
+        var previousConfig = Config.getConfiguration('userConfig');
         // Create a config copy
         var configCopy = {};
         angular.copy($scope.config, configCopy);
@@ -120,6 +131,14 @@
 
         // Reload we3 provider
         Web3Service.reloadWeb3Provider();
+
+        // If we're using lightwallet for 1st time,
+        // redirect the user to accounts/add page
+        if (configCopy.wallet == 'lightwallet' && previousConfig.wallet != 'lightwallet'
+            && !Config.getConfiguration('accounts')) {
+          Config.setConfiguration('showCreateWalletModal', true);
+          $location.path('/accounts');
+        }
 
         Utils.success("Configuration updated successfully.");
         showHideAuthCodeBtn();
@@ -263,13 +282,12 @@
           function () {
             // Show success message
             Utils.success("Authorization code was deleted successfully.");
-            // Remove authCode from configuration JSON
-            var config = JSON.parse(localStorage.getItem("userConfig"));
+            // Remove authCode from configuration JSON            
+            var config = Config.getUserConfiguration();
             delete config.alertNode.authCode;
             delete txDefault.alertNode.authCode;
-            //localStorage.setItem("userConfig", JSON.stringify(config));
             Config.setConfiguration("userConfig", JSON.stringify(config));
-            $scope.config = config;
+            loadConfig();
 
             showHideAuthCodeBtn();
           }

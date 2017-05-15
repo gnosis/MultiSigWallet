@@ -2,84 +2,34 @@
   function () {
     angular
     .module('multiSigWeb')
-    .controller('accountCtrl', function ($window, $rootScope, $scope, Config, $uibModal, Utils, $location, Web3Service) {
+    .controller('accountCtrl', function ($window, $scope, Config, $uibModal, Utils, $location, Web3Service) {
 
       $scope.account = {};
       $scope.showLoadingSpinner = false;
       /**
       * Init function
       */
-      function init (seed=null, keystore=null, setAddresses=true) {
+      function init (keystore=null, setAddresses=true) {
 
         if (keystore) {
           // Restore data
           Web3Service.restoreLightWallet();
         }
 
-        if (setAddresses) {
-          //$scope.account.addresses = Object.assign([], Web3Service.addresses, Config.getConfiguration('accounts'));
+        if (setAddresses) {          
           $scope.account.addresses = Config.getConfiguration('accounts');
         }
 
         $scope.keystore = !keystore ? Web3Service.getKeystore() : keystore;
         $scope.hasKeystore = $scope.keystore ? true : false;
-      }
 
-      /**
-      * Provide password to unlock accounts
-      */
-      function login() {
-        init(null, Web3Service.getKeystore(), true);
-        /*
-        var accounts = Config.getConfiguration('accounts');
-        if (Web3Service.getKeystore() && accounts && accounts.length > 0) {
-          $uibModal.open({
-            animation: false,
-            templateUrl: 'partials/modals/lightWalletPassword.html',
-            size: 'md',
-            scope: $scope,
-            backdrop: 'static',
-
-            controller: function ($scope, $uibModalInstance) {
-
-              $scope.ok = function () {
-                // Restore
-                Web3Service.decrypt($scope.account.password, function (canDecrypt) {
-                  if (canDecrypt) {
-                    // Reload params
-                    init(null, Web3Service.getKeystore(), true);
-                    // Unset password
-                    delete $scope.account.password;
-                    // Close modal
-                    $uibModalInstance.close();
-                  }
-                  else {
-                    Utils.dangerAlert({message:'Invalid password.'})
-                  }
-                });
-              };
-
-              $scope.cancel = function () {
-                if (isElectron) {
-                  $location.path('wallets');
-                }
-                else {
-                  $window.location.href = '/';
-                }
-              };
-            }
-          })
+        // If we're using lightwallet for 1st time,
+        // show the lightwallet creation modal
+        if (Config.getConfiguration('showCreateWalletModal')) {
+          Config.removeConfiguration('showCreateWalletModal');
+          $scope.createWallet();
         }
-        else if (Web3Service.getKeystore()) {
-          init(null, Web3Service.getKeystore(), false);
-        }*/
       }
-
-      /**
-      * Execute login on page load. The user is asked to type a password
-      * in order to decrypt accounts
-      */
-      login();
 
       $scope.isObjectEmpty = function (obj){
         for(var key in obj) {
@@ -193,7 +143,7 @@
                   // Load updated accounts
                   Config.setConfiguration('accounts', JSON.stringify(accounts));
                   // Reload data
-                  init(null, Web3Service.getKeystore(), true);
+                  init(Web3Service.getKeystore(), true);
                   // Unset password
                   delete $scope.account.password;
                   // hide spinner
@@ -573,6 +523,11 @@
           }
         });
       };
+
+      /**
+      * Call INIT
+      */
+      init();
 
     });
   }

@@ -2,7 +2,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("settingsCtrl", function (Web3Service, $scope, Config, Wallet, Utils, $window, $uibModal, $sce) {
+    .controller("settingsCtrl", function (Web3Service, $scope, Config, Wallet, Utils, $window, $uibModal, $sce, $location) {
 
       // Don't save the following config values to localStorage
       var configBlacklist = [
@@ -79,6 +79,8 @@
       * Updates configuration
       */
       $scope.update = function () {
+        // Current saved configuration
+        var previousConfig = Config.getConfiguration('userConfig');
         // Create a config copy
         var configCopy = {};
         angular.copy($scope.config, configCopy);
@@ -120,6 +122,14 @@
 
         // Reload we3 provider
         Web3Service.reloadWeb3Provider();
+
+        // If we're using lightwallet for 1st time,
+        // redirect the user to accounts/add page
+        if (configCopy.wallet == 'lightwallet' && previousConfig.wallet != 'lightwallet'
+            && !Config.getConfiguration('accounts')) {
+          Config.setConfiguration('showCreateWalletModal', true);
+          $location.path('/accounts');
+        }
 
         Utils.success("Configuration updated successfully.");
         showHideAuthCodeBtn();

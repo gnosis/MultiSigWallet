@@ -19,6 +19,10 @@
       * @param reject, function (optional)
       **/
       factory.reloadWeb3Provider = function (resolve, reject) {
+
+        factory.accounts = [];
+        factory.coinbase = null;
+
         // Ledger wallet
         if (txDefault.wallet == "ledger") {
           if (isElectron) {
@@ -42,67 +46,10 @@
           }
         }
         else if (txDefault.wallet == 'lightwallet' && isElectron) {
-          // Ask for password
-          /*if (factory.getKeystore()) {
-
-            $uibModal.open({
-              templateUrl: 'partials/modals/askLightWalletPassword.html',
-              size: 'md',
-              backdrop: 'static',
-              windowClass: 'bootstrap-dialog type-info',
-              controller: function ($scope, $uibModalInstance) {
-                $scope.title = 'Unlock your account';
-                $scope.password = '';
-                $scope.showLoadingSpinner = false;
-
-                $scope.ok = function () {
-                  // show spinner
-                  $scope.showLoadingSpinner = true;
-
-                  factory.canDecryptLightWallet($scope.password, function (response) {
-
-                    $scope.showLoadingSpinner = false;
-
-                    if (!response) {
-                      Utils.dangerAlert({message: "Invalid password."});
-                    }
-                    else {
-                      factory.lightWalletSetup(true, $scope.password);
-                      $uibModalInstance.close();
-
-                      if (resolve) {
-                        resolve();
-                      }
-                    }
-                  });
-                };
-
-                $scope.cancel = function () {
-                  // set remote node wallet
-                  var userConfig = Config.getUserConfiguration();
-                  userConfig.wallet = 'remotenode';
-                  Config.setConfiguration("userConfig", JSON.stringify(userConfig));
-                  // Reload configuration
-                  loadConfiguration(); // config.js
-                  $uibModalInstance.dismiss();
-                  // Reload web3 provider
-                  if (resolve) {
-                    factory.reloadWeb3Provider(resolve, reject);
-                  }
-                  else {
-                    factory.reloadWeb3Provider();
-                  }
-                };
-
-              }
-            });
-          }
-          else {*/
           factory.lightWalletSetup();
           if (resolve) {
             resolve();
           }
-          //}
         }
         else {
           // Connect to Ethereum Node
@@ -359,14 +306,6 @@
           getAccounts: function (cb) {
             cb(null, factory.getLightWalletAddresses());
           },
-          /*getPrivateKey: function (address, cb) {
-            var idx = factory.getLightWalletAddresses().indexOf(address);
-            if (idx == -1) {
-              return cb('Account not found');
-            }
-
-            cb(null, factory.keystore.wallets[idx].getPrivateKey());
-          },*/
           approveTransaction: function(txParams, cb){
             cb(null, true);
           },
@@ -534,23 +473,6 @@
         });
       };
 
-
-      /**
-      * Verify if a provided password can unlock a keystore
-      */
-      /*factory.canDecryptLightWallet = function (address, password, callback) {
-        var keystore = JSON.parse(factory.getKeystore() || '{}');
-        // Decript address related V3
-        encryptor.decrypt(password, keystore[address])
-        .then(function (decryptedV3String) {
-          ethereumWallet.fromV3(decryptedV3String, password);
-          callback(true);
-        })
-        .catch(function (error) {
-          callback(false);
-        });
-      };*/
-
       /**
       * Decrypts a V3 keystore
       */
@@ -594,60 +516,6 @@
       };
 
       /**
-      * Addes a new account
-      * @param password
-      * @param callback
-      */
-      /*factory.newLightWalletAccount = function (password, ctrlCallback) {
-
-        factory.canDecryptLightWallet(password, function (response) {
-          if (!response) {
-            ctrlCallback();
-          }
-          else {
-            var keystoreAddresses = factory.getLightWalletAddresses();
-            var storageAddresses = Config.getConfiguration('accounts');
-            var existingAddressToAdd = null;
-
-            for(var x in keystoreAddresses) {
-              var address = keystoreAddresses[x];
-              var matchingAddresses = storageAddresses.filter(function (item) {
-                return item.address.replace('0x', '') == address.replace('0x', '');
-              });
-
-              if (matchingAddresses.length == 0) {
-                existingAddressToAdd = address;
-                break;
-              }
-            }
-
-            if (existingAddressToAdd && factory.addresses.indexOf(existingAddressToAdd) == -1) {
-              factory.addresses.push(existingAddressToAdd);
-              ctrlCallback(factory.addresses);
-            }
-            if (existingAddressToAdd &&  factory.addresses.indexOf(existingAddressToAdd) !== -1) {
-              ctrlCallback(factory.addresses);
-            }
-            else if (!existingAddressToAdd) {
-              factory.keystore.addAccounts();
-              // Add new address to addresses list
-              // add 0x prefix to callback address
-
-              factory.keystore.serialize()
-              .then(function (serializedKeystore) {
-                encryptor.encrypt(password, serializedKeystore)
-                .then(function (encryptedString) {
-                  factory.setKeystore(encryptedString);
-                  factory.addresses = factory.getLightWalletAddresses();
-                  ctrlCallback(factory.addresses);
-                });
-              });
-            }
-          }
-        });
-      };*/
-
-      /**
       * Returns keystore string from localStorage or null
       */
       factory.getKeystore = function () {
@@ -684,38 +552,6 @@
       };
 
       /**
-      *
-      */
-      /*factory.restoreFromSeed = function (password, seed, ctrlCallback) {
-        if (bip39.validateMnemonic(seed)) {
-          var keystore = new hdkeyring({
-            mnemonic: seed,
-            numberOfAccounts: 1,
-          });
-
-          factory.keystore = keystore;
-
-          factory.keystore.serialize()
-          .then(function (serializedKeystore) {
-            encryptor.encrypt(password, serializedKeystore)
-            .then(function (encryptedString) {
-              factory.setKeystore(encryptedString);
-              factory.addresses = [factory.keystore.wallets[0].getAddressString()];
-              factory.lightWalletSetup(false);
-              // Return addresses (in our case just an array containing 1 address)
-              ctrlCallback(factory.addresses.map(function (address) {
-                // Add 0x prefix to address
-                return '0x' + address.replace('0x', '');
-              }));
-            });
-          });
-        }
-        else {
-          return ctrlCallback(false);
-        }
-      };*/
-
-      /**
       * Return accounts list
       */
       factory.getLightWalletAddresses = function () {
@@ -724,8 +560,7 @@
           addresses.push(item.address);
         });
 
-        return addresses;
-        //return [Config.getConfiguration('selectedAccount')];
+        return addresses;        
       };
 
 

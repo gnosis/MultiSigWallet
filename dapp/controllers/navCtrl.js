@@ -20,19 +20,35 @@
       // If not terms acepted, prompt disclaimer
       var termsAccepted = localStorage.getItem("termsAccepted");
 
-      if (!termsAccepted && !isElectron) {
-        $uibModal.open({
-          templateUrl: 'partials/modals/disclaimer.html',
-          size: 'md',
-          backdrop: 'static',
-          windowClass: 'bootstrap-dialog type-danger',
-          controller: function ($scope, $uibModalInstance) {
-            $scope.ok = function () {
-              $uibModalInstance.close($scope.walletOption);
-              localStorage.setItem("termsAccepted", true);
-            };
-          }
-        });
+      if (!termsAccepted) {
+        if (isElectron) {
+          $uibModal.open({
+            templateUrl: 'partials/modals/disclaimerElectron.html',
+            size: 'md',
+            backdrop: 'static',
+            windowClass: 'bootstrap-dialog type-danger',
+            controller: function ($scope, $uibModalInstance) {
+              $scope.ok = function () {
+                $uibModalInstance.close($scope.walletOption);
+                localStorage.setItem("termsAccepted", true);
+              };
+            }
+          });
+        }
+        else {
+          $uibModal.open({
+            templateUrl: 'partials/modals/disclaimer.html',
+            size: 'md',
+            backdrop: 'static',
+            windowClass: 'bootstrap-dialog type-danger',
+            controller: function ($scope, $uibModalInstance) {
+              $scope.ok = function () {
+                $uibModalInstance.close($scope.walletOption);
+                localStorage.setItem("termsAccepted", true);
+              };
+            }
+          });
+        }
       }
 
 

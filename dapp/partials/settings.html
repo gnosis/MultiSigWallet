@@ -55,7 +55,11 @@
         <div class="col-md-6 form-group">
           <label for="wallet-factory">Authorization code</label>
           <input id="wallet-factory" type="text" ng-model="config.alertNode.authCode" class="form-control" />
-          <div cass="pull-left">
+        </div>
+      </div>
+      <div class="row">
+        <div cass="form-group col-md-6 col-md-offset-6">
+          <div class="btn-block">
             <a href="{{alertManagementPage}}" target="_blank"
               class="btn btn-primary" type="button"
               ng-show="showDeleteAuthCodeBtn">

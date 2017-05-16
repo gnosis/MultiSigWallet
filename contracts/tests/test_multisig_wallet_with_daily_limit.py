@@ -86,10 +86,12 @@ class TestContract(TestCase):
         # Let one day pass
         self.s.block.timestamp += self.TWENTY_FOUR_HOURS + 1
         self.assertEqual(self.multisig_wallet.calcMaxWithdraw(), daily_limit_updated)
-        # Execute transaction should work now but fails, because it is a wrong sender
+        # Execute transaction should work now but fails, because it is triggered from a non owner address
         self.assertRaises(TransactionFailed, self.multisig_wallet.executeTransaction, transaction_id, sender=keys[9])
+        # Execute transaction also fails if the sender is a wallet owner but didn't confirm the transaction first
+        self.assertRaises(TransactionFailed, self.multisig_wallet.executeTransaction, transaction_id, sender=keys[wa_1])
         # But it works with the right sender
-        self.multisig_wallet.executeTransaction(transaction_id, sender=keys[wa_1])
+        self.multisig_wallet.executeTransaction(transaction_id, sender=keys[wa_2])
         self.assertTrue(self.multisig_wallet.transactions(transaction_id)[3])
         # Let one day pass
         self.s.block.timestamp += self.TWENTY_FOUR_HOURS + 1

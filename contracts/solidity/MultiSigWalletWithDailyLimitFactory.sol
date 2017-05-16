@@ -7,6 +7,9 @@ import "MultiSigWalletWithDailyLimit.sol";
 /// @author Stefan George - <stefan.george@consensys.net>
 contract MultiSigWalletWithDailyLimitFactory is Factory {
 
+    /*
+     * Public functions
+     */
     /// @dev Allows verified creation of multisignature wallet.
     /// @param _owners List of initial owners.
     /// @param _required Number of required confirmations.

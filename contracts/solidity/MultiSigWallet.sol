@@ -5,8 +5,9 @@ pragma solidity 0.4.10;
 /// @author Stefan George - <stefan.george@consensys.net>
 contract MultiSigWallet {
 
-    uint constant public MAX_OWNER_COUNT = 50;
-
+    /*
+     *  Events
+     */
     event Confirmation(address indexed sender, uint indexed transactionId);
     event Revocation(address indexed sender, uint indexed transactionId);
     event Submission(uint indexed transactionId);
@@ -17,6 +18,14 @@ contract MultiSigWallet {
     event OwnerRemoval(address indexed owner);
     event RequirementChange(uint required);
 
+    /*
+     *  Constants
+     */
+    uint constant public MAX_OWNER_COUNT = 50;
+
+    /*
+     *  Storage
+     */
     mapping (uint => Transaction) public transactions;
     mapping (uint => mapping (address => bool)) public confirmations;
     mapping (address => bool) public isOwner;
@@ -31,6 +40,9 @@ contract MultiSigWallet {
         bool executed;
     }
 
+    /*
+     *  Modifiers
+     */
     modifier onlyWallet() {
         if (msg.sender != address(this))
             throw;
@@ -222,6 +234,7 @@ contract MultiSigWallet {
     function executeTransaction(uint transactionId)
         public
         ownerExists(msg.sender)
+        confirmed(transactionId, msg.sender)
         notExecuted(transactionId)
     {
         if (isConfirmed(transactionId)) {

@@ -17,6 +17,33 @@
         }
       );
 
+      /**
+      * Shows the Web3 provider selection modal
+      */
+      function showWeb3SelectionModal () {
+        $uibModal.open({
+          templateUrl: 'partials/modals/chooseWeb3Wallet.html',
+          size: 'md',
+          backdrop: 'static',
+          windowClass: 'bootstrap-dialog type-info',
+          controller: function ($scope, $uibModalInstance) {
+            $scope.config = Config.getUserConfiguration();
+
+            $scope.ok = function (option) {
+              $scope.config.wallet = option;
+              // Save new configuation
+              Config.setConfiguration("userConfig", JSON.stringify($scope.config));
+              loadConfiguration(); // config.js
+              // Reload we3 provider
+              Web3Service.reloadWeb3Provider();
+              Utils.success("Welcome, you can start using your Multisignature Wallet.");
+              Config.setConfiguration('chooseWeb3ProviderShown', true);
+              $uibModalInstance.close();
+            };
+          }
+        });
+      }
+
       // If not terms acepted, prompt disclaimer
       var termsAccepted = localStorage.getItem("termsAccepted");
 
@@ -31,6 +58,8 @@
               $scope.ok = function () {
                 $uibModalInstance.close($scope.walletOption);
                 localStorage.setItem("termsAccepted", true);
+                // call web3 selection modal
+                showWeb3SelectionModal();
               };
             }
           });
@@ -137,30 +166,12 @@
 
           $scope.updateInfo().then(function () {
             var chooseWeb3ProviderShown = Config.getConfiguration('chooseWeb3ProviderShown');
-            if (!chooseWeb3ProviderShown) {
-              $uibModal.open({
-                templateUrl: 'partials/modals/chooseWeb3Wallet.html',
-                size: 'md',
-                backdrop: 'static',
-                windowClass: 'bootstrap-dialog type-info',
-                controller: function ($scope, $uibModalInstance) {
-                  $scope.config = Config.getUserConfiguration();
-
-                  $scope.ok = function (option) {
-                    $scope.config.wallet = option;
-                    // Save new configuation
-                    Config.setConfiguration("userConfig", JSON.stringify($scope.config));
-                    loadConfiguration(); // config.js
-                    // Reload we3 provider
-                    Web3Service.reloadWeb3Provider();
-                    Utils.success("Welcome, you can start using your Multisignature Wallet.");
-                    Config.setConfiguration('chooseWeb3ProviderShown', true);
-                    $uibModalInstance.close();
-                  };
-                }
-              });
+            if (termsAccepted && !chooseWeb3ProviderShown && isElectron) {
+              // show selection modal
+              showWeb3SelectionModal();
             }
-            else if (!Web3Service.coinbase && txDefault.wallet !== "ledger" && txDefault.wallet !== 'lightwallet') {
+            else if (termsAccepted && !isElectron && !Web3Service.coinbase
+                && txDefault.wallet !== "ledger" && txDefault.wallet !== 'lightwallet') {
               $uibModal.open({
                 templateUrl: 'partials/modals/web3Wallets.html',
                 size: 'md',

@@ -25,6 +25,7 @@ module.exports = function(config) {
       'bower_components/abi-decoder/dist/abi-decoder.js',
       'bower_components/angular-ui-select/dist/select.js',
       'bower_components/web3-provider-engine/dist/ProviderEngine.js',
+      'bower_components/angular-ui-notification/dist/angular-ui-notification.js',
       'node_modules/phantomjs-polyfill-object-assign/object-assign-polyfill.js',
       'app.js',
       'abi.js',

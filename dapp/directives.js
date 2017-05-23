@@ -398,6 +398,53 @@
           }
         });
       };
+    })
+    .directive('disabledIfInvalidAddress', function () {
+      // Disables an element until the ng-model passed to
+      // the directive is valid
+      return {
+        link: function(scope, element, attrs){
+          scope.ngDisabled = attrs.ngDisabled;
+          var isAddressValid = false;
+
+          var unwatchAddress = scope.$watch(function() {
+              return attrs.disabledIfInvalidAddress;
+            },
+            function() {
+              // Do more checks
+              if (attrs.disabledIfInvalidAddress.length < 42) {
+                isAddressValid = false;
+              }
+              else if (web3.isAddress(attrs.disabledIfInvalidAddress)) {
+                // Address valid (0x0........)
+                isAddressValid = true;
+              }
+              else {
+                isAddressValid = false;
+              }
+
+              // Set form as invalid
+              if (!isAddressValid) {
+                scope.form.$invalid = true;
+              }
+            }
+          );
+
+          var unwatchForm = scope.$watch(function() {
+              return scope.form.$invalid;
+            },
+            function() {
+              // Set form as invalid
+              if (!isAddressValid) {
+                scope.form.$invalid = true;
+              }
+            }
+          );
+
+          scope.$on('$destroy', unwatchAddress);
+          scope.$on('$destroy', unwatchForm);
+        }
+      };
     });
   }
 )();

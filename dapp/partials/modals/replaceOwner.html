@@ -19,7 +19,9 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-default" type="button" ng-disabled="form.$invalid" ng-click="send()">
+    <button class="btn btn-default" type="button" ng-disabled="form.$invalid"
+      disabled-if-invalid-address="{{newOwner}}"
+      ng-click="send()">
       Send multisig transaction
     </button>
     <button class="btn btn-danger" type="button" ng-click="cancel()">

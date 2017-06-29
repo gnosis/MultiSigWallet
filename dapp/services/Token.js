@@ -118,6 +118,28 @@
         );
       };
 
+      factory.setDefaultTokens = function (address) {
+        /**
+        * Set all the default tokens to a given wallet address
+        */
+        var tokens = {};
+        var wallets = Wallet.getAllWallets();
+
+        txDefault.tokens.map(function (token) {
+          if (!tokens[token.address]) {
+            tokens[token.address.toLowerCase()] = {
+              name: token.name,
+              symbol: token.symbol,
+              decimals: token.decimals,
+              address: token.address.toLowerCase()
+            };
+          }
+        });
+
+        Object.assign(wallets[address].tokens, tokens);
+        localStorage.setItem("wallets", JSON.stringify(wallets));
+      };
+
       return factory;
     });
   }

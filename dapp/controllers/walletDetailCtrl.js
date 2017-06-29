@@ -155,8 +155,10 @@
                   token,
                   $scope.wallet.address,
                   function (e, balance) {
-                    $scope.wallet.tokens[token].balance = balance;
-                    Wallet.triggerUpdates();
+                    if ($scope.wallet.tokens[token]) {
+                      $scope.wallet.tokens[token].balance = balance;
+                      Wallet.triggerUpdates();                      
+                    }
                   }
                 )
               );

@@ -72,14 +72,15 @@
                 // If owner not in list
                 if (walletOwnerskeys.indexOf($scope.owners[x]) == -1) {
                   $scope.wallet.owners[$scope.owners[x]] = {
-                    'name' : $scope.owners[x],
+                    'name' : 'Owner ' + (x+1),
                     'address' : $scope.owners[x]
                   };
                 }
                 else {
                   if (!$scope.wallet.owners[$scope.owners[x]].name) {
                     // Set owner name with its address
-                    $scope.wallet.owners[$scope.owners[x]].name = $scope.wallet.owners[$scope.owners[x]].address;
+                    // $scope.wallet.owners[$scope.owners[x]].name = $scope.wallet.owners[$scope.owners[x]].address;
+                    $scope.wallet.owners[$scope.owners[x]].name = 'Owner ' + (x+1);
                   }
                 }
               }
@@ -157,7 +158,7 @@
                   function (e, balance) {
                     if ($scope.wallet.tokens[token]) {
                       $scope.wallet.tokens[token].balance = balance;
-                      Wallet.triggerUpdates();                      
+                      Wallet.triggerUpdates();
                     }
                   }
                 )

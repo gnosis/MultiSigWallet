@@ -98,7 +98,7 @@
                 function (e, owners) {
                   // $scope.wallets[address] is undefined
                   // when deleting a wallet and executing
-                  // Wallet.getOwners in the meantime                   
+                  // Wallet.getOwners in the meantime
                   if ($scope.wallets[address]) {
                     $scope.wallets[address].isOnChain = (!e && owners.length > 0);
                   }
@@ -240,6 +240,8 @@
                   Utils.dangerAlert(e);
                 }
                 else {
+                  // Add default tokens to wallet
+                  Token.setDefaultTokens($scope.old.address);
                   $uibModalInstance.close();
                 }
               });

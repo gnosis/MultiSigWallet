@@ -198,7 +198,7 @@
             }
           },
           controller: function ($scope, $uibModalInstance, result) {
-            $scope.result = result.toString();
+            $scope.result = typeof result == "string" ? result : result.toString(10); // base 10
 
             $scope.copy = function () {
               $uibModalInstance.close();

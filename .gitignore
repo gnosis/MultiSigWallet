@@ -59,3 +59,7 @@ Thumbs.db
 /contracts/abi
 /dapp/partials.js
 multisigWallet.zip
+/dapp/dist
+
+# Truffle
+/build

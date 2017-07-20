@@ -1,5 +1,5 @@
-pragma solidity 0.4.10;
-import "MultiSigWallet.sol";
+pragma solidity 0.4.11;
+import "./MultiSigWallet.sol";
 
 
 /// @title Multisignature wallet with daily limit - Allows an owner to withdraw a daily limit without multisig.

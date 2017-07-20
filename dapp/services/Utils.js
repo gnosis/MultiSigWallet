@@ -6,6 +6,7 @@
       var factory = {};
 
       factory.rejectedTxErrorMessage = 'Transaction rejected by user';
+      factory.invalidPassword = 'Invalid password';
 
       factory.spinner = null;
 
@@ -58,6 +59,9 @@
             if (typeof error == "object" && error.toString().indexOf("User denied") != -1) {
               return factory.rejectedTxErrorMessage;
             }
+            else if (error.toString() == factory.invalidPassword) {
+              return factory.invalidPassword;
+            }
             else {
               if (error.errorCode) {
                 switch (error.errorCode) {
@@ -90,7 +94,7 @@
       factory.dangerAlert = function (error) {
         var errorHtml = factory.errorToHtml(error);
         // Just show alert is user don't rejected the tx
-        if (errorHtml !== factory.rejectedTxErrorMessage) {
+        if (errorHtml !== factory.rejectedTxErrorMessage && errorHtml !== factory.invalidPassword) {
           BootstrapDialog.show({
             type: BootstrapDialog.TYPE_DANGER,
             title: 'Error',
@@ -131,7 +135,7 @@
       };
 
       factory.success = function (info) {
-        Notification.success(info);        
+        Notification.success(info);
       };
 
       factory.signed = function (tx) {
@@ -194,7 +198,7 @@
             }
           },
           controller: function ($scope, $uibModalInstance, result) {
-            $scope.result = result.toString();
+            $scope.result = typeof result == "string" ? result : result.toString(10); // base 10
 
             $scope.copy = function () {
               $uibModalInstance.close();

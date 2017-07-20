@@ -7,6 +7,7 @@
       "node": false
     }
   },
+  "homepage": "https://wallet.gnosis.pm",
   "description": "Angular web app made for Multi Sig Wallet",
   "main": "main.js",
   "scripts": {
@@ -17,20 +18,41 @@
     "electron-rebuild": "electron-rebuild --force --module_dir . -w node-hid -e node_modules/electron && npm rebuild leveldown scrypt",
     "start": "http-server -a 0.0.0.0 -p 5000",
     "start-electron": "electron .",
-    "build-linux-x64": "electron-packager . MultisigWallet --prune --ignore=tests/* --ignore=testrpc.sh --platform=linux --out=./dist --overwrite=true --asar=true",
-    "build-osx": "electron-packager . MultisigWallet --prune --ignore=tests/* --ignore=testrpc.sh --platform=darwin --out=./dist --overwrite=true --asar=true",
-    "build-win": "electron-packager . MultisigWallet --prune --ignore=tests/* --ignore=testrpc.sh --platform=win32 --out=./dist --overwrite=true --asar=truer",
-    "build-all": "electron-packager . MultisigWallet --prune --ignore=tests/* --ignore=testrpc.sh --platform=all --out=./dist --overwrite=true --asar=true"
+    "package-linux-x64": "electron-packager . MultisigWallet --prune --ignore=tests/* --ignore=testrpc.sh --platform=linux --out=./dist --overwrite=true --asar=true",
+    "package-osx": "electron-packager . MultisigWallet --prune --ignore=tests/* --ignore=testrpc.sh --platform=darwin --out=./dist --overwrite=true --asar=true",
+    "package-win": "electron-packager . MultisigWallet --prune --ignore=tests/* --ignore=testrpc.sh --platform=win32 --out=./dist --overwrite=true --asar=true",
+    "package-all": "electron-packager . MultisigWallet --prune --ignore=tests/* --ignore=testrpc.sh --platform=all --out=./dist --overwrite=true --asar=true",
+    "build-linux": "build --linux",
+    "build-win": "build --win",
+    "build-osx": "build --mac"
   },
   "keywords": [
     "ethereum",
     "web3",
     "multisig"
   ],
-  "author": "denis.granha@consensys.net",
+  "author": {
+    "name": "Gnosis",
+    "email": "stefan@gnosis.pm"
+  },
+  "contributors": [
+    {
+      "name": "Denis Graña",
+      "email": "denis@gnosis.pm"
+    },
+    {
+      "name": "Stefan George",
+      "email": "stefan@gnosis.pm"
+    },
+    {
+      "name": "Giacomo Licari",
+      "email": "giacomo.licari@gnosis.pm"
+    }
+  ],
   "license": "ISC",
   "dependencies": {
     "bower": "^1.8.0",
+    "body-parser": "^1.17.1",
     "browser-passworder": "^2.0.3",
     "eth-hd-keyring": "^1.2.0",
     "eth-sig-util": "^1.2.1",
@@ -48,7 +70,6 @@
   "devDependencies": {
     "asar": "^0.13.0",
     "babel-register": "^6.24.0",
-    "body-parser": "^1.17.1",
     "coffee-script": "*",
     "electron": "~1.4.13",
     "electron-builder": "^17.1.0",
@@ -70,5 +91,19 @@
     "karma-phantomjs-launcher": "^1.0.2",
     "phantomjs-polyfill-object-assign": "0.0.2",
     "scrypt": "*"
+  },
+  "build": {
+    "appId": "pm.gnosis.wallet",
+    "linux": {
+      "target": [
+        "deb"
+      ]
+    },
+    "win": {
+      "target": "NSIS"
+    },
+    "mac": {
+      "icon": "./build/icon.icns"
+    }
   }
 }

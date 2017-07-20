@@ -317,7 +317,7 @@
           });
         }
 
-        // Converts to lowercase the addresses
+        // Converts the addresses to lower case
         var owners = {};
         for (var key in w.owners) {
           w.owners[key].address = w.owners[key].address.toLowerCase();
@@ -417,7 +417,7 @@
 
               if (operation == 'import') {
                 validOwners[ownerKeys[y]] = {
-                  name : owners[ownerKeys[y]] ? owners[ownerKeys[y]] : '',
+                  name : owners[ownerKeys[y]] ? owners[ownerKeys[y]] : 'Owner '  (y+1),
                   address : ownerKeys[y]
                 };
               } else {
@@ -607,28 +607,33 @@
       wallet.restore = function (info, cb) {
         var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(info.address);
         // Check contract function works
-        instance.MAX_OWNER_COUNT(function (e, count) {
-          if (e && Connection.isConnected) {
-            cb(e);
-          }
-          else {
-            if ((!count && Connection.isConnected) || (count && count.eq(0) && Connection.isConnected)) {
-              // it is not a wallet
-              cb("Address " + info.address + " is not a wallet contract");
+        try {
+          instance.MAX_OWNER_COUNT(function (e, count) {
+            if (e && Connection.isConnected) {
+              cb(e);
             }
             else {
-              // Add wallet, add My account to the object by default, won't be
-              // displayed anyway if user is not an owner, but if it is, name will be used
-              if (Web3Service.coinbase) {
-                var coinbase = Web3Service.coinbase.toLowerCase();
-                info.owners = {};
-                info.owners[coinbase] = { address: coinbase, name: 'My Account'};
+              if ((!count && Connection.isConnected) || (count && count.eq(0) && Connection.isConnected)) {
+                // it is not a wallet
+                cb("Address " + info.address + " is not a wallet contract");
               }
-              wallet.updateWallet(info);
-              cb(null, info);
+              else {
+                // Add wallet, add My account to the object by default, won't be
+                // displayed anyway if user is not an owner, but if it is, name will be used
+                if (Web3Service.coinbase) {
+                  var coinbase = Web3Service.coinbase.toLowerCase();
+                  info.owners = {};
+                  info.owners[coinbase] = { address: coinbase, name: 'My Account'};
+                }
+                wallet.updateWallet(info);
+                cb(null, info);
+              }
             }
-          }
-        });
+          });
+        }
+        catch (err) {
+          cb(err);
+        }
       };
 
       // MultiSig functions

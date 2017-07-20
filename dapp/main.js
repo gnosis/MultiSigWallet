@@ -3,6 +3,7 @@ const electron = require('electron');
 const app = electron.app;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
+const Menu = electron.Menu;
 const path = require('path');
 const url = require('url');
 const express = require('express');
@@ -16,16 +17,17 @@ let ledgerAddresses = null;
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 
+/**
+*
+*/
 function restServerSetup () {
-
   let restServer = express();
   let restPort = 8080;
   let connection = null;
-
   restServer.use(bodyParser.json());
-
-
-
+  /**
+  *
+  */
   function getLedgerConnection() {
     const connectionPromise = new Promise( (resolve, reject) => {
       if (!connection) {
@@ -177,6 +179,9 @@ function restServerSetup () {
   _startRestServer();
 }
 
+/**
+*
+*/
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow(
@@ -196,6 +201,34 @@ function createWindow () {
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
+
+  // Declare context menus
+  const selectionMenu = Menu.buildFromTemplate([
+    {role: 'copy'},
+    {type: 'separator'},
+    {role: 'selectall'},
+  ]);
+
+  const inputMenu = Menu.buildFromTemplate([
+    {role: 'undo'},
+    {role: 'redo'},
+    {type: 'separator'},
+    {role: 'cut'},
+    {role: 'copy'},
+    {role: 'paste'},
+    {type: 'separator'},
+    {role: 'selectall'},
+  ]);
+
+  // Set up context menu
+  mainWindow.webContents.on('context-menu', (e, props) => {
+    const { selectionText, isEditable } = props;
+    if (isEditable) {
+      inputMenu.popup(mainWindow);
+    } else if (selectionText && selectionText.trim() !== '') {
+      selectionMenu.popup(mainWindow);
+    }
+  });
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {

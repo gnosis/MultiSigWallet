@@ -308,7 +308,7 @@
           },
           approveTransaction: function(txParams, cb){
             cb(null, true);
-          },
+          },          
           signTransaction: function(txData, cb) {
             // Show password modal
             $uibModal.open({
@@ -317,6 +317,8 @@
               backdrop: 'static',
               controller: function ($scope, $uibModalInstance) {
                 $scope.title = 'Confirm transaction';
+                $scope.hasError = false;
+                $scope.errorMessage = '';
 
                 $scope.ok = function () {
                   // Enable spinner
@@ -326,8 +328,11 @@
                     if (!response) {
                       // Disable spinner
                       $scope.showLoadingSpinner = false;
-                      $uibModalInstance.dismiss();
-                      cb('Invalid password', null);
+                      //$uibModalInstance.dismiss();
+                      $scope.hasError = true;
+                      //cb('Invalid password', null);
+                      /*cb_copy = cb.bind({})
+                      cb_copy('Invalid password', null);*/
                     }
                     else {
                       // Retrieve wallet private key
@@ -560,7 +565,7 @@
           addresses.push(item.address);
         });
 
-        return addresses;        
+        return addresses;
       };
 
 

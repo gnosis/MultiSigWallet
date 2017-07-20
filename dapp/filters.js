@@ -31,12 +31,7 @@
     })
     .filter('bigNumber', function () {
       return function (big) {
-        if (isElectron && big) {
-          return new Web3().toBigNumber(big.address).toNumber();
-        }
-        if (big) {
-          return new Web3().toBigNumber(big).toNumber();
-        }
+        return new Web3().toBigNumber(big).toNumber();        
       };
     })
     .filter('txData', function () {

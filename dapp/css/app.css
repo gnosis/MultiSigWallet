@@ -150,3 +150,7 @@ input[name="editable-select"]:disabled {
 .top-20 {
     margin-top: 20px;
 }
+
+.ui-notification {
+  top: 50px !important;
+}

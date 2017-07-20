@@ -39,10 +39,14 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" ng-click="send()" class="btn btn-default" show-hide-by-connectivity="online" ng-disabled="form.$invalid || abiArray[method.index].constant">
+    <button type="button" ng-click="send()" class="btn btn-default" show-hide-by-connectivity="online"
+      disabled-if-invalid-address="{{tx.to}}"
+      ng-disabled="form.$invalid || abiArray[method.index].constant">
       Send transaction
     </button>
-    <button type="button" ng-click="simulate()" class="btn btn-default" show-hide-by-connectivity="online" ng-disabled="form.$invalid">
+    <button type="button" ng-click="simulate()" class="btn btn-default" show-hide-by-connectivity="online"
+      disabled-if-invalid-address="{{tx.to}}"
+      ng-disabled="form.$invalid">
       Simulate transaction
     </button>
     <button type="button" ng-click="signOff()" show-hide-by-connectivity="offline" class="btn btn-default" ng-disabled="form.$invalid">

@@ -15,7 +15,9 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-default" type="button" ng-disabled="form.$invalid" ng-click="send()" show-hide-by-connectivity="online">
+    <button class="btn btn-default" type="button" ng-disabled="form.$invalid"
+      disabled-if-invalid-address="{{owner.address}}"
+      ng-click="send()" show-hide-by-connectivity="online">
       Send multisig transaction
     </button>
     <button class="btn btn-default" type="button" ng-disabled="form.$invalid" ng-click="sign()" show-hide-by-connectivity="offline">

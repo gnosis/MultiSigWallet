@@ -2,7 +2,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("newWalletCtrl", function ($scope, $uibModalInstance, $uibModal, Utils, Transaction, Wallet, callback, Web3Service) {
+    .controller("newWalletCtrl", function ($scope, $uibModalInstance, $uibModal, Utils, Transaction, Wallet, Token, callback, Web3Service) {
 
       $scope.newOwner = {};
       $scope.owners = {};
@@ -32,6 +32,7 @@
                   Wallet.updateWallet({name: $scope.name, address: receipt.contractAddress, owners: $scope.owners});
                   Utils.success("Wallet deployed");
                   Transaction.update(contract.transactionHash, {multisig: receipt.contractAddress});
+                  Token.setDefaultTokens(contract.address);
                   callback();
                 }});
                 Utils.notification("Deployment transaction was sent.");
@@ -101,7 +102,7 @@
       $scope.addOwner = function () {
           $scope.owners[$scope.newOwner.address] = $scope.newOwner;
           $scope.newOwner = {}; // reset values
-      };      
+      };
     });
   }
 )();

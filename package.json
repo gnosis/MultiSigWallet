@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/ConsenSys/MultiSigWallet.git"
   },
-  "author": "denis@gnosis.pm",
+  "author": "Gnosis (https://gnosis.pm/)",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/ConsenSys/MultiSigWallet/issues"
@@ -21,5 +21,5 @@
             "browser": true,
             "node": false
         }
-    }    
+    }
 }

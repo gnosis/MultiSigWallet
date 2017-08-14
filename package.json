@@ -6,6 +6,9 @@
     "test": "cd dapp && npm test",
     "install": "cd dapp && npm install"
   },
+  "engines": {
+    "node": "7.1.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ConsenSys/MultiSigWallet.git"

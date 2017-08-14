@@ -1,5 +1,5 @@
-var MultisigWallet = artifacts.require("./MultisigWalletWithDailyLimit.sol");
-var MultisigWalletFactory = artifacts.require("./MultisigWalletWithDailyLimitFactory.sol");
+var MultisigWallet = artifacts.require("MultiSigWalletWithDailyLimit.sol");
+var MultisigWalletFactory = artifacts.require("MultiSigWalletWithDailyLimitFactory.sol");
 
 module.exports = function(deployer) {
   var args = process.argv;

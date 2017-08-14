@@ -159,9 +159,6 @@
           function(ledgerWeb3){
             factory.web3 = ledgerWeb3;
 
-            if (resolve) {
-              resolve();
-            }
             // Open Info Modal
             $uibModal.open({
               templateUrl: 'partials/modals/ledgerHelp.html',
@@ -308,7 +305,7 @@
           },
           approveTransaction: function(txParams, cb){
             cb(null, true);
-          },          
+          },
           signTransaction: function(txData, cb) {
             // Show password modal
             $uibModal.open({

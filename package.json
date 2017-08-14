@@ -4,7 +4,8 @@
   "description": "Main module, for installing all dependencies",
   "scripts": {
     "test": "cd dapp && npm test",
-    "install": "cd dapp && npm install"
+    "install": "cd dapp && npm install",
+    "start": "cd dapp && npm start"
   },
   "engines": {
     "node": "7.1.0"

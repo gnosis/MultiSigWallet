@@ -131,38 +131,40 @@ var txDefault = {
       name: "Local node"
     }
   ],
-  alertNodes: [
-    {
+  alertNodes: {
+    'mainnet': {
       url: 'https://alerts.gnosis.pm',
       authCode: null,
       name: 'Mainnet',
+      networkId: 1,
       managementPage: "https://alerts.gnosis.pm/api/alert/manage/?code={auth-code}"
     },
-    {
+    'kovan': {
       url: 'https://testalerts.gnosis.pm',
       authCode: null,
       name: 'Kovan',
+      networkId: 42,
       managementPage: "https://testalerts.gnosis.pm/api/alert/manage/?code={auth-code}"
     }
-  ],
-  walletFactoryAddresses: [
-    {
+  },
+  walletFactoryAddresses: {
+    'mainnet': {
       name: 'Mainnet',
       address: txDefaultOrig.walletFactoryAddress
     },
-    {
+    'ropsten': {
       name: 'Ropsten',
       address: '0x5cb85db3e237cac78cbb3fd63e84488cac5bd3dd'
     },
-    {
+    'kovan': {
       name: 'Kovan',
       address: '0x6C4c60F01999408CfD872Fdcf739912509A15da5'
     },
-    {
+    'privatenet': {
       name: 'Privatenet',
       address: '0xd79426bcee5b46fde413ededeb38364b3e666097'
     }
-  ]
+  }
 };
 
 /**

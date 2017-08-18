@@ -11,8 +11,8 @@
         },
         function () {
           // Javascript doesn't have a deep object copy, this is a patch
-          var copyObject = Wallet.getAllWallets()[$routeParams.address];
-          var tokenAddresses = Object.keys(copyObject.tokens);
+          var walletCopy = Wallet.getAllWallets()[$routeParams.address];
+          var tokenAddresses = Object.keys(walletCopy.tokens);
           // The token collection is updated by the controller and the service, so must be merged.
           tokenAddresses.map(function(item){
             // Initialize, user token balance
@@ -20,15 +20,17 @@
               $scope.userTokens[item] = {};
             }
             // Assign token to user tokens collection
-            Object.assign($scope.userTokens[item], copyObject.tokens[item]);
+            Object.assign($scope.userTokens[item], walletCopy.tokens[item]);
 
             // If token has a previous balance, copy it
-            if ($scope.wallet.tokens && $scope.wallet.tokens[item] && copyObject.tokens && copyObject.tokens[item]){
-              copyObject.tokens[item].balance = $scope.wallet.tokens[item].balance;
+            if ($scope.wallet.tokens && $scope.wallet.tokens[item] && walletCopy.tokens && walletCopy.tokens[item]) {
+              walletCopy.tokens[item].balance = $scope.wallet.tokens[item].balance;
             }
           });
-
-          $scope.wallet = copyObject;
+                    
+          Object.assign(walletCopy, $scope.wallet);
+          $scope.wallet = walletCopy;
+          
           $scope.totalTokens = Object.keys($scope.wallet.tokens).length;
         }
       );
@@ -368,7 +370,7 @@
         }).call();
       };
 
-      $scope.getOwners = function () {
+      /*$scope.getOwners = function () {
         var batch = Web3Service.web3.createBatch();
         $scope.owners = [];
 
@@ -392,7 +394,7 @@
           );
         }
         batch.execute();
-      };
+      };*/
 
       $scope.addOwner = function () {
         $uibModal.open({

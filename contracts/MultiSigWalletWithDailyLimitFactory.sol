@@ -1,6 +1,6 @@
-pragma solidity 0.4.10;
-import "Factory.sol";
-import "MultiSigWalletWithDailyLimit.sol";
+pragma solidity 0.4.13;
+import "./Factory.sol";
+import "./MultiSigWalletWithDailyLimit.sol";
 
 
 /// @title Multisignature wallet factory for daily limit version - Allows creation of multisig wallet.

@@ -1,6 +1,6 @@
-pragma solidity 0.4.10;
-import "Factory.sol";
-import "MultiSigWallet.sol";
+pragma solidity 0.4.13;
+import "./Factory.sol";
+import "./MultiSigWallet.sol";
 
 
 /// @title Multisignature wallet factory - Allows creation of multisig wallet.

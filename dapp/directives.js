@@ -290,10 +290,14 @@
           }
           else {
               scope.selectedItem = null;
-          }
+          }          
 
           scope.changeEvent = function() {
             scope.$parent.config.wallet = scope.selectedItem.name;
+            if (attrs.onChangeFunction !== undefined) {
+              var func = scope.$parent[attrs.onChangeFunction];
+              func();
+            }            
           };
         }
       };
@@ -304,7 +308,7 @@
         require: '^ngModel',
         scope: {
           ngModel: '=',
-          options: '=',
+          options: '=',          
           other: '@'
         },
         replace: true,
@@ -364,6 +368,11 @@
               scope.isDisabled = !scope.other || scope.other !== option;
               if (!scope.isDisabled) {
                 element[0].querySelector('.editable-select').focus();
+              }
+
+              if (attrs.onChangeFunction !== undefined) {
+                var func = scope.$parent[attrs.onChangeFunction];
+                func();
               }
             };
 

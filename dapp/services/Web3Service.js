@@ -40,7 +40,7 @@
         }
         // injected web3 provider (Metamask, mist, etc)
         else if (txDefault.wallet == "injected" && $window && $window.web3 && !isElectron) {
-          factory.web3 = new Web3($window.web3.currentProvider);
+          factory.web3 = new MultisigWeb3($window.web3.currentProvider);
           if (resolve) {
             resolve();
           }
@@ -53,7 +53,7 @@
         }
         else {
           // Connect to Ethereum Node
-          factory.web3 = new Web3(new Web3.providers.HttpProvider(txDefault.ethereumNode));
+          factory.web3 = new MultisigWeb3(new MultisigWeb3.providers.HttpProvider(txDefault.ethereumNode));
           // Check connection
           factory.web3.net.getListening(function(e){
             if (e) {
@@ -159,9 +159,6 @@
           function(ledgerWeb3){
             factory.web3 = ledgerWeb3;
 
-            if (resolve) {
-              resolve();
-            }
             // Open Info Modal
             $uibModal.open({
               templateUrl: 'partials/modals/ledgerHelp.html',
@@ -194,7 +191,7 @@
       /* Ledger wallet electron setup */
       factory.ledgerElectronSetup = function () {
         factory.engine = new ProviderEngine();
-        factory.web3 = new Web3(factory.engine);
+        factory.web3 = new MultisigWeb3(factory.engine);
 
         var web3Provider = new HookedWeb3Provider({
           getAccounts: function (cb) {
@@ -245,7 +242,7 @@
           }
         });
 
-        factory.web3 = new Web3(factory.engine);
+        factory.web3 = new MultisigWeb3(factory.engine);
 
         factory.engine.addProvider(web3Provider);
 
@@ -308,7 +305,7 @@
           },
           approveTransaction: function(txParams, cb){
             cb(null, true);
-          },          
+          },
           signTransaction: function(txData, cb) {
             // Show password modal
             $uibModal.open({
@@ -376,7 +373,7 @@
         web3Provider.host = txDefault.ethereumNode;
         // Setup engine
         factory.engine = new ProviderEngine();
-        factory.web3 = new Web3(factory.engine);
+        factory.web3 = new MultisigWeb3(factory.engine);
         // Add providers
         factory.engine.addProvider(web3Provider);
         factory.engine.addProvider(new RpcSubprovider({
@@ -574,7 +571,7 @@
       */
       function _startupSetup () {
         factory.engine = new ProviderEngine();
-        factory.web3 = new Web3(factory.engine);
+        factory.web3 = new MultisigWeb3(factory.engine);
         if (factory.getKeystore()) {
           factory.engine.addProvider(new RpcSubprovider({
             rpcUrl: txDefault.ethereumNode

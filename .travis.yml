@@ -1,10 +1,17 @@
 dist: trusty
 language: node_js
 node_js:
-  - "iojs"
-  - "7"
+  - iojs
+  - '7'
 sudo: required
+branches:
+  only:
+    - develop
+addons:
+  ssh_known_hosts:
+  - wallet-dev.gnosis.pm    
 before_install:
+  - openssl aes-256-cbc -K $encrypted_73122a370a19_key -iv $encrypted_73122a370a19_iv -in .travis/deploy_key.enc -out .travis/deploy_key -d
   - sudo apt-get update && sudo apt-get install -y libusb-1.0-0-dev
   - npm install -g git+https://github.com/ethereumjs/testrpc mocha solc node-hid
   - . $HOME/.nvm/nvm.sh
@@ -13,4 +20,10 @@ before_install:
   - npm install -g node-gyp node-hid rx
 install: npm install
 script:
-- npm run test
+  - npm run test
+after_success:
+  - eval "$(ssh-agent -s)"
+  - chmod 600 .travis/deploy_key
+  - ssh-add .travis/deploy_key
+  - git remote add deploy dokku@wallet-dev.gnosis.pm:wallet-dev.gnosis.pm
+  - git push deploy develop -f

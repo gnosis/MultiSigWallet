@@ -1,0 +1,204 @@
+<!-- Owners panel -->
+<div class="panel panel-default" data-ng-show="isSafari">
+  <div class="panel-heading">
+     <p class="centered">In some instances the webapp won't fully load if using <b>Safari</b>. Please visit using Google Chrome or Mozilla Firefox.</p>
+  </div>
+</div>
+<div class="panel panel-default">
+  <div class="panel-heading">
+      <p class="centered">Please note that some past transactions could have inaccurate data, please <a href="https://github.com/aragon/multisig-transparency/issues/new">inform us</a> if you see anything weird. You can read more about our <a href="https://blog.aragon.one">transparency model</a>.</p>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4>
+          Owners
+        </h4>
+      </div>
+      <table class="table table-bordered" uib-collapse="hideOwners">
+        <thead>
+          <tr>
+            <th>
+              Name:
+            </th>
+            <th class="text-right">
+              Address
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="owner in owners track by $index">
+            <td>
+              {{getOwnerName(owner)}}
+            </td>
+            <td class="text-right">
+              {{owner}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="pull-right">
+        </div>
+        <h4>
+          Assets
+        </h4>
+      </div>
+      <table class="table table-bordered" uib-collapse="hideTokens">
+        <thead>
+          <tr>
+            <th>
+              Name:
+            </th>
+            <th class="text-right">
+              Multisig balance
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Ether</td>
+            <td class="text-right"><span>{{balance|ether}} {{balanceUSD|fiat}}</span></td>
+          </tr>
+          <tr ng-repeat="token in wallet.tokens track by $index">
+            <td>
+              {{token.name}}
+            </td>
+            <td class="text-right">
+              {{token|token}} {{token.balanceUSD|fiat}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div ng-show="!totalTokens" class="panel-body text-center" uib-collapse="hideTokens">
+        No tokens. Add an ERC20 token <a href="" ng-click="addToken()">now</a>.
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Multisig transactions panel -->
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="pull-right form-inline">
+
+      <select class="form-control" ng-model="showTxs" ng-change="updateParams()">
+        <option value="all">
+          All
+        </option>
+        <option value="pending">
+          Pending
+        </option>
+        <option value="executed">
+          Executed
+        </option>
+      </select>
+      <select class="form-control" ng-change="updateTransactions()" ng-model="itemsPerPage" convert-to-number>
+        <option value="5">
+          5/p
+        </option>
+        <option value="10">
+          10/p
+        </option>
+        <option value="20">
+          20/p
+        </option>
+      </select>
+    </div>
+    <h4>
+      Multisig transactions
+    </h4>
+  </div>
+  <div class="table-responsive">
+  <table class="table table-bordered table-tx">
+    <thead>
+      <tr>
+        <th>
+          ID
+        </th>
+        <th>
+          Destination
+        </th>
+        <th>
+          Value
+        </th>
+        <th>
+          Subject
+        </th>
+        <th>
+          Human readable info
+        </th>
+        <th>
+          Confirmations
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="txId in txIds track by $index">
+        <td>
+          <a target="blank" href="{{transactions[txId].details.multisigTx|etherscan}}">{{txId|bigNumber}}</a>
+        </td>
+        <td>
+          <span uib-popover="{{transactions[txId].to}}" popover-enable="'true'" popover-trigger="'mouseenter'">
+            <a ng-href="{{transactions[txId].toUrl}}" target="_blank">{{transactions[txId].destination}}</a>
+          </span>
+        </td>
+        <td>
+          {{transactions[txId].value|ether}}
+        </br>
+          {{transactions[txId].details.fiat|fiat}}
+        </td>
+        <td>
+          <div class="text-center" ng-show="!transactions[txId].dataDecoded.title">
+            -
+          </div>
+          <span popover-trigger="'mouseenter'" uib-popover-template="'partials/multisigData.html'" popover-placement="bottom" popover-append-to-body="true" popover-enable="transactions[txId].data != '0x'">
+            {{transactions[txId].dataDecoded.title}}
+          </span>
+          <ul>
+            <li ng-repeat="param in transactions[txId].dataDecoded.params">
+              {{param.name}}:
+              <span uib-popover="{{param.value}}" popover-enable="param.value && param.value.toString().length > 7" popover-trigger="'mouseenter'">
+                {{param.value|addressCanBeOwner:wallet|logParam}}
+              </span>
+            </li>
+          </ul>
+        </td>
+        <td>
+          <div class="row">
+          <span class="col-md-12">{{transactions[txId].details.desc}}</span>
+          <br>
+          <ul>
+            <li ng-repeat="entity in transactions[txId].details.entities">
+              <a target="blank" href="{{entity.tx|etherscan}}">{{entity.name}}</a>
+            </li>
+          </ul>
+          </div>
+        </td>
+        <td>
+          <div class="row">
+            <div ng-class="{'col-md-12' : transactions[txId].executed, 'col-md-6' : !transactions[txId].executed}">
+              <ul ng-repeat="owner in transactions[txId].confirmations">
+                <li>
+                  {{wallet.owners[owner].name}}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <div ng-hide="totalItems" class="panel-body text-center">
+    Loading...
+  </div>
+  <div class="panel-footer text-right">
+    <ul uib-pagination total-items="totalItems" ng-model="currentPage" ng-change="updateTransactions()" items-per-page="itemsPerPage" next-text="&gt;" previous-text="&lt;"></ul>
+  </div>
+</div>

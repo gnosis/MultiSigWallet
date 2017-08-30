@@ -1,0 +1,107 @@
+@font-face {
+	font-family: 'Maison Neue';
+	src: url('MaisonNeue-LightItalic.woff2') format('woff2'),
+		url('MaisonNeue-LightItalic.woff') format('woff'),
+		url('MaisonNeue-LightItalic.ttf') format('truetype');
+	font-weight: 300;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'Maison Neue';
+	src: url('MaisonNeue-Light.woff2') format('woff2'),
+		url('MaisonNeue-Light.woff') format('woff'),
+		url('MaisonNeue-Light.ttf') format('truetype');
+	font-weight: 300;
+	font-style: normal;
+}
+
+/*@font-face {
+	font-family: 'Maison Neue';
+	src: url('MaisonNeue-MediumItalic.woff2') format('woff2'),
+		url('MaisonNeue-MediumItalic.woff') format('woff'),
+		url('MaisonNeue-MediumItalic.ttf') format('truetype');
+	font-weight: 500;
+	font-style: italic;
+}*/
+
+@font-face {
+	font-family: 'Maison Neue';
+	src: url('MaisonNeue-Book.woff2') format('woff2'),
+		url('MaisonNeue-Book.woff') format('woff'),
+		url('MaisonNeue-Book.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+/*@font-face {
+	font-family: 'Maison Neue';
+	src: url('MaisonNeue-BoldItalic.woff2') format('woff2'),
+		url('MaisonNeue-BoldItalic.woff') format('woff'),
+		url('MaisonNeue-BoldItalic.ttf') format('truetype');
+	font-weight: bold;
+	font-style: italic;
+}*/
+
+/*@font-face {
+	font-family: 'Maison Neue';
+	src: url('MaisonNeue-Medium.woff2') format('woff2'),
+		url('MaisonNeue-Medium.woff') format('woff'),
+		url('MaisonNeue-Medium.ttf') format('truetype');
+	font-weight: 500;
+	font-style: normal;
+}*/
+
+@font-face {
+	font-family: 'Maison Neue';
+	src: url('MaisonNeue-BookItalic.woff2') format('woff2'),
+		url('MaisonNeue-BookItalic.woff') format('woff'),
+		url('MaisonNeue-BookItalic.ttf') format('truetype');
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'Maison Neue Mono';
+	src: url('MaisonNeue-Mono.woff2') format('woff2'),
+		url('MaisonNeue-Mono.woff') format('woff'),
+		url('MaisonNeue-Mono.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Maison Neue Mono';
+	src: url('MaisonNeue-MonoItalic.woff2') format('woff2'),
+		url('MaisonNeue-MonoItalic.woff') format('woff'),
+		url('MaisonNeue-MonoItalic.ttf') format('truetype');
+	font-weight: normal;
+	font-style: italic;
+}
+
+/*@font-face {
+	font-family: 'Maison Neue';
+	src: url('MaisonNeue-DemiItalic.woff2') format('woff2'),
+		url('MaisonNeue-DemiItalic.woff') format('woff'),
+		url('MaisonNeue-DemiItalic.ttf') format('truetype');
+	font-weight: normal;
+	font-style: italic;
+}*/
+
+/*@font-face {
+	font-family: 'Maison Neue';
+	src: url('MaisonNeue-Bold.woff2') format('woff2'),
+		url('MaisonNeue-Bold.woff') format('woff'),
+		url('MaisonNeue-Bold.ttf') format('truetype');
+	font-weight: bold;
+	font-style: normal;
+}*/
+
+/*@font-face {
+	font-family: 'Maison Neue';
+	src: url('MaisonNeue-Demi.woff2') format('woff2'),
+		url('MaisonNeue-Demi.woff') format('woff'),
+		url('MaisonNeue-Demi.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}*/

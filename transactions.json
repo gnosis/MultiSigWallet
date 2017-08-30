@@ -1,0 +1,393 @@
+{
+	"txs": [
+		{
+			"id": 96,
+			"desc": "Pay Wachsman ANT (Aug and Sept 2017)",
+			"multisigTx": "0x8711fe9365585bd548e526de718d2b985d1238fc833d06bffe44aca3b7b93f1c",
+			"entities": []
+		},
+		{
+			"id": 95,
+			"desc": "Pay Wachsman ETH (Aug and Sept 2017)",
+			"multisigTx": "0x2206d57201a5c0132294f6cc15acaded31359edef12994c219b236032a53cec9",
+			"entities": []
+		},
+		{
+			"id": 94,
+			"desc": "Devcon sponsorship",
+			"fiat": 20000,
+			"multisigTx": "0x90ea2093c338ae9db09f54419631e9439598b6962e35c28a187db4012857bad2",
+			"entities": [{
+					"name": "Transfer to EF",
+					"tx": "0xe569267f7caabf2cc1ccb138f5b8f7cddf81ef4fd46b80887c076e8e295d067c"
+				},
+				{
+					"name": "Return remaining funds to multisig (9 ETH)",
+					"tx": "0x0a8959ee048537cd5ae5fcf2f2c3a65d97d7662f886d06a0f7eaac7859c1aa1c"
+				}
+			]
+		},
+		{
+			"id": 93,
+			"desc": "Fiat for team offsite",
+			"fiat": 1800,
+			"multisigTx": "0x31b26050bf857c53e6d0444bd330f4506e2221ce662d5550fa67892c64554d8f",
+			"entities": [{
+					"name": "ShapeShift -> ChipChap (https://shapeshift.io/#/status/5d788bd7-e2e1-4b79-8e77-bda7c051f3f5)",
+					"tx": "0x2b9ab42f22254af6bb644e771e9f4d4d562a90da942ded051ce1666515ad2b3b"
+				},
+				{
+					"name": "ShapeShift -> ChipChap (https://shapeshift.io/#/status/ac2d14d7-2570-40c7-9445-8d9bbc045b49)",
+					"tx": "0x91d57830b6d1cd51893c143724093cf498f3f0df64020d00e461e89c5f719b28"
+				},
+				{
+					"name": "ShapeShift -> ChipChap (https://shapeshift.io/#/status/f18e62ba-3e2f-44ae-aa4b-d0a78b623597)",
+					"tx": "0xebcfaa47c6195d6dfd71e48dc51680420e95506794e9ef359ba5578d78977ef5"
+				},
+				{
+					"name": "Return remaining funds to multisig (17.43 ETH)",
+					"tx": "0x7a222cc3074a7f85cfb186c3b9c52ced022cd21ee24b21d32dbb7320e1c55535"
+				}
+			]
+		},
+		{
+			"id": 92,
+			"desc": "Pay legal services and delayed salary. Fiat for laptops, office equipment, logistics, etc.",
+			"fiat": 20000,
+			"multisigTx": "0x8754ec3d1771c8f052b9d4161da83cc9219aaf97b673d09f860f78f8890fef18",
+			"entities": [{
+					"name": "ShapeShift -> Bitwala (https://shapeshift.io/#/status/81e1b9cc-92f0-4aaa-bed7-b2b0dc5033d2)",
+					"tx": "0x13cd2a039594bfbe9b01fc5c573b6ebee1bd2b9997053dae59a99b9379b6c0b2"
+				},
+				{
+					"name": "ShapeShift -> Bitwala (https://shapeshift.io/#/status/287c6ef4-e469-4ea2-9e82-00c28beda436)",
+					"tx": "0xd546a5708c3515a10190a22eccb3e35867c2c47dece53243f08568e40d64bf28"
+				},
+				{
+					"name": "ShapeShift -> Bitwala (https://shapeshift.io/#/status/dbc8fc47-5011-4e6a-b3d4-6b71f2c4ab79)",
+					"tx": "0x72cbe8ae6e118aa7af2eda824c679897e28229aec327e794c24bd611a78e594a"
+				},
+				{
+					"name": "ShapeShift -> Bitwala (https://shapeshift.io/#/status/ee2e7969-22a4-4efd-9202-17efb3134c45)",
+					"tx": "0xeb591919dd8e7d1cf70994478793f9c1a2ccce6f06691d7a90a1a018b29fb218"
+				},
+				{
+					"name": "Send remaining funds to Jorge",
+					"tx": "0x5d9d59a9e80d08e810f16fe753e3585a8fe86de45657e773a89efa5e7509659f"
+				},
+				{
+					"name": "Pay legal services",
+					"tx": "0x91669fc4d9de24c82e13ca4ed01eddd571aa18c9a8edbce3f9bca9839e01445b"
+				},
+				{
+					"name": "Pay delayed salary",
+					"tx": "0xed72ae96c21eab06c5f028e11144de25f5b5dbe6eb0aad0de9c4e565a0711fe3"
+				}
+			]
+		},
+		{
+			"id": 91,
+			"desc": "Salaries July 2017",
+			"fiat": 32333.333,
+			"multisigTx": "0x987fb34a6c2d20bd8b07e90d5f5a2337132504939630d4fafdf973fc964def52",
+			"entities": []
+		},
+		{
+			"id": 90,
+			"desc": "Wachsman PR",
+			"fiat": 4500,
+			"multisigTx": "0xb6262685c9fc613b4d9c89898f9a25d8fc6cc57a3644b2763e37633121d53805",
+			"entities": [{
+				"name": "Wachsman PR"
+			}]
+		},
+		{
+			"id": 89,
+			"desc": "ENS: aragonproject.eth resolves to the multisig",
+			"multisigTx": "0x506c2795fff565feb3a570551d236deaa5764a5e1751e78e5f15ae9e25dc551d"
+		},
+		{
+			"id": 88,
+			"desc": "ENS: Set aragonproject.eth resolver to PublicResolver",
+			"multisigTx": "0xa45caade0332352a0938835237c5de264799dcced7acd65a03262bb3d6f06bb4"
+		},
+		{
+			"id": 87,
+			"desc": "Bitwala debit card for business expenses and payment to PR agency",
+			"fiat": 19374,
+			"multisigTx": "0xeb2200bde7fa74b309dc528813ad44fce4f0f9f876b1d625f95e2ca75a832f41",
+			"entities": [{
+				"name": "ShapeShift -> Bitwala",
+				"tx": "0xfa210087b034cd426b3cc60be53e50a5c9488f2b9814800a8387dc8b76fee596"
+			}, {
+				"name": "ShapeShift -> Bitwala",
+				"tx": "0x52c286035c8b998d649464528c277180162a09af0aa165d07edc2f4f5db47c18"
+			}, {
+				"name": "ShapeShift -> Bitwala",
+				"tx": "0x922bbeea4855b0a462f1f50203f85cb5ab5418ca98ddf73df1248196e99c8617"
+			}, {
+				"name": "Wachsman PR",
+				"tx": "0x73e0018866b5b266034876719fed11ea908a3e1932253f4ca49618de14f76e5e"
+			}]
+		},
+		{
+			"id": 86,
+			"desc": "Token Buyback Program",
+			"multisigTx": "0xc63b7f455c804fca2837109eb5cbd2c332382d14d3f69c855252bc4734d8edf2",
+			"entities": [{
+				"name": "Pending bittrex txs",
+				"tx": "pending"
+			}]
+		},
+		{
+			"id": 85,
+			"desc": "Salaries June 2017 II",
+			"fiat": 7325,
+			"multisigTx": "0x4147c7f0fdf78a23743165ad702340d4256d39198cbf58cc5dcbd8d16d593f5a",
+			"entities": []
+		},
+		{
+			"id": 84,
+			"desc": "Salaries June 2017",
+			"fiat": 10000,
+			"multisigTx": "0x41e678e0ab455429ca89b9ca4a34687a3d681f353c4bc159c58af515777fa8be",
+			"entities": []
+		},
+		{
+			"id": 83,
+			"desc": "Token Buyback Program",
+			"fiat": 0,
+			"multisigTx": "0x8e9dba69beed6fba35a6edb68ad7168d2518a9d0bbc774d4dae1eaf99973ca7a",
+			"entities": [{
+					"name": "Bittrex",
+					"tx": "0xbbbb9081f8a8f3c8b6e98424c41926e4b10058dfe09c2f84a479537781f8cfca"
+				},
+				{
+					"name": "Bittrex",
+					"tx": "0x6cf70d97f598d37148b71ce93943556033a140e5f17693acec30ffa3c7e591ab"
+				}
+			]
+		},
+		{
+			"id": 82,
+			"desc": "",
+			"fiat": 0,
+			"multisigTx": "0x6bbec9e5f36b4d3e229452b66b94a953566541807bff75f7d7391b325f7879af",
+			"entities": [{
+				"name": "ShapeShift",
+				"tx": "0x157639dbb94e42743ab3bc163b16d35c0a324695759267e35fbe63998d0c0778"
+			}]
+		},
+		{
+			"id": 81,
+			"desc": "Buy 2 Devcon tickets for team",
+			"fiat": 1800,
+			"multisigTx": "0xcc2ddefa0ec99165995ec2e63279d1d01c34aed98b9af33fb03d6c1d0a24acc3",
+			"entities": [{
+					"name": "Ticket 1",
+					"tx": "0x142919132db1fda17d6600ff74c7b62474cfeaaba91746233924ec765c3395ef"
+				},
+				{
+					"name": "Ticket 2",
+					"tx": "0xaecb86b4948c4dcf546712e20bcb6c9f269254a5c93ffcf255c7965b7b3a037a"
+				}
+			]
+		},
+		{
+			"id": 80,
+			"desc": "Salaries May 2017",
+			"fiat": 9700,
+			"multisigTx": "0xc4acc99f0e6efd454f197ae779fc9cf723d847a04a879c812bbb6599eb3b0511",
+			"entities": []
+		},
+		{
+			"id": 79,
+			"desc": "Token Buyback Program",
+			"fiat": 0,
+			"multisigTx": "0x10528ea817cb481e38d910f825f37d1042738781008740c5e4f6aa2aad53b19f",
+			"entities": [{
+					"name": "Bittrex",
+					"tx": "0x6d76e3834b129ed528359e1a36a8f1abc974630bc57f48394aa2dad027678a52"
+				},
+				{
+					"name": "Bittrex",
+					"tx": "0x9cb45234c9678a9f944310a33dbe72ef4be5b0c50c1a5fdc4f9ced614a7a6dbc"
+				}
+			]
+		},
+		{
+			"id": 78,
+			"desc": "ENS: aragonnetwork.eth",
+			"multisigTx": "0x1b9e457264eb7af2e6dc3dd80a768e52e00482256b81a2f0eebd3f0dd68ea03e",
+			"entities": [{
+					"name": "Reveal bid for 50 ETH",
+					"tx": "0x219881111888fba881c4477c3aa83e9b90bbdedf224dc067fea604e1a3416c9f"
+				},
+				{
+					"name": "Return remaining 49.5 ETH to multisig",
+					"tx": "0xca47d54630e5ba4d43dfd7dde144fc0c58fae70c753cb254f1ba8f84acf73d4e"
+				}
+			]
+		},
+		{
+			"id": 77,
+			"desc": "ANT rewards for #frontline Slack team",
+			"fiat": 3000,
+			"multisigTx": "0x28a1f5f49a9b59518b44cc0e2f3fbba0b2a56f4f9a6702fecf32baa156c8b9c7",
+			"entities": []
+		},
+		{
+			"id": 76,
+			"desc": "One pager chinese translation",
+			"multisigTx": "0x82189a802c758d0ddee7b8f6db26ccaf675e87d95048e094d13af85e1b12a674",
+			"entities": []
+		},
+		{
+			"id": 75,
+			"desc": "ENS organization.eth and aragonproject.eth",
+			"multisigTx": "0x0fa05866fa29d8572ada16c9d9d70559edf4156942eb907c0849676591c6f896",
+			"entities": [{
+					"name": "organization.eth bid",
+					"tx": "0x7a4fc28f6a3b0683cb71f55e422a3da47350fc552a2efbdff80ca5804918b85c"
+				},
+				{
+					"name": "aragonproject.eth bid",
+					"tx": "0x2ccf24bd40872834f512f5caa804b514264c1678c762832de13db79f5fed722f"
+				},
+				{
+					"name": "Return remaining ETH",
+					"tx": "0x4ffe046845bbb538fc74d9762fe5d33cadc7326e879ea8196494767a5910afb6"
+				}
+			]
+		},
+		{
+			"id": 74,
+			"desc": "Pay token sale services",
+			"multisigTx": "0xc45492cb8a0606793ced8f1e7fc5d3bd01a90a6805f891ba2c0d13230e45afa3",
+			"entities": [{
+					"name": "imToken commisions",
+					"tx": "0x03e245277035639858a80b4739e6153970ae0567043fe69271cd90a0791212ae"
+				},
+				{
+					"name": "Bug bounty",
+					"tx": "0xf3d475562a2ce34aa7cbdf01d30c0a51ebecacd2dbf47c8e630e8c9c2e06cde0"
+				}
+			]
+		},
+		{
+			"id": 73,
+			"desc": "Token Buyback Program",
+			"fiat": 375000,
+			"multisigTx": "0xd17f3abbeeb778446b16f268c36bfae79c1c59d4d2a5d7863cabce5c45cada3d",
+			"entities": [{
+					"name": "Bittrex",
+					"tx": "0x97e3133c9120d26f75e18285ab5116803ad91d1514b60d85fff995b34459c059"
+				},
+				{
+					"name": "Bittrex",
+					"tx": "0xc8d1da47e325046f5115bb14698e71fa399d879e1397a7d7d2109c4c75089692"
+				},
+				{
+					"name": "Bittrex",
+					"tx": "0xf26ea056e093309c9c6de1f50bc832c66dd22df7583fd956206858cb40494a51"
+				}
+			]
+		},
+		{
+			"id": 72,
+			"desc": "Token Buyback Program",
+			"fiat": 375000,
+			"multisigTx": "0xd17f3abbeeb778446b16f268c36bfae79c1c59d4d2a5d7863cabce5c45cada3d",
+			"entities": []
+		},
+		{
+			"id": 71,
+			"desc": "Allocate remaining presale tokens",
+			"fiat": 0,
+			"multisigTx": "0xd95293c3b1d8f7470d7f4f9a594f94bad21f085e0eeab5efa3abcc5dd38c33f4",
+			"entities": []
+		},
+		{
+			"id": 70,
+			"desc": "Whitelist Jorge's address to make ANT vestings",
+			"fiat": 0,
+			"multisigTx": "0xd95293c3b1d8f7470d7f4f9a594f94bad21f085e0eeab5efa3abcc5dd38c33f4",
+			"entities": []
+		},
+		{
+			"id": 69,
+			"desc": "",
+			"fiat": 0,
+			"multisigTx": "0xa1b3fc3d2c0f423c50948f28a6da7b41e10ed9f79c6a7c33a8bd3947bbb4b343",
+			"entities": []
+		},
+		{
+			"id": 68,
+			"desc": "Funding Ethercards",
+			"fiat": 0,
+			"multisigTx": "0xbc2c898ac5a24982bdfa273a87b000b0873d3abcabefb413aacaa34fb68eef65",
+			"entities": []
+		},
+		{
+			"id": 67,
+			"desc": "Funding Ethercards",
+			"fiat": 0,
+			"multisigTx": "0x71e3398a9b30cf29bfde7b4c52ca9b392f2e1cad804e919f7c84f0f210f95eb3",
+			"entities": []
+		},
+		{
+			"id": 65,
+			"desc": "Founder token allocation with 2 year vesting and 6 month cliff",
+			"fiat": 0,
+			"multisigTx": "0x103c99f282dcea02ee65e2c31a5069baa1ee9a024ad1621ad7b3e4ef80e9e465",
+			"entities": [{
+				"name": "Luis"
+			}]
+		},
+		{
+			"id": 64,
+			"desc": "Founder token allocation with 2 year vesting and 6 month cliff",
+			"fiat": 0,
+			"multisigTx": "0xadc999083007f440a6ad11bdbd7eb9730727e4f201cc60103b5ed9d5a9c7f71d",
+			"entities": [{
+				"name": "Jorge"
+			}]
+		},
+		{
+			"id": 63,
+			"desc": "Early contributor token allocation",
+			"fiat": 0,
+			"multisigTx": "0x248390db5f8879ce99c6d248c7fa201514da922a90143f3dcfec6451bc021601",
+			"entities": [{
+				"name": "BoostVC"
+			}]
+		},
+		{
+			"id": 62,
+			"desc": "Advisor token allocation with 6 month vesting and 3 month cliff",
+			"fiat": 0,
+			"multisigTx": "0xbf91f5361dc43a0051be74f5d454d18743094104b22c23e38f593be1d140d595",
+			"entities": [{
+				"name": "Kenny Rowe"
+			}]
+		},
+		{
+			"id": 61,
+			"desc": "Advisor token allocation with 6 month vesting and 3 month cliff",
+			"fiat": 0,
+			"multisigTx": "0xfef02fea97870376fea7d64cf8a52883b3ac04b99b3647d68c768c8b806aac8f",
+			"entities": [{
+				"name": "Jake Brukhman"
+			}]
+		},
+		{
+			"id": 60,
+			"desc": "Advisor token allocation with 6 month vesting and 3 month cliff",
+			"fiat": 0,
+			"multisigTx": "0x243244d650afe83b3d01562aef423c3545ff91c714aca50d3038c0f888fc83e7",
+			"entities": [{
+				"name": "Daniele Levi"
+			}]
+		}
+	]
+}

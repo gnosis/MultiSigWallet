@@ -1,0 +1,21 @@
+{
+  "name": "rlp",
+  "description": "Recursive Length Prefix Encoding Module",
+  "main": "index.js",
+  "authors": [
+    "[object Object]"
+  ],
+  "license": "MPL-2.0",
+  "keywords": [
+    "rlp",
+    "ethereum"
+  ],
+  "homepage": "https://github.com/denisgranha/rlp",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

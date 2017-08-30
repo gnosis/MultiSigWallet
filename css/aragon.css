@@ -1,0 +1,189 @@
+body {
+  /*background: #fafafa !important;*/
+  color: #505050;
+  font-weight: normal;
+  background-color: #F8FCFD !important;
+  font-family: 'Maison Neue', 'Helvetica Neue', Arial, Helvetica, sans-serif !important;
+}
+
+.navbar-default {
+  background-color: #fff;
+}
+
+.centered {
+  text-align: center;
+}
+
+.panel {
+  background-color: white !important;
+  border: 1px solid #e8e8e8;
+  padding: 10px;
+  /*box-shadow: 0 4px 10px rgba(59, 59, 59, 0.25);*/
+}
+
+.panel-default > .panel-heading {
+  background-color: white !important;
+  border-color: white !important;
+  color: #3b3b3b !important;
+  padding: 10px 8px !important;
+}
+
+.table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+  border-color: transparent !important;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+  background-color: #fafafa !important;
+}
+
+.table-hover > tbody > tr:hover {
+  background-color: #fafafa !important;
+}
+
+.page-header {
+  border-bottom: none !important;
+  margin-top: 0 !important;
+}
+
+.page-header h1 {
+  text-align: center;
+}
+
+.form-control, .btn-default {
+  border-color: white !important;
+  background-color: #fafafa !important;
+  color: #3b3b3b !important;
+}
+
+.btn-default {
+  border-radius: 2px;
+}
+
+.panel-footer {
+  background-color: #fff !important;
+  border-top: none !important;
+}
+
+.pagination > li > a, .pagination > li > span {
+  border-color: white !important;
+  background-color: #fafafa !important;
+  color: #3b3b3b;
+}
+
+.navbar > .container {
+  margin-top: 3px;
+}
+
+.navbar {
+  min-height: 64px;
+}
+
+.navbar-default {
+  border-color: #e8e8e8;
+}
+
+body {
+  padding-top: 94px;
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+  font-weight: 400;
+}
+
+.navbar-text {
+  font-weight: 300;
+}
+
+.navbar-header {
+  padding-right: 30px;
+  border-right: 1px solid #e8e8e8;
+  padding-top: 4px;
+  padding-bottom: 9px;
+}
+
+.collapse > p {
+  font-size: 20px;
+  margin-left: 38px;
+  margin-top: 18px;
+}
+
+.panel-default > .panel-heading {
+  padding-bottom: 0!important;
+}
+
+.panel-heading h4 {
+  font-size: 16px;
+  margin-top: 0;
+  margin-bottom: 14px;
+}
+
+table.table-tx tbody tr td:first-child, table.table-tx tbody tr td:nth-child(2) {
+  min-width: 60px;
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+table tbody tr td:first-child, table thead tr th:nth-child(3), table tbody tr td:first-child, table tbody tr td:nth-child(3) {
+  text-align: right;
+}
+
+table tbody tr td:first-child {
+  text-align: left;
+}
+
+table thead tr th:nth-child(5) {
+  text-align: center;
+}
+
+table thead tr th {
+  font-weight: 400;
+  font-size: 12px;
+  color: #979FA1;
+  text-transform: uppercase;
+  border-left: 0!important;
+  border-right: 0!important;
+  border-bottom: 1px solid #e8e8e8!important;
+}
+
+table.table-tx {
+  margin-top: 10px;
+}
+
+table.table-tx tbody tr td {
+  border-left: 0!important;
+  border-right: 0!important;
+  border-bottom: 1px solid #e8e8e8!important;
+}
+
+.pagination > li > a, .pagination > li > span {
+  background-color: #fff!important;
+}
+
+.pagination > li:first-child > a, .pagination > li:first-child > span, .pagination > li:last-child > a, .pagination > li:last-child > span {
+  border: 1px solid #e8e8e8!important;
+  border-radius: 4px!important;
+}
+
+.pagination > li:first-child > a, .pagination > li:first-child > span {
+  margin-right: 1px;
+}
+
+.pagination > li:last-child > a, .pagination > li:last-child > span {
+  margin-left: 1px;
+}
+
+.pagination-page a {
+  color: #aaa!important;
+}
+
+.pagination-page.active a {
+  color: #333!important;
+  font-weight: bold;
+}
+
+.panel-heading select {
+  width: 120px!important;
+  margin-top: -10px;
+}

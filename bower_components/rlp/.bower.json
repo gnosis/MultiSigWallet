@@ -1,0 +1,31 @@
+{
+  "name": "rlp",
+  "description": "Recursive Length Prefix Encoding Module",
+  "main": "index.js",
+  "authors": [
+    "[object Object]"
+  ],
+  "license": "MPL-2.0",
+  "keywords": [
+    "rlp",
+    "ethereum"
+  ],
+  "homepage": "https://github.com/denisgranha/rlp",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "version": "0.0.1",
+  "_release": "0.0.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.0.1",
+    "commit": "cb1a94b22a805c7dfc575086fdf18180dc560fb7"
+  },
+  "_source": "https://github.com/denisgranha/rlp.git",
+  "_target": "^0.0.1",
+  "_originalSource": "rlp"
+}

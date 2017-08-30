@@ -1,0 +1,25 @@
+{
+  "name": "ledger-wallet-provider",
+  "description": "Ledger Nano S wallet provider for the Web3 ProviderEngine",
+  "main": "dist/ledgerwallet.js",
+  "authors": [
+    "denis@gnosis.pm"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "ledger",
+    "wallet",
+    "provider",
+    "ethereum",
+    "nano"
+  ],
+  "homepage": "https://github.com/Neufund/ledger-wallet-provider",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "private": true,
+  "name": "browser-builds",
+  "version": "0.0.1",
+  "description": "Browser builds of ethereumjs libraries.",
+  "scripts": {
+    "build": "./build.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ethereumjs/browser-builds.git"
+  },
+  "keywords": [
+    "ethereum",
+    "browser"
+  ],
+  "author": "Alex Beregszaszi <alex@rtfs.hu>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ethereumjs/browser-builds/issues"
+  },
+  "homepage": "https://github.com/ethereumjs/browser-builds#readme",
+  "dependencies": {
+    "ethereumjs-abi": "^0.6.2",
+    "ethereumjs-icap": "^0.3.1",
+    "ethereumjs-tx": "^1.1.1",
+    "ethereumjs-units": "^0.1.0",
+    "ethereumjs-vm": "^1.4.0",
+    "ethereumjs-wallet": "^0.6.0"
+  }
+}

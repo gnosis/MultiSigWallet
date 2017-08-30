@@ -1,0 +1,14 @@
+{
+  "name": "ethjs-abi-denis",
+  "homepage": "https://github.com/denisgranha/ethjs-abi",
+  "version": "0.1.1",
+  "_release": "0.1.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.1.1",
+    "commit": "023ed7c5bba80e022df108a4778f318de86c05cd"
+  },
+  "_source": "https://github.com/denisgranha/ethjs-abi.git",
+  "_target": "0.1.1",
+  "_originalSource": "ethjs-abi-denis"
+}

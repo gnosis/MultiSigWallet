@@ -1,0 +1,13 @@
+{
+  "name": "ethereum-tx",
+  "homepage": "https://github.com/ethereumjs/browser-builds",
+  "_release": "2fb69a714a",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "2fb69a714afe092b06645286f14b94f41e5c062c"
+  },
+  "_source": "https://github.com/ethereumjs/browser-builds.git",
+  "_target": "*",
+  "_originalSource": "ethereum-tx"
+}

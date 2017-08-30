@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Aragon funds</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="any" href="./img/wallet-logo.png" />
+    <!-- Custom Stylesheets -->
+    <link href="./css/gnosis-bootstrap.css" rel="stylesheet" type="text/css" />
+    <!--<link href="./bootstrap/dist/css/bootstrap.css" rel="stylesheet" type="text/css" />-->
+    <link href="./css/gnosis-bootstrap-dialog.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="./fonts/Maison Neue/fonts.css">
+    <!-- 3rd party Stylesheets -->
+    <link href="./bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="./bower_components/SpinKit/css/spinkit.css" rel="stylesheet" type="text/css" />
+    <link href="./css/app.css" rel="stylesheet" type="text/css" />
+    <link href="./css/aragon.css" rel="stylesheet" type="text/css" />
+    <!-- 3rd party Script -->
+    <script src="./bower_components/angular/angular.min.js"></script>
+    <script src="./bower_components/angular-animate/angular-animate.min.js"></script>
+    <script src="./bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script src="./bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="./bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="./bower_components/angular-route/angular-route.min.js"></script>
+    <script src="./bower_components/angular-touch/angular-touch.min.js"></script>
+    <script src="./bower_components/web3/dist/web3.js"></script>
+    <script src="./bower_components/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js"></script>
+    <script src="./bower_components/ethereum-tx/dist/ethereumjs-tx.js"></script>
+    <script src="./bower_components/moment/min/moment-with-locales.min.js"></script>
+    <script src="./bower_components/abi-decoder/dist/abi-decoder.js"></script>
+    <script src="./bower_components/clipboard/dist/clipboard.min.js"></script>
+    <script src="./bower_components/ngclipboard/dist/ngclipboard.min.js"></script>
+    <script src="./bower_components/rlp/dist/rlp.js"></script>
+    <!-- Production -->
+    <script src="./bower_components/ledger-wallet-provider/dist/ledgerwallet.js"></script>
+    <!-- Testing -->
+    <!--
+    <script src="./ledgerwallet.js"></script>
+    -->
+    <!-- App -->
+    <script src="./config.js"></script>
+    <script src="./app.js"></script>
+    <script src="./filters.js"></script>
+    <script src="./routes.js"></script>
+    <script src="./abi.js"></script>
+    <script src="./directives.js"></script>
+    <script src="./partials.js"></script>
+
+    <!-- Services -->
+    <script src="./services/Wallet.js"></script>
+    <script src="./services/Utils.js"></script>
+    <script src="./services/Transaction.js"></script>
+    <script src="./services/Token.js"></script>
+    <script src="./services/Connection.js"></script>
+    <script src="./services/ABI.js"></script>
+    <script src="./services/EthAlerts.js"></script>
+    <!-- Controllers -->
+    <script src="./controllers/walletCtrl.js"></script>
+    <script src="./controllers/walletDetailCtrl.js"></script>
+    <script src="./controllers/walletTransactionCtrl.js"></script>
+
+
+    <script src="./expose.js"></script>
+  </head>
+  <body ng-app="multiSigWeb">
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">
+            <img src="./img/aragon-logo.svg" />
+            <img src="./img/aragon-text.svg" />
+          </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <p class="navbar-text">Foundation Multisig – <a href="https://etherscan.io/address/aragonproject.eth" target="blank">aragonproject.eth</a></p>
+        </div>
+      </div>
+    </nav>
+    <div class="container">
+      <ng-view></ng-view>
+    </div>
+  </body>
+</html>

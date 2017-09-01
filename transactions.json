@@ -1,6 +1,20 @@
 {
 	"txs": [
 		{
+			"id": 100,
+			"desc": "Pay salaries and offsite reimbursements to the team",
+			"fiat": 13233.73,
+			"multisigTx": "0xe1652ab5e6879117616f74ff923b17e0cb2dce347c85642dffaad8fa326e5a81",
+			"entities": []
+		},
+		{
+			"id": 99,
+			"desc": "Pay salaries and offsite reimbursements to the team",
+			"fiat": 44310.75,
+			"multisigTx": "0x1e7ee97ee294eb80941ebc3d9a85bef652a5dc7c151fca323198c71139438e6a",
+			"entities": []
+		},
+		{
 			"id": 97,
 			"desc": "Pay Natalia for design services",
 			"multisigTx": "0x04f8f3a39d1f4d2f646b30b340061ecb360155eec6f1a1f5d7370d6218ee98da",
@@ -9,12 +23,14 @@
 		{
 			"id": 96,
 			"desc": "Pay Wachsman ANT (Aug and Sept 2017)",
+			"fiat": 4500,
 			"multisigTx": "0x8711fe9365585bd548e526de718d2b985d1238fc833d06bffe44aca3b7b93f1c",
 			"entities": []
 		},
 		{
 			"id": 95,
 			"desc": "Pay Wachsman ETH (Aug and Sept 2017)",
+			"fiat": 4500,
 			"multisigTx": "0x2206d57201a5c0132294f6cc15acaded31359edef12994c219b236032a53cec9",
 			"entities": []
 		},

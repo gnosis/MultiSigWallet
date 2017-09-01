@@ -237,7 +237,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "</div>\n" +
     "<div class=\"panel panel-default\">\n" +
     "  <div class=\"panel-heading\">\n" +
-    "      <p class=\"centered\">Please note that some past transactions could have inaccurate data, please <a href=\"https://github.com/aragon/multisig-transparency/issues/new\">inform us</a> if you see anything weird. You can read more about our <a href=\"https://blog.aragon.one\">transparency model</a>.</p>\n" +
+    "      <p class=\"centered\">Please note that some past transactions could have inaccurate data, please <a href=\"https://github.com/aragon/multisig-transparency/issues/new\">inform us</a> if you see anything weird. You can read more about our <a href=\"https://blog.aragon.one/why-transparency-matters-d6f9e6e10985\">transparency model</a>.</p>\n" +
     "  </div>\n" +
     "</div>\n" +
     "<div class=\"row\">\n" +

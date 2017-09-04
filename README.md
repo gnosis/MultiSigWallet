@@ -6,7 +6,7 @@ Allows multiple parties to agree on transactions before execution. Allows to add
 Install
 -------------
 ```
-git clone https://github.com/ConsenSys/MultiSigWallet.git
+git clone https://github.com/gnosis/MultiSigWallet.git
 cd MultiSigWallet
 vagrant up
 ```

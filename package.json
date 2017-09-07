@@ -4,7 +4,7 @@
   "description": "Main module, for installing all dependencies",
   "scripts": {
     "test-dapp": "cd dapp && npm test",
-    "test": "run-with-testrpc -d 'truffle test'",
+    "test": "truffle compile && run-with-testrpc -d 'truffle test test/javascript/testMultiSigWalletWithDailyLimit.js' && run-with-testrpc -d 'truffle test test/javascript/testMultiSigWalletWithDailyLimitFactory.js'",
     "install": "cd dapp && npm install",
     "start": "cd dapp && npm start"
   },

@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Main module, for installing all dependencies",
   "scripts": {
-    "test": "cd dapp && npm test",
+    "test-dapp": "cd dapp && npm test",
+    "test-truffle": "truffle test",
     "install": "cd dapp && npm install",
     "start": "cd dapp && npm start"
   },

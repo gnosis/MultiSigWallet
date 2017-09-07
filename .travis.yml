@@ -1,0 +1,17 @@
+dist: trusty
+language: node_js
+node_js:
+  - "iojs"
+  - "7"
+sudo: required
+before_install:
+  - sudo apt-get update && sudo apt-get install -y libusb-1.0-0-dev
+  - npm install -g git+https://github.com/ethereumjs/testrpc mocha solc node-hid
+  - . $HOME/.nvm/nvm.sh
+  - nvm install stable
+  - nvm use stable
+  - npm install -g node-gyp node-hid rx truffle
+install: npm install
+script:
+- npm run test-dapp
+- npm run test

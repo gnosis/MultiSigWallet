@@ -29,36 +29,31 @@ Being used by
 Install
 -------------
 ```
-git clone https://github.com/ConsenSys/MultiSigWallet.git
+git clone https://github.com/gnosis/MultiSigWallet.git
 cd MultiSigWallet
-vagrant up
+npm install
 ```
 
 Test
 -------------
-### Run single test:
+### Run contract tests:
 ```
-cd /vagrant/contracts/
-python -m unittest tests.test_multisig_wallet
+npm test
 ```
-### Run all tests:
+### Run interface tests:
 ```
-cd /vagrant/contracts/
-python -m unittest discover tests
+npm run test-dapp
 ```
 
 Deploy
 -------------
-**Remember to change owner addresses in the respective JSON file before deployment!**
 ### Deploy multisig wallet:
 ```
-cd /vagrant/contracts/
-python deploy.py -f deploy/MultiSig.json
+truffle migrate <account1,account2,...,accountN> <requiredConfirmations>
 ```
 ### Deploy multisig wallet with daily limit:
 ```
-cd /vagrant/contracts/
-python deploy.py -f deploy/MultiSigWithDailyLimit.json
+truffle migrate <account1,account2,...,accountN> <requiredConfirmations> <dailyLimit>
 ```
 
 Limitations

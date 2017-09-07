@@ -15,6 +15,6 @@ module.exports = deployer => {
     console.log("Wallet deployed")
   } else {
     deployer.deploy(MultisigWalletWithDailyLimit, args[3].split(","), args[4], args[5])
-    console.log("Wallet with Daily Limit deployed")>
+    console.log("Wallet with Daily Limit deployed")
   }
 }

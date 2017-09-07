@@ -21,8 +21,12 @@ The following people have reviewed the code at the time of the linked commit:
 
 Being used by
 -------------
-- [Golem](https://golem.network/)
+- [Aragon](https://aragon.one/)
+- [Bancor](https://www.bancor.network/)
 - Brace
+- [District0x](https://district0x.io/)
+- [Golem](https://golem.network/)
+- [MysteriumNetwork](https://mysterium.network/)
 - [Weifund](http://weifund.io/)
 - StabL
 
@@ -67,7 +71,11 @@ All contracts are WITHOUT ANY WARRANTY; without even the implied warranty of MER
 
 Deployed instances with significant funds
 -------------
+- Aragon [0xcafe1a77e84698c83ca8931f54a755176ef75f2c](https://etherscan.io/address/0xcafe1a77e84698c83ca8931f54a755176ef75f2c)
+- Bancor [0x5894110995b8c8401bd38262ba0c8ee41d4e4658](https://etherscan.io/address/0x5894110995b8c8401bd38262ba0c8ee41d4e4658)
 - Golem [0x7da82c7ab4771ff031b66538d2fb9b0b047f6cf9] (https://etherscan.io/address/0x7da82c7ab4771ff031b66538d2fb9b0b047f6cf9)
+- MysteriumDev [0x7e6614722614e434c4df9901bab31e466ba12fa4](https://etherscan.io/address/0x7e6614722614e434c4df9901bab31e466ba12fa4)
+- District0x [0xd20e4d854c71de2428e1268167753e4c7070ae68](https://etherscan.io/address/0xd20e4d854c71de2428e1268167753e4c7070ae68)
 
 License
 -------------

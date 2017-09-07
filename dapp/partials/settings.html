@@ -12,24 +12,18 @@
           <editable-select
             ng-model="config.selectedEthereumNode"
             options="config.ethereumNodes"
-            other="Custom node"
+            other="Custom node"            
             template-url="editable-select-settings-tpl.html">
+            <!-- on-change-function="alertNodeSetup" -->
           </editable-select>
         </div>
         <div class="col-md-6 form-group">
           <label for="wallet-factory">Web3 provider</label>
-          <!--<select id="web3-wallet" ng-model="config.wallet" class="form-control" >
-            <option value="injected">
-              Default (MetaMask, Mist, Parity ...)
-            </option>
-            <option value="ledger">
-              Ledger Wallet
-            </option>
-            <option value="lightwallet">
-              Light Wallet
-            </option>
-          </select>-->
-          <provider-list default-item="config.wallet" selected-item="providers[$index].name"></provider-list>
+          <provider-list 
+            default-item="config.wallet" 
+            selected-item="providers[$index].name">
+            <!-- on-change-function="alertNodeSetup" -->
+          </provider-list>
         </div>
       </div>
       <div class="row">
@@ -47,8 +41,8 @@
           <label for="alert-nodes">Alert node</label>
           <editable-select
             ng-model="config.alertNode"
-            options="config.alertNodes"
-            other="Custom node"
+            options="config.alertNodesList"
+            other="Custom node"            
             template-url="editable-select-settings-tpl.html">
           </editable-select>
         </div>
@@ -77,7 +71,7 @@
           <label for="wallet-factory">Wallet factory contract</label>
           <editable-select
             ng-model="config.walletFactoryAddress"
-            options="config.walletFactoryAddresses"
+            options="config.walletFactoryAddressList"
             other="Custom contract"
             template-url="editable-select-contract-settings-tpl.html"
             type="contract-address">

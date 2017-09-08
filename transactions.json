@@ -1,6 +1,13 @@
 {
 	"txs": [
 		{
+			"id": 101,
+			"desc": "Buy team equipment",
+			"fiat": 750,
+			"multisigTx": "0x405ee3c4ff89fa3a2d8e514ec1597769e73ca56d315888c63c27c45729794fbf",
+			"entities": []
+		},
+		{
 			"id": 100,
 			"desc": "Pay salaries and offsite reimbursements to the team",
 			"fiat": 13233.73,

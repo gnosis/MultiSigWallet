@@ -2,34 +2,91 @@
   function () {
     angular
     .module('multiSigWeb')
-    .controller('navCtrl', function ($scope, Wallet, Connection, Transaction, $interval, $sce, $location, $uibModal) {
+    .controller('navCtrl', function ($scope, Wallet, Web3Service, Config, Connection, Transaction, $interval, $sce, $location, $uibModal, Utils) {
       $scope.navCollapsed = true;
+      $scope.isElectron = isElectron;
+      $scope.config = Config.getConfiguration();
 
-      // If not terms acepted, prompt disclaimer
-      var termsAccepted = localStorage.getItem("termsAccepted");
+      // Reload config when it changes
+      $scope.$watch(
+        function () {
+          return Config.updates;
+        },
+        function () {
+          $scope.config = Config.getUserConfiguration();
+        }
+      );
 
-      if (!termsAccepted) {
+      /**
+      * Shows the Web3 provider selection modal
+      */
+      function showWeb3SelectionModal () {
         $uibModal.open({
-          templateUrl: 'partials/modals/disclaimer.html',
+          templateUrl: 'partials/modals/chooseWeb3Wallet.html',
           size: 'md',
           backdrop: 'static',
-          windowClass: 'bootstrap-dialog type-danger',
+          windowClass: 'bootstrap-dialog type-info',
           controller: function ($scope, $uibModalInstance) {
-            $scope.ok = function () {
-              $uibModalInstance.close($scope.walletOption);
-              localStorage.setItem("termsAccepted", true);
+            $scope.config = Config.getUserConfiguration();
+
+            $scope.ok = function (option) {
+              $scope.config.wallet = option;
+              // Save new configuation
+              Config.setConfiguration("userConfig", JSON.stringify($scope.config));
+              loadConfiguration(); // config.js
+              // Reload we3 provider
+              Web3Service.reloadWeb3Provider();
+              Utils.success("Welcome, you can start using your Multisignature Wallet.");
+              Config.setConfiguration('chooseWeb3ProviderShown', true);
+              $uibModalInstance.close();
             };
           }
         });
       }
 
+      // If not terms acepted, prompt disclaimer
+      var termsAccepted = localStorage.getItem("termsAccepted");
 
-      $scope.updateInfo = function (){
+      if (!termsAccepted) {
+        if (isElectron) {
+          $uibModal.open({
+            templateUrl: 'partials/modals/disclaimerElectron.html',
+            size: 'md',
+            backdrop: 'static',
+            windowClass: 'bootstrap-dialog type-danger',
+            controller: function ($scope, $uibModalInstance) {
+              $scope.ok = function () {
+                $uibModalInstance.close($scope.walletOption);
+                localStorage.setItem("termsAccepted", true);
+                // call web3 selection modal
+                showWeb3SelectionModal();
+              };
+            }
+          });
+        }
+        else {
+          $uibModal.open({
+            templateUrl: 'partials/modals/disclaimer.html',
+            size: 'md',
+            backdrop: 'static',
+            windowClass: 'bootstrap-dialog type-danger',
+            controller: function ($scope, $uibModalInstance) {
+              $scope.ok = function () {
+                $uibModalInstance.close($scope.walletOption);
+                localStorage.setItem("termsAccepted", true);
+              };
+            }
+          });
+        }
+      }
+
+
+      $scope.updateInfo = function () {
 
         /**
         * Setup Ethereum Chain infos
         */
-        Transaction.getEthereumChain.then(
+        Transaction.getEthereumChain().then(
           function (data) {
             $scope.ethereumChain = data;
             txDefaultOrig.walletFactoryAddress = data.walletFactoryAddress;
@@ -37,13 +94,48 @@
           }
         );
 
-        return Wallet.initParams().then(function () {
-          $scope.loggedIn = Wallet.coinbase;
-          $scope.accounts = Wallet.accounts;
-          $scope.coinbase = Wallet.coinbase;
-          $scope.nonce = Wallet.txParams.nonce;
-          $scope.balance = Wallet.balance;
-        });
+        if (isElectron || !$scope.paramsPromise) {
+          // init params
+          $scope.paramsPromise = Wallet.initParams().then(function () {
+            $scope.loggedIn = Web3Service.coinbase;
+            $scope.coinbase = Web3Service.coinbase;
+            $scope.nonce = Wallet.txParams.nonce;
+            $scope.balance = Wallet.balance;
+            $scope.paramsPromise = null;
+
+            if (!isElectron) {
+              $scope.accounts = Web3Service.accounts;
+            }
+            else {
+              // Retrieves accounts from localStorage
+              if (Config.getConfiguration('accounts')) {
+                $scope.accounts = Config.getConfiguration('accounts').map(function (account) {
+                  return account.address;
+                });
+              }
+              else {
+                $scope.accounts = [];
+              }
+            }
+          }, function (error) {
+            if (txDefault.wallet == "ledger") {
+              $scope.loggedIn = true;
+              $scope.accounts = Web3Service.accounts;
+              $scope.coinbase = Web3Service.coinbase;
+              $scope.nonce = Wallet.txParams.nonce;
+              $scope.paramsPromise = null;
+            }
+            else {
+              var syncErrorShown = Config.getConfiguration('syncErrorShown');
+              if (!syncErrorShown) {
+                Utils.dangerAlert(error);
+                Config.setConfiguration('syncErrorShown', true);
+              }
+            }
+          });
+        }
+
+        return $scope.paramsPromise;
       };
 
       /**
@@ -59,10 +151,9 @@
 
       };
 
-      Wallet.webInitialized.then(
+      Web3Service.webInitialized.then(
         function () {
-          $scope.interval = $interval($scope.updateInfo, 15000);
-          // $scope.updateInfo();
+          $scope.interval = $interval($scope.updateInfo, 5000);
 
           /**
           * Lookup connection status
@@ -74,7 +165,13 @@
           $scope.connectionInterval = $interval($scope.updateConnectionStatus, txDefault.connectionChecker.checkInterval);
 
           $scope.updateInfo().then(function () {
-            if (!Wallet.coinbase && txDefault.wallet !== "ledger") {
+            var chooseWeb3ProviderShown = Config.getConfiguration('chooseWeb3ProviderShown');
+            if (termsAccepted && !chooseWeb3ProviderShown && isElectron) {
+              // show selection modal
+              showWeb3SelectionModal();
+            }
+            else if (termsAccepted && !isElectron && !Web3Service.coinbase
+                && txDefault.wallet !== "ledger" && txDefault.wallet !== 'lightwallet') {
               $uibModal.open({
                 templateUrl: 'partials/modals/web3Wallets.html',
                 size: 'md',
@@ -96,7 +193,7 @@
       });
 
       $scope.selectAccount = function (account) {
-        Wallet.selectAccount(account);
+        Web3Service.selectAccount(account);
         $scope.updateInfo();
       };
 

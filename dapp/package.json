@@ -7,37 +7,83 @@
       "node": false
     }
   },
+  "homepage": "https://wallet.gnosis.pm",
   "description": "Angular web app made for Multi Sig Wallet",
-  "main": "index.html",
+  "main": "main.js",
   "scripts": {
     "test": "sh testrpc.sh",
     "certs": "openssl req -x509 -sha256 -nodes -newkey rsa:2048 -days 365 -keyout localhost.key -out localhost.crt -subj '/CN=localhost/O=Multisig/C=US'",
     "dist": "zip -x node_modules/\\* -x npm-debug.log -x tests/\\* -x config.karma.js -x .DS_Store -x .gitignore -r ../multisigWallet.zip ./",
     "postinstall": "./node_modules/bower/bin/bower install && ./node_modules/grunt/bin/grunt ngtemplates",
-    "start": "http-server -a 0.0.0.0 -p 5000"
+    "install-electron": "npm install && ./node_modules/.bin/electron-rebuild",
+    "electron-rebuild": "electron-rebuild --force --module_dir . -w node-hid -e node_modules/electron && npm rebuild leveldown scrypt",
+    "start": "http-server -a 0.0.0.0 -p 5000",
+    "start-electron": "electron .",
+    "package-linux-x64": "electron-packager . MultisigWallet --prune --ignore=tests/* --ignore=testrpc.sh --platform=linux --out=./dist --overwrite=true --asar=true",
+    "package-osx": "electron-packager . MultisigWallet --prune --ignore=tests/* --ignore=testrpc.sh --platform=darwin --out=./dist --overwrite=true --asar=true",
+    "package-win": "electron-packager . MultisigWallet --prune --ignore=tests/* --ignore=testrpc.sh --platform=win32 --out=./dist --overwrite=true --asar=true",
+    "package-all": "electron-packager . MultisigWallet --prune --ignore=tests/* --ignore=testrpc.sh --platform=all --out=./dist --overwrite=true --asar=true",
+    "build-linux": "build --linux",
+    "build-win": "build --win",
+    "build-osx": "build --mac"
   },
   "keywords": [
     "ethereum",
     "web3",
     "multisig"
   ],
-  "author": "denis.granha@consensys.net",
+  "author": {
+    "name": "Gnosis",
+    "email": "stefan@gnosis.pm"
+  },
+  "contributors": [
+    {
+      "name": "Denis Graña",
+      "email": "denis@gnosis.pm"
+    },
+    {
+      "name": "Stefan George",
+      "email": "stefan@gnosis.pm"
+    },
+    {
+      "name": "Giacomo Licari",
+      "email": "giacomo.licari@gnosis.pm"
+    }
+  ],
   "license": "ISC",
   "dependencies": {
-    "grunt": "^1.0.0",    
     "bower": "^1.8.0",
+    "body-parser": "^1.17.1",
+    "browser-passworder": "^2.0.3",
+    "eth-hd-keyring": "^1.2.0",
+    "eth-sig-util": "^1.2.1",
     "ethereumjs-testrpc": "git+https://github.com/denisgranha/testrpc.git",
+    "ethereumjs-wallet": "^0.6.0",
+    "express": "^4.15.2",
+    "grunt": "^1.0.0",
     "grunt-angular-templates": "^1.1.0",
     "grunt-http-server": "^2.0.0",
-    "http-server": "^0.9.0"
+    "http-server": "^0.9.0",
+    "json-rpc-error": "^2.0.0",
+    "ledgerco": "^1.1.2",
+    "node-hid": "^0.5.4",
+    "web3": "^0.19.0"
   },
   "devDependencies": {
+    "asar": "^0.13.0",
     "babel-register": "^6.24.0",
     "coffee-script": "*",
+    "electron": "~1.4.13",
+    "electron-builder": "^17.1.0",
+    "electron-packager": "^8.6.0",
+    "electron-rebuild": "^1.5.7",
     "grunt": "^1.0.0",
+    "grunt-bower-bundle": "^0.1.0",
+    "grunt-bower-concat": "^1.0.0",
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-eslint": "^19.0.0",
+    "grunt-minified": "0.0.6",
     "grunt-npm-command": "^0.1.2",
     "jasmine-core": "^2.5.2",
     "jshint": "^2.9.4",
@@ -47,5 +93,19 @@
     "karma-phantomjs-launcher": "^1.0.2",
     "phantomjs-polyfill-object-assign": "0.0.2",
     "scrypt": "*"
+  },
+  "build": {
+    "appId": "pm.gnosis.wallet",
+    "linux": {
+      "target": [
+        "deb"
+      ]
+    },
+    "win": {
+      "target": "NSIS"
+    },
+    "mac": {
+      "icon": "./build/icon.icns"
+    }
   }
 }

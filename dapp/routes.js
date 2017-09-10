@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .config(function($routeProvider){
+    .config(function($routeProvider, NotificationProvider){
       $routeProvider
       .when("/wallets", {
         controller: 'walletCtrl',
@@ -24,8 +24,18 @@
         controller: 'notificationsSignupConfirmationCtrl',
         templateUrl: 'partials/wallets.html'
       })
+      .when("/accounts", {
+        // Only for Electron
+        controller: 'accountCtrl',
+        templateUrl: 'partials/accounts.html'
+      })
       .otherwise({
         redirectTo: '/wallets'
+      });
+
+      NotificationProvider.setOptions({
+        delay: 3000,
+        horizontalSpacing: 60
       });
     });
   }

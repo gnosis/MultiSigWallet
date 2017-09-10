@@ -1,0 +1,27 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Restore seed
+  </h3>
+</div>
+<div class="modal-body" id="modal-body">
+  <form name="restore_form" novalidate>
+    <div class="form-group">
+      <label for="seed">Wallet seed phrase</label>
+      <textarea id="seed" class="form-control" ng-model="account.seed" required></textarea>
+    </div>
+    <div class="form-group">
+      <label for="password">Type a password to protect your wallet</label>
+      <input id="password" type="password" class="form-control" ng-model="account.password" ng-minlength="8" required />
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-default" type="button"
+    ng-disabled="!account.seed.length > 0 || restore_form.$invalid"
+    ng-click="ok()">
+    Ok
+  </button>
+  <button class="btn btn-danger" type="button" ng-click="cancel()">
+    Cancel
+  </button>
+</div>

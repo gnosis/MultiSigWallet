@@ -2,10 +2,11 @@
   function () {
     angular
     .module("multiSigWeb")
-    .service("Utils", function ($uibModal) {
+    .service("Utils", function ($uibModal, Notification) {
       var factory = {};
 
       factory.rejectedTxErrorMessage = 'Transaction rejected by user';
+      factory.invalidPassword = 'Invalid password';
 
       factory.spinner = null;
 
@@ -58,6 +59,9 @@
             if (typeof error == "object" && error.toString().indexOf("User denied") != -1) {
               return factory.rejectedTxErrorMessage;
             }
+            else if (error.toString() == factory.invalidPassword) {
+              return factory.invalidPassword;
+            }
             else {
               if (error.errorCode) {
                 switch (error.errorCode) {
@@ -90,7 +94,7 @@
       factory.dangerAlert = function (error) {
         var errorHtml = factory.errorToHtml(error);
         // Just show alert is user don't rejected the tx
-        if (errorHtml !== factory.rejectedTxErrorMessage) {
+        if (errorHtml !== factory.rejectedTxErrorMessage && errorHtml !== factory.invalidPassword) {
           BootstrapDialog.show({
             type: BootstrapDialog.TYPE_DANGER,
             title: 'Error',
@@ -127,21 +131,11 @@
       };
 
       factory.notification = function (info) {
-        BootstrapDialog.show({
-            message: info,
-            onshown: function (dialogRef) {
-              setTimeout(function () {
-                dialogRef.close();
-              }, 5000);
-            }
-          });
+        Notification.primary(info);
       };
 
       factory.success = function (info) {
-        BootstrapDialog.show({
-          type: BootstrapDialog.TYPE_SUCCESS,
-          message: info
-        });
+        Notification.success(info);
       };
 
       factory.signed = function (tx) {
@@ -191,6 +185,39 @@
             };
           }
         });
+      };
+
+      factory.simulatedTransaction = function (result) {
+        $uibModal.open({
+          animation: false,
+          templateUrl: 'partials/modals/simulatedTransaction.html',
+          size: 'sm',
+          resolve: {
+            result: function () {
+              return result;
+            }
+          },
+          controller: function ($scope, $uibModalInstance, result) {
+            $scope.result = typeof result == "string" ? result : result.toString(10); // base 10
+
+            $scope.copy = function () {
+              $uibModalInstance.close();
+            };
+
+            $scope.cancel = function () {
+              $uibModalInstance.dismiss();
+            };
+          }
+        });
+      };
+
+      factory.isObjectEmpty = function (obj){
+        for(var key in obj) {
+          if(obj.hasOwnProperty(key)) {
+            return false;
+          }
+        }
+        return true;
       };
 
       return factory;

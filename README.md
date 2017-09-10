@@ -1,41 +1,63 @@
 Ethereum Multisignature Wallet
 ===================
 
-Allows multiple parties to agree on transactions before execution. Allows to add and remove owners and update the number of required confirmations. A web user interface can be found [here](/dapp).
+The purpose of multisig wallets is to increase security by requiring multiple parties to agree on transactions before execution. Transactions can be executed only when confirmed by a predefined number of owners. A web user interface can be found [here](/dapp).
+
+Features
+-------------
+
+- Can hold Ether and all kind of tokens with multisig support
+- Easy to use offline signing (cold wallet) support
+- Integration with web3 wallets (Metamask, Mist, Parity, etc)
+- Transaction data and log decoding, makes transactions more readable
+- Interacting with any contracts with UI support
+- Hardware wallet support (Ledger Wallet)
+- Optional email notifications when an event is triggered or you are required to sign a transaction
+
+Reviewers
+-------------
+The following people have reviewed the code at the time of the linked commit:
+- Stefan George ([Georgi87](https://github.com/Georgi87)): [b9405cc30de4615e325b1d46c71cdef670bdeadc](https://github.com/ConsenSys/MultiSigWallet/tree/b9405cc30de4615e325b1d46c71cdef670bdeadc)
+
+Being used by
+-------------
+- [Aragon](https://aragon.one/)
+- [Bancor](https://www.bancor.network/)
+- Brace
+- [District0x](https://district0x.io/)
+- [Golem](https://golem.network/)
+- [MysteriumNetwork](https://mysterium.network/)
+- [Weifund](http://weifund.io/)
+- StabL
 
 Install
 -------------
 ```
 git clone https://github.com/gnosis/MultiSigWallet.git
 cd MultiSigWallet
-vagrant up
+npm install
 ```
 
 Test
 -------------
-### Run single test:
+### Run contract tests:
 ```
-cd /vagrant/contracts/
-python -m unittest tests.test_multisig_wallet
+npm test
 ```
-### Run all tests:
+### Run interface tests:
 ```
-cd /vagrant/contracts/
-python -m unittest discover tests
+npm run test-dapp
 ```
 
 Deploy
 -------------
-**Remember to change owner addresses in the respective JSON file before deployment!**
 ### Deploy multisig wallet:
 ```
-cd /vagrant/contracts/
-python deploy.py -f deploy/MultiSig.json
+truffle migrate <account1,account2,...,accountN> <requiredConfirmations>
 ```
 ### Deploy multisig wallet with daily limit:
 ```
-cd /vagrant/contracts/
-python deploy.py -f deploy/MultiSigWithDailyLimit.json
+truffle migrate <account1,account2,...,accountN> <requiredConfirmations> <dailyLimit>
 ```
 
 Limitations
@@ -47,14 +69,13 @@ Security
 -------------
 All contracts are WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-Reviewers
--------------
-The following people have reviewed the code at the time of the linked commit:
-- Stefan George ([Georgi87](https://github.com/Georgi87)): [b9405cc30de4615e325b1d46c71cdef670bdeadc](https://github.com/ConsenSys/MultiSigWallet/tree/b9405cc30de4615e325b1d46c71cdef670bdeadc)
-
 Deployed instances with significant funds
 -------------
-- Golem [0x7da82c7ab4771ff031b66538d2fb9b0b047f6cf9] (https://etherscan.io/address/0x7da82c7ab4771ff031b66538d2fb9b0b047f6cf9)
+- Aragon [0xcafe1a77e84698c83ca8931f54a755176ef75f2c](https://etherscan.io/address/0xcafe1a77e84698c83ca8931f54a755176ef75f2c)
+- Bancor [0x5894110995b8c8401bd38262ba0c8ee41d4e4658](https://etherscan.io/address/0x5894110995b8c8401bd38262ba0c8ee41d4e4658)
+- Golem [0x7da82c7ab4771ff031b66538d2fb9b0b047f6cf9](https://etherscan.io/address/0x7da82c7ab4771ff031b66538d2fb9b0b047f6cf9)
+- MysteriumDev [0x7e6614722614e434c4df9901bab31e466ba12fa4](https://etherscan.io/address/0x7e6614722614e434c4df9901bab31e466ba12fa4)
+- District0x [0xd20e4d854c71de2428e1268167753e4c7070ae68](https://etherscan.io/address/0xd20e4d854c71de2428e1268167753e4c7070ae68)
 
 License
 -------------

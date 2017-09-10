@@ -16,13 +16,13 @@
       };
 
       function getUrl (action) {
-        host = txDefault.alertsNode;
+        host = txDefault.alertNode.url;
         return host + (host.endsWith('/') ? urls[action] : '/' + urls[action]);
       }
 
       function addAuthHeaders (data) {
         data.headers = {
-          'auth-code': txDefault.authCode
+          'auth-code': txDefault.alertNode.authCode
         };
       }
 
@@ -46,7 +46,7 @@
         return $http.delete(getUrl('delete'), data);
       };
 
-      factory.signupCallback = $window.location.origin + '#/signup/?auth-code={%auth-code%}';
+      factory.signupCallback = !isElectron ? $window.location.origin + '#/signup/?auth-code={%auth-code%}' : null;
 
 
       return factory;

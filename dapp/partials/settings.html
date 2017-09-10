@@ -6,64 +6,86 @@
   </div>
   <form ng-submit="update()">
     <div class="panel-body">
-      <div class="form-group">
-        <label for="node">Ethereum node</label>
-        <input id="node" type="url" ng-model="config.ethereumNode" class="form-control" />
+      <div class="row">
+        <div class="col-md-6 form-group">
+          <label for="node">Ethereum node</label>
+          <editable-select
+            ng-model="config.selectedEthereumNode"
+            options="config.ethereumNodes"
+            other="Custom node"            
+            template-url="editable-select-settings-tpl.html">
+            <!-- on-change-function="alertNodeSetup" -->
+          </editable-select>
+        </div>
+        <div class="col-md-6 form-group">
+          <label for="wallet-factory">Web3 provider</label>
+          <provider-list 
+            default-item="config.wallet" 
+            selected-item="providers[$index].name">
+            <!-- on-change-function="alertNodeSetup" -->
+          </provider-list>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="gas-limit">Gas limit</label>
-        <input id="gas-limit" type="number" ng-model="config.gasLimit" class="form-control" />
+      <div class="row">
+        <div class="col-md-6 form-group">
+          <label for="gas-limit">Gas limit</label>
+          <input id="gas-limit" type="number" ng-model="config.gasLimit" class="form-control" />
+        </div>
+        <div class="col-md-6 form-group">
+          <label for="gas-price">Gas price</label>
+          <input id="gas-price" type="number" ng-model="config.gasPrice" class="form-control" />
+        </div>
       </div>
-      <div class="form-group">
-        <label for="gas-price">Gas price</label>
-        <input id="gas-price" type="number" ng-model="config.gasPrice" class="form-control" />
+      <div class="row">
+        <div class="col-md-6 form-group">
+          <label for="alert-nodes">Alert node</label>
+          <editable-select
+            ng-model="config.alertNode"
+            options="config.alertNodesList"
+            other="Custom node"            
+            template-url="editable-select-settings-tpl.html">
+          </editable-select>
+        </div>
+        <div class="col-md-6 form-group">
+          <label for="wallet-factory">Authorization code</label>
+          <input id="wallet-factory" type="text" ng-model="config.alertNode.authCode" class="form-control" />
+        </div>
       </div>
-      <div class="form-group">
-        <label for="wallet-factory">Web3 wallet</label>
-        <select id="web3-wallet" ng-model="config.wallet" class="form-control" >
-          <option value="injected">
-            Default (MetaMask, Mist, Parity ...)
-          </option>
-          <option value="ledger">
-            Ledger Wallet
-          </option>
-        </select>
+      <div class="row">
+        <div class="col-md-6"></div>
+        <div cass="col-md-6">
+          <div class="pull-left" style="margin-left: 15px;">
+            <a href="{{alertManagementPage}}" target="_blank"
+              class="btn btn-primary" type="button"
+              ng-show="showDeleteAuthCodeBtn">
+              Manage notifications
+            </a>
+            <button class="btn btn-danger" type="button" ng-click="remove()" ng-show="showDeleteAuthCodeBtn">
+              Delete Authorization code
+            </button>
+          </div>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="wallet-factory">Wallet factory contract</label>
-        <input id="wallet-factory" type="text" ng-model="config.walletFactoryAddress" class="form-control" />
-      </div>
-      <div class="form-group">
-        <label for="wallet-factory">Alerts node</label>
-        <input id="wallet-factory" type="text" ng-model="config.alertsNode" class="form-control" />
-      </div>
-      <div class="form-group">
-        <label for="wallet-factory">Authorization code</label>
-        <input id="wallet-factory" type="text" ng-model="config.authCode" class="form-control" />
-      </div>
-      <div class="form-group">
-        <button class="btn btn-danger" type="button" ng-click="remove()" ng-show="showDeleteAuthCodeBtn">
-          Delete Authorization code
-        </button>
+      <div class="row">
+        <div class="col-md-6 form-group">
+          <label for="wallet-factory">Wallet factory contract</label>
+          <editable-select
+            ng-model="config.walletFactoryAddress"
+            options="config.walletFactoryAddressList"
+            other="Custom contract"
+            template-url="editable-select-contract-settings-tpl.html"
+            type="contract-address">
+          </editable-select>
+        </div>
       </div>
     </div>
     <div class="panel-footer">
-      <input type="submit" class="btn btn-default" value="Update" />
+      <input type="submit" class="btn btn-default" value="Update settings" />
       <button type="button" class="btn btn-default" ng-click="reset()">
-        Reset
+        Reset settings
       </button>
+      <input type="button" class="btn btn-default" value="Import wallets" ng-click="showImportWalletDialog()" />
+      <input type="button" class="btn btn-default" value="Export wallets" ng-click="showExportWalletDialog()" />
     </div>
   </form>
-</div>
-
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h4>
-      Import/export wallets
-    </h4>
-  </div>
-  <div class="panel-footer">
-    <input type="button" class="btn btn-default" value="Import" ng-click="showImportWalletDialog()" />
-    <input type="button" class="btn btn-default" value="Export" ng-click="showExportWalletDialog()" />
-  </div>
 </div>

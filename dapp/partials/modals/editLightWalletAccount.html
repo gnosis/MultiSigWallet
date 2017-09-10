@@ -1,0 +1,28 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Edit account
+  </h3>
+</div>
+<div class="modal-body">
+
+  <form name="edit_form" novalidate>
+    <div>
+      <input type="text" ng-model="account.new_name" ng-minlength="1"
+        name="name" required="" placeholder="Name" class="form-control">
+    </div>
+    <div class="top-10">
+      <input type="text" ng-model="account.address"
+        name="address" required="" class="form-control" disabled>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="submit" class="btn btn-success"
+    ng-disabled="edit_form.$invalid"
+    ng-click="ok()">
+    Update
+  </button>
+  <button class="btn btn-danger" ng-click="cancel()">
+    Cancel
+  </button>
+</div>

@@ -9,7 +9,7 @@
       $scope.wallets = Wallet.wallets;
 
       // Get Ethereum Chain
-      Transaction.getEthereumChain.then(
+      Transaction.getEthereumChain().then(
         function (data) {
           $scope.chain = data.chain;
           $scope.etherscan = data.etherscan;

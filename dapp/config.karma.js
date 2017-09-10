@@ -2,7 +2,7 @@
 // Generated on Wed Jan 11 2017 14:38:33 GMT+0100 (CET)
 
 module.exports = function(config) {
-  config.set({
+  const karmaConfig = {
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: '',
@@ -15,6 +15,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+      'tests/globalvars.js',
       'bower_components/angular/angular.js',
       'bower_components/angular-mocks/angular-mocks.js',
       'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
@@ -22,12 +23,15 @@ module.exports = function(config) {
       'bower_components/ngclipboard/dist/ngclipboard.min.js',
       'bower_components/web3/dist/web3.min.js',
       'bower_components/abi-decoder/dist/abi-decoder.js',
+      'bower_components/angular-ui-select/dist/select.js',
+      'bower_components/web3-provider-engine/dist/ProviderEngine.js',
+      'bower_components/angular-ui-notification/dist/angular-ui-notification.js',
       'node_modules/phantomjs-polyfill-object-assign/object-assign-polyfill.js',
       'app.js',
       'abi.js',
       'config.js',
       'services/**/*.js',
-      'tests/*'
+      'tests/*.test*'
     ],
 
 
@@ -58,7 +62,7 @@ module.exports = function(config) {
 
     // level of logging
     // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-    logLevel: config.LOG_INFO,
+    logLevel: config.LOG_DEBUG,
 
 
     // enable / disable watching file and executing tests whenever any file changes
@@ -67,7 +71,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['PhantomJS'], //['PhantomJS'], //['Chrome'],
+    browsers: ['Chrome'], //['PhantomJS'], //['Chrome'],
 
 
     // Continuous Integration mode
@@ -76,6 +80,25 @@ module.exports = function(config) {
 
     // Concurrency level
     // how many browser should be started simultaneous
-    concurrency: Infinity
-  });
+    concurrency: Infinity, 
+
+  };
+
+  // 
+  // config.set(
+  var configuration = {
+    // other things
+    customLaunchers: {
+        Chrome_travis_ci: {
+            base: 'Chrome',
+            flags: ['--no-sandbox']
+        }
+    },
+  };
+ 
+  if (process.env.TRAVIS) {
+      configuration.browsers = ['Chrome_travis_ci'];
+  }
+ 
+  config.set(Object.assign({}, karmaConfig, configuration));
 };

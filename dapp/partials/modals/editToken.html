@@ -24,7 +24,9 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-default" type="button" ng-click="ok()" ng-disabled="form.$invalid">
+    <button class="btn btn-default" type="button" ng-click="ok()"
+      disabled-if-invalid-address="{{editToken.address}}"
+      ng-disabled="form.$invalid">
       Ok
     </button>
     <button class="btn btn-danger" type="button" ng-click="cancel()">

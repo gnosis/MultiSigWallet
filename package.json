@@ -2,26 +2,43 @@
   "name": "multisig-wallet-gnosis",
   "version": "1.0.0",
   "description": "Main module, for installing all dependencies",
-  "main": "dapp/index.html",
   "scripts": {
-    "test": "cd dapp && npm test",
+    "test-dapp": "cd dapp && npm test",
+    "test": "sh truffle_test_runner.sh",
     "install": "cd dapp && npm install",
     "start": "cd dapp && npm start"
+  },
+  "engines": {
+    "node": "7.1.0"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ConsenSys/MultiSigWallet.git"
   },
-  "author": "denis@gnosis.pm",
+  "author": "Gnosis (https://gnosis.pm/)",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/ConsenSys/MultiSigWallet/issues"
   },
   "homepage": "https://github.com/ConsenSys/MultiSigWallet#readme",
   "eslintConfig": {
-        "env": {
-            "browser": true,
-            "node": false
-        }
+    "env": {
+      "browser": true,
+      "node": false
     }
+  },
+  "dependencies": {
+    "child_process": "^1.0.2",
+    "ethereumjs-testrpc": "^4.0.1",
+    "run-with-testrpc": "^0.2.1",
+    "truffle": "^3.4.9"
+  },
+  "devDependencies": {
+    "babel-eslint": "^7.2.3",
+    "eslint": "^4.6.1",
+    "eslint-config-airbnb": "^15.1.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.3.0"
+  }
 }

@@ -4,10 +4,11 @@
     .module("multiSigWeb")
     .controller("addNotificationsCtrl", function ($rootScope, $scope, $uibModalInstance, wallet, EthAlerts, Utils, callback) {
 
-      $scope.selectedEvents = {}
+      $scope.selectedEvents = {};
       $scope.params = {};
 
       $scope.showLoadingSpinner = false;
+      $scope.showAlertData = false;
       // When True, all events are selected. None otherwise.
       var subscribeUnsubscribe = true;
       $scope.subscribeUnsubscribeValue = 'Subscribe all';
@@ -26,7 +27,7 @@
 
       var getRequest = {
         'contract' : wallet.address
-      }
+      };
 
       /**
       * Retrieves the user/contract related Alert and its events
@@ -44,12 +45,15 @@
               subscribeUnsubscribe = false;
               $scope.subscribeUnsubscribeValue = 'Unsubscribe all';
             }
+
+            // Show Alert data
+            $scope.showAlertData = true;
           },
           function errorCallback(response) {
             $uibModalInstance.close();
 
             if (response.status == 401) {
-              response.data = 'Wrong authentication code.'
+              response.data = 'Wrong authentication code.';
             }
             else if (response.status = -1) {
               response.data = 'An error occurred. Please verify whether Gnosis Alert Node is setted correctly.';
@@ -67,11 +71,11 @@
             $scope.selectedEvents[$scope.events[event].name] = true;
           }
 
-          $scope.subscribeUnsubscribeValue = 'Unsubscribe all'
+          $scope.subscribeUnsubscribeValue = 'Unsubscribe all';
         }
         else {
           $scope.selectedEvents = {};
-          $scope.subscribeUnsubscribeValue = 'Subscribe all'
+          $scope.subscribeUnsubscribeValue = 'Subscribe all';
         }
 
         subscribeUnsubscribe = !subscribeUnsubscribe;

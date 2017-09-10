@@ -2,13 +2,13 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("newWalletCtrl", function ($scope, $uibModalInstance, $uibModal, Utils, Transaction, Wallet, callback) {
+    .controller("newWalletCtrl", function ($scope, $uibModalInstance, $uibModal, Utils, Transaction, Wallet, Token, callback, Web3Service) {
 
       $scope.newOwner = {};
       $scope.owners = {};
-      $scope.owners[Wallet.coinbase] = {
+      $scope.owners[Web3Service.coinbase] = {
         name: 'My account',
-        address: Wallet.coinbase
+        address: Web3Service.coinbase
       };
 
       $scope.confirmations = 1;
@@ -30,8 +30,9 @@
                 Transaction.add({txHash: contract.transactionHash, callback: function (receipt) {
                   // Save wallet
                   Wallet.updateWallet({name: $scope.name, address: receipt.contractAddress, owners: $scope.owners});
-                  Utils.success("Wallet deployed at address: " + receipt.contractAddress);
+                  Utils.success("Wallet deployed");
                   Transaction.update(contract.transactionHash, {multisig: receipt.contractAddress});
+                  Token.setDefaultTokens(contract.address);
                   callback();
                 }});
                 Utils.notification("Deployment transaction was sent.");
@@ -68,7 +69,7 @@
                   txHash: tx,
                   callback: function(receipt){
                     var walletAddress = receipt.decodedLogs[0].events[1].value;
-                    Utils.success("Wallet deployed at address: " + walletAddress);
+                    Utils.success("Wallet deployed");
                     Wallet.updateWallet({name: $scope.name, address: walletAddress, owners: $scope.owners});
                     Transaction.update(tx, {multisig: walletAddress});
                     callback();
@@ -102,34 +103,6 @@
           $scope.owners[$scope.newOwner.address] = $scope.newOwner;
           $scope.newOwner = {}; // reset values
       };
-
-      /*$scope.addOwner = function () {
-        $uibModal.open({
-          animation: false,
-          templateUrl: 'partials/modals/addOwner.html',
-          size: 'md',
-          controller: function ($scope, $uibModalInstance) {
-            $scope.owner = {
-              name: "",
-              address: ""
-            };
-
-            $scope.ok = function () {
-              $uibModalInstance.close($scope.owner);
-            };
-
-            $scope.cancel = function () {
-              $uibModalInstance.dismiss();
-            };
-          }
-        })
-        .result
-        .then(
-          function (owner) {
-            $scope.owners[owner.address] = owner;
-          }
-        );
-      };*/
     });
   }
 )();

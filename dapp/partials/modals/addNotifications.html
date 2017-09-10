@@ -3,17 +3,24 @@
     Notifications
   </h3>
 </div>
-<form class="form" name="addNotifications">
+
+<div class="modal-body" id="modal-body" ng-show="!showAlertData">
+  <div class="form-group">
+    <i class="fa fa-spinner fa-spin"></i>
+    Loading...
+  </div>
+</div>
+
+<form class="form" name="addNotifications" ng-show="showAlertData">
   <div class="modal-body" id="modal-body">
     <div class="form-group">
-      <input type="button" class="btn btn-sm btn-primary"
-        ng-value="subscribeUnsubscribeValue" ng-click="subscribeUnsubscribe()">
+      Notify me on:
     </div>
     <div class="form-group" ng-repeat="event in events track by $index">
       <label class="checkbox-inline">
           <input type="checkbox" value=""
           ng-model="selectedEvents[event.name]">
-          {{event.name | formatEventName}}
+          <span alert-event-description="{{event.name | formatEventName}}"></span>
       </label>
       <!-- TO BE Handled in another moment
       <div class="form-group" ng-repeat="param in event.inputs track by $index" >
@@ -25,12 +32,16 @@
       </div>
       -->
     </div>
+    <div class="form-group">
+      <input type="button" class="btn btn-sm btn-primary"
+        ng-value="subscribeUnsubscribeValue" ng-click="subscribeUnsubscribe()">
+    </div>
   </div>
   <div class="modal-footer">
     <button class="btn btn-default" type="button" ng-click="ok()"
       ng-show="!showLoadingSpinner">
       Ok
-    </button>    
+    </button>
     <button class="btn btn-default" type="button"
       ng-show="showLoadingSpinner"
       disabled>

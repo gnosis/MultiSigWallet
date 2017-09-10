@@ -6,7 +6,7 @@ describe('Wallet Service', function(){
   var connectionService = {};
   var accounts = ["0x291d64e40fdc9eb1ae5721e6dc5d60260e61a7b1", "0xcf9428b6257a19eb4f6640ab9ead9a5bb5bae3c1"];
   var destination = "0xE3eB3DA4cae8BE5eFF65886A399e9f8E36a290A5";
-  var host = 'http://localhost:4000';
+  var host = 'http://localhost:8545';
   var web3;
   var ethJs;
   var snapId;
@@ -19,15 +19,17 @@ describe('Wallet Service', function(){
         function ($injector) {
           // Inject Services
           walletService = $injector.get('Wallet');
+          web3Service = $injector.get('Web3Service');
           transactionService = $injector.get('Transaction');
           transactionService.Wallet = walletService;
+          transactionService.Web3 = web3Service;
           utilsService = $injector.get('Utils');
           connectionService = $injector.get('Connection');
           connectionService.isConnected = true;
 
           web3 = new Web3(new Web3.providers.HttpProvider(host));
           web3.eth.defaultAccount = web3.eth.accounts[0]; //set default account;
-          walletService.web3 = web3;
+          web3Service.web3 = web3;
 
           /*ethJs = {'Util' : ethUtil};
           walletService.EthJS = ethJs;*/
@@ -59,7 +61,7 @@ describe('Wallet Service', function(){
             console.log("call webInitialized");
           });
 
-          spyOn(walletService, ['webInitialized'] ).and.returnValue(webInitialized);
+          spyOn(web3Service, ['webInitialized'] ).and.returnValue(webInitialized);
           spyOn(walletService, ['initParams'] ).and.returnValue(function(){
             console.log("call initParams");
           });
@@ -88,7 +90,6 @@ describe('Wallet Service', function(){
             console.log('clear localstorage');
             store = {};
           });*/
-
           walletService.deployWithLimit(accounts, 1, new Web3().toBigNumber(1).mul('1e18'),
             function (e, r) {
               if (r.address) {
@@ -118,16 +119,17 @@ describe('Wallet Service', function(){
   });
 
   afterEach(function (done) {
+    console.log("revert snapshot");
     web3.currentProvider.sendAsync({
-            jsonrpc: "2.0",
-            method: "evm_revert",
-            id: 123456,
-            params: [snapId]
-          }, function (e, response) {
-            console.log("after");
-            console.log(response);
-            done();
-      });
+      jsonrpc: "2.0",
+      method: "evm_revert",
+      id: 12345,
+      params: [snapId]
+    }, function (e, response) {
+      console.log("after snapshot");
+      console.log(response);
+      done();
+    });
   });
 
   afterAll(function (done) {
@@ -262,7 +264,7 @@ TO BE REVIEWED
       expect(e).toBe(null);
       expect(typeof(tx)).toBe('string');
       var res = web3.eth.getTransaction(tx);
-      var owner2 = '0x' + res.input.substring(res.input.length-40, res.input.length)
+      var owner2 = '0x' + res.input.substring(res.input.length-40, res.input.length);
       expect(owner2).toBe(accounts[1]);
       done();
     });
@@ -291,12 +293,12 @@ TO BE REVIEWED
     });
 
 
-    walletService.updateLimit(walletAddress, new Web3().toBigNumber(2).mul('1e18'), function (e, r){ //.mul('1e18')
+    walletService.updateLimit(walletAddress, new Web3().toBigNumber(2).mul('1e18'), {}, function (e, r){ //.mul('1e18')
       console.log("##############");
       if(e){console.log(e.message);}
 
       var withdrawTx = {};
-      withdrawTx.value = new Web3().toBigNumber(1)
+      withdrawTx.value = new Web3().toBigNumber(1);
       withdrawTx.to = accounts[0];
       withdrawTx.data = '0x0';
 
@@ -307,6 +309,7 @@ TO BE REVIEWED
         null,
         null,
         null,
+        {},
         function (e, tx) {
           console.log("####### Withdraw1 #######");
           expect(e).toBe(null);
@@ -327,6 +330,7 @@ TO BE REVIEWED
                 null,
                 null,
                 null,
+                {},
                 function (e, tx) {
                   console.log("####### Withdraw2 #######");
 
@@ -380,7 +384,7 @@ TO BE REVIEWED
 
 
     //  {
-    //   var instance = wallet.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
+    //   var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
     //   var data = instance.changeDailyLimit.getData(
     //     limit,
     //     cb
@@ -409,7 +413,7 @@ TO BE REVIEWED
 
           var walletAddress = r.address;
 
-          walletService.addOwner(walletAddress, {address: accounts[1]},
+          walletService.addOwner(walletAddress, {address: accounts[1]}, {},
             function (e1, tx) {
               console.log('add owner');
               if(e1){console.log(e1);}
@@ -442,7 +446,7 @@ TO BE REVIEWED
 
           var walletAddress = r.address;
 
-          walletService.removeOwner(walletAddress, {'address' : accounts[1]},
+          walletService.removeOwner(walletAddress, {'address' : accounts[1]}, {},
             function (e1, tx) {
               console.log('remove owner');
               expect(e1).toBe(null);
@@ -468,7 +472,7 @@ TO BE REVIEWED
         expect(e).toBe(null);
         if (r.address) {
           var walletAddress = r.address;
-          walletService.replaceOwner(walletAddress, accounts[0], accounts[1],
+          walletService.replaceOwner(walletAddress, accounts[0], accounts[1], {},
             function (e1, tx) {
               expect(e1).toBe(null);
               var batch = web3.createBatch();

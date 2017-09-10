@@ -2,7 +2,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("walletDetailCtrl", function ($scope, $filter, $sce, Wallet, $routeParams, Utils, Transaction, $interval, $uibModal, Token, ABI) {
+    .controller("walletDetailCtrl", function (Web3Service, $scope, $filter, $sce, Wallet, $routeParams, Utils, Transaction, $interval, $uibModal, Token, ABI) {
       $scope.wallet = {};
 
       $scope.$watch(
@@ -11,8 +11,8 @@
         },
         function () {
           // Javascript doesn't have a deep object copy, this is a patch
-          var copyObject = Wallet.getAllWallets()[$routeParams.address];
-          var tokenAddresses = Object.keys(copyObject.tokens);
+          var walletCopy = Wallet.getAllWallets()[$routeParams.address];
+          var tokenAddresses = Object.keys(walletCopy.tokens);
           // The token collection is updated by the controller and the service, so must be merged.
           tokenAddresses.map(function(item){
             // Initialize, user token balance
@@ -20,15 +20,17 @@
               $scope.userTokens[item] = {};
             }
             // Assign token to user tokens collection
-            Object.assign($scope.userTokens[item], copyObject.tokens[item]);
+            Object.assign($scope.userTokens[item], walletCopy.tokens[item]);
 
             // If token has a previous balance, copy it
-            if ($scope.wallet.tokens && $scope.wallet.tokens[item] && copyObject.tokens && copyObject.tokens[item]){
-              copyObject.tokens[item].balance = $scope.wallet.tokens[item].balance;
+            if ($scope.wallet.tokens && $scope.wallet.tokens[item] && walletCopy.tokens && walletCopy.tokens[item]) {
+              walletCopy.tokens[item].balance = $scope.wallet.tokens[item].balance;
             }
           });
-
-          $scope.wallet = copyObject;
+                    
+          Object.assign(walletCopy, $scope.wallet);
+          $scope.wallet = walletCopy;
+          
           $scope.totalTokens = Object.keys($scope.wallet.tokens).length;
         }
       );
@@ -46,7 +48,7 @@
 
       $scope.updateParams = function () {
 
-        var batch = Wallet.web3.createBatch();
+        var batch = Web3Service.web3.createBatch();
 
         $scope.showExecuted = true;
         $scope.showPending = true;
@@ -69,15 +71,35 @@
               var walletOwnerskeys = Object.keys($scope.wallet.owners);
 
               for (var x=0; x<owners.length; x++){
+                // If owner not in list
                 if (walletOwnerskeys.indexOf($scope.owners[x]) == -1) {
                   $scope.wallet.owners[$scope.owners[x]] = {
-                    'name' : '',
+                    'name' : 'Owner ' + (x+1),
                     'address' : $scope.owners[x]
                   };
+                }
+                else {
+                  if (!$scope.wallet.owners[$scope.owners[x]].name) {
+                    // Set owner name with its address
+                    // $scope.wallet.owners[$scope.owners[x]].name = $scope.wallet.owners[$scope.owners[x]].address;
+                    $scope.wallet.owners[$scope.owners[x]].name = 'Owner ' + (x+1);
+                  }
                 }
               }
 
               //Wallet.updateWallet($scope.wallet);
+            }
+          )
+        );
+
+        // Get ETH Balance
+        batch.add(
+          Wallet.getBalance(
+            $scope.wallet.address,
+            function (e, balance) {
+              if (!e && balance) {
+                $scope.balance = balance;
+              }
             }
           )
         );
@@ -136,8 +158,10 @@
                   token,
                   $scope.wallet.address,
                   function (e, balance) {
-                    $scope.wallet.tokens[token].balance = balance;
-                    Wallet.triggerUpdates();
+                    if ($scope.wallet.tokens[token]) {
+                      $scope.wallet.tokens[token].balance = balance;
+                      Wallet.triggerUpdates();
+                    }
                   }
                 )
               );
@@ -146,7 +170,7 @@
               batch.add(
                 Token.balanceOf(
                   token,
-                  Wallet.coinbase,
+                  Web3Service.coinbase,
                   function (e, balance) {
                     $scope.userTokens[token].balance = balance;
                     Wallet.triggerUpdates();
@@ -160,7 +184,7 @@
         batch.execute();
       };
 
-      Wallet
+      Web3Service
       .webInitialized
       .then(
         function () {
@@ -293,14 +317,14 @@
           $scope.showPending,
           $scope.showExecuted,
           function (e, ids) {
-            var txBatch = Wallet.web3.createBatch();
+            var txBatch = Web3Service.web3.createBatch();
             if (!$scope.transactions) {
               $scope.transactions = {};
             }
 
             $scope.txIds = ids.slice(0).reverse();
             ids.map(function (tx) {
-              if (!$scope.transactions[tx]) {
+              if (!$scope.transactions[tx]) {
                 $scope.transactions[tx] = {};
               }
               // Get transaction info
@@ -331,7 +355,7 @@
                 Wallet.getConfirmations($scope.wallet.address, tx, function (e, confirmations) {
                   $scope.$apply(function () {
                     $scope.transactions[tx].confirmations = confirmations;
-                    if (confirmations.indexOf(Wallet.coinbase) != -1) {
+                    if (confirmations.indexOf(Web3Service.coinbase) != -1) {
                       $scope.transactions[tx].confirmed=true;
                     }
                     else {
@@ -346,8 +370,8 @@
         }).call();
       };
 
-      $scope.getOwners = function () {
-        var batch = Wallet.web3.createBatch();
+      /*$scope.getOwners = function () {
+        var batch = Web3Service.web3.createBatch();
         $scope.owners = [];
 
         function assignOwner (e, owner) {
@@ -370,7 +394,7 @@
           );
         }
         batch.execute();
-      };
+      };*/
 
       $scope.addOwner = function () {
         $uibModal.open({
@@ -597,6 +621,9 @@
         })
         .result
         .then(function (owner) {
+          if (owner.name == undefined || owner.name == '') {
+            owner.name = owner.address;
+          }
           $scope.wallet.owners[owner.address] = owner;
           Wallet.updateWallet($scope.wallet);
         });

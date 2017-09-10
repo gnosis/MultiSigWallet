@@ -5,7 +5,7 @@
     .controller("replaceOwnerCtrl", function ($scope, Wallet, Utils, Transaction, wallet, owner, $uibModalInstance) {
       $scope.owner = owner;
       $scope.send = function () {
-        Wallet.replaceOwner(wallet.address, $scope.owner.address, $scope.newOwner, function (e, tx) {
+        Wallet.replaceOwner(wallet.address, $scope.owner.address, $scope.newOwner, {onlySimulate: false}, function (e, tx) {
           if (e) {
             Utils.dangerAlert(e);
           }

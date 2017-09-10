@@ -1,0 +1,34 @@
+<div>
+  <div class="input-group dropdown">
+      <input
+        ng-if="!isDisabled"
+        name="editable-select"
+        type="text"
+        class="form-control dropdown-toggle editable-select"
+        ng-model="ngModel.url"
+        ng-disabled="isDisabled"
+      />
+      <input
+        ng-if="isDisabled"
+        name="editable-select"
+        type="text"
+        class="form-control dropdown-toggle editable-select"
+        ng-model="ngModel.name"
+        ng-disabled="isDisabled"
+      />
+    <ul class="dropdown-menu settings-dropdown-menu">
+      <li ng-repeat="option in options"
+          ng-click="click(option)">
+          <p>
+              <span><b>{{option.name}}</b></span><br/>
+              <span>{{option.url}}</span>
+          </p>
+      </li>
+      <li ng-if="other" role="presentation" class="divider"></li>
+      <li ng-click="click(other)">Custom configuration</li>
+    </ul>    
+    <span class="input-group-addon dropdown-toggle settings-caret-container" data-toggle="dropdown">
+      <span class="caret"></span>
+    </span>
+  </div>
+</div>

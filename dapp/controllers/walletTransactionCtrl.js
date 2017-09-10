@@ -6,7 +6,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("walletTransactionCtrl", function ($scope, Wallet, Transaction, Utils, wallet, $uibModalInstance, ABI) {
+    .controller("walletTransactionCtrl", function (Web3Service, $scope, Wallet, Transaction, Utils, wallet, $uibModalInstance, ABI) {
 
       $scope.wallet = wallet;
       $scope.abiArray = null;
@@ -54,7 +54,7 @@
         if ($scope.method) {
           params.map(function(param, index) {
             // Parse if array param
-            if ($scope.method.inputs && $scope.method.inputs[index].type.indexOf("[]") !== -1) {
+            if ($scope.method.inputs && $scope.method.inputs.length && $scope.method.inputs[index].type.indexOf("[]") !== -1) {
               try {
                 params[index] = JSON.parse($scope.params[index]);
               }
@@ -69,8 +69,9 @@
           $scope.wallet.address,
           tx,
           $scope.abiArray,
-          $scope.method && $scope.method.index?$scope.method.name:null,
+          $scope.method && $scope.method.name?$scope.method.name:null,
           params,
+          {onlySimulate: false},
           function (e, tx) {
             if (e) {
               Utils.dangerAlert(e);
@@ -93,6 +94,43 @@
                 }
               );
               $uibModalInstance.close();
+            }
+          }
+        );
+      };
+
+      $scope.simulate = function () {
+        var tx = {};
+        Object.assign(tx, $scope.tx);
+        var params = [];
+        Object.assign(params, $scope.params);
+        if ($scope.method) {
+          params.map(function(param, index) {
+            // Parse if array param
+            if ($scope.method.inputs && $scope.method.inputs[index].type.indexOf("[]") !== -1) {
+              try {
+                params[index] = JSON.parse($scope.params[index]);
+              }
+              catch (e) {
+                Utils.dangerAlert(e);
+              }
+            }
+          });
+        }
+        tx.value = new Web3().toBigNumber($scope.tx.value).mul('1e18');
+        Wallet.submitTransaction(
+          $scope.wallet.address,
+          tx,
+          $scope.abiArray,
+          $scope.method && $scope.method.index?$scope.method.name:null,
+          params,
+          {onlySimulate: true},
+          function (e, tx) {
+            if (e) {
+              Utils.dangerAlert(e);
+            }
+            else {
+              Utils.simulatedTransaction(tx);
             }
           }
         );
@@ -138,7 +176,7 @@
       $scope.getNonce = function () {
         $scope.tx.value = "0x" + new Web3().toBigNumber($scope.tx.value).mul('1e18').toString(16);
         if ($scope.abiArray) {
-          var instance = Wallet.web3.eth.contract($scope.abiArray).at($scope.tx.to);
+          var instance = Web3Service.web3.eth.contract($scope.abiArray).at($scope.tx.to);
           $scope.data = instance[$scope.method.name].getData.apply(this, $scope.params);
         }
         else {

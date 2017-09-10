@@ -77,3 +77,80 @@ textarea.json-config {
 .sk-circle .sk-child:before{
   background-color: white !important;
 }
+
+/*.ui-select-choices-row:hover {
+  background-color: #143e4d !important;
+}
+
+.ui-select-bootstrap .ui-select-choices-row>span:hover {
+  background-color: #143e4d !important;
+}
+
+.ui-select-bootstrap .ui-select-choices-row.active > span {
+  background-color: #143e4d !important;
+  color: #1f7692 !important;
+}
+
+.ui-select-bootstrap .ui-select-choices-row > span {
+  color: #1f7692 !important;
+}
+
+.ui-select-bootstrap .ui-select-choices-row > span:hover {
+  color: #1f7692 !important;
+}*/
+
+input[name="editable-select"]:disabled {
+  color: #fff;
+}
+
+.editable-select {
+  color: #fff;
+  background: #143e4d;
+}
+
+.settings-dropdown-menu {
+  width: 100%;
+}
+
+.settings-dropdown-menu:hover {
+  cursor: pointer;
+}
+
+.settings-dropdown-menu li {
+  padding-left: 10px;
+}
+
+.settings-dropdown-menu li:hover {
+  background: #143e4d !important;
+  color: #1f7692 !important;
+}
+
+.settings-caret-container {
+  background: #143e4d !important;
+}
+
+.seed {
+  background-color: #f7d30e;
+  padding: 3rem;
+  color: #1e3749;
+}
+
+.alert-fail {
+    color: #f7d30e;
+}
+
+.not-on-chain-wallet {
+  margin-right: 10px;
+}
+
+.top-10 {
+    margin-top: 10px;
+}
+
+.top-20 {
+    margin-top: 20px;
+}
+
+.ui-notification {
+  top: 50px !important;
+}

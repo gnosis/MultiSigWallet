@@ -6,9 +6,14 @@
 			"fiat": 146500,
 			"multisigTx": "0xb6382072323e143153ab800a0f0ce580ae1fc7281ee488c00fa271e26315fdb1",
 			"entities": [{
-				"name": "Bittrex",
-				"tx": "0x20d0d4c32823ebeeb6d12f5ad787a097bf90d147c3be4c64b488fafa22c22cbc"
-			}]
+					"name": "Bittrex",
+					"tx": "0x20d0d4c32823ebeeb6d12f5ad787a097bf90d147c3be4c64b488fafa22c22cbc"
+				},
+				{
+					"name": "Bittrex",
+					"tx": "0xadde44f7479c62a373a3f1abdb116747ef3ea0abc338f0a8454c55df8988c95a"
+				}
+			]
 		},
 		{
 			"id": 102,

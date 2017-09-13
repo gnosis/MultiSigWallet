@@ -1,6 +1,16 @@
 {
 	"txs": [
 		{
+			"id": 102,
+			"desc": "Perform token buyback",
+			"fiat": 146500,
+			"multisigTx": "0xb6382072323e143153ab800a0f0ce580ae1fc7281ee488c00fa271e26315fdb1",
+			"entities": [{
+				"name": "Bittrex",
+				"tx": "0x20d0d4c32823ebeeb6d12f5ad787a097bf90d147c3be4c64b488fafa22c22cbc"
+			}]
+		},
+		{
 			"id": 101,
 			"desc": "Buy team equipment",
 			"fiat": 750,

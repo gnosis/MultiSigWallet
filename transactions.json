@@ -1,13 +1,23 @@
 {
 	"txs": [
 		{
-			"id": 102,
+			"id": 103,
 			"desc": "Perform token buyback",
 			"fiat": 146500,
 			"multisigTx": "0xb6382072323e143153ab800a0f0ce580ae1fc7281ee488c00fa271e26315fdb1",
 			"entities": [{
 				"name": "Bittrex",
 				"tx": "0x20d0d4c32823ebeeb6d12f5ad787a097bf90d147c3be4c64b488fafa22c22cbc"
+			}]
+		},
+		{
+			"id": 102,
+			"desc": "Bitwala debit card for business expenses",
+			"fiat": 20000,
+			"multisigTx": "0xc057672cf708df863bf83187d7ef7783c26c488e67d2cda7b4a9ac0fe5a0cfbd",
+			"entities": [{
+				"name": "Kraken -> Bitwala",
+				"tx": "0x124a42ae94f4f4e11cab5f9a1dcf8415b8d545f2fd2b564a2ad079e9c9fb9dbc"
 			}]
 		},
 		{

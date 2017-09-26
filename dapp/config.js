@@ -19,7 +19,7 @@ var txDefaultOrig =
   defaultChainID: null,
   // Mainnet
   walletFactoryAddress: "0x12ff9a987c648c5608b2c2a76f58de74a3bf1987",
-  //ledgerAPI: "http://localhost:" + ledgerPort,
+  ledgerAPI: "http://localhost:" + ledgerPort,
   tokens: [
     {
       'address': '0x6810e776880c02933d47db1b9fc05908e5386b96',

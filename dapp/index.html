@@ -168,13 +168,21 @@
             </ul>
             <ul class="nav navbar-nav pull-right">
               <li uib-dropdown>
-               <a href="#" uib-dropdown-toggle ng-show="loggedIn">
+               <a href="#" uib-dropdown-toggle ng-show="loggedIn" id="accountInfo" data-clipboard-text={{coinbase}}>
                  <!-- <i class="fa fa-address-book-o" aria-hidden="true"></i> -->
                  Account: {{coinbase|limitTo:20}}... <b class="caret"></b>
                </a>
                <ul class="dropdown-menu">
                   <li ng-repeat="account in accounts"><a href="" ng-click="selectAccount(account)">{{account}}</a></li>
                </ul>
+              </li>
+              
+              <li ng-show="loggedIn">
+                <p style="margin:10px;" class="navbar-text">
+                  <button type="button" class="btn btn-default btn-sm pull-left ng-isolate-scope" data-clipboard-text={{coinbase}} ngclipboard>
+                    Copy
+                  </button>
+                </p>
               </li>
               <li ng-show="loggedIn">
                 <p class="navbar-text" ng-show="balance"> Balance: {{balance|ether}} </p>

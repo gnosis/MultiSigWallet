@@ -77,7 +77,7 @@ contract('MultiSigWallet', (accounts) => {
         await multisigInstance.executeTransaction(transactionId, {from: accounts[0]})
         assert.deepEqual(
             await multisigInstance.getTransactionIds(0, 2, excludePending, includeExecuted),
-            [transactionId, transactionId2]
+            [transactionId2, transactionId]
         )
     })
 })

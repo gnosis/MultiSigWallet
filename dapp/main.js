@@ -12,6 +12,7 @@ const EthereumTx = require('ethereumjs-tx');
 const bodyParser = require('body-parser');
 let restServer, restPort = null;
 let ledgerAddresses = null;
+let lastPath = null;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -81,9 +82,9 @@ function restServerSetup () {
 
   // Declare routes
   // @todo to be implemented
-  restServer.route('/accounts')
+  restServer.route('/accounts/:path?')
   .get(function (req, res) {
-    if (ledgerAddresses) {
+    if (ledgerAddresses  && (!req.params.path || req.params.path == lastPath)) {
       res.json(ledgerAddresses);
     }
     else {
@@ -91,7 +92,7 @@ function restServerSetup () {
       .then(
         function(eth) {
           Promise.race([
-            eth.getAddress_async("44'/60'/0'/0", true),
+            eth.getAddress_async(decodeURIComponent(req.params.path) || "44'/60'/0'/0", true),
             new Promise(
               (_, reject) => {
                 setTimeout(
@@ -103,6 +104,7 @@ function restServerSetup () {
           ])
           .then(function(addresses) {
             ledgerAddresses = [addresses.address];
+            lastPath = req.params.path || false;
             res.json([addresses.address]);
           }, function (){
             res.status(500).send();

@@ -330,6 +330,19 @@
         });
       };
 
+      $scope.withdrawEther = function (wallet) {
+        $uibModal.open({
+          templateUrl: 'partials/modals/withdrawEther.html',
+          size: 'md',
+          resolve: {
+            wallet: function () {
+              return wallet;
+            }
+          },
+          controller: 'withdrawEtherCtrl'
+        });
+      };
+
       $scope.openNotifications = function (address) {
         var authCode = txDefault.alertNode.authCode || null;
         var template = 'partials/modals/notificationsSignup.html';

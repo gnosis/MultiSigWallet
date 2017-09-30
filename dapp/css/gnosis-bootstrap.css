@@ -1586,7 +1586,7 @@ pre code {
 }
 @media (min-width: 1200px) {
   .container {
-    width: 1170px;
+    width: 1370px;
   }
 }
 .container-fluid {
@@ -6594,7 +6594,7 @@ button.close {
     display: inline-block !important;
   }
 }
-@media (min-width: 992px) and (max-width: 1199px) {
+@media (min-width: 992px) and (max-width: 1499px) {
   .visible-md {
     display: block !important;
   }

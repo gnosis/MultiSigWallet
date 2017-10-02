@@ -134,7 +134,7 @@ function restServerSetup () {
           const hex = tx.serialize().toString("hex");
 
           // Pass to _ledger for signing
-          eth.signTransaction_async("44'/60'/0'/0", hex)
+          eth.signTransaction_async(lastPath || "44'/60'/0'/0", hex)
           .then(result => {
               // Store signature in transaction
               tx.v = new Buffer(result.v, "hex");

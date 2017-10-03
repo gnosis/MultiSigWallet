@@ -1,6 +1,34 @@
 {
 	"txs": [
 		{
+			"id": 107,
+			"desc": "Pay Wachsman PR",
+			"fiat": 4500,
+			"multisigTx": "0x6d393caeeedfbd158499ed1f0952ae2b5acfd758d64372179f655a03d1ecfce1",
+			"entities": []
+		},
+		{
+			"id": 106,
+			"desc": "Pay Wachsman PR",
+			"fiat": 4500,
+			"multisigTx": "0x1bfb9053e05e455855f8c9cd2fdf6a16a2aae195ab60a704084a336f4db2b517",
+			"entities": []
+		},
+		{
+			"id": 105,
+			"desc": "Pay salaries to the team",
+			"fiat": 146500,
+			"multisigTx": "0x9312457fd38fbdd112db29c9787c3b6bbebc450922f3190e9f0d8f837a9bd866",
+			"entities": []
+		},
+		{
+			"id": 104,
+			"desc": "Pay salaries to the team",
+			"fiat": 146500,
+			"multisigTx": "0xaee23d82fb8e3368c89c0457d89c4a6439f690ef7a77b6c05296ff6ed8d839f7",
+			"entities": []
+		},
+		{
 			"id": 103,
 			"desc": "Perform token buyback",
 			"fiat": 146500,

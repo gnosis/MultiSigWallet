@@ -1027,15 +1027,26 @@
       */
       wallet.confirmTransaction = function (address, txId, options, cb) {
         var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
-        Web3Service.sendTransaction(
-          instance.confirmTransaction,
-          [
-            txId,
-            wallet.txDefaults()
-          ],
-          options,
-          cb
-        );
+        var defaults = wallet.txDefaults()
+        Web3Service.web3.eth.estimateGas({
+          from: defaults.from,
+          to: address,
+          data: instance.confirmTransaction.getData(txId)
+        }, function (err, gas) {
+          Web3Service.sendTransaction(
+            instance.confirmTransaction,
+            [
+              txId,
+              {
+                gasPrice: defaults.gasPrice,
+                gas: gas,
+                from: defaults.from
+              }
+            ],
+            options,
+            cb
+          );
+        })
       };
 
       /**

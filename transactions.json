@@ -17,14 +17,14 @@
 		{
 			"id": 105,
 			"desc": "Pay salaries to the team",
-			"fiat": 146500,
+			"fiat": 40000,
 			"multisigTx": "0x9312457fd38fbdd112db29c9787c3b6bbebc450922f3190e9f0d8f837a9bd866",
 			"entities": []
 		},
 		{
 			"id": 104,
 			"desc": "Pay salaries to the team",
-			"fiat": 146500,
+			"fiat": 10000,
 			"multisigTx": "0xaee23d82fb8e3368c89c0457d89c4a6439f690ef7a77b6c05296ff6ed8d839f7",
 			"entities": []
 		},

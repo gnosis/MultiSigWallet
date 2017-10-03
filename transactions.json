@@ -1,6 +1,13 @@
 {
 	"txs": [
 		{
+			"id": 108,
+			"desc": "Pay Natalia for design services",
+			"fiat": 594,
+			"multisigTx": "",
+			"entities": []
+		},
+		{
 			"id": 107,
 			"desc": "Pay Wachsman PR",
 			"fiat": 4500,

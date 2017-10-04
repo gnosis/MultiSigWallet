@@ -71,14 +71,14 @@
 			"id": 100,
 			"desc": "Pay salaries and offsite reimbursements to the team",
 			"fiat": 13233.73,
-			"multisigTx": "0xe1652ab5e6879117616f74ff923b17e0cb2dce347c85642dffaad8fa326e5a81",
+			"multisigTx": "0x1e7ee97ee294eb80941ebc3d9a85bef652a5dc7c151fca323198c71139438e6a",
 			"entities": []
 		},
 		{
 			"id": 99,
 			"desc": "Pay salaries and offsite reimbursements to the team",
 			"fiat": 44310.75,
-			"multisigTx": "0x1e7ee97ee294eb80941ebc3d9a85bef652a5dc7c151fca323198c71139438e6a",
+			"multisigTx": "0xe1652ab5e6879117616f74ff923b17e0cb2dce347c85642dffaad8fa326e5a81",
 			"entities": []
 		},
 		{

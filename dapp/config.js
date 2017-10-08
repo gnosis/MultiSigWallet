@@ -148,6 +148,7 @@ var txDefault = {
       managementPage: "https://testalerts.gnosis.pm/api/alert/manage/?code={auth-code}"
     }
   },
+  etherscanApiKey: '5HX5Z25IG7PGQ7BGCY3DTJ11MS2VE4Y1MK',
   walletFactoryAddresses: {
     'mainnet': {
       name: 'Mainnet',

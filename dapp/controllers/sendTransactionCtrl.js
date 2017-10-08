@@ -2,7 +2,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("sendTransactionCtrl", function ($scope, $http, Wallet, Utils, Transaction, $uibModalInstance, ABI, Web3Service) {
+    .controller("sendTransactionCtrl", function ($scope, $http, Config, Wallet, Utils, Transaction, $uibModalInstance, ABI, Web3Service) {
       $scope.methods = [];
       $scope.tx = {
         value: 0

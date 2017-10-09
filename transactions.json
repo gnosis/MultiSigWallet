@@ -1,6 +1,16 @@
 {
 	"txs": [
 		{
+			"id": 109,
+			"desc": "Perform token buyback",
+			"fiat": 245000,
+			"multisigTx": "0x4e5b9f46780823096f0541c13bafd036546c3e61018a4fef0fec5e6610fd03de",
+			"entities": [{
+				"name": "Bittrex",
+				"tx": "0x20d0d4c32823ebeeb6d12f5ad787a097bf90d147c3be4c64b488fafa22c22cbc"
+			}]
+		},
+		{
 			"id": 108,
 			"desc": "Pay Natalia for design services",
 			"fiat": 594,

@@ -305,6 +305,7 @@
                 else if (block && block.hash == "0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3") {
                   data.chain = "mainnet";
                   data.etherscan = "https://etherscan.io";
+                  data.etherscanApi = "https://api.etherscan.io";
                   data.walletFactoryAddress = "0xed5a90efa30637606ddaf4f4b3d42bb49d79bd4e";
                 }
                 else if (block && block.hash == "0x41941023680923e0fe4d74a34bdac8141f2540e3ae90623718e47d66d1ca4a2d") {
@@ -322,6 +323,8 @@
                   data.etherscan = "https://testnet.etherscan.io";
                   data.walletFactoryAddress = "0xd79426bcee5b46fde413ededeb38364b3e666097";
                 }
+
+                data.etherscanApi = data.etherscanApi || data.etherscan
 
                 resolve(data);
               });

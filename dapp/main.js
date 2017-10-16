@@ -184,6 +184,111 @@ function restServerSetup () {
 /**
 *
 */
+const template = [
+  {
+    label: 'Edit',
+    submenu: [
+      {role: 'undo'},
+      {role: 'redo'},
+      {type: 'separator'},
+      {role: 'cut'},
+      {role: 'copy'},
+      {role: 'paste'},
+      {role: 'pasteandmatchstyle'},
+      {role: 'delete'},
+      {role: 'selectall'}
+    ]
+  },
+  {
+    label: 'View',
+    submenu: [
+      {role: 'reload'},
+      {role: 'forcereload'},
+      {role: 'toggledevtools'},
+      {type: 'separator'},
+      {role: 'resetzoom'},
+      {role: 'zoomin'},
+      {role: 'zoomout'},
+      {type: 'separator'},
+      {role: 'togglefullscreen'}
+    ]
+  },
+  {
+    role: 'window',
+    submenu: [
+      {role: 'minimize'},
+      {role: 'close'}
+    ]
+  },
+  // {
+  //   label: 'Development',
+  //   submenu: [
+  //     {
+  //       label: "Show DevTools",
+  //       click () {
+  //         if(mainWindow.webContents.isDevToolsOpened()) {
+  //            mainWindow.webContents.closeDevTools()
+
+  //         } 
+  //         else {
+
+  //           mainWindow.webContents.openDevTools();
+  //         } 
+  //       }
+  //     }
+  //   ]
+  // },
+  {
+    role: 'help',
+    submenu: [
+      {
+        label: 'Learn More',
+        click () { require('electron').shell.openExternal('https://electron.atom.io') }
+      }
+    ]
+  }
+]
+
+if (process.platform === 'darwin') {
+  template.unshift({
+    label: app.getName(),
+    submenu: [
+      {role: 'about'},
+      {type: 'separator'},
+      {role: 'services', submenu: []},
+      {type: 'separator'},
+      {role: 'hide'},
+      {role: 'hideothers'},
+      {role: 'unhide'},
+      {type: 'separator'},
+      {role: 'quit'}
+    ]
+  })
+
+  // Edit menu
+  template[1].submenu.push(
+    {type: 'separator'},
+    {
+      label: 'Speech',
+      submenu: [
+        {role: 'startspeaking'},
+        {role: 'stopspeaking'}
+      ]
+    }
+  )
+
+  // Window menu
+  template[3].submenu = [
+    {role: 'close'},
+    {role: 'minimize'},
+    {role: 'zoom'},
+    {type: 'separator'},
+    {role: 'front'}
+  ]
+}
+
+
+
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow(
@@ -202,7 +307,7 @@ function createWindow () {
   }));
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
 
   // Declare context menus
   const selectionMenu = Menu.buildFromTemplate([
@@ -222,6 +327,7 @@ function createWindow () {
     {role: 'selectall'},
   ]);
 
+  
   // Set up context menu
   mainWindow.webContents.on('context-menu', (e, props) => {
     const { selectionText, isEditable } = props;
@@ -252,6 +358,9 @@ function createWindow () {
     module.paths.push(path.resolve(__dirname, '..', '..', 'app.asar', 'node_modules'));
     path = undefined;
   `);*/
+
+  const menu = Menu.buildFromTemplate(template)
+  Menu.setApplicationMenu(menu)
 }
 
 // This method will be called when Electron has finished

@@ -25,7 +25,8 @@
     "package-all": "electron-packager . MultisigWallet --prune --ignore=tests/* --ignore=testrpc.sh --platform=all --out=./dist --overwrite=true --asar=true",
     "build-linux": "build --linux",
     "build-win": "build --win",
-    "build-osx": "build --mac"
+    "build-osx": "build --mac",
+    "postbuild-osx": "codesign -s \"Developer ID Application: Colu technologies Ltd (TCVCLYQVFC)\" --keychain ~/Library/Keychains/login.keychain ./dist/${npm_package_name}-${npm_package_version}.dmg -f --verbose=4"
   },
   "keywords": [
     "ethereum",

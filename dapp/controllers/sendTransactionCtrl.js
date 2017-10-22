@@ -14,7 +14,7 @@
         Object.assign(tx, $scope.tx);
         var params = [];
         Object.assign(params, $scope.params);
-        if ($scope.method.inputs && $scope.method.inputs.length) {
+        if ($scope.method && $scope.method.inputs && $scope.method.inputs.length) {
           // assign default value (otherwise transaction will fail when any value is not filled)
           for (var i = 0; i < $scope.method.inputs.length; i++) {
             params[i] = params[i] || ""

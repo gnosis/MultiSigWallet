@@ -230,6 +230,7 @@
                     cb(e);
                   }
                   else {
+                    console.log("getNetwork chainID", chainID)
                     sendToLedger(chainID);
                   }
                 });

@@ -2,6 +2,7 @@ var txDefaultOrig =
 {
   gasLimit: 3141592,
   gasPrice: 18000000000,
+  confirmAddGas: 37004,
   path: "44'/60'/0'/0",
   ethereumNode: "https://mainnet.infura.io:443",
   alertNode: {

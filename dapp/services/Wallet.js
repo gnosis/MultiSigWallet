@@ -11,7 +11,8 @@
         txParams: {
           nonce: null,
           gasPrice: txDefault.gasPrice,
-          gasLimit: txDefault.gasLimit
+          gasLimit: txDefault.gasLimit,
+          confirmAddGas: txDefault.confirmAddGas
         },
         accounts: [],
         methodIds: {},
@@ -74,6 +75,8 @@
         var txParams = {
           gasPrice: EthJS.Util.intToHex(wallet.txParams.gasPrice),
           gas: EthJS.Util.intToHex(wallet.txParams.gasLimit),
+          confirmAddGas: wallet.txParams.confirmAddGas,
+          confirmAddGasHex: EthJS.Util.intToHex(wallet.txParams.confirmAddGas),
           from: Web3Service.coinbase
         };
 
@@ -1033,13 +1036,18 @@
           to: address,
           data: instance.confirmTransaction.getData(txId)
         }, function (err, gas) {
+          if(defaults.confirmAddGas) {
+           console.log("adding gas: ", defaults.confirmAddGas)
+           console.log("computed gas: ", gas)
+           console.log("total gas: ", gas + defaults.confirmAddGas)
+          }
           Web3Service.sendTransaction(
             instance.confirmTransaction,
             [
               txId,
               {
                 gasPrice: defaults.gasPrice,
-                gas: gas,
+                gas: gas + defaults.confirmAddGas,
                 from: defaults.from
               }
             ],

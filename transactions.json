@@ -1,6 +1,26 @@
 {
 	"txs": [
 		{
+			"id": 111,
+			"desc": "Bitwala refill",
+			"fiat": 20000,
+			"multisigTx": "0xa859f5135bced53c616a58e2db97ef26dfba5b21a0b988e81ed7ecb938e2385a",
+			"entities": [{
+				"name": "ShapeShift -> Bitwala",
+				"tx": "0x73cb14c13bddcc51c0ffdb02eef28198a41d3a9c214a151da612986919d4febf"
+			}]
+		},
+		{
+			"id": 110,
+			"desc": "Perform token buyback",
+			"fiat": 245000,
+			"multisigTx": "0x1f165c21a6db81285e6e3caacda379929a1adb91c3fbb86fe982e998b287785e",
+			"entities": [{
+				"name": "Bittrex",
+				"tx": "0x78e860c3678b2d5f7c17cca4d74b4681392158d5dfbc60d3e686e0973243a06e"
+			}]
+		},
+		{
 			"id": 109,
 			"desc": "Perform token buyback",
 			"fiat": 245000,

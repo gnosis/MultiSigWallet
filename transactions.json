@@ -1,6 +1,27 @@
 {
 	"txs": [
 		{
+			"id": 114,
+			"desc": "Bitwala refill (via Kraken)",
+			"fiat": 11680,
+			"multisigTx": "0xc9319977cd64b58489beb5443ff28f79d88d406bcbdfbe9826fba3eee9e6ed58",
+			"entities": []
+		},
+		{
+			"id": 113,
+			"desc": "Pay salaries to the team",
+			"fiat": 1861.64,
+			"multisigTx": "0x3d175d3045709ec4d6fedbe54a568181cf13d8e8f995cd61814c0dbd36e96bb5",
+			"entities": []
+		},
+		{
+			"id": 112,
+			"desc": "Pay salaries to the team",
+			"fiat": 43994.44,
+			"multisigTx": "0x73846b774f50166b0716209f4fdaa784adbd7897cee0a506de301b381e8e12f3",
+			"entities": []
+		},
+		{
 			"id": 111,
 			"desc": "Bitwala refill",
 			"fiat": 20000,

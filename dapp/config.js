@@ -2,6 +2,8 @@ var txDefaultOrig =
 {
   gasLimit: 3141592,
   gasPrice: 18000000000,
+  confirmAddGas: 37004,
+  path: "44'/60'/0'/0",
   ethereumNode: "https://mainnet.infura.io:443",
   alertNode: {
     url : "https://alerts.gnosis.pm",
@@ -19,7 +21,7 @@ var txDefaultOrig =
   defaultChainID: null,
   // Mainnet
   walletFactoryAddress: "0x12ff9a987c648c5608b2c2a76f58de74a3bf1987",
-  //ledgerAPI: "http://localhost:" + ledgerPort,
+  ledgerAPI: "http://localhost:" + ledgerPort,
   tokens: [
     {
       'address': '0x6810e776880c02933d47db1b9fc05908e5386b96',
@@ -147,6 +149,7 @@ var txDefault = {
       managementPage: "https://testalerts.gnosis.pm/api/alert/manage/?code={auth-code}"
     }
   },
+  etherscanApiKey: '5HX5Z25IG7PGQ7BGCY3DTJ11MS2VE4Y1MK',
   walletFactoryAddresses: {
     'mainnet': {
       name: 'Mainnet',

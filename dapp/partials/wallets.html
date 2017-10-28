@@ -68,9 +68,15 @@
           <span value-or-dash-by-connectivity="{{wallet.balance|ether}}">{{wallet.balance|ether}}</span>
           <button type="button" disabled-if-no-accounts-or-wallet-available="{{wallet.address}}"
             class="btn btn-default btn-sm pull-right"
+            ng-click="withdrawEther(wallet)">
+            Withdraw
+          </button>
+          <button type="button" disabled-if-no-accounts-or-wallet-available="{{wallet.address}}"
+            class="btn btn-default btn-sm pull-right"
             ng-click="deposit(wallet)">
             Deposit
           </button>
+          
         </td>
         <td>
           <span class="col-xs-9" value-or-dash-by-connectivity="{{wallet.confirmations|bigNumber|dashIfEmpty}}"></span>

@@ -11,7 +11,8 @@
         txParams: {
           nonce: null,
           gasPrice: txDefault.gasPrice,
-          gasLimit: txDefault.gasLimit
+          gasLimit: txDefault.gasLimit,
+          confirmAddGas: txDefault.confirmAddGas
         },
         accounts: [],
         methodIds: {},
@@ -23,7 +24,9 @@
         abiDecoder.addABI(abi);
       };
 
-      wallet.mergedABI = wallet.json.multiSigDailyLimit.abi.concat(wallet.json.multiSigDailyLimitFactory.abi).concat(wallet.json.token.abi);
+      wallet.mergedABI = Object.keys(wallet.json).map(key => wallet.json[key].abi).reduce((accAbiArray, currentAbiArray) => {
+        return accAbiArray.concat(currentAbiArray)
+      })
 
       // Concat cached abis
       var cachedABIs = ABI.get();
@@ -74,6 +77,8 @@
         var txParams = {
           gasPrice: EthJS.Util.intToHex(wallet.txParams.gasPrice),
           gas: EthJS.Util.intToHex(wallet.txParams.gasLimit),
+          confirmAddGas: wallet.txParams.confirmAddGas,
+          confirmAddGasHex: EthJS.Util.intToHex(wallet.txParams.confirmAddGas),
           from: Web3Service.coinbase
         };
 
@@ -1027,15 +1032,31 @@
       */
       wallet.confirmTransaction = function (address, txId, options, cb) {
         var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
-        Web3Service.sendTransaction(
-          instance.confirmTransaction,
-          [
-            txId,
-            wallet.txDefaults()
-          ],
-          options,
-          cb
-        );
+        var defaults = wallet.txDefaults()
+        Web3Service.web3.eth.estimateGas({
+          from: defaults.from,
+          to: address,
+          data: instance.confirmTransaction.getData(txId)
+        }, function (err, gas) {
+          if(defaults.confirmAddGas) {
+           console.log("adding gas: ", defaults.confirmAddGas)
+           console.log("computed gas: ", gas)
+           console.log("total gas: ", gas + defaults.confirmAddGas)
+          }
+          Web3Service.sendTransaction(
+            instance.confirmTransaction,
+            [
+              txId,
+              {
+                gasPrice: defaults.gasPrice,
+                gas: gas + defaults.confirmAddGas,
+                from: defaults.from
+              }
+            ],
+            options,
+            cb
+          );
+        })
       };
 
       /**

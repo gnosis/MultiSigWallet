@@ -2,7 +2,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("sendTransactionCtrl", function ($scope, Wallet, Utils, Transaction, $uibModalInstance, ABI, Web3Service) {
+    .controller("sendTransactionCtrl", function ($scope, $http, Config, Wallet, Utils, Transaction, $uibModalInstance, ABI, Web3Service) {
       $scope.methods = [];
       $scope.tx = {
         value: 0
@@ -14,6 +14,12 @@
         Object.assign(tx, $scope.tx);
         var params = [];
         Object.assign(params, $scope.params);
+        if ($scope.method && $scope.method.inputs && $scope.method.inputs.length) {
+          // assign default value (otherwise transaction will fail when any value is not filled)
+          for (var i = 0; i < $scope.method.inputs.length; i++) {
+            params[i] = params[i] || ""
+          }
+        }
         if ($scope.method) {
           params.map(function(param, index) {
             // Parse if array param
@@ -174,6 +180,23 @@
             $scope.abi = JSON.stringify($scope.abis[to].abi);
             $scope.name = $scope.abis[to].name;
             $scope.updateMethods();
+          } else {
+            // try to fetch from etherscan
+            Transaction.getEthereumChain().then(
+              function (data) {
+                var config = Config.getUserConfiguration()
+                var etherscanApiKey = config.etherscanApiKey
+                var etherscanApiBaseUrl = data.etherscanApi
+                $http.get(etherscanApiBaseUrl + '/api?module=contract&action=getabi&address=' + to + '&apikey=' + etherscanApiKey)
+                  .then(function (response) {
+                    if (response.data.message === 'OK') {
+                      $scope.abi = response.data.result
+                      $scope.updateMethods();
+                      // save for next time
+                      ABI.update($scope.abiArray, to, $scope.name)
+                    }
+                  })
+              })
           }
         }
       };

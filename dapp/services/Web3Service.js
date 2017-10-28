@@ -195,7 +195,7 @@
 
         var web3Provider = new HookedWeb3Provider({
           getAccounts: function (cb) {
-            $http.get(txDefault.ledgerAPI + "/accounts").success(function (accounts) {
+            $http.get(txDefault.ledgerAPI + "/accounts/" + encodeURIComponent(txDefault.path)).success(function (accounts) {
               cb(null, accounts);
             }).error(cb);
           },
@@ -230,6 +230,7 @@
                     cb(e);
                   }
                   else {
+                    console.log("getNetwork chainID", chainID)
                     sendToLedger(chainID);
                   }
                 });

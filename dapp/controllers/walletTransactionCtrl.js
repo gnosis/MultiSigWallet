@@ -6,7 +6,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("walletTransactionCtrl", function (Web3Service, $scope, Wallet, Transaction, Utils, wallet, $uibModalInstance, ABI) {
+    .controller("walletTransactionCtrl", function (Web3Service, $scope, Wallet, Transaction, Utils, wallet, $uibModalInstance, ABI, Config, $http) {
 
       $scope.wallet = wallet;
       $scope.abiArray = null;
@@ -26,6 +26,23 @@
             $scope.abi = JSON.stringify($scope.abis[to].abi);
             $scope.name = $scope.abis[to].name;
             $scope.updateMethods();
+          } else {
+            // try to fetch from etherscan
+            Transaction.getEthereumChain().then(
+              function (data) {
+                var config = Config.getUserConfiguration()
+                var etherscanApiKey = config.etherscanApiKey
+                var etherscanApiBaseUrl = data.etherscanApi
+                $http.get(etherscanApiBaseUrl + '/api?module=contract&action=getabi&address=' + to + '&apikey=' + etherscanApiKey)
+                  .then(function (response) {
+                    if (response.data.message === 'OK') {
+                      $scope.abi = response.data.result
+                      $scope.updateMethods();
+                      // save for next time
+                      ABI.update($scope.abiArray, to, $scope.name)
+                    }
+                  })
+              })
           }
         }
       };
@@ -37,7 +54,7 @@
           $scope.method = $scope.methods[0];
           $scope.abiArray = JSON.parse($scope.abi);
           $scope.abiArray.map(function (item, index) {
-            if (!item.constant && item.name && item.type == "function") {
+            if (item.name && item.type == "function") {
               $scope.methods.push({name: item.name, index: index, inputs: item.inputs});
             }
           });

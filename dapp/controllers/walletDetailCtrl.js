@@ -2,7 +2,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("walletDetailCtrl", function (Web3Service, $scope, $filter, $sce, Wallet, $routeParams, Utils, Transaction, $interval, $uibModal, Token, ABI) {
+    .controller("walletDetailCtrl", function (Web3Service, $scope, $filter, $sce, Wallet, $routeParams, Utils, Transaction, $interval, $uibModal, Token, ABI, Config, $http) {
       $scope.wallet = {};
 
       $scope.$watch(
@@ -341,6 +341,25 @@
                       // Get data info if data has not being decoded, because is a new transactions or we don't have the abi to do it
                       if (!$scope.transactions[tx].dataDecoded || $scope.transactions[tx].dataDecoded.notDecoded || ($scope.transactions[tx].dataDecoded.usedABI && (!savedABI || savedABI.abi ))) {
                         $scope.transactions[tx].dataDecoded = $scope.getParam($scope.transactions[tx]);
+                        if ($scope.transactions[tx].dataDecoded.notDecoded) {
+                          // Try fetching from etherscan
+                          Transaction.getEthereumChain().then(
+                            function (data) {
+                              var config = Config.getUserConfiguration()
+                              var etherscanApiKey = config.etherscanApiKey
+                              var etherscanApiBaseUrl = data.etherscanApi
+                              $http.get(etherscanApiBaseUrl + '/api?module=contract&action=getabi&address=' + info.to + '&apikey=' + etherscanApiKey)
+                                .then(function (response) {
+                                  if (response.data.message === 'OK') {
+                                    // save in local storage
+                                    var abiArray = JSON.parse(response.data.result)
+                                    ABI.update(abiArray, info.to)
+                                    // update table
+                                    $scope.transactions[tx].dataDecoded = $scope.getParam($scope.transactions[tx]);
+                                  }
+                                })
+                            })
+                        }
                       }
                       // If destionation type has not been set
                       if (!$scope.transactions[tx].destination) {

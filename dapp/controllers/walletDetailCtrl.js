@@ -343,7 +343,6 @@
                         $scope.transactions[tx].dataDecoded = $scope.getParam($scope.transactions[tx]);
                         if ($scope.transactions[tx].dataDecoded.notDecoded) {
                           // Try fetching from etherscan
-                          console.log('trying to fetch from ETHERSCAN: ', info.to)
                           Transaction.getEthereumChain().then(
                             function (data) {
                               var config = Config.getUserConfiguration()

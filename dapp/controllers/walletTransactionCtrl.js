@@ -37,7 +37,7 @@
           $scope.method = $scope.methods[0];
           $scope.abiArray = JSON.parse($scope.abi);
           $scope.abiArray.map(function (item, index) {
-            if (!item.constant && item.name && item.type == "function") {
+            if (item.name && item.type == "function") {
               $scope.methods.push({name: item.name, index: index, inputs: item.inputs});
             }
           });

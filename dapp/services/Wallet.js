@@ -24,7 +24,9 @@
         abiDecoder.addABI(abi);
       };
 
-      wallet.mergedABI = wallet.json.multiSigDailyLimit.abi.concat(wallet.json.multiSigDailyLimitFactory.abi).concat(wallet.json.token.abi);
+      wallet.mergedABI = Object.keys(wallet.json).map(key => wallet.json[key].abi).reduce((accAbiArray, currentAbiArray) => {
+        return accAbiArray.concat(currentAbiArray)
+      })
 
       // Concat cached abis
       var cachedABIs = ABI.get();

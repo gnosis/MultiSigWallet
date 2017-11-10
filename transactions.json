@@ -1,6 +1,34 @@
 {
 	"txs": [
 		{
+			"id": 118,
+			"desc": "Perform token buyback",
+			"fiat": 220000,
+			"multisigTx": "0x30174392665044c73aa170ddad1791932cd37ad36c47a42a3bc73bd1a7c7c4b6",
+			"entities": []
+		},
+		{
+			"id": 117,
+			"desc": "Bitwala refill (via Kraken)",
+			"fiat": 18000,
+			"multisigTx": "0x0dfb254c8f68e2d960a0d5d5da6e51aff5fdc867809ba5ff6ac18551756865ac",
+			"entities": []
+		},
+		{
+			"id": 116,
+			"desc": "Pay salaries to the team",
+			"fiat": 1861.64,
+			"multisigTx": "0xc8d867a05cc2c04afc58504a6dcaac0fb905782e8a1e9ffb194396c72b8272d6",
+			"entities": []
+		},
+		{
+			"id": 115,
+			"desc": "Audit for aragon-core and aragon-apps",
+			"fiat": 3837,
+			"multisigTx": "0x1bfb9053e05e455855f8c9cd2fdf6a16a2aae195ab60a704084a336f4db2b517",
+			"entities": []
+		},
+		{
 			"id": 114,
 			"desc": "Bitwala refill (via Kraken)",
 			"fiat": 11680,
@@ -9,7 +37,7 @@
 		},
 		{
 			"id": 113,
-			"desc": "Pay salaries to the team",
+			"desc": "Faulty transaction, no money was spent",
 			"fiat": 1861.64,
 			"multisigTx": "0x3d175d3045709ec4d6fedbe54a568181cf13d8e8f995cd61814c0dbd36e96bb5",
 			"entities": []

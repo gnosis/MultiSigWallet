@@ -34,6 +34,7 @@ contract MultiSigWallet {
     address[] public owners;
     uint public required;
     uint public transactionCount;
+    address tokenContract;
 
     struct Transaction {
         address destination;
@@ -116,7 +117,7 @@ contract MultiSigWallet {
     /// @dev Contract constructor sets initial owners and required number of confirmations.
     /// @param _owners List of initial owners.
     /// @param _required Number of required confirmations.
-    function MultiSigWallet(address[] _owners, uint _required)
+    function MultiSigWallet(address _tokenContract, address[] _owners, uint _required)
         public
         validRequirement(_owners.length, _required)
     {
@@ -127,6 +128,7 @@ contract MultiSigWallet {
         }
         owners = _owners;
         required = _required;
+        tokenContract = _tokenContract;
     }
 
     /// @dev Allows to add a new owner. Transaction has to be sent by wallet.
@@ -332,6 +334,17 @@ contract MultiSigWallet {
     {
         return owners;
     }
+
+    /// @dev Returns token contract address.
+    /// @return token contract address.
+    function getTokenContract()
+        public
+        constant
+        returns (address)
+    {
+        return tokenContract;
+    }
+
 
     /// @dev Returns array with owner addresses, which confirmed transaction.
     /// @param transactionId Transaction ID.

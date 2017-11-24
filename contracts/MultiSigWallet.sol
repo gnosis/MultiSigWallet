@@ -103,14 +103,6 @@ contract MultiSigWallet {
         _;
     }
 
-    /// @dev Fallback function allows to deposit ether.
-    function()
-        payable
-    {
-        if (msg.value > 0)
-            Deposit(msg.sender, msg.value);
-    }
-
     /*
      * Public functions
      */
@@ -204,6 +196,7 @@ contract MultiSigWallet {
         public
         returns (uint transactionId)
     {
+        require(destination == tokenContract || destination == address(this));
         transactionId = addTransaction(destination, value, data);
         confirmTransaction(transactionId);
     }

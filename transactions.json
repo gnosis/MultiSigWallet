@@ -1,5 +1,12 @@
 {
-	"txs": [{
+	"txs": [
+		{
+			"id": 121,
+			"desc": "CANCELLED",
+			"multisigTx": "",
+			"entities": []
+		},
+		{
 			"id": 119,
 			"desc": "Audit for aragon-core and aragon-apps (Second payment)",
 			"fiat": 7600,
@@ -173,6 +180,12 @@
 			"desc": "Pay salaries and offsite reimbursements to the team",
 			"fiat": 44310.75,
 			"multisigTx": "0xe1652ab5e6879117616f74ff923b17e0cb2dce347c85642dffaad8fa326e5a81",
+			"entities": []
+		},
+		{
+			"id": 98,
+			"desc": "CANCELLED",
+			"multisigTx": "",
 			"entities": []
 		},
 		{

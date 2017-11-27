@@ -1,5 +1,11 @@
 {
-	"txs": [
+	"txs": [{
+			"id": 119,
+			"desc": "Audit for aragon-core and aragon-apps",
+			"fiat": 7600,
+			"multisigTx": "0x4066343ebd4c371ed102840fbf6a324100dd2620127e78dc79e43d543be44510",
+			"entities": []
+		},
 		{
 			"id": 118,
 			"desc": "Perform token buyback",

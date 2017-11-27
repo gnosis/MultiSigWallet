@@ -1,8 +1,14 @@
 const MultiSigWalletWithDailyLimit = artifacts.require('MultiSigWalletWithDailyLimit')
+const TestToken = artifacts.require('TestToken')
 const web3 = MultiSigWalletWithDailyLimit.web3
-const deployMultisig = (owners, confirmations, limit) => {
-    return MultiSigWalletWithDailyLimit.new(owners, confirmations, limit)
+const deployMultisig = (tokenAddress, owners, confirmations, limit) => {
+    return MultiSigWalletWithDailyLimit.new(tokenAddress, owners, confirmations, limit)
 }
+
+const deployToken = () => {
+    return TestToken.new()
+}
+
 
 const utils = require('./utils')
 const ONE_DAY = 24*3600
@@ -13,8 +19,11 @@ contract('MultiSigWalletWithDailyLimit', (accounts) => {
     const requiredConfirmations = 2
 
     beforeEach(async () => {
-        multisigInstance = await deployMultisig([accounts[0], accounts[1]], requiredConfirmations, dailyLimit)
+        tokenInstance = await deployToken();
+        assert.ok(tokenInstance);
+        multisigInstance = await deployMultisig(tokenInstance.address, [accounts[0], accounts[1], accounts[2]], requiredConfirmations, dailyLimit)
         assert.ok(multisigInstance)
+        assert.equal(await multisigInstance.getTokenContract(), tokenInstance.address);
     })
 
     it('create multisig', async () => {

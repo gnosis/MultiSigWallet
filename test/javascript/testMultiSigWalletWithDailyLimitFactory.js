@@ -1,5 +1,6 @@
 const MultiSigWalletWithDailyLimit = artifacts.require('MultiSigWalletWithDailyLimit')
 const MultiSigWalletWithDailyLimitFactory = artifacts.require('MultiSigWalletWithDailyLimitFactory')
+const TestToken = artifacts.require('TestToken')
 const web3 = MultiSigWalletWithDailyLimitFactory.web3
 
 const utils = require('./utils')
@@ -8,16 +9,18 @@ contract('MultiSigWalletWithDailyLimitFactory', (accounts) => {
     let factoryInstance
     const dailyLimit = 3000
     const requiredConfirmations = 2
+    let tokenInstance
 
     beforeEach(async () => {
-        // [accounts[0], accounts[1]], requiredConfirmations, dailyLimit
+        tokenInstance = await TestToken.new()
+        assert.ok(tokenInstance)
         factoryInstance = await MultiSigWalletWithDailyLimitFactory.new()
         assert.ok(factoryInstance)
     })
 
     it('Multisig Factory', async () => {
         // Create factory
-        const tx = await factoryInstance.create([accounts[0], accounts[1]], requiredConfirmations, dailyLimit)
+        const tx = await factoryInstance.create(tokenInstance.address, [accounts[0], accounts[1]], requiredConfirmations, dailyLimit)
         const walletAddress = utils.getParamFromTxEvent(tx, 'instantiation', null, 'ContractInstantiation')
 
         const walletCount = await factoryInstance.getInstantiationCount(accounts[0])
@@ -33,6 +36,8 @@ contract('MultiSigWalletWithDailyLimitFactory', (accounts) => {
         assert.equal(balance.valueOf(), deposit)
         assert.equal(dailyLimit, await multisigInstance.dailyLimit())
         assert.equal(dailyLimit, await multisigInstance.calcMaxWithdraw())
+        assert.equal(tokenInstance.address, await multisigInstance.getTokenContract())
+
         
         // Update daily limit
         const dailyLimitUpdated = 2000

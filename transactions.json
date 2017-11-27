@@ -1,6 +1,12 @@
 {
 	"txs": [
 		{
+			"id": 123,
+			"desc": "CANCELLED",
+			"multisigTx": "",
+			"entities": []
+		},
+		{
 			"id": 121,
 			"desc": "CANCELLED",
 			"multisigTx": "",

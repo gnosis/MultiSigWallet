@@ -45,9 +45,7 @@ contract TestToken {
         public
         returns (bool success)
     {
-        if (balances[msg.sender] < _value) {
-            throw;
-        }
+        require(balances[msg.sender] >= _value);
         balances[msg.sender] -= _value;
         balances[_to] += _value;
         Transfer(msg.sender, _to, _value);
@@ -63,9 +61,7 @@ contract TestToken {
         public
         returns (bool success)
     {
-        if (balances[_from] < _value || allowed[_from][msg.sender] < _value) {
-            throw;
-        }
+        require(balances[_from] >= _value && allowed[_from][msg.sender] >= _value);
         balances[_to] += _value;
         balances[_from] -= _value;
         allowed[_from][msg.sender] -= _value;

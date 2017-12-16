@@ -3,3 +3,4 @@ truffle compile
 run-with-testrpc -d 'truffle test test/javascript/testMultiSigWalletWithDailyLimit.js'
 run-with-testrpc -d 'truffle test test/javascript/testMultiSigWalletWithDailyLimitFactory.js'
 run-with-testrpc -d 'truffle test test/javascript/testExecutionAfterRequirementsChanged.js'
+run-with-testrpc -d 'truffle test test/javascript/testExternalCalls.js'

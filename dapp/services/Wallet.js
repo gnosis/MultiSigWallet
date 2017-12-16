@@ -72,8 +72,8 @@
       **/
       wallet.txDefaults = function (tx) {
         var txParams = {
-          gasPrice: EthJS.Util.intToHex(wallet.txParams.gasPrice),
-          gas: EthJS.Util.intToHex(wallet.txParams.gasLimit),
+          gasPrice: ethereumjs.Util.intToHex(wallet.txParams.gasPrice),
+          gas: ethereumjs.Util.intToHex(wallet.txParams.gasLimit),
           from: Web3Service.coinbase
         };
 
@@ -116,10 +116,10 @@
         var txInfo = {
           from: Web3Service.coinbase,
           to: address,
-          value: EthJS.Util.intToHex(0),
-          gasPrice: EthJS.Util.intToHex(wallet.txParams.gasPrice),
-          gas: EthJS.Util.intToHex(wallet.txParams.gasLimit),
-          nonce: nonce?nonce:EthJS.Util.intToHex(wallet.txParams.nonce),
+          value: ethereumjs.Util.intToHex(0),
+          gasPrice: ethereumjs.Util.intToHex(wallet.txParams.gasPrice),
+          gas: ethereumjs.Util.intToHex(wallet.txParams.gasLimit),
+          nonce: nonce?nonce:ethereumjs.Util.intToHex(wallet.txParams.nonce),
           data: data
         };
 

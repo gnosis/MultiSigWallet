@@ -1,6 +1,30 @@
 {
 	"txs": [
 		{
+			"id": 133,
+			"desc": "Buy hardware",
+			"multisigTx": "",
+			"entities": []
+		},
+		{
+			"id": 132,
+			"desc": "Payroll December 2017 (ANT)",
+			"multisigTx": "0x4d8019eb0836f74d452a4ccb742bfd47de68c3e4ee1b0b882ca1078627633b7b",
+			"entities": []
+		},
+		{
+			"id": 131,
+			"desc": "Payroll December 2017 (ETH and Fiat)",
+			"multisigTx": "0x181ad9d3a49ea215ce6fd912cebc29e5057adc80c33b52ea36fa7b393e0369a8",
+			"entities": []
+		},
+		{
+			"id": 130,
+			"desc": "CANCELLED",
+			"multisigTx": "",
+			"entities": []
+		},
+		{
 			"id": 129,
 			"desc": "Perform token buyback",
 			"fiat": 400000,

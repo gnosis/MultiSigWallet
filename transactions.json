@@ -1,9 +1,21 @@
 {
 	"txs": [
 		{
+			"id": 135,
+			"desc": "ANT for bounties in multiple repos",
+			"multisigTx": "0xeaa0d4a552730cd5a963249ab8c71a15295dd3dba5c476453af33d962302aa45",
+			"entities": []
+		},
+		{
+			"id": 134,
+			"desc": "Perform token buyback",
+			"multisigTx": "0x9f73f08b52921dfe856c5e4216a2f9b529b5115bcf3d32bb5dcb8aa7b182650c",
+			"entities": []
+		},
+		{
 			"id": 133,
 			"desc": "Buy hardware",
-			"multisigTx": "",
+			"multisigTx": "0x6ff9048b66ef286d60752aa8584b1eae96348336ffaec5c79c59d23441abc863",
 			"entities": []
 		},
 		{

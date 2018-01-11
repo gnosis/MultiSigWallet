@@ -1,6 +1,18 @@
 {
 	"txs": [
 		{
+			"id": 137,
+			"desc": "Payment to service providers (ANT)",
+			"multisigTx": "0xaed5cc6c065dfa71711004050863e629326a2c4daa9032178f86b3a8f3ebaa32",
+			"entities": []
+		},
+		{
+			"id": 136,
+			"desc": "Payment to service providers (ETH)",
+			"multisigTx": "0x08f8f9f913f7dec1e7fdfaf73a2b199be738f9a89642456b365b590d7aae1d3e",
+			"entities": []
+		},
+		{
 			"id": 135,
 			"desc": "ANT for bounties in multiple repos",
 			"multisigTx": "0xeaa0d4a552730cd5a963249ab8c71a15295dd3dba5c476453af33d962302aa45",

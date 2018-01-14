@@ -540,7 +540,8 @@
           requiredConfirmations,
           limit,
           wallet.txDefaults({
-            data: wallet.json.multiSigDailyLimit.binHex
+            data: wallet.json.multiSigDailyLimit.binHex,
+            gas: 2500000 // Gas to create multisig with maximum of 16 owners
           }),
           cb
         );

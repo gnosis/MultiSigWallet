@@ -99,6 +99,9 @@ contract MultiSigWallet {
             Deposit(msg.sender, msg.value);
     }
 
+    // ERC223 fallback function to accept token transfers
+    function tokenFallback(address, uint, bytes) public {}
+
     /*
      * Public functions
      */

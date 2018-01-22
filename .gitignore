@@ -67,7 +67,7 @@ multisigWallet.zip
 /build
 
 # Bower
-bower_components
+dapp/bower_components
 
 # Keys
 dapp/localhost.crt

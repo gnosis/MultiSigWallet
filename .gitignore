@@ -30,6 +30,8 @@ nosetests.xml
 
 # npm
 node_modules/
+package-lock.json
+dapp/package-lock.json
 
 # Compass
 .sass-cache
@@ -63,3 +65,10 @@ multisigWallet.zip
 
 # Truffle
 /build
+
+# Bower
+bower_components
+
+# Keys
+dapp/localhost.crt
+dapp/localhost.key

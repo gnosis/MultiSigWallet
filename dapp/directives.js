@@ -46,15 +46,7 @@
             function () {
               Wallet.initParams().then(
                 function () {
-                  // Check withdraw with value 0
-                  var validWithdraw = true;
-                  if (element.length && element[0].attributes && element[0].attributes['data-action'] && element[0].attributes['data-action'].nodeValue == "withdraw") {
-                    if (scope.wallet && scope.wallet.maxWithdraw && scope.wallet.maxWithdraw.eq(0)) {
-                      validWithdraw = false;
-                    }
-                  }
-
-                  if (scope.wallet && scope.wallet.isOnChain == true && validWithdraw) {
+                  if (scope.wallet && scope.wallet.isOnChain == true) {
                     element.removeAttr('disabled');
                   }
                   else if (attrs.disabledIfNoAccountsOrWalletAvailable) {
@@ -62,7 +54,7 @@
                     Wallet.getOwners(
                       address,
                       function (e, owners) {
-                        if (!e && owners.length > 0 && Web3Service.coinbase && validWithdraw) {
+                        if (!e && owners.length > 0 && Web3Service.coinbase) {
                           element.removeAttr('disabled');
                         }
                         else {
@@ -73,7 +65,7 @@
                   }
                   else {
                     scope.$watch(function(){
-                      if(Web3Service.coinbase && validWithdraw) {
+                      if(Web3Service.coinbase) {
                         element.removeAttr('disabled');
                       }
                       else {

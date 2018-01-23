@@ -6,11 +6,14 @@
       $scope.wallet = wallet;
       $scope.amount = 10;
       $scope.deposit = function () {
+        console.log(Wallet.txParams.gasPrice)
         Transaction.send(
           {
             to: $scope.wallet.address,
             from: Web3Service.coinbase,
-            value: new ethereumjs.BN(new Web3().toWei($scope.amount))
+            value: new ethereumjs.BN(new Web3().toWei($scope.amount)),
+            gas: 50000,
+            gasPrice: Wallet.txParams.gasPrice
           },
           function (e, tx) {
             if (e) {

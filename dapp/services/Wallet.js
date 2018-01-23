@@ -51,16 +51,14 @@
       wallet.getGasPrice = function () {
         return $q(
           function(resolve, reject){
-            Web3Service.web3.eth.getGasPrice(
-              function (e, gasPrice) {
-                if (e) {
-                  reject(e);
-                }
-                else {
-                  resolve(gasPrice);
-                }
-              }
-            );
+            $http
+              .get('https://ethgasstation.info/json/ethgasAPI.json')
+              .then(
+                function(response) {                  
+                  resolve(response.data.safeLow * 1e9)
+                },
+                reject
+              )            
           }
         );
       };
@@ -71,8 +69,8 @@
       **/
       wallet.txDefaults = function (tx) {
         var txParams = {
-          gasPrice: ethereumjs.Util.intToHex(wallet.txParams.gasPrice),
-          gas: ethereumjs.Util.intToHex(wallet.txParams.gasLimit),
+          gasPrice: wallet.txParams.gasPrice,
+          gas: wallet.txParams.gasLimit,
           from: Web3Service.coinbase
         };
 
@@ -174,16 +172,12 @@
 
       wallet.updateGasPrice = function (cb) {
         if (Connection.isConnected) {
-          return Web3Service.web3.eth.getGasPrice.request(
-            function (e, gasPrice) {
-              if (e) {
-                cb(e);
-              }
-              else {
-                wallet.txParams.gasPrice = gasPrice.toNumber();
-                cb(null, gasPrice);
-              }
-            }
+          wallet.getGasPrice().then(
+            function (gasPrice) {
+              wallet.txParams.gasPrice = gasPrice;
+              cb(null, gasPrice);
+            },
+            cb
           );
         }
         else {

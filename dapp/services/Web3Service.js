@@ -71,31 +71,84 @@
         }
       };
 
-      factory.sendTransaction = function (method, params, options, cb) {
-        // Simulate first
-        function sendIfSuccess(e, result) {
-          if (e) {
-            cb(e);
-          }
-          else {
-            if (result) {                            
-              method.sendTransaction.apply(method.sendTransaction, params.concat(cb));
+      /**
+      * Configure gas limit and gas price
+      * Used for ledger wallet, lightwallet and ethereum node providers
+      **/
+      factory.configureGas = function (params, cb) {
+        if (txDefault.wallet == "ledger" || txDefault.wallet == 'remotenode' || txDefault.wallet == 'lightwallet') {
+          $uibModal
+          .open(
+            {
+              animation: false,
+              templateUrl: 'partials/modals/configureGas.html',
+              size: 'md',
+              resolve: {
+                options: function () {
+                  return params;
+                }
+              },
+              controller: function ($scope, $uibModalInstance, Web3Service, options) {
+                $scope.send = function () {
+                  $uibModalInstance.close({gas: $scope.gasLimit, gasPrice: $scope.gasPrice * 1e9});
+                };
+
+                $scope.cancel = function () {
+                  $uibModalInstance.dismiss();
+                }
+
+                $scope.close = $uibModalInstance.dismiss;
+                console.log(options)
+                $scope.gasLimit = options.gas;
+                $scope.gasPrice = options.gasPrice / 1e9;
+
+                $scope.calculateFee = function () {
+                  $scope.txFee = $scope.gasLimit * ($scope.gasPrice * 1e9) / 1e18;
+                }                
+
+                $scope.calculateFee();
+              }
             }
-            else {
-              cb("Simulated transaction failed");
-            }
-          }
-        }
-      
-        var args;
-        if ( options && options.onlySimulate) {
-          args = params.concat(cb);
-          method.call.apply(method.call, args);
+          )
+          .result
+          .then(cb);
         }
         else {
-          args = params.concat(sendIfSuccess);
-          method.call.apply(method.call, args);
-        }        
+          cb();
+        }
+      };
+
+      factory.sendTransaction = function (method, params, options, cb) {
+
+        factory.configureGas(params[params.length-1], function(gasOptions){
+          var refinedTxOptions = Object.assign({}, params[params.length-1], gasOptions);
+          // Ugly but needed
+          params[params.length-1] = refinedTxOptions
+          // Simulate first
+          function sendIfSuccess(e, result) {
+            if (e) {
+              cb(e);
+            }
+            else {
+              if (result) {                            
+                method.sendTransaction.apply(method.sendTransaction, params.concat(cb));
+              }
+              else {
+                cb("Simulated transaction failed");
+              }
+            }
+          }
+        
+          var args;
+          if ( options && options.onlySimulate) {
+            args = params.concat(cb);
+            method.call.apply(method.call, args);
+          }
+          else {
+            args = params.concat(sendIfSuccess);
+            method.call.apply(method.call, args);
+          }   
+        });             
       };
 
       /**

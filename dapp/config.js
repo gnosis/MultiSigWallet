@@ -158,7 +158,7 @@ var txDefault = {
     },
     'kovan': {
       name: 'Kovan',
-      address: '0x6C4c60F01999408CfD872Fdcf739912509A15da5'
+      address: '0x2c992817e0152a65937527b774c7a99a84603045'
     },
     'privatenet': {
       name: 'Privatenet',

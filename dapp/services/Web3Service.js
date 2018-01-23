@@ -4,7 +4,7 @@
     .module('multiSigWeb')
     .service("Web3Service", function ($window, $q, Utils, $uibModal, Connection, Config, $http) {
 
-      factory = {};
+      var factory = {};
 
       factory.webInitialized = $q(function (resolve, reject) {
         window.addEventListener('load', function () {
@@ -78,7 +78,7 @@
             cb(e);
           }
           else {
-            if (result) {
+            if (result) {                            
               method.sendTransaction.apply(method.sendTransaction, params.concat(cb));
             }
             else {
@@ -86,15 +86,16 @@
             }
           }
         }
-
+      
+        var args;
         if ( options && options.onlySimulate) {
-          var args = params.concat(cb);
+          args = params.concat(cb);
           method.call.apply(method.call, args);
         }
         else {
-          var args = params.concat(sendIfSuccess);
+          args = params.concat(sendIfSuccess);
           method.call.apply(method.call, args);
-        }
+        }        
       };
 
       /**

@@ -2,8 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .service('Wallet', function ($window, $http, $q, $rootScope, $uibModal, Utils, ABI, Connection, Web3Service) {
-
+    .service('Wallet', function ($window, $http, $q, $rootScope, $uibModal, Utils, ABI, Connection, Web3Service) {      
       // Init wallet factory object
       var wallet = {
         wallets: JSON.parse(localStorage.getItem("wallets")) || {},
@@ -540,7 +539,8 @@
           requiredConfirmations,
           limit,
           wallet.txDefaults({
-            data: wallet.json.multiSigDailyLimit.binHex
+            data: wallet.json.multiSigDailyLimit.binHex,
+            gas: (2556980 + 42733 * owners.length) // Gas to create multisig with dynamic gas for owners
           }),
           cb
         );
@@ -554,7 +554,8 @@
           requiredConfirmations,
           limit,
           wallet.txDefaults({
-            data: wallet.json.multiSigDailyLimit.binHex
+            data: wallet.json.multiSigDailyLimit.binHex,
+            gas: (2002000 + 27820 * owners.length)
           }),
           cb
         );
@@ -670,7 +671,7 @@
                 "0x0",
                 data,
                 count,
-                wallet.txDefaults()
+                wallet.txDefaults({gas: 300000})
               ],
               options,
               cb
@@ -724,7 +725,7 @@
                 "0x0",
                 data,
                 count,
-                wallet.txDefaults()
+                wallet.txDefaults({gas: 300000})
               ],
               options,
               cb
@@ -779,7 +780,7 @@
                 "0x0",
                 data,
                 count,
-                wallet.txDefaults()
+                wallet.txDefaults({gas: 300000})
               ],
               options,
               cb
@@ -838,7 +839,7 @@
                 "0x0",
                 data,
                 count,
-                wallet.txDefaults()
+                wallet.txDefaults({gas: 300000})
               ],
               options,
               cb
@@ -983,7 +984,7 @@
                 "0x0",
                 data,
                 count,
-                wallet.txDefaults()
+                wallet.txDefaults({gas: 300000})
               ],
               options,
               cb

@@ -2,8 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .service('Wallet', function ($window, $http, $q, $rootScope, $uibModal, Utils, ABI, Connection, Web3Service) {
-
+    .service('Wallet', function ($window, $http, $q, $rootScope, $uibModal, Utils, ABI, Connection, Web3Service) {      
       // Init wallet factory object
       var wallet = {
         wallets: JSON.parse(localStorage.getItem("wallets")) || {},
@@ -672,7 +671,7 @@
                 "0x0",
                 data,
                 count,
-                wallet.txDefaults()
+                wallet.txDefaults({gas: 300000})
               ],
               options,
               cb
@@ -726,7 +725,7 @@
                 "0x0",
                 data,
                 count,
-                wallet.txDefaults()
+                wallet.txDefaults({gas: 300000})
               ],
               options,
               cb
@@ -781,7 +780,7 @@
                 "0x0",
                 data,
                 count,
-                wallet.txDefaults()
+                wallet.txDefaults({gas: 300000})
               ],
               options,
               cb
@@ -840,7 +839,7 @@
                 "0x0",
                 data,
                 count,
-                wallet.txDefaults()
+                wallet.txDefaults({gas: 300000})
               ],
               options,
               cb
@@ -985,7 +984,7 @@
                 "0x0",
                 data,
                 count,
-                wallet.txDefaults()
+                wallet.txDefaults({gas: 300000})
               ],
               options,
               cb

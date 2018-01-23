@@ -10,7 +10,7 @@
           {
             to: $scope.wallet.address,
             from: Web3Service.coinbase,
-            value: new EthJS.BN(new Web3().toWei($scope.amount))
+            value: new ethereumjs.BN(new Web3().toWei($scope.amount))
           },
           function (e, tx) {
             if (e) {
@@ -31,7 +31,7 @@
         Transaction.signOffline(
           {
             to: $scope.wallet.address,
-            value: new EthJS.BN(new Web3().toWei($scope.amount))
+            value: new ethereumjs.BN(new Web3().toWei($scope.amount))
           },
           function (e, signed) {
             if (e) {

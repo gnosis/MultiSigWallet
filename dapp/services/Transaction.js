@@ -156,9 +156,9 @@
               from: Web3Service.coinbase,
               to: txObject.to,
               value: txObject.value,
-              gasPrice: EthJS.Util.intToHex(Wallet.txParams.gasPrice),
-              gas: EthJS.Util.intToHex(Wallet.txParams.gasLimit),
-              nonce: EthJS.Util.intToHex(nonce)
+              gasPrice: ethereumjs.Util.intToHex(Wallet.txParams.gasPrice),
+              gas: ethereumjs.Util.intToHex(Wallet.txParams.gasLimit),
+              nonce: ethereumjs.Util.intToHex(nonce)
             };
 
             Web3Service.web3.eth.signTransaction(txInfo, function(e, signed) {

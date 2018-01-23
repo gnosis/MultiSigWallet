@@ -1,7 +1,7 @@
 Ethereum Multisignature Wallet UI
 ===================
 
-A web user interface for the [MultiSigWallet](https://github.com/ConsenSys/MultiSigWallet).
+A web user interface for the [MultiSigWallet](https://github.com/gnosis/MultiSigWallet).
 
 Requirements
 -------------

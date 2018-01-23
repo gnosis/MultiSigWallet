@@ -50,19 +50,19 @@ contract MultiSigWalletWithDailyLimit is MultiSigWallet {
         confirmed(transactionId, msg.sender)
         notExecuted(transactionId)
     {
-        Transaction tx = transactions[transactionId];
+        Transaction storage txn = transactions[transactionId];
         bool _confirmed = isConfirmed(transactionId);
-        if (_confirmed || tx.data.length == 0 && isUnderLimit(tx.value)) {
-            tx.executed = true;
+        if (_confirmed || txn.data.length == 0 && isUnderLimit(txn.value)) {
+            txn.executed = true;
             if (!_confirmed)
-                spentToday += tx.value;
-            if (tx.destination.call.value(tx.value)(tx.data))
+                spentToday += txn.value;
+            if (txn.destination.call.value(txn.value)(txn.data))
                 Execution(transactionId);
             else {
                 ExecutionFailure(transactionId);
-                tx.executed = false;
+                txn.executed = false;
                 if (!_confirmed)
-                    spentToday -= tx.value;
+                    spentToday -= txn.value;
             }
         }
     }

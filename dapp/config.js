@@ -18,7 +18,7 @@ var txDefaultOrig =
   wallet: "injected",
   defaultChainID: null,
   // Mainnet
-  walletFactoryAddress: "0x12ff9a987c648c5608b2c2a76f58de74a3bf1987",
+  walletFactoryAddress: "0x6e95c8e8557abc08b46f3c347ba06f8dc012763f",
   //ledgerAPI: "http://localhost:" + ledgerPort,
   tokens: [
     {

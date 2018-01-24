@@ -75,47 +75,41 @@
       * Configure gas limit and gas price
       * Used for ledger wallet, lightwallet and ethereum node providers
       **/
-      factory.configureGas = function (params, cb) {
-        if (txDefault.wallet == "ledger" || txDefault.wallet == 'remotenode' || txDefault.wallet == 'lightwallet') {
-          $uibModal
-          .open(
-            {
-              animation: false,
-              templateUrl: 'partials/modals/configureGas.html',
-              size: 'md',
-              resolve: {
-                options: function () {
-                  return params;
-                }
-              },
-              controller: function ($scope, $uibModalInstance, Web3Service, options) {
-                $scope.send = function () {
-                  $uibModalInstance.close({gas: $scope.gasLimit, gasPrice: $scope.gasPrice * 1e9});
-                };
-
-                $scope.cancel = function () {
-                  $uibModalInstance.dismiss();
-                }
-
-                $scope.close = $uibModalInstance.dismiss;
-                console.log(options)
-                $scope.gasLimit = options.gas;
-                $scope.gasPrice = options.gasPrice / 1e9;
-
-                $scope.calculateFee = function () {
-                  $scope.txFee = $scope.gasLimit * ($scope.gasPrice * 1e9) / 1e18;
-                }                
-
-                $scope.calculateFee();
+      factory.configureGas = function (params, cb) {        
+        $uibModal
+        .open(
+          {
+            animation: false,
+            templateUrl: 'partials/modals/configureGas.html',
+            size: 'md',
+            resolve: {
+              options: function () {
+                return params;
               }
+            },
+            controller: function ($scope, $uibModalInstance, Web3Service, options) {
+              $scope.send = function () {
+                $uibModalInstance.close({gas: $scope.gasLimit, gasPrice: $scope.gasPrice * 1e9});
+              };
+
+              $scope.cancel = function () {
+                $uibModalInstance.dismiss();
+              }
+
+              $scope.close = $uibModalInstance.dismiss;                
+              $scope.gasLimit = options.gas;
+              $scope.gasPrice = options.gasPrice / 1e9;
+
+              $scope.calculateFee = function () {
+                $scope.txFee = $scope.gasLimit * ($scope.gasPrice * 1e9) / 1e18;
+              }                
+
+              $scope.calculateFee();
             }
-          )
-          .result
-          .then(cb);
-        }
-        else {
-          cb();
-        }
+          }
+        )
+        .result
+        .then(cb);
       };
 
       factory.sendTransaction = function (method, params, options, cb) {

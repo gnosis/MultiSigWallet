@@ -5,12 +5,14 @@
     .controller("depositCtrl", function ($scope, Transaction, $routeParams, $uibModalInstance, Wallet, Utils, wallet, Web3Service) {
       $scope.wallet = wallet;
       $scope.amount = 10;
-      $scope.deposit = function () {
+      $scope.deposit = function () {        
         Transaction.send(
           {
             to: $scope.wallet.address,
             from: Web3Service.coinbase,
-            value: new ethereumjs.BN(new Web3().toWei($scope.amount))
+            value: new ethereumjs.BN(new Web3().toWei($scope.amount)),
+            gas: 50000,
+            gasPrice: Wallet.txParams.gasPrice
           },
           function (e, tx) {
             if (e) {

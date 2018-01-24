@@ -527,32 +527,40 @@
 
       wallet.deployWithLimit = function (owners, requiredConfirmations, limit, cb) {
         var MyContract = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi);
+        var gasNeeded = 2556980 + 42733 * owners.length; // Gas to create multisig with dynamic gas for owners
 
-        MyContract.new(
-          owners,
-          requiredConfirmations,
-          limit,
-          wallet.txDefaults({
-            data: wallet.json.multiSigDailyLimit.binHex,
-            gas: (2556980 + 42733 * owners.length) // Gas to create multisig with dynamic gas for owners
-          }),
-          cb
-        );
+        Web3Service.configureGas({gas: gasNeeded, gasPrice: wallet.txParams.gasPrice}, function (gasOptions){
+          MyContract.new(
+            owners,
+            requiredConfirmations,
+            limit,
+            wallet.txDefaults({
+              data: wallet.json.multiSigDailyLimit.binHex,
+              gas: gasOptions.gas,
+              gasPrice: gasOptions.gasPrice
+            }),
+            cb
+          );
+        });        
       };
 
       wallet.deployWithLimitFactory = function (owners, requiredConfirmations, limit, cb) {
         var walletFactory = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimitFactory.abi).at(txDefault.walletFactoryAddress);
+        var gasNeeded = 2002000 + 27820 * owners.length;
 
-        walletFactory.create(
-          owners,
-          requiredConfirmations,
-          limit,
-          wallet.txDefaults({
-            data: wallet.json.multiSigDailyLimit.binHex,
-            gas: (2002000 + 27820 * owners.length)
-          }),
-          cb
-        );
+        Web3Service.configureGas({gas: gasNeeded, gasPrice: wallet.txParams.gasPrice}, function (gasOptions){
+          walletFactory.create(
+            owners,
+            requiredConfirmations,
+            limit,
+            wallet.txDefaults({
+              data: wallet.json.multiSigDailyLimit.binHex,
+              gas: gasOptions.gas,
+              gasPrice: gasOptions.gasPrice
+            }),
+            cb
+          );
+        });
       };
 
       wallet.deployWithLimitFactoryOffline = function (owners, requiredConfirmations, limit, cb) {

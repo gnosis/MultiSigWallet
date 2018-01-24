@@ -1,37 +1,38 @@
 dist: trusty
 language: node_js
 node_js:
-  - "7"
-  - "8"
-  - "9"
+- '7'
+- '8'
+- '9'
 sudo: required
 before_install:
-  - sudo apt-get update && sudo apt-get install -y libusb-1.0-0-dev
-  - export CHROME_BIN=chromium-browser
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
+- sudo apt-get update && sudo apt-get install -y libusb-1.0-0-dev
+- export CHROME_BIN=chromium-browser
+- export DISPLAY=:99.0
+- sh -e /etc/init.d/xvfb start
 install: npm install && cd dapp && npm install && cd ..
 script:
 - npm run test-dapp
 - npm run test
+before_deploy: "rm -rf dapp/node_modules"
 deploy:
-  - provider: s3
-    bucket: wallet-development
-    secret_access_key:
-      secure: XmO28ALS4VgBGmMOQJdQKMzwPxzr5s3BsWVsK8Z0XoR/ViOH5rGol6myinEcqidy2sKEvKsEM3wAqW7eKpLXJi3YKK+1cmnpAzBlLQY7rISMpWsHOJ8Rgar9DrxsoOzqOmq24M/shrdO/Jq3NoezqWVF+pz7M2kOp/4mryJ62G7EZPEUQSAiLAK4EG86FaiiGAU+LCjH3cvgdM7LwUkcrHjHfJrrg05qDUVOfd5QCyEfUvx+sa9iOxPoFUIzqjWuHJrEN1xgbz3CcvWaLtUT1Gxldbw23yIDDPasoOZ/RcCSlbgss8myj8mCsPL/lj01nV4QNx3a3TEPcIK9sfUFgTmRkgZTtm/T39rjY1DwMk2DFa7mwIr/yWvysoRtf5Cuf6e9rPQxKuEtyKYgiYMdBlDxzsD/61/lslSCo4+Hw7FHuSsSqS7DRA6LWH2cwF/x0xp8tFnmpaugcRmZMK43vz/FVo6AM9riUDLAWuNZqfEoXqDJw0ibPKmhfvZVOhQ0PCIp4PNOauoIYPN93AyTQIQ8tqItm+YEfHP1MR/bxxUnKD8fkztcAeOTIKlv4DcPzFAr4kyHnZPvot50MOtfCf+Paetwm5wcR0IBtH32Q50/0+W62BgRlgNVu6anuzGmx2TboTCF0uySf9qops9RDZ0CF66DX/d+eMR6Jrl/jQA=
-    access_key_id:
-      secure: a+SpPi6jQJXzm0wJhdt4RJyd/ksS9om8IdHt2dlNsxZFxvD8NBqHKyZ0HUDB9r/+ni/vdzomQS6QfznwDrGvsIVrLaZCsdzkyTREvSXvFW3zA9MMFvf/gyNr+TXW0VMZZPC+GRhnTjWSbbFau5sGzvAb3xZKqzUIBsyb6q4r9uJfuSt4vVk427jEQMGnWK/oupw+KyE2LBUIpydPKZWVpzyX2KBAIKJzM0wZhW0lPwpXj6UNzpxi96ODTo4/rlrjBWraMr6zxfuEryXNcC4hPjrBPC9nABslZtkMuFMikIRzzYzmTExwmh2oJ3pp70HHDP1WINriMZ4XSrF6BWOQkmK0iFlaWZCenqMTQer+fzE4aKcFZgEp88c/ax8G0pKFfVRi6DtTH1iCZ9bfYHp0nvC9jtpXcYHWpWUas9mO6GG7boTZXHdlE2PKkPQUz6I3zTAkSUf1Vg8AixryeQuKnnhI2GQQ3TitK6DbN/jAvt4qV951hq7Oc4VreTu/VrcoTfyuw1x+kwUYiRk95kC5q8rIzb9qqhaknP9BKZsPd29AtiXfb9muNxjTZuuDyYkUKhC73+ZvmJfp8XBoGX95LpaiJCSBNQ5YUvEwM/uQ1E8/cj8TEdyosrofGjIQB7upbNUVYL/PbDXQXQ4O1RQ5fkjb4XOVLLNVucjfuHnn8Bg=
-    skip_cleanup: true
-    local_dir: dist
-    on:
-      branch: develop
-  - provider: s3
-    bucket: wallet-staging
-    secret_access_key:
-      secure: XmO28ALS4VgBGmMOQJdQKMzwPxzr5s3BsWVsK8Z0XoR/ViOH5rGol6myinEcqidy2sKEvKsEM3wAqW7eKpLXJi3YKK+1cmnpAzBlLQY7rISMpWsHOJ8Rgar9DrxsoOzqOmq24M/shrdO/Jq3NoezqWVF+pz7M2kOp/4mryJ62G7EZPEUQSAiLAK4EG86FaiiGAU+LCjH3cvgdM7LwUkcrHjHfJrrg05qDUVOfd5QCyEfUvx+sa9iOxPoFUIzqjWuHJrEN1xgbz3CcvWaLtUT1Gxldbw23yIDDPasoOZ/RcCSlbgss8myj8mCsPL/lj01nV4QNx3a3TEPcIK9sfUFgTmRkgZTtm/T39rjY1DwMk2DFa7mwIr/yWvysoRtf5Cuf6e9rPQxKuEtyKYgiYMdBlDxzsD/61/lslSCo4+Hw7FHuSsSqS7DRA6LWH2cwF/x0xp8tFnmpaugcRmZMK43vz/FVo6AM9riUDLAWuNZqfEoXqDJw0ibPKmhfvZVOhQ0PCIp4PNOauoIYPN93AyTQIQ8tqItm+YEfHP1MR/bxxUnKD8fkztcAeOTIKlv4DcPzFAr4kyHnZPvot50MOtfCf+Paetwm5wcR0IBtH32Q50/0+W62BgRlgNVu6anuzGmx2TboTCF0uySf9qops9RDZ0CF66DX/d+eMR6Jrl/jQA=
-    access_key_id:
-      secure: a+SpPi6jQJXzm0wJhdt4RJyd/ksS9om8IdHt2dlNsxZFxvD8NBqHKyZ0HUDB9r/+ni/vdzomQS6QfznwDrGvsIVrLaZCsdzkyTREvSXvFW3zA9MMFvf/gyNr+TXW0VMZZPC+GRhnTjWSbbFau5sGzvAb3xZKqzUIBsyb6q4r9uJfuSt4vVk427jEQMGnWK/oupw+KyE2LBUIpydPKZWVpzyX2KBAIKJzM0wZhW0lPwpXj6UNzpxi96ODTo4/rlrjBWraMr6zxfuEryXNcC4hPjrBPC9nABslZtkMuFMikIRzzYzmTExwmh2oJ3pp70HHDP1WINriMZ4XSrF6BWOQkmK0iFlaWZCenqMTQer+fzE4aKcFZgEp88c/ax8G0pKFfVRi6DtTH1iCZ9bfYHp0nvC9jtpXcYHWpWUas9mO6GG7boTZXHdlE2PKkPQUz6I3zTAkSUf1Vg8AixryeQuKnnhI2GQQ3TitK6DbN/jAvt4qV951hq7Oc4VreTu/VrcoTfyuw1x+kwUYiRk95kC5q8rIzb9qqhaknP9BKZsPd29AtiXfb9muNxjTZuuDyYkUKhC73+ZvmJfp8XBoGX95LpaiJCSBNQ5YUvEwM/uQ1E8/cj8TEdyosrofGjIQB7upbNUVYL/PbDXQXQ4O1RQ5fkjb4XOVLLNVucjfuHnn8Bg=
-    skip_cleanup: true
-    local_dir: dist
-    on:
-      branch: master
+- provider: s3
+  bucket: wallet-development
+  secret_access_key:
+    secure: FfW1tvr/TMrFYeumFXymGTuz0NmqQvJypuV3BlpbsIcHKKdHb7s210zIHPsKyU2uRjJJGeQCMDzPuI6EHXc4p2cR1o2VPmI2JuXsPjd9SUWJYfxL3/kyhUk+kdyvR+wH8MycddWL0+1XOe8m4K9CERHAUJj3cO2YorrlVVyvaqsZOkNS2gDjBs7+vqUNRgI3CR9f80Tt/m2ib0oWKL9q2nia68F2gVdLyKq70gR1OuH3GAi+cswmdjQMt/twiNWVuRBCXyiFJu2z1vsEmK+GcNvSD6TOWPGJtsWtYmH5rOyzqDrcv/Ee2XeOmgcNKOHCqwR/BgbqMcpmimupuV2WFXUfbxwp+49d7wCW8S6QANnA2H/PS6wcTWwck9vCtOR8CYIWPoMA/711s2YZ+kwoBAVUlaBbTXYlMRVcSmT35PMXuLZ40ixOprPZYJZnt5nTArJiG8g7WTEfqtLUCNztLBiEQNnbc+pfj8h1ddN96kC5NWsyevE7LRsnmILlqrgupON/1E6//xcLZCIIy0PoF+1VAnXBTJHcuQr7ylqVVrm/l5BX+yKAmwD+42ybC0d2LMXQattsI4NLEyzsolsRdiHxLEe3BXO65azHLPZEoh+YeXuiaOXx4gWi8Q9Z1TzVUozRsBjYlOigIBLaFPncd0MM3xJaxjDGwqxw87eLQV8=
+  access_key_id:
+    secure: B3CEVnnj56OEqbbYdFOpG7lgkuhiZOr+1Iao/Jbsvqv6uAqDRU4mQY0WS+crJ8N3evQcJbW3F9CwAYH6IRy7k7Is4F/6nXr6eqlAz0ovNlSOKg8wxGg5bzI3Eg6meX3gy1nXSmvGNWyzBH4vPFwII8NpoqkVpeqUv7h16tXjDjw+UxeYyVICauzzbZOoVFAPLBj0E4IHMgtem1e4hWVvZnpO8x2sz8TNIDxiHxIakA9VqbHuWOuQ4uzoQm00FiuGY/iiGHG10UWScKIirWGtKwHPenPoB5F/KefuBOpJkJ8n7ir0uITbok1RASTw6hJevAKSqCBmIFdDR34AZtbT57Fw9JjC5Mhedeaz33xOz9Nu7bfUEH+JPq1MIYr88s1J1jaNJj4vFfPaYYjxXBA1CS9KzUo48VA4k+cX56h4sOkGCnGuTdTbL2UahyVjJy3mMcGI2Mq0xDipoyQSMM7Bhec21HcgE3gaFS2QAjbDVFQLonqpnaqshRGmXXCFBkP8kh0HhS3Ackq04wUR/1P7JpTTqslK9X9e9WcLQkNc+sGsFqaKETXBc5fZfDtZwvJOOeZnbOhO2mfDazHJJYKooMcTKTtWJhPSkjiqw6hcNUKE7gL/XSA9JraO6yYru/MCiBMNVVkWtbPBm83sLwTsd3EySLBp+XSP1JGD3FBV9Sw=
+  skip_cleanup: true
+  local_dir: dapp
+  on:
+    branch: develop
+- provider: s3
+  bucket: wallet-staging
+  secret_access_key:
+    secure: FfW1tvr/TMrFYeumFXymGTuz0NmqQvJypuV3BlpbsIcHKKdHb7s210zIHPsKyU2uRjJJGeQCMDzPuI6EHXc4p2cR1o2VPmI2JuXsPjd9SUWJYfxL3/kyhUk+kdyvR+wH8MycddWL0+1XOe8m4K9CERHAUJj3cO2YorrlVVyvaqsZOkNS2gDjBs7+vqUNRgI3CR9f80Tt/m2ib0oWKL9q2nia68F2gVdLyKq70gR1OuH3GAi+cswmdjQMt/twiNWVuRBCXyiFJu2z1vsEmK+GcNvSD6TOWPGJtsWtYmH5rOyzqDrcv/Ee2XeOmgcNKOHCqwR/BgbqMcpmimupuV2WFXUfbxwp+49d7wCW8S6QANnA2H/PS6wcTWwck9vCtOR8CYIWPoMA/711s2YZ+kwoBAVUlaBbTXYlMRVcSmT35PMXuLZ40ixOprPZYJZnt5nTArJiG8g7WTEfqtLUCNztLBiEQNnbc+pfj8h1ddN96kC5NWsyevE7LRsnmILlqrgupON/1E6//xcLZCIIy0PoF+1VAnXBTJHcuQr7ylqVVrm/l5BX+yKAmwD+42ybC0d2LMXQattsI4NLEyzsolsRdiHxLEe3BXO65azHLPZEoh+YeXuiaOXx4gWi8Q9Z1TzVUozRsBjYlOigIBLaFPncd0MM3xJaxjDGwqxw87eLQV8=
+  access_key_id:
+    secure: B3CEVnnj56OEqbbYdFOpG7lgkuhiZOr+1Iao/Jbsvqv6uAqDRU4mQY0WS+crJ8N3evQcJbW3F9CwAYH6IRy7k7Is4F/6nXr6eqlAz0ovNlSOKg8wxGg5bzI3Eg6meX3gy1nXSmvGNWyzBH4vPFwII8NpoqkVpeqUv7h16tXjDjw+UxeYyVICauzzbZOoVFAPLBj0E4IHMgtem1e4hWVvZnpO8x2sz8TNIDxiHxIakA9VqbHuWOuQ4uzoQm00FiuGY/iiGHG10UWScKIirWGtKwHPenPoB5F/KefuBOpJkJ8n7ir0uITbok1RASTw6hJevAKSqCBmIFdDR34AZtbT57Fw9JjC5Mhedeaz33xOz9Nu7bfUEH+JPq1MIYr88s1J1jaNJj4vFfPaYYjxXBA1CS9KzUo48VA4k+cX56h4sOkGCnGuTdTbL2UahyVjJy3mMcGI2Mq0xDipoyQSMM7Bhec21HcgE3gaFS2QAjbDVFQLonqpnaqshRGmXXCFBkP8kh0HhS3Ackq04wUR/1P7JpTTqslK9X9e9WcLQkNc+sGsFqaKETXBc5fZfDtZwvJOOeZnbOhO2mfDazHJJYKooMcTKTtWJhPSkjiqw6hcNUKE7gL/XSA9JraO6yYru/MCiBMNVVkWtbPBm83sLwTsd3EySLBp+XSP1JGD3FBV9Sw=
+  skip_cleanup: true
+  local_dir: dapp
+  on:
+    branch: master

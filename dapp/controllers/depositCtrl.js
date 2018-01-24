@@ -5,8 +5,7 @@
     .controller("depositCtrl", function ($scope, Transaction, $routeParams, $uibModalInstance, Wallet, Utils, wallet, Web3Service) {
       $scope.wallet = wallet;
       $scope.amount = 10;
-      $scope.deposit = function () {
-        console.log(Wallet.txParams.gasPrice)
+      $scope.deposit = function () {        
         Transaction.send(
           {
             to: $scope.wallet.address,

@@ -305,22 +305,22 @@
                 else if (block && block.hash == "0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3") {
                   data.chain = "mainnet";
                   data.etherscan = "https://etherscan.io";
-                  data.walletFactoryAddress = "0xed5a90efa30637606ddaf4f4b3d42bb49d79bd4e";
+                  data.walletFactoryAddress = txDefault.walletFactoryAddresses["mainnet"].address;
                 }
                 else if (block && block.hash == "0x41941023680923e0fe4d74a34bdac8141f2540e3ae90623718e47d66d1ca4a2d") {
                   data.chain = "ropsten";
                   data.etherscan = "https://ropsten.etherscan.io";
-                  data.walletFactoryAddress = "0x5cb85db3e237cac78cbb3fd63e84488cac5bd3dd";
+                  data.walletFactoryAddress = txDefault.walletFactoryAddresses["ropsten"].address;
                 }
                 else if (block && block.hash == "0xa3c565fc15c7478862d50ccd6561e3c06b24cc509bf388941c25ea985ce32cb9") {
                   data.chain = "kovan";
                   data.etherscan = "https://kovan.etherscan.io";
-                  data.walletFactoryAddress = "0xa0dbdadcbcc540be9bf4e9a812035eb1289dad73";
+                  data.walletFactoryAddress = txDefault.walletFactoryAddresses["kovan"].address;
                 }
                 else {
                   data.chain = "privatenet";
                   data.etherscan = "https://testnet.etherscan.io";
-                  data.walletFactoryAddress = "0xd79426bcee5b46fde413ededeb38364b3e666097";
+                  data.walletFactoryAddress = txDefault.walletFactoryAddresses["privatenet"].address;
                 }
 
                 resolve(data);

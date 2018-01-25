@@ -58,6 +58,14 @@
               factoryAddress = $scope.config.walletFactoryAddresses['kovan'];
               alertNode = $scope.config.alertNodes['kovan'];
             }
+            else if (data.chain == 'ropsten') {
+              factoryAddress = $scope.config.walletFactoryAddresses['ropsten'];
+              alertNode = $scope.config.alertNodes['ropsten'];
+            }
+            else if (data.chain == 'privatenet') {
+              factoryAddress = $scope.config.walletFactoryAddresses['privatenet'];
+              alertNode = $scope.config.alertNodes['privatenet'];
+            }
             else {
               factoryAddress = $scope.config.walletFactoryAddresses['mainnet'];
               alertNode = $scope.config.alertNodes['mainnet'];

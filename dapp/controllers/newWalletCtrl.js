@@ -13,6 +13,7 @@
 
       $scope.confirmations = 1;
       $scope.limit = 0;
+      $scope.maxAllowedConfirmations = 1;
 
       $scope.removeOwner = function (address) {
         delete $scope.owners[address];
@@ -102,6 +103,7 @@
       $scope.addOwner = function () {
           $scope.owners[$scope.newOwner.address] = $scope.newOwner;
           $scope.newOwner = {}; // reset values
+          $scope.maxAllowedConfirmations = Object.keys($scope.owners).length
       };
     });
   }

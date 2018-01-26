@@ -3,13 +3,6 @@ var txDefaultOrig =
   gasLimit: 3141592,
   gasPrice: 18000000000,
   ethereumNode: "https://mainnet.infura.io:443",
-  alertNode: {
-    url : "https://alerts.gnosis.pm",
-    authCode: null,
-    name: "Mainnet",
-    managementPage: "https://alerts.gnosis.pm/api/alert/manage/?code={auth-code}",
-    managementRoute: "api/alert/manage"
-  },
   connectionChecker:{
     method : "OPTIONS",
     url : "https://www.google.com",
@@ -131,22 +124,6 @@ var txDefault = {
       name: "Local node"
     }
   ],
-  alertNodes: {
-    'mainnet': {
-      url: 'https://alerts.gnosis.pm',
-      authCode: null,
-      name: 'Mainnet',
-      networkId: 1,
-      managementPage: "https://alerts.gnosis.pm/api/alert/manage/?code={auth-code}"
-    },
-    'kovan': {
-      url: 'https://testalerts.gnosis.pm',
-      authCode: null,
-      name: 'Kovan',
-      networkId: 42,
-      managementPage: "https://testalerts.gnosis.pm/api/alert/manage/?code={auth-code}"
-    }
-  },
   walletFactoryAddresses: {
     'mainnet': {
       name: 'Mainnet',

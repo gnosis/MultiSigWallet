@@ -12,17 +12,15 @@
           <editable-select
             ng-model="config.selectedEthereumNode"
             options="config.ethereumNodes"
-            other="Custom node"            
+            other="Custom node"
             template-url="editable-select-settings-tpl.html">
-            <!-- on-change-function="alertNodeSetup" -->
           </editable-select>
         </div>
         <div class="col-md-6 form-group">
           <label for="wallet-factory">Web3 provider</label>
-          <provider-list 
-            default-item="config.wallet" 
+          <provider-list
+            default-item="config.wallet"
             selected-item="providers[$index].name">
-            <!-- on-change-function="alertNodeSetup" -->
           </provider-list>
         </div>
       </div>
@@ -34,36 +32,6 @@
         <div class="col-md-6 form-group">
           <label for="gas-price">Gas price</label>
           <input id="gas-price" type="number" ng-model="config.gasPrice" class="form-control" />
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6 form-group">
-          <label for="alert-nodes">Alert node</label>
-          <editable-select
-            ng-model="config.alertNode"
-            options="config.alertNodesList"
-            other="Custom node"            
-            template-url="editable-select-settings-tpl.html">
-          </editable-select>
-        </div>
-        <div class="col-md-6 form-group">
-          <label for="wallet-factory">Authorization code</label>
-          <input id="wallet-factory" type="text" ng-model="config.alertNode.authCode" class="form-control" />
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6"></div>
-        <div cass="col-md-6">
-          <div class="pull-left" style="margin-left: 15px;">
-            <a href="{{alertManagementPage}}" target="_blank"
-              class="btn btn-primary" type="button"
-              ng-show="showDeleteAuthCodeBtn">
-              Manage notifications
-            </a>
-            <button class="btn btn-danger" type="button" ng-click="remove()" ng-show="showDeleteAuthCodeBtn">
-              Delete Authorization code
-            </button>
-          </div>
         </div>
       </div>
       <div class="row">

@@ -47,7 +47,7 @@
     <script src="./bower_components/angular-ui-notification/dist/angular-ui-notification.min.js"></script>
     <script>
       if (isElectron) {
-        var lightwallet = require("./bower_components/eth-lightwallet/dist/lightwallet.min.js");
+        var lightwallet = require("eth-lightwallet");
         var FileSaver = require("./bower_components/file-saver/FileSaver.min.js");
         var ethereumWallet = require('ethereumjs-wallet');
         var HookedWalletProvider = require('./bower_components/web3-provider-engine/subproviders/hooked-wallet');

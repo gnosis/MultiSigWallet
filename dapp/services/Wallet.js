@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .service('Wallet', function ($window, $http, $q, $rootScope, $uibModal, Utils, ABI, Connection, Web3Service) {      
+    .service('Wallet', function ($window, $http, $q, $rootScope, $uibModal, Utils, ABI, Connection, Web3Service) {
       // Init wallet factory object
       var wallet = {
         wallets: JSON.parse(localStorage.getItem("wallets")) || {},
@@ -54,11 +54,11 @@
             $http
               .get('https://ethgasstation.info/json/ethgasAPI.json')
               .then(
-                function(response) {                  
-                  resolve(response.data.safeLow * 1e9)
+                function(response) {
+                  resolve((response.data.safeLow / 10) * 1e9)
                 },
                 reject
-              )            
+              )
           }
         );
       };
@@ -541,7 +541,7 @@
             }),
             cb
           );
-        });        
+        });
       };
 
       wallet.deployWithLimitFactory = function (owners, requiredConfirmations, limit, cb) {

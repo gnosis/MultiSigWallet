@@ -6,26 +6,9 @@
 
       // Don't save the following config values to localStorage
       var configBlacklist = [
-        "alertNodes", "alertNodesList", "ethereumNodes", "selectedEthereumNode", 
+        "ethereumNodes", "selectedEthereumNode",
         "walletFactoryAddresses", "selectedWalletFactoryAddress"
       ];
-
-      /**
-      * Sets the complete url to the Alert (notifications) management page
-      */
-      function alertNodeSetup () {
-        if ($scope.config.alertNode && $scope.config.alertNode.authCode) {
-          if (!$scope.config.alertNode.managementPage) {
-            if ($scope.config.alertNode.url.endsWith('/')) {
-              $scope.config.alertNode.managementPage = $scope.config.alertNode.url + txDefaultOrig.alertNode.managementRoute + '/?code={auth-code}';
-            }
-            else {
-              $scope.config.alertNode.managementPage = $scope.config.alertNode.url + '/' + txDefaultOrig.alertNode.managementRoute + '/?code={auth-code}';
-            }
-          }
-          $scope.alertManagementPage = $scope.config.alertNode.managementPage.replace('{auth-code}', $scope.config.alertNode.authCode);          
-        }              
-      };
 
       /**
       * Loads configuration
@@ -48,30 +31,32 @@
           }
         }
 
-        // Automatically get ETH chain and set the proper alert node
+        // Automatically get ETH chain
         Transaction.getEthereumChain().then(
           function (data) {
             var factoryAddress;
-            var alertNode;
 
             if (data.chain == 'kovan') {
               factoryAddress = $scope.config.walletFactoryAddresses['kovan'];
-              alertNode = $scope.config.alertNodes['kovan'];
+            }
+            else if (data.chain == 'ropsten') {
+              factoryAddress = $scope.config.walletFactoryAddresses['ropsten'];
+            }
+            else if (data.chain == 'privatenet') {
+              factoryAddress = $scope.config.walletFactoryAddresses['privatenet'];
             }
             else {
               factoryAddress = $scope.config.walletFactoryAddresses['mainnet'];
-              alertNode = $scope.config.alertNodes['mainnet'];
             }
 
             factoryAddress.name = 'Automatic';
-            alertNode.name = 'Automatic';
 
-            // Get the current wallet factory address object, 
+            // Get the current wallet factory address object,
             // we have to search inside the walletFactoryAddresses object
-            var walletFactoryKeys = Object.keys($scope.config.walletFactoryAddresses);            
+            var walletFactoryKeys = Object.keys($scope.config.walletFactoryAddresses);
             var currentWalletFactory;
-            
-            for (var x=0; x<walletFactoryKeys.length; x++) {              
+
+            for (var x=0; x<walletFactoryKeys.length; x++) {
               if ($scope.config.walletFactoryAddresses[walletFactoryKeys[x]].address == $scope.config.walletFactoryAddress) {
                 currentWalletFactory = $scope.config.walletFactoryAddresses[walletFactoryKeys[x]];
                 break;
@@ -85,41 +70,19 @@
             }
             else {
               $scope.config.walletFactoryAddress = {
-                'address': $scope.config.walletFactoryAddress, 
+                'address': $scope.config.walletFactoryAddress,
                 'name': 'Custom node'
               };
             }
 
             $scope.config.walletFactoryAddressList = [factoryAddress]; // Needed by the ui drop-down select list
 
-            // Set the new alertNode only if the Automatic mode is setted
-            if ($scope.config.alertNode && $scope.config.alertNode.name != 'Custom node') {
-              $scope.config.alertNode = alertNode;
-            }
-
-            $scope.config.alertNodesList = [alertNode]; // Needed by the ui drop-down select list
-
           }
-        );        
-
-        alertNodeSetup();
+        );
 
       }
 
       loadConfig();
-
-      /**
-      * Shows/hides 'Delete Auth Code' button
-      */
-      function showHideAuthCodeBtn () {
-        $scope.showDeleteAuthCodeBtn = $scope.config.alertNode ? $scope.config.alertNode.authCode ? true : false : false;
-
-        if ($scope.showDeleteAuthCodeBtn) {
-          setAlertManagementPage();
-        }
-      }
-
-      showHideAuthCodeBtn(); // called on page loading
 
       /**
       * Updates configuration
@@ -178,18 +141,6 @@
         }
 
         Utils.success("Configuration updated successfully.");
-        showHideAuthCodeBtn();
-      };
-
-      /**
-      * Adds a new custon ui-select item to Alert Node
-      */
-      $scope.addCustomAlertNode = function(param) {
-        var item = {
-           url: param,
-           authCode: null
-         };
-         return item;
       };
 
       /**
@@ -244,7 +195,6 @@
           function () {
             loadConfig();
             Utils.success("Configuration reseted successfully.");
-            showHideAuthCodeBtn();
           }
         );
       };
@@ -268,67 +218,6 @@
           size: 'md',
           controller: 'importWalletConfigCtrl'
         });
-      };
-
-      /**
-      * Delete a DAPP and its alerts/notifications
-      */
-      $scope.remove = function () {
-
-        $uibModal.open({
-          templateUrl: 'partials/modals/deleteDApp.html',
-          size: 'md',
-          scope: $scope,
-          controller: function ($uibModalInstance, $scope, EthAlerts) {
-            $scope.showLoadingSpinner = false;
-
-            $scope.ok = function () {
-              $scope.showLoadingSpinner = true;
-
-              EthAlerts.delete().then(
-                function successCallback(response) {
-                  $uibModalInstance.close();
-                },
-                function errorCallback(response) {
-                  var errorMessage = "";
-                  if (response.status = -1) {
-                    errorMessage = 'An error occurred. Please verify whether Gnosis Alert Node is setted correctly.';
-                  }
-                  else {
-                    Object.keys(response.data).map(function (error) {
-                      errorMessage += "<b>" + error + "</b>: ";
-                      errorMessage += response.data[error];
-                      errorMessage += "<br/>";
-                    });
-                  }
-                  Utils.dangerAlert(errorMessage);
-                }
-              )
-              .finally(function () {
-                $scope.showLoadingSpinner = false;
-              });
-            };
-
-            $scope.cancel = function () {
-              $uibModalInstance.dismiss();
-            };
-          }
-        })
-        .result
-        .then(
-          function () {
-            // Show success message
-            Utils.success("Authorization code was deleted successfully.");
-            // Remove authCode from configuration JSON            
-            var config = Config.getUserConfiguration();
-            delete config.alertNode.authCode;
-            delete txDefault.alertNode.authCode;
-            Config.setConfiguration("userConfig", JSON.stringify(config));
-            loadConfig();
-
-            showHideAuthCodeBtn();
-          }
-        );
       };
 
     });

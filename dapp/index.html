@@ -5,9 +5,6 @@
     <script src="./bower_components/web3/dist/web3.js">
       </script>
     <script>
-      var Web3Local = Web3;
-    </script>
-    <script>
       // Detect if it's an Electron app or not
       var isElectron = (window && window.process && window.process.type) ? true : false;
     </script>
@@ -50,7 +47,7 @@
     <script src="./bower_components/angular-ui-notification/dist/angular-ui-notification.min.js"></script>
     <script>
       if (isElectron) {
-        var lightwallet = require("./bower_components/eth-lightwallet/dist/lightwallet.min.js");
+        var lightwallet = require("eth-lightwallet");
         var FileSaver = require("./bower_components/file-saver/FileSaver.min.js");
         var ethereumWallet = require('ethereumjs-wallet');
         var HookedWalletProvider = require('./bower_components/web3-provider-engine/subproviders/hooked-wallet');
@@ -117,9 +114,6 @@
     <script src="./controllers/nonceCtrl.js"></script>
     <script src="./controllers/confirmMultisigTransactionOfflineCtrl.js"></script>
     <script src="./controllers/editABICtrl.js"></script>
-    <script src="./controllers/addNotificationsCtrl.js"></script>
-    <script src="./controllers/notificationsSignupCtrl.js"></script>
-    <script src="./controllers/notificationsSignupConfirmationCtrl.js"></script>
     <script src="./controllers/accountCtrl.js"></script>
 
     <script src="./expose.js"></script>

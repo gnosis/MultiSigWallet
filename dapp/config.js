@@ -3,13 +3,6 @@ var txDefaultOrig =
   gasLimit: 3141592,
   gasPrice: 18000000000,
   ethereumNode: "https://mainnet.infura.io:443",
-  alertNode: {
-    url : "https://alerts.gnosis.pm",
-    authCode: null,
-    name: "Mainnet",
-    managementPage: "https://alerts.gnosis.pm/api/alert/manage/?code={auth-code}",
-    managementRoute: "api/alert/manage"
-  },
   connectionChecker:{
     method : "OPTIONS",
     url : "https://www.google.com",
@@ -131,22 +124,6 @@ var txDefault = {
       name: "Local node"
     }
   ],
-  alertNodes: {
-    'mainnet': {
-      url: 'https://alerts.gnosis.pm',
-      authCode: null,
-      name: 'Mainnet',
-      networkId: 1,
-      managementPage: "https://alerts.gnosis.pm/api/alert/manage/?code={auth-code}"
-    },
-    'kovan': {
-      url: 'https://testalerts.gnosis.pm',
-      authCode: null,
-      name: 'Kovan',
-      networkId: 42,
-      managementPage: "https://testalerts.gnosis.pm/api/alert/manage/?code={auth-code}"
-    }
-  },
   walletFactoryAddresses: {
     'mainnet': {
       name: 'Mainnet',
@@ -167,6 +144,24 @@ var txDefault = {
   }
 };
 
+var oldWalletFactoryAddresses = [
+  ("0x12ff9a987c648c5608b2c2a76f58de74a3bf1987").toLowerCase(),
+  ("0xed5a90efa30637606ddaf4f4b3d42bb49d79bd4e").toLowerCase(),
+  ("0xa0dbdadcbcc540be9bf4e9a812035eb1289dad73").toLowerCase()
+];
+
+/**
+* Update the default wallet factory address in local storage
+*/
+function checkWalletFactoryAddress() {
+  var userConfig = JSON.parse(localStorage.getItem("userConfig"));
+
+  if (userConfig && oldWalletFactoryAddresses.indexOf(userConfig.walletFactoryAddress.toLowerCase()) >= 0) {
+    userConfig.walletFactoryAddress = txDefaultOrig.walletFactoryAddress;
+    localStorage.setItem("userConfig", JSON.stringify(userConfig));
+  }
+}
+
 /**
 * Reload configuration
 */
@@ -175,4 +170,5 @@ function loadConfiguration () {
   Object.assign(txDefault, txDefaultOrig, userConfig);
 }
 
+checkWalletFactoryAddress();
 loadConfiguration();

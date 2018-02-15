@@ -527,7 +527,7 @@
 
       wallet.deployWithLimit = function (owners, requiredConfirmations, limit, cb) {
         var MyContract = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi);
-        var gasNeeded = 2556980 + 42733 * owners.length; // Gas to create multisig with dynamic gas for owners
+        var gasNeeded = 2558000 + 42733 * owners.length; // Gas to create multisig with dynamic gas for owners
 
         Web3Service.configureGas({gas: gasNeeded, gasPrice: wallet.txParams.gasPrice}, function (gasOptions){
           MyContract.new(
@@ -546,7 +546,7 @@
 
       wallet.deployWithLimitFactory = function (owners, requiredConfirmations, limit, cb) {
         var walletFactory = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimitFactory.abi).at(txDefault.walletFactoryAddress);
-        var gasNeeded = 2002000 + 27820 * owners.length;
+        var gasNeeded = 2005000 + 27820 * owners.length;
 
         Web3Service.configureGas({gas: gasNeeded, gasPrice: wallet.txParams.gasPrice}, function (gasOptions){
           walletFactory.create(

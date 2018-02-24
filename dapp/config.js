@@ -12,7 +12,6 @@ var txDefaultOrig =
   defaultChainID: null,
   // Mainnet
   walletFactoryAddress: "0x6e95c8e8557abc08b46f3c347ba06f8dc012763f",
-  ledgerAPI: "http://localhost:" + ledgerPort,
   tokens: [
     {
       'address': '0x6810e776880c02933d47db1b9fc05908e5386b96',
@@ -120,6 +119,10 @@ var txDefault = {
       name: "Remote Kovan"
     },
     {
+      url : "https://rinkeby.infura.io:443",
+      name: "Remote Rinkeby"
+    },
+    {
       url : "http://localhost:8545",
       name: "Local node"
     }
@@ -136,6 +139,10 @@ var txDefault = {
     'kovan': {
       name: 'Kovan',
       address: '0x2c992817e0152a65937527b774c7a99a84603045'
+    },
+    'rinkeby': {
+      name: 'Rinkeby',
+      address: '0x19ba60816abca236baa096105df09260a4791418'
     },
     'privatenet': {
       name: 'Privatenet',

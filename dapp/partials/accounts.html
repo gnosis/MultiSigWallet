@@ -11,24 +11,6 @@
         ng-click="openImportLightWallet()">
         Import
       </button>
-      <!--<button type="button"
-        class="btn btn-default"
-        ng-click="downloadKeystore()"
-        ng-show="hasKeystore && account.addresses.length > 0">
-        Download
-      </button>-->
-      <!--<button ng-disabled="hasKeystore && account.addresses.length > 0"
-        type="button"
-        class="btn btn-default"
-        ng-click="restoreFromSeed()">
-        Import
-      </button>-->
-      <!--<button type="button"
-        class="btn btn-default"
-        ng-click="showSeed()"
-        ng-show="hasKeystore && account.addresses.length > 0">
-        Show seed
-      </button>-->
     </div>
     <h4>
       Accounts
@@ -59,9 +41,6 @@
           </div>
         </td>
         <td>
-          <!--<div uib-popover="{{account.address}}" popover-trigger="'mouseenter'" id="{{$index}}">
-            {{account.address}}
-          </div>-->
           <span uib-popover="{{account.address}}" popover-trigger="'mouseenter'" id="{{$index}}">
             {{account.address}}
           </span>

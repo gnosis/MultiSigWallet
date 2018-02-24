@@ -317,6 +317,11 @@
                   data.etherscan = "https://kovan.etherscan.io";
                   data.walletFactoryAddress = txDefault.walletFactoryAddresses["kovan"].address;
                 }
+                else if (block && block.hash == "0x6341fd3daf94b748c72ced5a5b26028f2474f5f00d824504e4fa37a75767e177") {
+                  data.chain = "rinkeby";
+                  data.etherscan = "https://rinkeby.etherscan.io";
+                  data.walletFactoryAddress = txDefault.walletFactoryAddresses["rinkeby"].address;
+                }
                 else {
                   data.chain = "privatenet";
                   data.etherscan = "https://testnet.etherscan.io";

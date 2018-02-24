@@ -141,7 +141,7 @@ var txDefault = {
       address: '0x2c992817e0152a65937527b774c7a99a84603045'
     },
     'rinkeby': {
-      name: 'Kovan',
+      name: 'Rinkeby',
       address: '0x19ba60816abca236baa096105df09260a4791418'
     },
     'privatenet': {

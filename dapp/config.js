@@ -120,6 +120,10 @@ var txDefault = {
       name: "Remote Kovan"
     },
     {
+      url : "https://rinkeby.infura.io:443",
+      name: "Remote Rinkeby"
+    },
+    {
       url : "http://localhost:8545",
       name: "Local node"
     }
@@ -136,6 +140,10 @@ var txDefault = {
     'kovan': {
       name: 'Kovan',
       address: '0x2c992817e0152a65937527b774c7a99a84603045'
+    },
+    'rinkeby': {
+      name: 'Kovan',
+      address: '0x19ba60816abca236baa096105df09260a4791418'
     },
     'privatenet': {
       name: 'Privatenet',

@@ -271,58 +271,6 @@
       };
 
       /**
-      * Restore account from seed
-      */
-      /*$scope.restoreFromSeed = function () {
-        $uibModal.open({
-          animation: false,
-          templateUrl: 'partials/modals/restoreSeed.html',
-          size: 'md',
-          controller: function ($scope, $uibModalInstance) {
-            $scope.account = {};
-            $scope.account.password = '';
-
-            $scope.ok = function () {
-              // Restore
-              Web3Service.restoreFromSeed($scope.account.password, $scope.account.seed, function (addresses) {
-                if (!addresses) {
-                  Utils.dangerAlert({message:'Invalid seed phrase.'});
-                }
-                else {
-                  var accountName = 'My account';
-                  var accounts = [];
-                  accounts.push(
-                    {
-                      'name': accountName,
-                      'address': addresses[0]
-                    }
-                  );
-
-                  // Unset password
-                  delete $scope.account.password;
-
-                  // Load updated accounts
-                  Config.setConfiguration('accounts', JSON.stringify(accounts));
-                  // Reload data
-                  init();
-                  // Hide spinner
-                  $scope.showLoadingSpinner = false;
-                  // Show success modal
-                  Utils.success("Account was restored.");
-                  // Close modal
-                  $uibModalInstance.close();
-                }
-              });
-            };
-
-            $scope.cancel = function () {
-              $uibModalInstance.dismiss();
-            };
-          }
-        });
-      };*/
-
-      /**
       * Download keystore
       */
       $scope.downloadKeystore = function () {
@@ -371,6 +319,47 @@
             $scope.fileValid = false;
             $scope.fileName = '';
 
+            $scope.importAccount = function () {
+              // Import light wallet account
+              Web3Service.importLightWalletAccount($scope.fileContent, $scope.account.password, function (newAddress) {
+                var accounts = Config.getConfiguration('accounts');
+                var accountName = $scope.account.name;
+
+                if (accounts) {
+                  accounts.push(
+                    {
+                      'name': accountName,
+                      'address': newAddress
+                    }
+                  );
+                }
+                else {
+                  accounts = [];
+                  accounts.push(
+                    {
+                      'name': accountName,
+                      'address': newAddress
+                    }
+                  );
+                }
+
+                // Unset password
+                // delete $scope.account.password;
+
+                // Load updated accounts
+                Config.setConfiguration('accounts', JSON.stringify(accounts));
+                Config.setConfiguration('selectedAccount', JSON.stringify(newAddress));
+                // Reload data
+                init();
+                // Hide spinner
+                $scope.showLoadingSpinner = false;
+                // Show success modal
+                Utils.success("Account was imported.");
+                // Close modal
+                $uibModalInstance.close();
+              });
+            }
+
             $scope.isFileValid = function(element) {
               var reader = new FileReader();
 
@@ -401,47 +390,24 @@
                 }
                 // check if address already imported or created
                 if (Object.keys(JSON.parse(Web3Service.getKeystore() || '{}')).indexOf(address) == -1) {
-                  // Import light wallet account
-                  Web3Service.importLightWalletAccount($scope.fileContent, $scope.account.password, function (newAddress) {
-                    var accounts = Config.getConfiguration('accounts');
-                    var accountName = $scope.account.name;
-
-                    if (accounts) {
-                      accounts.push(
-                        {
-                          'name': accountName,
-                          'address': newAddress
-                        }
-                      );
-                    }
-                    else {
-                      accounts = [];
-                      accounts.push(
-                        {
-                          'name': accountName,
-                          'address': newAddress
-                        }
-                      );
-                    }
-
-                    // Unset password
-                    // delete $scope.account.password;
-
-                    // Load updated accounts
-                    Config.setConfiguration('accounts', JSON.stringify(accounts));
-                    Config.setConfiguration('selectedAccount', JSON.stringify(newAddress));
-                    // Reload data
-                    init();
-                    // Hide spinner
-                    $scope.showLoadingSpinner = false;
-                    // Show success modal
-                    Utils.success("Account was imported.");
-                    // Close modal
-                    $uibModalInstance.close();
-                  });
+                  $scope.importAccount();
                 }
                 else {
-                  Utils.dangerAlert({message:'The account already exists.'});
+                  // Check if account is on the accounts array
+                  var accounts = Config.getConfiguration('accounts');
+                  var savedKey = false;
+                  for (var key in Object.keys(accounts)){
+                    if (accounts[key].address == address) {
+                      savedKey = true;
+                      break;
+                    }
+                  }
+                  if (!savedKey){
+                    $scope.importAccount();
+                  }
+                  else {
+                    Utils.dangerAlert({message:'The account already exists.'});
+                  }
                 }
               }
               catch (err) {
@@ -500,7 +466,7 @@
               // show spinner
               $scope.showLoadingSpinner = true;
 
-              factory.decryptLightWallet(address, $scope.password, function (response, v3Instance) {
+              Web3Service.decryptLightWallet(address, $scope.password, function (response, v3Instance) {
                 if (!response) {
                   Utils.dangerAlert({message: "Invalid password."});
                   $scope.showLoadingSpinner = false;

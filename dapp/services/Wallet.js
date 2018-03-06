@@ -527,7 +527,7 @@
 
       wallet.deployWithLimit = function (owners, requiredConfirmations, limit, cb) {
         var MyContract = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi);
-        var gasNeeded = 2558000 + 42733 * owners.length; // Gas to create multisig with dynamic gas for owners
+        var gasNeeded = 3000000;
 
         Web3Service.configureGas({gas: gasNeeded, gasPrice: wallet.txParams.gasPrice}, function (gasOptions){
           MyContract.new(
@@ -546,21 +546,35 @@
 
       wallet.deployWithLimitFactory = function (owners, requiredConfirmations, limit, cb) {
         var walletFactory = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimitFactory.abi).at(txDefault.walletFactoryAddress);
-        var gasNeeded = 2005000 + 27820 * owners.length;
-
-        Web3Service.configureGas({gas: gasNeeded, gasPrice: wallet.txParams.gasPrice}, function (gasOptions){
-          walletFactory.create(
+        walletFactory
+          .create
+          .estimateGas(
             owners,
             requiredConfirmations,
             limit,
-            wallet.txDefaults({
-              data: wallet.json.multiSigDailyLimit.binHex,
-              gas: gasOptions.gas,
-              gasPrice: gasOptions.gasPrice
-            }),
-            cb
+            function (e, gas) {
+              if (e) {
+                cb(e);
+              }
+              else {
+                Web3Service.configureGas({gas: Math.ceil(gas * 1.5), gasPrice: wallet.txParams.gasPrice}, function (gasOptions){
+                  walletFactory.create(
+                    owners,
+                    requiredConfirmations,
+                    limit,
+                    wallet.txDefaults({
+                      data: wallet.json.multiSigDailyLimit.binHex,
+                      gas: gasOptions.gas,
+                      gasPrice: gasOptions.gasPrice
+                    }),
+                    cb
+                  );
+                });
+              }
+            }
           );
-        });
+
+        
       };
 
       wallet.deployWithLimitFactoryOffline = function (owners, requiredConfirmations, limit, cb) {

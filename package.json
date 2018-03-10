@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "child_process": "^1.0.2",
-    "ethereumjs-testrpc": "^4.0.1",
+    "ethereumjs-testrpc": "^6.0.3",
     "run-with-testrpc": "^0.2.1",
     "truffle": "^4.1.3"
   },

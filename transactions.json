@@ -69,9 +69,9 @@
 					"tx": "0xd69d881e9f924c148a20d080886b80b2813713a200429d7ed90f9cb47eab65da"
 			},
 			{
-					"name": “ANT Payment to Law Firm",
+					"name": "ANT Payment to Law Firm",
 					"tx": "0xb520cd570a16e584716e1cd11bb936d86cabf6b1a7fa648f2b37abad6350ea23"
-			},]
+			}]
 		},
 		{
 			"id": 136,
@@ -84,9 +84,7 @@
 			{
 					"name": "ETH Payment to Law Firm",
 					"tx": "0x3ee324b913bae7ebae5388bf5516f9e868061ef99c628c1f8c266d08677dc4bb"
-			},
-			]
-
+			}]
 		},
 		{
 			"id": 135,

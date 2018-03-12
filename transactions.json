@@ -27,13 +27,13 @@
 		{
 			"id": 143,
 			"desc": "Q1 Offsite Reimbursements and Travel for Q1 Events",
-			"multisigTx": "0x6ab62dbbfb069c8a33430274f0508cda9b4a278b87127b15af10424c9593136a”,
+			"multisigTx": "0x6ab62dbbfb069c8a33430274f0508cda9b4a278b87127b15af10424c9593136a",
 			"entities": []
 		},
 		{
 			"id": 142,
 			"desc": "Referral Bonus",
-			"multisigTx": "0xed4399c02c0629495a5d09483e72928b715358281cb5e020a2ec8a1e31eba761”,
+			"multisigTx": "0xed4399c02c0629495a5d09483e72928b715358281cb5e020a2ec8a1e31eba761",
 			"entities": []
 		},
 		{

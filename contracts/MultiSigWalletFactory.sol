@@ -1,4 +1,4 @@
-pragma solidity 0.4.15;
+pragma solidity ^0.4.15;
 import "./Factory.sol";
 import "./MultiSigWallet.sol";
 

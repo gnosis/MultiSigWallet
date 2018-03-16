@@ -1,4 +1,4 @@
-pragma solidity 0.4.15;
+pragma solidity ^0.4.15;
 
 
 /// @title Test token contract - Allows testing of token transfers with multisig wallet.
@@ -37,11 +37,20 @@ contract TestToken {
         totalSupply += _value;
     }
 
+    /*
+     * This modifier is present in some real world token contracts, and due to a solidity
+     * bug it was not compatible with multisig wallets
+     */
+    modifier onlyPayloadSize(uint size) {
+        require(msg.data.length == size + 4);
+        _;
+    }
+
     /// @dev Transfers sender's tokens to a given address. Returns success.
     /// @param _to Address of token receiver.
     /// @param _value Number of tokens to transfer.
     /// @return Returns success of function call.
-    function transfer(address _to, uint256 _value)
+    function transfer(address _to, uint256 _value) onlyPayloadSize(2 * 32)
         public
         returns (bool success)
     {

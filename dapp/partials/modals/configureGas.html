@@ -7,7 +7,7 @@
     <div class="form-group">
         <label for="value">Gas limit:</label>
         <input id="value" type="number" class="form-control" ng-model="gasLimit" step="any" ng-change="calculateFee()"
-            min="0" max="999999999999999" required >
+            min="{minimumGasLimit}" max="999999999999999" required >
     </div>
     <div class="form-group">
         <label for="value">Gas price (GWei):</label>

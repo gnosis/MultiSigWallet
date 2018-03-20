@@ -98,6 +98,7 @@
 
               $scope.close = $uibModalInstance.dismiss;                
               $scope.gasLimit = options.gas;
+              $scope.minimumGasLimit = options.gas;
               $scope.gasPrice = options.gasPrice / 1e9;
 
               $scope.calculateFee = function () {

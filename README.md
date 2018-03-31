@@ -57,6 +57,10 @@ truffle migrate <account1,account2,...,accountN> <requiredConfirmations>
 truffle migrate <account1,account2,...,accountN> <requiredConfirmations> <dailyLimit>
 ```
 
+Interface Releases
+------------------
+You can find binaries for OSX, Windows and Linux [here](https://github.com/gnosis/MultiSigWallet/releases)
+
 Limitations
 -------------
 This implementation does not allow the creation of smart contracts via multisignature transactions.

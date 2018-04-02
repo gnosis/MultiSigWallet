@@ -29,9 +29,9 @@
   },
   "dependencies": {
     "child_process": "^1.0.2",
-    "ethereumjs-testrpc": "^4.0.1",
+    "ethereumjs-testrpc": "^6.0.3",
     "run-with-testrpc": "^0.2.1",
-    "truffle": "^3.4.9"
+    "truffle": "^4.1.5"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",

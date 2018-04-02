@@ -1,4 +1,5 @@
-pragma solidity ^0.4.15;
+pragma solidity 0.4.21;
+
 import "./Factory.sol";
 import "./MultiSigWalletWithDailyLimit.sol";
 

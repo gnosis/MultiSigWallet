@@ -1,4 +1,4 @@
-pragma solidity ^0.4.15;
+pragma solidity ^0.4.21;
 
 contract Factory {
 
@@ -37,6 +37,6 @@ contract Factory {
     {
         isInstantiation[instantiation] = true;
         instantiations[msg.sender].push(instantiation);
-        ContractInstantiation(msg.sender, instantiation);
+        emit ContractInstantiation(msg.sender, instantiation);
     }
 }

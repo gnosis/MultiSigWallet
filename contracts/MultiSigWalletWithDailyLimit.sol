@@ -1,4 +1,5 @@
-pragma solidity ^0.4.15;
+pragma solidity 0.4.21;
+
 import "./MultiSigWallet.sol";
 
 
@@ -39,7 +40,7 @@ contract MultiSigWalletWithDailyLimit is MultiSigWallet {
         onlyWallet
     {
         dailyLimit = _dailyLimit;
-        DailyLimitChange(_dailyLimit);
+        emit DailyLimitChange(_dailyLimit);
     }
 
     /// @dev Allows anyone to execute a confirmed transaction or ether withdraws until daily limit is reached.
@@ -57,9 +58,9 @@ contract MultiSigWalletWithDailyLimit is MultiSigWallet {
             if (!_confirmed)
                 spentToday += txn.value;
             if (txn.destination.call.value(txn.value)(txn.data))
-                Execution(transactionId);
+                emit Execution(transactionId);
             else {
-                ExecutionFailure(transactionId);
+                emit ExecutionFailure(transactionId);
                 txn.executed = false;
                 if (!_confirmed)
                     spentToday -= txn.value;

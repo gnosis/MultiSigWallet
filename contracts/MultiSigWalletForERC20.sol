@@ -46,7 +46,7 @@ contract MultiSigWalletForERC20 {
     uint public transactionCount;
 
     struct Transaction {
-        address destination;
+        address contract_address;
         address send_to;
         uint value;
         bytes data;
@@ -72,7 +72,7 @@ contract MultiSigWalletForERC20 {
     }
 
     modifier transactionExists(uint transactionId) {
-        require(transactions[transactionId].destination != 0 && transactions[transactionId].send_to != 0);
+        require(transactions[transactionId].contract_address != 0 && transactions[transactionId].send_to != 0);
         _;
     }
 
@@ -195,16 +195,16 @@ contract MultiSigWalletForERC20 {
     }
 
     /// @dev Allows an owner to submit and confirm a transaction.
-    /// @param destination ERC20 token contract address.
+    /// @param contract_address ERC20 token contract address.
     /// @param send_to ERC20 token owner address.
     /// @param value ERC20 token value.
     /// @param data Transaction data payload.
     /// @return Returns transaction ID.
-    function submitTransaction(address destination, address send_to, uint value, bytes data)
+    function submitTransaction(address contract_address, address send_to, uint value, bytes data)
         public
         returns (uint transactionId)
     {
-        transactionId = addTransaction(destination, send_to, value, data);
+        transactionId = addTransaction(contract_address, send_to, value, data);
         confirmTransaction(transactionId);
     }
 
@@ -244,7 +244,7 @@ contract MultiSigWalletForERC20 {
         if (isConfirmed(transactionId)) {
             Transaction storage txn = transactions[transactionId];
             txn.executed = true;
-            ERC20Token erc20token = ERC20Token(txn.destination);
+            ERC20Token erc20token = ERC20Token(txn.contract_address);
             if (erc20token.transfer(txn.send_to, txn.value))
                 Execution(transactionId);
             else {
@@ -275,19 +275,19 @@ contract MultiSigWalletForERC20 {
      * Internal functions
      */
     /// @dev Adds a new transaction to the transaction mapping, if transaction does not exist yet.
-    /// @param destination ERC20 token contract address.
+    /// @param contract_address ERC20 token contract address.
     /// @param send_to ERC20 token owner address.
     /// @param value ERC20 token value.
     /// @param data Transaction data payload.
     /// @return Returns transaction ID.
-    function addTransaction(address destination, address send_to, uint value, bytes data)
+    function addTransaction(address contract_address, address send_to, uint value, bytes data)
         internal
-        notNull(destination)
+        notNull(contract_address)
         returns (uint transactionId)
     {
         transactionId = transactionCount;
         transactions[transactionId] = Transaction({
-            destination: destination,
+            contract_address: contract_address,
             send_to: send_to,
             value: value,
             data: data,

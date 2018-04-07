@@ -1,6 +1,6 @@
 {
   "name": "multisig-wallet-gnosis",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Main module, for installing all dependencies",
   "scripts": {
     "test-dapp": "cd dapp && npm test",
@@ -13,14 +13,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ConsenSys/MultiSigWallet.git"
+    "url": "git+https://github.com/gnosis/MultiSigWallet.git"
   },
   "author": "Gnosis (https://gnosis.pm/)",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ConsenSys/MultiSigWallet/issues"
+    "url": "https://github.com/gnosis/MultiSigWallet/issues"
   },
-  "homepage": "https://github.com/ConsenSys/MultiSigWallet#readme",
+  "homepage": "https://github.com/gnosis/MultiSigWallet#readme",
   "eslintConfig": {
     "env": {
       "browser": true,

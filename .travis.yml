@@ -16,7 +16,6 @@ script:
 - npm run test
 before_deploy: rm -rf dapp/node_modules
 deploy:
-  matrix:
   - provider: s3
     bucket: wallet-development
     secret_access_key:

@@ -30,7 +30,6 @@
   "dependencies": {
     "child_process": "^1.0.2",
     "ethereumjs-testrpc": "^4.0.1",
-    "run-with-testrpc": "^0.2.1",
     "truffle": "^3.4.9"
   },
   "devDependencies": {
@@ -39,6 +38,7 @@
     "eslint-config-airbnb": "^15.1.0",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "^5.1.1",
-    "eslint-plugin-react": "^7.3.0"
+    "eslint-plugin-react": "^7.3.0",
+    "run-with-testrpc": "^0.2.1"
   }
 }

@@ -38,6 +38,12 @@
             }
           }
         }
+        else if (txDefault.wallet == "trezor") {
+          factory.trezorSetup();
+          if (resolve) {
+            resolve();
+          }
+        }
         // injected web3 provider (Metamask, mist, etc)
         else if (txDefault.wallet == "injected" && $window && $window.web3 && !isElectron) {
           factory.web3 = new MultisigWeb3($window.web3.currentProvider);
@@ -325,6 +331,80 @@
             $scope.checkCoinbase();
           }
         });
+      };
+
+      /* Trezor setup */
+      factory.trezorSetup = function () {
+        console.log("setting up trezor")
+        const ethUtil = require('ethereumjs-util');
+        const EthTx = require('ethereumjs-tx');
+        factory.engine = new ProviderEngine();
+        factory.web3 = new MultisigWeb3(factory.engine);
+
+        var web3Provider = new HookedWeb3Provider({
+          getAccounts: function (cb) {
+            if(!factory.accounts.length) {
+              TrezorConnect.ethereumGetAddress("m/44'/60'/0'/0/0", function(response) {
+                if(response.success){                  
+                  factory.accounts = ["0x" + response.address];
+                  cb(null, factory.accounts)
+                }
+                else{
+                  cb(response.error)
+                }
+              })
+            }
+            else {
+              cb(null, factory.accounts)
+            }
+          },
+          approveTransaction: function(txParams, cb) {
+            cb(null, true);
+          },
+          signTransaction: function(txData, cb) {
+            factory.web3.version.getNetwork(function (e, chainID) {
+              if(!txData.value){
+                txData.value = '0x00'
+              }
+              TrezorConnect.ethereumSignTx(
+                "m/44'/60'/0'/0/0", // address path - either array or string, see example
+                (txData.nonce.length % 2)?'0' + txData.nonce.slice(2): txData.nonce.slice(2),     // nonce - hexadecimal string
+                txData.gasPrice.slice(2), // gas price - hexadecimal string
+                txData.gas.slice(2), // gas limit - hexadecimal string
+                txData.to? txData.to.slice(2):null,        // address
+                (txData.value.length % 2)? '0' + txData.value.slice(2): txData.value,     // value in wei, hexadecimal string
+                txData.data ? txData.data.slice(2) : null,      // data, hexadecimal string OR null for no data
+                parseInt(chainID, 16),  // chain id for EIP-155 - is only used in fw 1.4.2 and newer, older will ignore it
+                function(response){
+                  if (response.success){
+                    txData.value = txData.value || '0x00';
+                    txData.data = ethUtil.addHexPrefix(txData.data);
+                    txData.gasPrice = parseInt(txData.gasPrice, 16);
+                    txData.nonce = parseInt(txData.nonce, 16);
+                    txData.gasLimit = txData.gas;
+                    txData.v = response.v;
+                    txData.s = '0x' + response.s;
+                    txData.r = '0x' + response.r;
+                    // Sign transaction
+                    var tx = new EthTx(txData);
+                    cb(null, '0x' + tx.serialize().toString('hex'));
+                  }
+                  else{
+                    cb(response.error)
+                  }
+                })
+              });         
+          }
+        });
+
+        factory.web3 = new MultisigWeb3(factory.engine);
+
+        factory.engine.addProvider(web3Provider);
+
+        factory.engine.addProvider(new RpcSubprovider({
+          rpcUrl: txDefault.ethereumNode
+        }));
+        factory.engine.start();
       };
 
       /**

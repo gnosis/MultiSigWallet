@@ -251,6 +251,10 @@
               {
                 name: 'remotenode',
                 value: 'Remote node',
+              },
+              {
+                name: "trezor",
+                value: "Trezor"
               }
             );
           }

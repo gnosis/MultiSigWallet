@@ -24,11 +24,14 @@
       if (isElectron) {
         if (typeof module === 'object') {window.module = module; module = undefined;}
         $ = require('./bower_components/jquery/dist/jquery.min.js');
-        var HookedWeb3Provider = require('./bower_components/web3-provider-engine/subproviders/hooked-wallet.js');
-        var RpcSubprovider = require('./bower_components/web3-provider-engine/subproviders/rpc.js');
+        // var HookedWeb3Provider = require('./bower_components/web3-provider-engine/subproviders/hooked-wallet.js');
+        // var RpcSubprovider = require('./bower_components/web3-provider-engine/subproviders/rpc.js');
         var ledgerPort = require('electron').remote.getGlobal('ledgerPort');
       }
     </script>
+    <script src="./node_modules/web3-provider-engine/dist/HookedWalletSubprovider.js"></script>
+    <script src="./node_modules/web3-provider-engine/dist/RpcSubprovider.js"></script>
+    <script src="./node_modules/browser-builds/dist/ethereumjs-tx/ethereumjs-tx-1.3.3.min.js"></script>
     <script src="./bower_components/angular/angular.min.js"></script>
     <script src="./bower_components/angular-animate/angular-animate.min.js"></script>
     <script src="./bower_components/jquery/dist/jquery.min.js"></script>
@@ -38,7 +41,6 @@
     <script src="./bower_components/angular-touch/angular-touch.min.js"></script>
 
     <script src="./bower_components/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js"></script>
-    <script src="./bower_components/ethereum-tx/dist/ethereumjs-tx/ethereumjs-tx-1.3.3.js"></script>
     <script src="./bower_components/moment/min/moment-with-locales.min.js"></script>
     <script src="./bower_components/abi-decoder/dist/abi-decoder.js"></script>
     <script src="./bower_components/clipboard/dist/clipboard.min.js"></script>
@@ -51,7 +53,6 @@
         var lightwallet = require("eth-lightwallet");
         var FileSaver = require("./bower_components/file-saver/FileSaver.min.js");
         var ethereumWallet = require('ethereumjs-wallet');
-        var HookedWalletProvider = require('./bower_components/web3-provider-engine/subproviders/hooked-wallet');
         var hdkeyring = require('eth-hd-keyring');
         var encryptor = require('browser-passworder');
       }

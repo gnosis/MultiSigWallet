@@ -335,13 +335,10 @@
 
       /* Trezor setup */
       factory.trezorSetup = function () {
-        console.log("setting up trezor")
-        const ethUtil = require('ethereumjs-util');
-        const EthTx = require('ethereumjs-tx');
         factory.engine = new ProviderEngine();
         factory.web3 = new MultisigWeb3(factory.engine);
 
-        var web3Provider = new HookedWeb3Provider({
+        var web3Provider = new HookedWalletSubprovider({
           getAccounts: function (cb) {
             if(!factory.accounts.length) {
               TrezorConnect.ethereumGetAddress("m/44'/60'/0'/0/0", function(response) {
@@ -368,17 +365,17 @@
               }
               TrezorConnect.ethereumSignTx(
                 "m/44'/60'/0'/0/0", // address path - either array or string, see example
-                (txData.nonce.length % 2)?'0' + txData.nonce.slice(2): txData.nonce.slice(2),     // nonce - hexadecimal string
-                txData.gasPrice.slice(2), // gas price - hexadecimal string
-                txData.gas.slice(2), // gas limit - hexadecimal string
-                txData.to? txData.to.slice(2):null,        // address
-                (txData.value.length % 2)? '0' + txData.value.slice(2): txData.value,     // value in wei, hexadecimal string
-                txData.data ? txData.data.slice(2) : null,      // data, hexadecimal string OR null for no data
+                Utils.trezorHex(txData.nonce),     // nonce - hexadecimal string
+                Utils.trezorHex(txData.gasPrice), // gas price - hexadecimal string
+                Utils.trezorHex(txData.gas), // gas limit - hexadecimal string
+                txData.to? Utils.trezorHex(txData.to):null,        // address
+                Utils.trezorHex(txData.value),     // value in wei, hexadecimal string
+                txData.data ? Utils.trezorHex(txData.data) : null,      // data, hexadecimal string OR null for no data
                 parseInt(chainID, 16),  // chain id for EIP-155 - is only used in fw 1.4.2 and newer, older will ignore it
                 function(response){
                   if (response.success){
                     txData.value = txData.value || '0x00';
-                    txData.data = ethUtil.addHexPrefix(txData.data);
+                    txData.data = ethereumjs.Util.addHexPrefix(txData.data);
                     txData.gasPrice = parseInt(txData.gasPrice, 16);
                     txData.nonce = parseInt(txData.nonce, 16);
                     txData.gasLimit = txData.gas;
@@ -386,7 +383,7 @@
                     txData.s = '0x' + response.s;
                     txData.r = '0x' + response.r;
                     // Sign transaction
-                    var tx = new EthTx(txData);
+                    var tx = new ethereumjs.Tx(txData);
                     cb(null, '0x' + tx.serialize().toString('hex'));
                   }
                   else{

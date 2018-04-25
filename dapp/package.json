@@ -58,6 +58,8 @@
     "eth-hd-keyring": "^1.2.0",
     "eth-sig-util": "^1.2.1",
     "ethereumjs-testrpc": "git+https://github.com/denisgranha/testrpc.git",
+    "web3-provider-engine": "git+https://github.com/denisgranha/provider-engine.git#compiled-subprovider",
+    "browser-builds": "git+https://github.com/ethereumjs/browser-builds#ddb27f8d0f18f04333cccea7b5fef48eb609dd42",
     "ethereumjs-wallet": "^0.6.0",
     "eth-lightwallet": "^3.0.1",
     "express": "^4.15.2",

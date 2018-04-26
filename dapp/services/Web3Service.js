@@ -494,7 +494,7 @@
           }
         };
 
-        web3Provider = new HookedWalletProvider(options);
+        web3Provider = new HookedWalletSubprovider(options);
         //web3Provider.transaction_signer = factory.keystore;
         web3Provider.host = txDefault.ethereumNode;
         // Setup engine
@@ -572,9 +572,13 @@
       };
 
       factory.importLightWalletAccount = function (v3, password, ctrlCallback) {
+        // DIRTY but MyEtherWallet doesn't generate an standard V3 file, it adds a word Crypto instead of crypto
+        v3.crypto = v3.Crypto;
+        delete v3.Crypto;
         var v3String = JSON.stringify(v3);
         // key => value object (address => V3)
         var keystoreObj = JSON.parse(factory.getKeystore()) || {};
+
         // Set keystore in V3 format
         factory.keystore = v3;
         // Encrypt V3

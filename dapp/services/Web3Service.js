@@ -248,7 +248,7 @@
         factory.engine = new ProviderEngine();
         factory.web3 = new MultisigWeb3(factory.engine);
 
-        var web3Provider = new HookedWeb3Provider({
+        var web3Provider = new HookedWalletSubprovider({
           getAccounts: function (cb) {
             $http.get("http://localhost:" + ledgerPort + "/accounts").success(function (accounts) {
               cb(null, accounts);

@@ -8,9 +8,6 @@
     "install": "cd dapp && npm install",
     "start": "cd dapp && npm start"
   },
-  "engines": {
-    "node": "7.1.0"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gnosis/MultiSigWallet.git"

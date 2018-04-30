@@ -1,8 +1,6 @@
 dist: trusty
 language: node_js
 node_js:
-- '7'
-- '8'
 - '9'
 sudo: required
 before_install:
@@ -16,7 +14,6 @@ script:
 - npm run test
 before_deploy: rm -rf dapp/node_modules
 deploy:
-  matrix:
   - provider: s3
     bucket: wallet-development
     secret_access_key:

@@ -38,6 +38,12 @@
             }
           }
         }
+        else if (txDefault.wallet == "trezor") {
+          factory.trezorSetup();
+          if (resolve) {
+            resolve();
+          }
+        }
         // injected web3 provider (Metamask, mist, etc)
         else if (txDefault.wallet == "injected" && $window && $window.web3 && !isElectron) {
           factory.web3 = new MultisigWeb3($window.web3.currentProvider);
@@ -242,7 +248,7 @@
         factory.engine = new ProviderEngine();
         factory.web3 = new MultisigWeb3(factory.engine);
 
-        var web3Provider = new HookedWeb3Provider({
+        var web3Provider = new HookedWalletSubprovider({
           getAccounts: function (cb) {
             $http.get("http://localhost:" + ledgerPort + "/accounts").success(function (accounts) {
               cb(null, accounts);
@@ -325,6 +331,77 @@
             $scope.checkCoinbase();
           }
         });
+      };
+
+      /* Trezor setup */
+      factory.trezorSetup = function () {
+        factory.engine = new ProviderEngine();
+        factory.web3 = new MultisigWeb3(factory.engine);
+
+        var web3Provider = new HookedWalletSubprovider({
+          getAccounts: function (cb) {
+            if(!factory.accounts.length) {
+              TrezorConnect.ethereumGetAddress("m/44'/60'/0'/0/0", function(response) {
+                if(response.success){                  
+                  factory.accounts = ["0x" + response.address];
+                  cb(null, factory.accounts)
+                }
+                else{
+                  cb(response.error)
+                }
+              })
+            }
+            else {
+              cb(null, factory.accounts)
+            }
+          },
+          approveTransaction: function(txParams, cb) {
+            cb(null, true);
+          },
+          signTransaction: function(txData, cb) {
+            factory.web3.version.getNetwork(function (e, chainID) {
+              if(!txData.value){
+                txData.value = '0x00'
+              }
+              TrezorConnect.ethereumSignTx(
+                "m/44'/60'/0'/0/0", // address path - either array or string, see example
+                Utils.trezorHex(txData.nonce),     // nonce - hexadecimal string
+                Utils.trezorHex(txData.gasPrice), // gas price - hexadecimal string
+                Utils.trezorHex(txData.gas), // gas limit - hexadecimal string
+                txData.to? Utils.trezorHex(txData.to):null,        // address
+                Utils.trezorHex(txData.value),     // value in wei, hexadecimal string
+                txData.data ? Utils.trezorHex(txData.data) : null,      // data, hexadecimal string OR null for no data
+                parseInt(chainID, 16),  // chain id for EIP-155 - is only used in fw 1.4.2 and newer, older will ignore it
+                function(response){
+                  if (response.success){
+                    txData.value = txData.value || '0x00';
+                    txData.data = ethereumjs.Util.addHexPrefix(txData.data);
+                    txData.gasPrice = parseInt(txData.gasPrice, 16);
+                    txData.nonce = parseInt(txData.nonce, 16);
+                    txData.gasLimit = txData.gas;
+                    txData.v = response.v;
+                    txData.s = '0x' + response.s;
+                    txData.r = '0x' + response.r;
+                    // Sign transaction
+                    var tx = new ethereumjs.Tx(txData);
+                    cb(null, '0x' + tx.serialize().toString('hex'));
+                  }
+                  else{
+                    cb(response.error)
+                  }
+                })
+              });         
+          }
+        });
+
+        factory.web3 = new MultisigWeb3(factory.engine);
+
+        factory.engine.addProvider(web3Provider);
+
+        factory.engine.addProvider(new RpcSubprovider({
+          rpcUrl: txDefault.ethereumNode
+        }));
+        factory.engine.start();
       };
 
       /**
@@ -417,7 +494,7 @@
           }
         };
 
-        web3Provider = new HookedWalletProvider(options);
+        web3Provider = new HookedWalletSubprovider(options);
         //web3Provider.transaction_signer = factory.keystore;
         web3Provider.host = txDefault.ethereumNode;
         // Setup engine
@@ -495,9 +572,13 @@
       };
 
       factory.importLightWalletAccount = function (v3, password, ctrlCallback) {
+        // DIRTY but MyEtherWallet doesn't generate an standard V3 file, it adds a word Crypto instead of crypto
+        v3.crypto = v3.Crypto;
+        delete v3.Crypto;
         var v3String = JSON.stringify(v3);
         // key => value object (address => V3)
         var keystoreObj = JSON.parse(factory.getKeystore()) || {};
+
         // Set keystore in V3 format
         factory.keystore = v3;
         // Encrypt V3

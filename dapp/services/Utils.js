@@ -220,6 +220,26 @@
         return true;
       };
 
+      factory.trezorHex = function (hex){
+        var trezorHex;
+        if(hex == undefined || hex == null){
+          return ;
+        }
+        if(hex.length > 2 && hex.slice(0,2) == '0x'){
+          trezorHex = hex.slice(2);
+        }
+        else{
+          trezorHex = hex;
+        }
+
+        if((trezorHex.length % 2) == 0) {
+          return trezorHex;
+        }
+        else{
+          return '0' + trezorHex;
+        }
+      }
+
       return factory;
     });
   }

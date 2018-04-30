@@ -12,6 +12,10 @@ install: npm install && cd dapp && npm install && cd ..
 script:
 - npm run test-dapp
 - npm run test
+before_deploy: 
+  - rm -rf dapp/node_modules/electron* dapp/node_modules/http-server dapp/node_modules/grunt* dapp/node_modules/webpack dapp/node_modules/karma* dapp/node_modules/babel*
+
+
 deploy:
   - provider: s3
     bucket: wallet-development

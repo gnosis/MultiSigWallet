@@ -5,6 +5,7 @@
   "scripts": {
     "test-dapp": "cd dapp && npm test",
     "test": "sh truffle_test_runner.sh",
+    "lint-contracts": "solhint contracts/**/*.sol",
     "install": "cd dapp && npm install",
     "start": "cd dapp && npm start"
   },
@@ -36,6 +37,7 @@
     "eslint-config-airbnb": "^15.1.0",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "^5.1.1",
-    "eslint-plugin-react": "^7.3.0"
+    "eslint-plugin-react": "^7.3.0",
+    "solhint": "^1.1.10"
   }
 }

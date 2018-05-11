@@ -1,0 +1,12 @@
+{
+  "extends": "default",
+  "rules": {
+    "avoid-call-value": "warn",
+    "const-name-snakecase": "warn",
+    "func-name-mixedcase": "warn",
+    "func-order": "warn",
+    "func-param-name-mixedcase": "warn",
+    "var-name-mixedcase": "warn",
+    "visibility-modifier-order": "warn"
+  }
+}

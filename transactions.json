@@ -128,6 +128,14 @@
 			{
 					"name": "RCD March Extra Services Payment",
 					"tx": "0xd78143c6fdcec8c2e0edc86366056e504177db5d56c666977423401d847819e7"
+			},
+			{
+					"name": "EdCon Sponsorship",
+					"tx": "0x8468209270e532da260a5bacc690ac9bc5a7a1f5797b8f7cc20ebddbb62c79a6"
+			},	     
+			{
+					"name": "Token Summit Tickets (2) for Aragon Team",
+					"tx": "0xcbaeb2941ab620f5a5d1e1c65282210be01dfa23e10790e243b6f5bde7945263"
 			}	    ]
 		},
 		{

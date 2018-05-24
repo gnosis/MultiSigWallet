@@ -154,3 +154,16 @@ input[name="editable-select"]:disabled {
 .ui-notification {
   top: 50px !important;
 }
+
+.imprint{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  background: #182a36;
+  padding: 0;
+  text-align: center;
+}
+.imprint a{
+  color: white;
+}

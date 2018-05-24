@@ -18,7 +18,7 @@
     "install-electron": "npm install && ./node_modules/.bin/electron-rebuild",
     "electron-rebuild": "electron-rebuild --force --module_dir . -w node-hid -e node_modules/electron && npm rebuild leveldown scrypt",
     "start": "http-server -a 0.0.0.0 -p 5000",
-    "start-electron": "NODE_ENV=development electron .",
+    "start-electron": "NODE_ENV=development node_modules/.bin/electron .",
     "package-linux-x64": "electron-packager . MultisigWallet --prune --ignore=tests/* --ignore=testrpc.sh --platform=linux --out=./dist --overwrite=true --asar=true",
     "package-osx": "electron-packager . MultisigWallet --prune --ignore=tests/* --ignore=testrpc.sh --platform=darwin --out=./dist --overwrite=true --asar=true",
     "package-win": "electron-packager . MultisigWallet --prune --ignore=tests/* --ignore=testrpc.sh --platform=win32 --out=./dist --overwrite=true --asar=true",

@@ -45,9 +45,9 @@
       }
 
       // If not terms acepted, prompt disclaimer
-      var termsAccepted = localStorage.getItem("termsAccepted");
+      var gdprTermsAccepted = localStorage.getItem("gdprTermsAccepted");
 
-      if (!termsAccepted) {
+      if (!gdprTermsAccepted) {
         if (isElectron) {
           $uibModal.open({
             templateUrl: 'partials/modals/disclaimerElectron.html',
@@ -57,7 +57,7 @@
             controller: function ($scope, $uibModalInstance) {
               $scope.ok = function () {
                 $uibModalInstance.close($scope.walletOption);
-                localStorage.setItem("termsAccepted", true);
+                localStorage.setItem("gdprTermsAccepted", true);
                 // call web3 selection modal
                 showWeb3SelectionModal();
               };
@@ -73,7 +73,7 @@
             controller: function ($scope, $uibModalInstance) {
               $scope.ok = function () {
                 $uibModalInstance.close($scope.walletOption);
-                localStorage.setItem("termsAccepted", true);
+                localStorage.setItem("gdprTermsAccepted", true);
               };
             }
           });
@@ -166,11 +166,11 @@
 
           $scope.updateInfo().then(function () {
             var chooseWeb3ProviderShown = Config.getConfiguration('chooseWeb3ProviderShown');
-            if (termsAccepted && !chooseWeb3ProviderShown && isElectron) {
+            if (gdprTermsAccepted && !chooseWeb3ProviderShown && isElectron) {
               // show selection modal
               showWeb3SelectionModal();
             }
-            else if (termsAccepted && !isElectron && !Web3Service.coinbase
+            else if (gdprTermsAccepted && !isElectron && !Web3Service.coinbase
                 && txDefault.wallet !== "ledger" && txDefault.wallet !== 'lightwallet') {
               $uibModal.open({
                 templateUrl: 'partials/modals/web3Wallets.html',

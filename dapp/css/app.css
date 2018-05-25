@@ -167,3 +167,7 @@ input[name="editable-select"]:disabled {
 .imprint a{
   color: white;
 }
+
+::selection {
+  background:transparent;
+  }

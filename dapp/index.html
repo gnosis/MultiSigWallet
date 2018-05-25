@@ -52,6 +52,7 @@
         var ethereumWallet = require('ethereumjs-wallet');
         var hdkeyring = require('eth-hd-keyring');
         var encryptor = require('browser-passworder');
+        var shell = require('electron').shell;
       }
       else {
         document.write('<script src="./node_modules/ledger-wallet-provider/dist/ledgerwallet.js"><' + '/script>');
@@ -113,7 +114,7 @@
     <script src="./controllers/confirmMultisigTransactionOfflineCtrl.js"></script>
     <script src="./controllers/editABICtrl.js"></script>
     <script src="./controllers/accountCtrl.js"></script>
-
+    <script src="./controllers/footerCtrl.js"></script>
     <script src="./expose.js"></script>
     <script>
       if (isElectron) {
@@ -185,10 +186,13 @@
       <ng-view></ng-view>
     </div>
     <footer>
-        <nav class="imprint">
-          <div class="container">
+        <nav class="imprint" ng-controller="footerCtrl">
+          <div class="container" ng-hide="isElectron">
               Please read our full <a href="https://gnosis.pm/assets/pdf/PrivacyPolicyGnosisLtd.pdf" target="_blank" >Privacy Policy</a> and <a href="/TermsofUseMultisig.pdf" target="_blank" >Terms of Use</a>. - <a target="_blank" href="/imprint.html">Imprint</a>
           </div>
+          <div class="container" ng-show="isElectron">
+            Please read our full <a ng-click="openPolicy()">Privacy Policy</a> and <a ng-click="openTerms()">Terms of Use</a>. - <a ng-click="openImprint()">Imprint</a>
+        </div>
           </nav>
     </footer>
   </body>

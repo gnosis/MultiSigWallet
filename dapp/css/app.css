@@ -169,5 +169,5 @@ input[name="editable-select"]:disabled {
 }
 
 ::selection {
-  background:transparent;
+  background: #b3c3ce;
   }

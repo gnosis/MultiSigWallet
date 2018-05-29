@@ -57,7 +57,16 @@
                 function(response) {
                   resolve((response.data.safeLow / 10) * 1e9)
                 },
-                reject
+                function (error) {
+                  // Get gas price from Ethereum Node
+                  Web3Service.web3.eth.getGasPrice(function (g_error, g_result) {
+                    if (g_error) {
+                      reject (g_error);
+                    } else {
+                      resolve(g_result);
+                    }
+                  });
+                }
               )
           }
         );
@@ -574,7 +583,7 @@
             }
           );
 
-        
+
       };
 
       wallet.deployWithLimitFactoryOffline = function (owners, requiredConfirmations, limit, cb) {
@@ -1059,7 +1068,7 @@
               cb
             );
           }
-        });        
+        });
       };
 
       /**
@@ -1098,8 +1107,8 @@
               options,
               cb
             );
-          }          
-        });        
+          }
+        });
       };
 
       /**
@@ -1222,9 +1231,9 @@
                     options,
                     cb
                   );
-                }                
+                }
               }
-            );            
+            );
           }
         }).call();
       };

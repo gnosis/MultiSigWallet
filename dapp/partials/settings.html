@@ -57,3 +57,18 @@
     </div>
   </form>
 </div>
+
+<div class="panel panel-default" ng-if="appVersion !== undefined">
+  <div class="panel-heading">
+    <h4>
+      About
+    </h4>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-6">
+        App Version {{ appVersion }}
+      </div>
+    </div>
+  </div>
+</div>

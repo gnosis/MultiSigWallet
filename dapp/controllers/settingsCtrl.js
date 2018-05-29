@@ -2,7 +2,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("settingsCtrl", function (Web3Service, $scope, Config, Wallet, Utils, Transaction, $window, $uibModal, $sce, $location) {
+    .controller("settingsCtrl", function (Web3Service, $scope, Config, Wallet, Utils, Transaction, $window, $uibModal, $sce, $location, $http) {
 
       // Don't save the following config values to localStorage
       var configBlacklist = [
@@ -79,10 +79,20 @@
 
           }
         );
+      }
 
+      function setAppVersion () {
+        if (isElectron) {
+          $scope.appVersion = require('electron').remote.app.getVersion();
+        } else {
+          $http.get('package.json').success(function (package_json){
+            $scope.appVersion = package_json.version;
+          });
+        }
       }
 
       loadConfig();
+      setAppVersion();
 
       /**
       * Updates configuration

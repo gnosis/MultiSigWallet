@@ -578,11 +578,21 @@
           delete v3.Crypto;
         }
         var v3String = JSON.stringify(v3);
+        // Verify passphrase is correct
+        try {
+          v3Instance = ethereumWallet.fromV3(v3String, password);
+        } catch (error) {
+          ctrlCallback(error);
+          return;
+        }
+
+
         // key => value object (address => V3)
         var keystoreObj = JSON.parse(factory.getKeystore()) || {};
 
         // Set keystore in V3 format
         factory.keystore = v3;
+
         // Encrypt V3
         encryptor.encrypt(password, v3String)
         .then(function (encryptedV3String) {
@@ -603,7 +613,7 @@
           // Do web3 setup
           factory.lightWalletSetup(false);
 
-          ctrlCallback(generatedAddress);
+          ctrlCallback(null, generatedAddress);
         });
       };
 

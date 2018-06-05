@@ -8,6 +8,7 @@ var txDefaultOrig =
     url : "https://www.google.com",
     checkInterval: 5000
   },
+  ethGasStation: "https://safe-relay.gnosis.pm/api/v1/gas-station/",
   wallet: "injected",
   defaultChainID: null,
   // Mainnet

@@ -321,7 +321,12 @@
 
             $scope.importAccount = function () {
               // Import light wallet account
-              Web3Service.importLightWalletAccount($scope.fileContent, $scope.account.password, function (newAddress) {
+              Web3Service.importLightWalletAccount($scope.fileContent, $scope.account.password, function (error, newAddress) {
+                if (error) {
+                  Utils.dangerAlert(error);
+                  return;
+                }
+                
                 var accounts = Config.getConfiguration('accounts');
                 var accountName = $scope.account.name;
 

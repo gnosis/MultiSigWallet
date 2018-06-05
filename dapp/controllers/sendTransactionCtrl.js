@@ -10,7 +10,9 @@
       $scope.params = [];
 
       $scope.send = function () {
-        var tx = {};
+        var tx = Wallet.txDefaults({
+          gas: 21000
+        });
         Object.assign(tx, $scope.tx);
         var params = [];
         Object.assign(params, $scope.params);

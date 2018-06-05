@@ -5,8 +5,6 @@
       .controller('footerCtrl', function ($scope) {
         $scope.navCollapsed = true;
         $scope.isElectron = isElectron;
-        console.log(isElectron, shell)
-
 
         // electron show terms and policy
         $scope.openTerms = function() {

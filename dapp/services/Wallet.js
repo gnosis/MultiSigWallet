@@ -52,10 +52,10 @@
         return $q(
           function(resolve, reject){
             $http
-              .get('https://ethgasstation.info/json/ethgasAPI.json')
+              .get(txDefault.ethGasStation)
               .then(
                 function(response) {
-                  resolve((response.data.safeLow / 10) * 1e9)
+                  resolve(response.data.standard)
                 },
                 function (error) {
                   // Get gas price from Ethereum Node

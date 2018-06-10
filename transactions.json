@@ -1,6 +1,112 @@
 {
 	"txs": [
 		{
+			"id": 171,
+			"desc": "Operating Expenses (ANT)",
+			"multisigTx": " ",
+			"entities": [{
+					"name": "ETHBuenosAires Hackathon Prizes",
+					"tx": "0x00d510db379337192f98350173195c3f29e50da6bbe5985873ad93b9ae96321f"
+			},
+			{
+					"name": "ETHBuenosAires Hackathon Prizes",
+					"tx": "0x3c7b08153f51e462c4c65a4542239b70f8b577b8e5fd31d2a3cb2ee607ac0768"
+			},
+			{
+					"name": "ETHBuenosAires Hackathon Prizes",
+					"tx": "0xf903536109c89e48f3e3b2f46f866c18e5008741b7555dc5866b11c1a4bd2c63"
+			}, 
+			{
+					"name": "ETHBuenosAires Hackathon Prizes",
+					"tx": "0xba3254971376c1839abeb3590c6cf53ae3a81ba373a24a71345de3e9eee4714d"
+			},
+			{
+					"name": "ETHBuenosAires Hackathon Prizes",
+					"tx": "0xa188a0223e6d33e22ab6233919a6262ef41cba93be0a332ff1d5476e282cb3d5"
+			},
+			{
+					"name": "ETHBuenosAires Hackathon Prizes",
+					"tx": "0x71aba08b3d77bbc08d4291d596a20ae740b805c63d05fa143b84d0b795a84aba"
+			}, 	     
+			{
+					"name": "Code Audit: WHG",
+					"tx": "0xaf593885f930d8a71b6191bdc8bfb729c4aed649c7dc9fb4264ef75f280c21a5"
+			},
+			{
+					"name": "RCD Monthly Services: May",
+					"tx": "0x36e2b5736e4f30b07ced0ddb4e60bb106ca39d00d1b598a7875717d4996fffb2"
+			},
+			{
+					"name": "RCD April Extra Services",
+					"tx": "0xa6999879c6613f982408c5c7ceea898caf487931bc680cabab6da7cccb23c9c8"
+			},
+			{
+					"name": "RCD May Extra Services",
+					"tx": "0xeb6b39a7736bf854275d5f4027acf81158575219ce8476afb8ea4c235825190d"
+			},
+			{
+					"name": "RCD Monthly Services: June",
+					"tx": "0x0299c18cfb5af660353a9c58f7f5ae92d1bf6af5b1321ba4bf2aa4fcd82cbe3e"
+			}	     
+				    ]
+		},
+		{
+			"id": 170,
+			"desc": "Operating Expenses (ETH)",
+			"multisigTx": " ",
+			"entities": [{
+					"name": "ETHBuenosAires Hackathon Prizes",
+					"tx": "0x4087d608219e226ac0a189d8b28cc2cd5101b70148b5be1d247e94f827e08723"
+			},
+			{
+					"name": "ETHBuenosAires Hackathon Prizes",
+					"tx": "0xad7ff20a0b5d4943a2d94574c50549571883374716d6a973adabaa0ae18ad9e3"
+			},
+			{
+					"name": "ETHBuenosAires Hackathon Prizes",
+					"tx": "0x75e80197231204c8c32fa6627c112dc3d5e65e97d4d62c7f58abfc02d50be6d4"
+			},	     
+			{
+					"name": "Code Audit: WHG",
+					"tx": "0xd7164938981a81eb9a29cb83a3885db7dc3477e570f08a0bf0f518b4e8d77219"
+			},
+			{
+					"name": "Professional Services Provider: Lakeside",
+					"tx": "0xf2f6a828ca25ebfcac766e8a42d4170eb5febd537a030e4b9794f35c27a1831a"
+			},	    
+			{
+					"name": "Professional Services Provider: Lakeside",
+					"tx": "0x501165a0d587990274c84bd03a60954c11c4131cff8c77aec177c1102529a5ca"
+			},
+			{
+					"name": "Professional Services Provider: Human Resources/Hiring",
+					"tx": "0xdaa61a6f72ae167f58b0b72ea0e9d777ff5411720ccb6e4ceb2620edf191e577"
+			},
+			{
+					"name": "RCD Monthly Services: May",
+					"tx": "0x2cb13ddffe56471d41895a728aa9ce4de35a288bf9b16f4a78a62ed5e9f9acca"
+			},
+			{
+					"name": "RCD April Extra Services",
+					"tx": "0x0afe9388e7616fc9534f45f2cc526447e5a760017f2ae4dab19bda8d298f56c8"
+			},	     
+			{
+					"name": "RCD Monthly Services: June",
+					"tx": "0x4d8d2718d221fdeef118d535cac8ab644a6927d9c1157ab261fbbc3e89dc8929"
+			},
+			{
+					"name": "RCD May Extra Services",
+					"tx": "0xef45ac7db4a74c3c76b4927675e62272625fc55d5e72d186cf57d4faf7965b30"
+			},	     
+				    ]
+		},
+		{
+			"id": 169,
+			"desc": "Contractor Rewards",
+			"multisigTx": " ",
+			"entities": []
+		},
+		{
 			"id": 168,
 			"desc": " ",
 			"multisigTx": " ",
@@ -20,7 +126,7 @@
 		},
 		{
 			"id": 165,
-			"desc": " ",
+			"desc": "Prizes and Bounties",
 			"multisigTx": "0x8196b2c4c6bc8f8b7a62ac0bd350bc0237dd1804655df8e14418d95d98e9312c",
 			"entities": [{
 					"name": "Ethereum Community Tour: Seoul Hackathon Prizes",

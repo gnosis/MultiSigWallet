@@ -95,6 +95,10 @@
 					"tx": "0x4d8d2718d221fdeef118d535cac8ab644a6927d9c1157ab261fbbc3e89dc8929"
 			},
 			{
+					"name": "RCD Monthly Services: June (FIAT)",
+					"tx": "0x0538accc25a2f016f53845ba53d78d221bb22a38ba06fca8aafdc99322fa5785"
+			},	     
+			{
 					"name": "RCD May Extra Services",
 					"tx": "0xef45ac7db4a74c3c76b4927675e62272625fc55d5e72d186cf57d4faf7965b30"
 			},	     

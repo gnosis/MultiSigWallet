@@ -109,7 +109,7 @@ contract MultiSigWallet {
         public
         validRequirement(_owners.length, _required)
     {
-        for (uint i=0; i<_owners.length; i++) {
+        for (uint i = 0; i < _owners.length; i++) {
             require(!isOwner[_owners[i]] && _owners[i] != 0);
             isOwner[_owners[i]] = true;
         }
@@ -139,7 +139,7 @@ contract MultiSigWallet {
         ownerExists(owner)
     {
         isOwner[owner] = false;
-        for (uint i=0; i<owners.length - 1; i++)
+        for (uint i = 0; i < owners.length - 1; i++)
             if (owners[i] == owner) {
                 owners[i] = owners[owners.length - 1];
                 break;
@@ -159,7 +159,7 @@ contract MultiSigWallet {
         ownerExists(owner)
         ownerDoesNotExist(newOwner)
     {
-        for (uint i=0; i<owners.length; i++)
+        for (uint i = 0; i < owners.length; i++)
             if (owners[i] == owner) {
                 owners[i] = newOwner;
                 break;
@@ -244,12 +244,14 @@ contract MultiSigWallet {
     function external_call(address destination, uint value, uint dataLength, bytes data) private returns (bool) {
         bool result;
         assembly {
-            let x := mload(0x40)   // "Allocate" memory for output (0x40 is where "free memory" pointer is stored by convention)
+            let x := mload(0x40)   // "Allocate" memory for output (0x40 is where "free memory"
+                                    // pointer is stored by convention)
             let d := add(data, 32) // First 32 bytes are the padded length of data, so exclude that
             result := call(
                 sub(gas, 34710),   // 34710 is the value that solidity is currently emitting
-                                   // It includes callGas (700) + callVeryLow (3, to pay for SUB) + callValueTransferGas (9000) +
-                                   // callNewAccountGas (25000, in case the destination address does not exist and needs creating)
+                                   // It includes callGas (700) + callVeryLow (3, to pay for SUB) +
+                                   // callValueTransferGas (9000) + callNewAccountGas (25000, in case
+                                   // the destination address does not exist and needs creating)
                 destination,
                 value,
                 d,
@@ -270,7 +272,7 @@ contract MultiSigWallet {
         returns (bool)
     {
         uint count = 0;
-        for (uint i=0; i<owners.length; i++) {
+        for (uint i = 0; i < owners.length; i++) {
             if (confirmations[transactionId][owners[i]])
                 count += 1;
             if (count == required)
@@ -313,7 +315,7 @@ contract MultiSigWallet {
         constant
         returns (uint count)
     {
-        for (uint i=0; i<owners.length; i++)
+        for (uint i = 0; i < owners.length; i++)
             if (confirmations[transactionId][owners[i]])
                 count += 1;
     }
@@ -327,9 +329,8 @@ contract MultiSigWallet {
         constant
         returns (uint count)
     {
-        for (uint i=0; i<transactionCount; i++)
-            if (   pending && !transactions[i].executed
-                || executed && transactions[i].executed)
+        for (uint i = 0; i < transactionCount; i++)
+            if (pending && !transactions[i].executed || executed && transactions[i].executed)
                 count += 1;
     }
 
@@ -354,13 +355,13 @@ contract MultiSigWallet {
         address[] memory confirmationsTemp = new address[](owners.length);
         uint count = 0;
         uint i;
-        for (i=0; i<owners.length; i++)
+        for (i = 0; i < owners.length; i++)
             if (confirmations[transactionId][owners[i]]) {
                 confirmationsTemp[count] = owners[i];
                 count += 1;
             }
         _confirmations = new address[](count);
-        for (i=0; i<count; i++)
+        for (i = 0; i < count; i++)
             _confirmations[i] = confirmationsTemp[i];
     }
 
@@ -378,15 +379,13 @@ contract MultiSigWallet {
         uint[] memory transactionIdsTemp = new uint[](transactionCount);
         uint count = 0;
         uint i;
-        for (i=0; i<transactionCount; i++)
-            if (   pending && !transactions[i].executed
-                || executed && transactions[i].executed)
-            {
+        for (i = 0; i < transactionCount; i++)
+            if (pending && !transactions[i].executed || executed && transactions[i].executed) {
                 transactionIdsTemp[count] = i;
                 count += 1;
             }
         _transactionIds = new uint[](to - from);
-        for (i=from; i<to; i++)
+        for (i = from; i < to; i++)
             _transactionIds[i - from] = transactionIdsTemp[i];
     }
 }

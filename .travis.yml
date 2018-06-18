@@ -1,24 +1,30 @@
-dist: trusty
 language: node_js
 node_js:
 - '9'
-sudo: required
-env:
-- DIST='web' # distribution
-- DIST='desktop'
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      sudo: required
+      env:
+      - DIST='web' # distribution
+      - DIST='desktop'
+    - os: osx
+      env:
+      - DIST='desktop'
 before_install:
-- sudo apt-get update && sudo apt-get install -y libusb-1.0-0-dev
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update && sudo apt-get install -y libusb-1.0-0-dev ; fi
 - export CHROME_BIN=chromium-browser
 - export DISPLAY=:99.0
-- sh -e /etc/init.d/xvfb start
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sh -e /etc/init.d/xvfb start ; fi
 install: npm install && cd dapp && npm install && cd ..
 script:
 - npm run test-dapp
 - npm run test
 before_deploy:
-  - if [[ "$DIST" == "desktop" ]] && [[ "$TRAVIS_BRANCH" == "develop" ]]; then cd dapp/ && mkdir dist && npm run build-linux && npm run build-osx; fi
-  - if [[ "$DIST" == "web" ]]; then rm -rf dapp/node_modules/electron* dapp/node_modules/http-server dapp/node_modules/grunt* dapp/node_modules/webpack dapp/node_modules/karma* dapp/node_modules/babel* ; fi
-
+  - if [[ "$DIST" == "desktop" ]] && [[ "$TRAVIS_BRANCH" == "develop" ]] && [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd dapp/ && mkdir dist && npm run build-linux; fi
+  - if [[ "$DIST" == "desktop" ]] && [[ "$TRAVIS_BRANCH" == "develop" ]] && [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd dapp/ && mkdir dist && npm run build-osx; fi
+  - if [[ "$DIST" == "web" ]] && [[ "$TRAVIS_OS_NAME" == "linux" ]]; then rm -rf dapp/node_modules/electron* dapp/node_modules/http-server dapp/node_modules/grunt* dapp/node_modules/webpack dapp/node_modules/karma* dapp/node_modules/babel* ; fi
 deploy:
   - provider: s3
     bucket: wallet-development

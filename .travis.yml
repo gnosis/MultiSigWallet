@@ -16,7 +16,7 @@ script:
 - npm run test-dapp
 - npm run test
 before_deploy:
-  - if [[ "$DIST" == "desktop" ]] && [[ "$TRAVIS_BRANCH" == "master" ]]; then cd dapp/ && npm run build-linux & npm run build-osx; fi
+  - if [[ "$DIST" == "desktop" ]] && [[ "$TRAVIS_BRANCH" == "develop" ]]; then cd dapp/ && mkdir dist && npm run build-linux && npm run build-osx; fi
   - if [[ "$DIST" == "web" ]]; then rm -rf dapp/node_modules/electron* dapp/node_modules/http-server dapp/node_modules/grunt* dapp/node_modules/webpack dapp/node_modules/karma* dapp/node_modules/babel* ; fi
 
 deploy:
@@ -50,7 +50,7 @@ deploy:
     access_key_id:
       secure: BDEFvOIGXS59CL3DzPDZ3q2AkkRdFzwgiGoyou2KEE1Kv3D7TxxTKM8cvuFSHlvGls8qronN7zgB8Zt5wEXJS6+mBotb6T8W3c5xWKyrPooTdwMsvTwtXbUiJeU6Kp6YJCkKUHDYo2XPFDGuYQXK4GBImaMsS2bTcBwM14K7oD6pTzLDERU8Ll+/1u3HtboJOy688+hWs+P2K4xUO+W+3KXGI1MNapg9QcqyzgPCByBny/uvhzc262xbpe6U/QOKEKjmZQb7mpgidrPNGk3MesepAlGg/WoM8ufmbOFBqI/gWHknOY+26oRkdzP3NHhQXHXqSZTvcEFtlGNonSCc50o8p3NoMbR673cbgbecJ0OrP6ZzAcll7SGWa5JQqpA+6Ep82jEExTWjTOUK2aQYaRgPkahVNuwmqpoXt4tvnnlIETt10O9P7Un1dmBxJn6TxIroZW+9suhbzs5UmzjB+wJU2io2/FTxNHzgGj9cRQ3FG2regirneJ4SFImf8+ZJymdc86qUE1/3fXzt3f0c3MZhm3C8ZTXEcZJuqpCNu04nxapch6G0I4NlyziTh+1ezUa6+yZs8P/NRnKcHiU+7j7AV0ewJyK92QY7dfr+LjnqYw8q9GBj1djgf0i7FVzyAAuGL52MXrnWAn3Jfypg6Zsu8nVdeToowpJTQ60m0kA=
     skip_cleanup: true
-    local_dir: dapp/dist/
+    local_dir: $TRAVIS_BUILD_DIR/dapp/dist/
     on:
-      branch: master
+      branch: develop # remember to change it to master
       condition: $DIST = 'desktop'

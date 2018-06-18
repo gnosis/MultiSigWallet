@@ -16,7 +16,7 @@ script:
 - npm run test-dapp
 - npm run test
 before_deploy:
-  - if [[ "$DIST" == "desktop" ]] && [[ "$TRAVIS_BRANCH" == "master" ]]; then npm run build-linux & npm run build-osx; fi
+  - if [[ "$DIST" == "desktop" ]] && [[ "$TRAVIS_BRANCH" == "master" ]]; then cd dapp/ && npm run build-linux & npm run build-osx; fi
   - if [[ "$DIST" == "web" ]]; then rm -rf dapp/node_modules/electron* dapp/node_modules/http-server dapp/node_modules/grunt* dapp/node_modules/webpack dapp/node_modules/karma* dapp/node_modules/babel* ; fi
 
 deploy:

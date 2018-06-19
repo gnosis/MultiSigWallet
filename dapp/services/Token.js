@@ -50,7 +50,9 @@
           [
             to,
             value,
-            Wallet.txDefaults()
+            Wallet.txDefaults({
+              gas: 200000
+            })
           ],
           options,
           cb
@@ -85,7 +87,20 @@
             cb(e);
           }
           else {
-            walletInstance.submitTransaction(tokenAddress, "0x0", data, count, Wallet.txDefaults(), options, cb);
+        
+            Web3Service.configureGas(Wallet.txDefaults({gas: 500000}), function (gasOptions){
+              walletInstance.submitTransaction(
+                tokenAddress, 
+                "0x0", 
+                data, 
+                count, 
+                Wallet.txDefaults({
+                  gas: gasOptions.gas,
+                  gasPrice: gasOptions.gasPrice
+                }), 
+                options, 
+                cb);
+            });
           }
         }).call();
       };

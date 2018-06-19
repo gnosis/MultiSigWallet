@@ -251,6 +251,10 @@
               {
                 name: 'remotenode',
                 value: 'Remote node',
+              },
+              {
+                name: "trezor",
+                value: "Trezor"
               }
             );
           }
@@ -267,6 +271,10 @@
                 {
                   name: 'remotenode',
                   value: 'Remote node',
+                },
+                {
+                  name: "trezor",
+                  value: "Trezor"
                 }
               );
           }
@@ -282,14 +290,14 @@
           }
           else {
               scope.selectedItem = null;
-          }          
+          }
 
           scope.changeEvent = function() {
             scope.$parent.config.wallet = scope.selectedItem.name;
             if (attrs.onChangeFunction !== undefined) {
               var func = scope.$parent[attrs.onChangeFunction];
               func();
-            }            
+            }
           };
         }
       };
@@ -300,7 +308,7 @@
         require: '^ngModel',
         scope: {
           ngModel: '=',
-          options: '=',          
+          options: '=',
           other: '@'
         },
         replace: true,
@@ -400,7 +408,7 @@
         });
       };
     })
-    .directive('disabledIfInvalidAddress', function () {
+    .directive('disabledIfInvalidAddress', function (Web3Service) {
       // Disables an element until the ng-model passed to
       // the directive is valid
       return {
@@ -416,7 +424,7 @@
               if (attrs.disabledIfInvalidAddress.length < 42) {
                 isAddressValid = false;
               }
-              else if (web3.isAddress(attrs.disabledIfInvalidAddress)) {
+              else if (Web3Service.web3.isAddress(attrs.disabledIfInvalidAddress)) {
                 // Address valid (0x0........)
                 isAddressValid = true;
               }

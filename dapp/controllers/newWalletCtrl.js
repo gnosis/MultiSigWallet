@@ -33,7 +33,7 @@
                   Wallet.updateWallet({name: $scope.name, address: receipt.contractAddress, owners: $scope.owners});
                   Utils.success("Wallet deployed");
                   Transaction.update(contract.transactionHash, {multisig: receipt.contractAddress});
-                  Token.setDefaultTokens(contract.address);
+                  Token.setDefaultTokens(receipt.contractAddress);
                   callback();
                 }});
                 Utils.notification("Deployment transaction was sent.");

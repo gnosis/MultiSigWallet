@@ -45,9 +45,9 @@
       }
 
       // If not terms acepted, prompt disclaimer
-      var termsAccepted = localStorage.getItem("termsAccepted");
+      var gdprTermsAccepted = localStorage.getItem("gdprTermsAccepted");
 
-      if (!termsAccepted) {
+      if (!gdprTermsAccepted) {
         if (isElectron) {
           $uibModal.open({
             templateUrl: 'partials/modals/disclaimerElectron.html',
@@ -57,10 +57,18 @@
             controller: function ($scope, $uibModalInstance) {
               $scope.ok = function () {
                 $uibModalInstance.close($scope.walletOption);
-                localStorage.setItem("termsAccepted", true);
+                localStorage.setItem("gdprTermsAccepted", true);
                 // call web3 selection modal
                 showWeb3SelectionModal();
               };
+
+              $scope.openTerms = function() {
+                shell.openExternal('https://wallet.gnosis.pm/TermsofUseMultisig.pdf');
+              }
+
+              $scope.openPolicy = function () {
+                shell.openExternal('https://gnosis.pm/assets/pdf/PrivacyPolicyGnosisLtd.pdf');
+              }
             }
           });
         }
@@ -73,7 +81,7 @@
             controller: function ($scope, $uibModalInstance) {
               $scope.ok = function () {
                 $uibModalInstance.close($scope.walletOption);
-                localStorage.setItem("termsAccepted", true);
+                localStorage.setItem("gdprTermsAccepted", true);
               };
             }
           });
@@ -94,46 +102,66 @@
           }
         );
 
-        if (isElectron || !$scope.paramsPromise) {
-          // init params
-          $scope.paramsPromise = Wallet.initParams().then(function () {
-            $scope.loggedIn = Web3Service.coinbase;
+        // init params
+        $scope.paramsPromise = Wallet.initParams().then(function () {
+          $scope.loggedIn = Web3Service.coinbase;
+          $scope.coinbase = Web3Service.coinbase;
+          $scope.nonce = Wallet.txParams.nonce;
+          $scope.balance = Wallet.balance;
+          $scope.paramsPromise = null;
+
+          if (!isElectron) {
+            $scope.accounts = Web3Service.accounts;
+          }
+          else {
+            // Retrieves accounts from localStorage
+            if (Config.getConfiguration('accounts')) {
+              $scope.accounts = Config.getConfiguration('accounts').map(function (account) {
+                return account.address;
+              });
+            }
+            else {
+              $scope.accounts = [];
+            }
+          }
+        }, function (error) {
+          if (txDefault.wallet == "ledger") {
+            $scope.loggedIn = true;
+            $scope.accounts = Web3Service.accounts;
             $scope.coinbase = Web3Service.coinbase;
             $scope.nonce = Wallet.txParams.nonce;
-            $scope.balance = Wallet.balance;
             $scope.paramsPromise = null;
+          }
+          else if (txDefault.wallet == "lightwallet") {
+            // Retrieves accounts from localStorage, cannot get them from the injected web3 as we
+            // are offline
+            if (Config.getConfiguration('accounts')) {
+              $scope.accounts = Config.getConfiguration('accounts').map(function (account) {
+                return account.address;
+              });
 
-            if (!isElectron) {
-              $scope.accounts = Web3Service.accounts;
-            }
-            else {
-              // Retrieves accounts from localStorage
-              if (Config.getConfiguration('accounts')) {
-                $scope.accounts = Config.getConfiguration('accounts').map(function (account) {
-                  return account.address;
-                });
+              if (Web3Service.coinbase) {
+                $scope.coinbase = Web3Service.coinbase;
               }
               else {
-                $scope.accounts = [];
+                $scope.coinbase = $scope.accounts[0];
               }
-            }
-          }, function (error) {
-            if (txDefault.wallet == "ledger") {
+
               $scope.loggedIn = true;
-              $scope.accounts = Web3Service.accounts;
-              $scope.coinbase = Web3Service.coinbase;
-              $scope.nonce = Wallet.txParams.nonce;
-              $scope.paramsPromise = null;
             }
             else {
-              var syncErrorShown = Config.getConfiguration('syncErrorShown');
-              if (!syncErrorShown) {
-                Utils.dangerAlert(error);
-                Config.setConfiguration('syncErrorShown', true);
-              }
+              // $scope.accounts = [];
+              $scope.loggedIn = false;
             }
-          });
-        }
+          }
+          else {
+            var syncErrorShown = Config.getConfiguration('syncErrorShown');
+            if (!syncErrorShown) {
+              Utils.dangerAlert(error);
+              Config.setConfiguration('syncErrorShown', true);
+            }
+          }
+        });
 
         return $scope.paramsPromise;
       };
@@ -151,10 +179,17 @@
 
       };
 
+      /**
+      * Update info independently we're online or offline
+      */
+      $scope.updateInfo();
+      $scope.interval = $interval($scope.updateInfo, 5000);
+
+      /**
+      * Initialize web3
+      */
       Web3Service.webInitialized.then(
         function () {
-          $scope.interval = $interval($scope.updateInfo, 5000);
-
           /**
           * Lookup connection status
           * Check connectivity first on page loading
@@ -166,11 +201,11 @@
 
           $scope.updateInfo().then(function () {
             var chooseWeb3ProviderShown = Config.getConfiguration('chooseWeb3ProviderShown');
-            if (termsAccepted && !chooseWeb3ProviderShown && isElectron) {
+            if (gdprTermsAccepted && !chooseWeb3ProviderShown && isElectron) {
               // show selection modal
               showWeb3SelectionModal();
             }
-            else if (termsAccepted && !isElectron && !Web3Service.coinbase
+            else if (gdprTermsAccepted && !isElectron && !Web3Service.coinbase
                 && txDefault.wallet !== "ledger" && txDefault.wallet !== 'lightwallet') {
               $uibModal.open({
                 templateUrl: 'partials/modals/web3Wallets.html',
@@ -185,6 +220,9 @@
               });
             }
           });
+        },
+        function (error, e) {
+          // do nothing
         }
       );
 

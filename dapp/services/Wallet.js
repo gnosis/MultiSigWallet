@@ -52,12 +52,21 @@
         return $q(
           function(resolve, reject){
             $http
-              .get('https://ethgasstation.info/json/ethgasAPI.json')
+              .get(txDefault.ethGasStation)
               .then(
                 function(response) {
-                  resolve((response.data.safeLow / 10) * 1e9)
+                  resolve(response.data.standard)
                 },
-                reject
+                function (error) {
+                  // Get gas price from Ethereum Node
+                  Web3Service.web3.eth.getGasPrice(function (g_error, g_result) {
+                    if (g_error) {
+                      reject (g_error);
+                    } else {
+                      resolve(g_result);
+                    }
+                  });
+                }
               )
           }
         );
@@ -227,19 +236,20 @@
                         batch.add(request);
                       }
                     }),
-                    $q(function (resolve, reject) {
-                      var request = wallet.updateGasPrice(function (e) {
-                        if (e) {
-                          reject(e);
-                        }
-                        else {
-                          resolve();
-                        }
-                      });
-                      if (request) {
-                        batch.add(request);
-                      }
-                    }),
+                    // DEPRECATED
+                    // $q(function (resolve, reject) {
+                    //   var request = wallet.updateGasPrice(function (e) {
+                    //     if (e) {
+                    //       reject(e);
+                    //     }
+                    //     else {
+                    //       resolve();
+                    //     }
+                    //   });
+                    //   if (request) {
+                    //     batch.add(request);
+                    //   }
+                    // }),
                     $q(function (resolve, reject) {
                       if (Web3Service.coinbase) {
                         batch.add(
@@ -574,7 +584,7 @@
             }
           );
 
-        
+
       };
 
       wallet.deployWithLimitFactoryOffline = function (owners, requiredConfirmations, limit, cb) {
@@ -1059,7 +1069,7 @@
               cb
             );
           }
-        });        
+        });
       };
 
       /**
@@ -1098,8 +1108,8 @@
               options,
               cb
             );
-          }          
-        });        
+          }
+        });
       };
 
       /**
@@ -1222,9 +1232,9 @@
                     options,
                     cb
                   );
-                }                
+                }
               }
-            );            
+            );
           }
         }).call();
       };

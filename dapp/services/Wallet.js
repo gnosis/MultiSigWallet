@@ -236,19 +236,20 @@
                         batch.add(request);
                       }
                     }),
-                    $q(function (resolve, reject) {
-                      var request = wallet.updateGasPrice(function (e) {
-                        if (e) {
-                          reject(e);
-                        }
-                        else {
-                          resolve();
-                        }
-                      });
-                      if (request) {
-                        batch.add(request);
-                      }
-                    }),
+                    // DEPRECATED
+                    // $q(function (resolve, reject) {
+                    //   var request = wallet.updateGasPrice(function (e) {
+                    //     if (e) {
+                    //       reject(e);
+                    //     }
+                    //     else {
+                    //       resolve();
+                    //     }
+                    //   });
+                    //   if (request) {
+                    //     batch.add(request);
+                    //   }
+                    // }),
                     $q(function (resolve, reject) {
                       if (Web3Service.coinbase) {
                         batch.add(

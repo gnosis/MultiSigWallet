@@ -93,7 +93,7 @@
                 return params;
               }
             },
-            controller: function ($scope, $uibModalInstance, Web3Service, options) {
+            controller: function ($scope, $uibModalInstance, Web3Service, Wallet, options) {
               $scope.send = function () {
                 $uibModalInstance.close({gas: $scope.gasLimit, gasPrice: $scope.gasPrice * 1e9});
               };
@@ -102,16 +102,21 @@
                 $uibModalInstance.dismiss();
               }
 
-              $scope.close = $uibModalInstance.dismiss;
-              $scope.gasLimit = options.gas;
-              $scope.minimumGasLimit = options.gas;
-              $scope.gasPrice = options.gasPrice / 1e9;
-
               $scope.calculateFee = function () {
                 $scope.txFee = $scope.gasLimit * ($scope.gasPrice * 1e9) / 1e18;
               }
 
-              $scope.calculateFee();
+              $scope.close = $uibModalInstance.dismiss;
+
+              Wallet.getGasPrice().then(function (gasPrice) {
+                $scope.gasLimit = options.gas;
+                $scope.minimumGasLimit = options.gas;
+                $scope.gasPrice = gasPrice / 1e9;
+                $scope.calculateFee();
+              }).catch(function (error) {
+                cb(error);
+              });
+
             }
           }
         )
@@ -120,7 +125,7 @@
       };
 
       factory.sendTransaction = function (method, params, options, cb) {
-
+        
         factory.configureGas(params[params.length-1], function(gasOptions){
           var refinedTxOptions = Object.assign({}, params[params.length-1], gasOptions);
           // Ugly but needed

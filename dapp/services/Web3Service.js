@@ -125,8 +125,16 @@
       };
 
       factory.sendTransaction = function (method, params, options, cb) {
-        
-        factory.configureGas(params[params.length-1], function(gasOptions){
+        var gasConfigurationData;
+
+        if (options && options.onlySimulate === true) {
+          gasConfigurationData = options;
+        } else {
+          gasConfigurationData = params[params.length-1];
+        }
+
+
+        factory.configureGas(gasConfigurationData, function(gasOptions){
           var refinedTxOptions = Object.assign({}, params[params.length-1], gasOptions);
           // Ugly but needed
           params[params.length-1] = refinedTxOptions

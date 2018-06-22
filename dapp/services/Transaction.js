@@ -125,12 +125,14 @@
       };
 
       factory.simulate = function (tx, cb) {
+        var options = Object.assign({ onlySimulate: true }, tx);
+
         Web3Service.sendTransaction(
           Web3Service.web3.eth,
           [
             tx
           ],
-          { onlySimulate: true },
+          options,
           function (e, txHash) {
             if (e) {
               cb(e);
@@ -228,12 +230,13 @@
       factory.simulateMethod = function (tx, abi, method, params, cb) {
         // Instance contract
         var instance = Web3Service.web3.eth.contract(abi).at(tx.to);
+        var options = Object.assign({ onlySimulate: true }, tx);
 
         try {
           Web3Service.sendTransaction(
             instance[method],
             params,
-            { onlySimulate: true },
+            options,
             function (e, txHash) {
               if (e) {
                 cb(e);

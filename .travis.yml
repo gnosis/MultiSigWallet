@@ -8,6 +8,10 @@ matrix:
       sudo: required
       env:
       - DIST='web' # distribution
+    - os: linux
+      dist: trusty
+      sudo: required
+      env:
       - DIST='desktop'
     - os: osx
       env:

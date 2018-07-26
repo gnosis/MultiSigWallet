@@ -50,7 +50,7 @@
       "email": "giacomo.licari@gnosis.pm"
     }
   ],
-  "license": "ISC",
+  "license": "LGPL",
   "dependencies": {
     "abi-decoder": "1.1.0",
     "angular": "1.5.8",

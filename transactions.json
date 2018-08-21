@@ -1,9 +1,184 @@
 {
 	"txs": [
 		{
+			"id": 180,
+			"desc": "Operating Expenses (ANT)",
+			"multisigTx": "0x659a2cbc1bf5c374e5cc9cdbe1bc80b8fa8f65e24eba5fe1123a2e6d5a0c431c",
+			"entities": [{
+					"name": " ",
+					"tx": " "}
+				]
+		},
+		{
+			"id": 179,
+			"desc": "Operating Expenses (ETH)",
+			"multisigTx": "0xab4f7b5f0b935e5426ae804ec444f05ec97f494ae5529514e969e9f9f0e6ca99",
+			"entities": [
+			{
+					"name": "Blockternship Hackathon Prize",
+					"tx": "0xba0edf99474695095716c5878704ce670641c2fa22f4dbfe6705633a72b394c3"
+			},
+			{
+					"name": "AraCon Venue (Deposit)",
+					"tx": "0x9c6984ba2600bd64ee5f02eb1620f02011fe71a6b9048ef559ae7af5e09db229"
+			},
+			{
+					"name": "Nest Grant: ZK Labs (2)",
+					"tx": "0xff576dc8b60994c28f4e57ba0721cf5fee6ab2b21d7923c6a543f79bc6db4a53"
+			},
+			{
+					"name": "Nest Grant: Espresso (half of 1st)",
+					"tx": "0x0da19103f3f3a109145b753f386c1552612e134ef3e361d002d797a46b01ce19"
+			},
+			{
+					"name": "Nest Grant: dAppNode (half of 1st)",
+					"tx": "0x08819ef83da77629917b599686ec84658ab5d560b25ae5a2caed5f0c304b458e"
+			},
+			{
+					"name": "Service Provider: Neuralux (DevOps)",
+					"tx": "0x30b2c15249e64e82f8a62385afdbb9df9fa93beeadc606df7a5b7d088eeb9580"
+			},
+			{
+					"name": "ETHMagicians Security UnConf (Berlin)",
+					"tx": "0xa5ea47a14978ca0edcff9034bd80c0988d200c5d31f2dcad6d8ed4fe37e90409"
+			},
+			{
+					"name": "Bloom Network: Pollination, Governance Hackathon Sponsorship",
+					"tx": "0x034d6918f96cfb5f27d26961f54fe432a0d556145336b7d7cc9f50510019a975"
+			},
+			{
+					"name": "Ara-NYC Meetup (2)",
+					"tx": "0xcc2fb0711e5a6ba7310a078aed994053943e48e23e762ee28873e5d50703e9bb"
+			},
+			{
+					"name": "SF Hackathon Venue (Deposit)",
+					"tx": "0x0df2cfc9e690bf403af60e2db310b068ff4b0d546157eee874b34fb7fe72e4f2"
+			},
+			{
+					"name": "Giveth: AragonDAC",
+					"tx": "0xc88cece3afdd54a511f5221deaa696026f4be0eee461f2e60bfaa4be7c2779ca"
+			}	
+			
+				]
+		},
+		{
+			"id": 178,
+			"desc": " ",
+			"multisigTx": "0x7a954106d5b5df98387a33052a73d080fd3cd5066f6101bc8439d765fc8eb2fb",
+			"entities": []
+		},
+		{
+			"id": 177,
+			"desc": " ",
+			"multisigTx": " ",
+			"entities": []
+		},
+		{
+			"id": 176,
+			"desc": " ",
+			"multisigTx": " ",
+			"entities": []
+		},
+		{
+			"id": 175,
+			"desc": "Operating Expenses (ANT)",
+			"multisigTx": "0xa7e191e9a9d9c5aa5d216815aa2efacd8d10402da511969d0f89d95ea8c89e66",
+			"entities": [{
+					"name": " ",
+					"tx": " "}
+				]
+		},
+		{
+			"id": 174,
+			"desc": "Operating Expenses (ETH)",
+			"multisigTx": "0x524bd77d709b44973e287409a97724baa1b9494c40d48e076a3cd27ff3c9113c",
+			"entities": [{
+					"name": "Code Audit: ConsenSys",
+					"tx": "0x08e36dff5fb31b701b69ab9b34e908aac9170635c44fb8ef8bbf979ceedc7293"
+			},
+			{
+					"name": "Professional Service Provider: Lakeside Partners",
+					"tx": "0x42b927e320cac8da0958ad9b13dbdb9bf68e489662afda5c65d3cffb262a3a4e"
+			},
+			{
+					"name": "Professional Service Provider: Hedman",
+					"tx": "0xccfdbfbf72d6a243750deebf512a79e25143c154c36600e311770531bce8b8c9"
+			},
+			{
+					"name": "Professional Service Provider: Hiring/Human Resources",
+					"tx": "0x4a75cc25c0b5b679d996ea7275d470251dc23ef3530e0a795429e50cc24b924c"
+			},
+			{
+					"name": "Wenger & Veili",
+					"tx": "0x28024fcbbe6d2b1d8fb9eba11c4a3ce540b70bb721cacd2b7073e413eb488f21"
+			},
+			{
+					"name": "Wenger & Veili",
+					"tx": "0xd6acec3bf5eaa2414618c0caa07a8a4f072057fbc806c8122b442680ce87a509"
+			},
+			{
+					"name": "Wenger & Veili",
+					"tx": "0x5737f5ac828dc4301cd6764249b2c81ae82a9e3bab5a44d32e785d60e47c7a3a"
+			},
+			{
+					"name": "Ara-NYC Meetup (1)",
+					"tx": "0x2dc0ff16dfd5bd393d1004d74a3aa978d4ade5236b50018fdfeea6c92d656a67"
+			},
+			{
+					"name": "Ara-Beers Zug Meetup (CVC with Web3 & Status)",
+					"tx": "0x6959dcace217e6ed99c463dad34d7ac281999298b660004dca5a7733bfea179d"
+			}	     
+				     
+				]
+		},
+		{
+			"id": 173,
+			"desc": "Operating Expenses (ANT)",
+			"multisigTx": "0xcfe993928e9ee5fee675fa8028bcfe4bc61e6ea9f6c83646e6440bb14a8ab99b",
+			"entities": [{
+					"name": "RCD Monthly Services: July",
+					"tx": "0xd40fa7f46fb82e546118f5b1c5863fd5b28550f5051ee2dd24ff357cfeca563d"
+			},
+			{
+					"name": "RCD June Extra Services",
+					"tx": "0x6e2b6d09c0aa7252eeb3f31c40168a16076058bcef2bd78b9339b62e117a755d"
+			}
+				]
+		},
+		{
+			"id": 172,
+			"desc": "Operating Expenses (ETH)",
+			"multisigTx": "0x8769cbab014704fe51c75d414860ed820222ca7badeca30f4ac614b17a42e80e",
+			"entities": [{
+					"name": "Nest Grant: ZK Labs (1)",
+					"tx": "0x349139c15d380ebcf61d5d3ea35c5287acc9d9b16dfd0a211966b1813741aa2d"
+			},
+			{
+					"name": "Nest Grant: Frame (Audit)",
+					"tx": "0x091ae98c1f3f51cd9b86b1de52b6670b7da1185b09be1d08f61a4d27e2fcaaa1"
+			},
+			{
+					"name": "Nest Grant: Giveth dApp",
+					"tx": "0x2894151b66ee06a7f129f46012efed944e273aa765fd5c1b33622da7be6dc412"
+			},
+			{
+					"name": "RCD Monthly Services: July",
+					"tx": "0x1cdd74b2197cf57d249a1cb2000cfba12f00a5c3e89daa5648cd46316b8d87a8"
+			},
+			{
+					"name": "RCD June Extra Services",
+					"tx": "0xc9eeed23c94c07ed4a54930c66249a2027842c9a2997d58a03ce7ab111f82235"
+			},
+			{
+					"name": "RCD July + June Extra Services (Fiat = 4,414.54 EUR)",
+					"tx": "0x783ddb430ad3b4dbfc2a9f62ea5f06bd9c7832d0006967eb7f441be0c5ddec49"
+			}
+				]
+		},
+		{
 			"id": 171,
 			"desc": "Operating Expenses (ANT)",
-			"multisigTx": " ",
+			"multisigTx": "0xa9e915b79e0ff8ad2f7d0aa3a2a116775304331b1736230967e7d57d750fd1ed",
 			"entities": [{
 					"name": "ETHBuenosAires Hackathon Prizes",
 					"tx": "0x00d510db379337192f98350173195c3f29e50da6bbe5985873ad93b9ae96321f"
@@ -33,6 +208,10 @@
 					"tx": "0xaf593885f930d8a71b6191bdc8bfb729c4aed649c7dc9fb4264ef75f280c21a5"
 			},
 			{
+					"name": "Code Audit (VAT): WHG",
+					"tx": "0x8e0cb53efcd080c41e0416cbdb9a534c49a9f7011dc08f06574f8ba96a6cc50e"
+			},
+			{
 					"name": "RCD Monthly Services: May",
 					"tx": "0x36e2b5736e4f30b07ced0ddb4e60bb106ca39d00d1b598a7875717d4996fffb2"
 			},
@@ -53,7 +232,7 @@
 		{
 			"id": 170,
 			"desc": "Operating Expenses (ETH)",
-			"multisigTx": " ",
+			"multisigTx": "0x00775154ed9a89b812144c62ee4ed2fa3557b05c2680e015ddcb13319f61f89e",
 			"entities": [{
 					"name": "ETHBuenosAires Hackathon Prizes",
 					"tx": "0x4087d608219e226ac0a189d8b28cc2cd5101b70148b5be1d247e94f827e08723"
@@ -69,6 +248,10 @@
 			{
 					"name": "Code Audit: WHG",
 					"tx": "0xd7164938981a81eb9a29cb83a3885db7dc3477e570f08a0bf0f518b4e8d77219"
+			},
+			{
+					"name": "Code Audit (VAT): WHG",
+					"tx": "0x6d8f0510a6b3ce4aebfad184b1cb4f02f8e5f21be8a00f5f25604aa0fe3594e0"
 			},
 			{
 					"name": "Professional Services Provider: Lakeside",
@@ -101,7 +284,12 @@
 			{
 					"name": "RCD May Extra Services",
 					"tx": "0xef45ac7db4a74c3c76b4927675e62272625fc55d5e72d186cf57d4faf7965b30"
-			}	     
+			},
+			{
+					"name": "Nest Grant: Gnarly (2)",
+					"tx": "0x1b8a01fbc455fb7c1172bc8abc3d577486e248cf0ed215479318c33985fa4457"
+			}
+				     
 				    ]
 		},
 		{
@@ -212,23 +400,23 @@
 					"tx": "0x9420d4f70c9651636364f8f5410dfca0f24ad7b1913652b4e2db0801dbf35503"
 			},
 			{
-					"name": "Nest Grant: That Planning Tab",
+					"name": "Nest Grant: That Planning Tab (1)",
 					"tx": "0x020b3c27941bf51c21a3e3c5148e534de54d049fbec2d63026bc39d22b49dfd2"
 			},
 			{
-					"name": "Nest Grant: Frame",
+					"name": "Nest Grant: Frame (1)",
 					"tx": "0x50a827eedfdae4b639e6beefd67d6c9be64686e61e07a9a5b5f3ed3ca115a5a0"
 			},
 			{
-					"name": "Nest Grant: Gnarly",
+					"name": "Nest Grant: Gnarly (1)",
 					"tx": "0x3619bbf35effc584851f81826bc17cecbd6850592e9483f12d68fe90c2b585fc"
 			},
 			{
-					"name": "Nest Grant: Pando",
+					"name": "Nest Grant: Pando (1)",
 					"tx": "0xfa3baaef58001b6f536e0877298eae722193bd50917f9fe3c1fb232164b2e8f4"
 			},	     
 			{
-					"name": "Nest Grant: Prysmatic Labs",
+					"name": "Nest Grant: Prysmatic Labs (1)",
 					"tx": "0xdf7dcc12c7af9a48d8b280d16a60675b641c800a89c40f9dd22ac7c05249db23"
 			},	     
 			{

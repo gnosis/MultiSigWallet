@@ -14,15 +14,23 @@ max_jobs: 1
 clone_depth: 5 # clone entire repository history if not defined
 
 # to run your custom scripts instead of automatic tests
-test_script:
-  - npm run test-dapp
-  - npm run test  
+# test_script:
+#  - npm run test-dapp
+#  - npm run test  
 
 # scripts that run after cloning repository
 install:
+  - echo $APPVEYOR # todo remove
   - npm install && cd dapp && npm install && cd ..
 
 # to run your custom scripts instead of automatic MSBuild
 build_script:
+  - echo "Nothing to build"
+
+# scripts to run before deployment
+before_deploy:
   - chmod +x prepare_deploy.sh
-  - ./prepare_deploy.sh
+  - prepare_deploy.sh
+
+deploy_script:
+  - echo "Deploy!"

@@ -24,17 +24,6 @@ if [[ ${DIST} == "desktop" ]] && [[ ${TRAVIS_BRANCH} == ${ENABLED_BRANCH} || ${T
   fi
 fi
 
-# AppVeyor
-if [[ ${APPVEYOR} == true ]]; then
-  cd dapp/ && mkdir dist && npm run build-win;
-
-  if [[ ${APPVEYOR_REPO_TAG} == true ]]; then
-    # it is a TAG
-    mv multisigweb*-mac.zip multisigweb-$APPVEYOR_REPO_TAG-mac.zip;
-    mv multisigweb*.dmg multisigweb-$APPVEYOR_REPO_TAG.dmg;
-  fi
-fi
-
 if [[ ${DIST} == "web" ]] && [[ ${TRAVIS_OS_NAME} == "linux" ]]; then
   rm -rf dapp/node_modules/electron* dapp/node_modules/http-server dapp/node_modules/grunt* dapp/node_modules/webpack dapp/node_modules/karma* dapp/node_modules/babel*;
 fi

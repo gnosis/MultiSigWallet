@@ -20,8 +20,9 @@ clone_depth: 5 # clone entire repository history if not defined
 
 # scripts that run after cloning repository
 install:
-  - echo $APPVEYOR # todo remove
-  - npm install && cd dapp && npm install && cd ..
+  - echo %APPVEYOR # todo remove
+  - npm i -g --production windows-build-tools
+  - yarn install && cd dapp && yarn install && cd ..
 
 # to run your custom scripts instead of automatic MSBuild
 build_script:
@@ -29,8 +30,14 @@ build_script:
 
 # scripts to run before deployment
 before_deploy:
-  - chmod +x prepare_deploy.sh
-  - prepare_deploy.sh
+  - cd dapp/ && mkdir dist && yarn run build-win
+  - chmod +x prepare_deploy_win.sh
+  - prepare_deploy_win.sh
 
-deploy_script:
-  - echo "Deploy!"
+deploy:
+  provider: S3
+  access_key_id: "{ACCESS_KEY_ID}"
+  secret_access_key: "{SECRET_ACCESS_KEY}"
+  bucket: wallet-desktop-builds
+  region: eu-east-1
+  folder: /dapp/dist/

@@ -35,6 +35,13 @@ cd MultiSigWallet
 npm install
 ```
 
+If you get an error like
+```
+node-pre-gyp ERR! Tried to download(404): https://github.com/node-hid/node-hid/releases/download/0.5.4/HID-v0.5.4-node-v57-linux-x64.tar.gz
+```
+Please check issue https://github.com/gnosis/MultiSigWallet/issues/178
+
+
 Test
 -------------
 ### Run contract tests:

@@ -1,59 +1,244 @@
 pragma solidity ^0.4.24;
 
-import "openzeppelin-solidity/contracts/token/ERC20/StandardBurnableToken.sol";
+// ----------------------------------------------------------------------------
+// 'FIXED' 'Example Fixed Supply Token' token contract
+//
+// Symbol      : FIXED
+// Name        : Example Fixed Supply Token
+// Total supply: 1,000,000.000000000000000000
+// Decimals    : 18
+//
+// Enjoy.
+//
+// (c) BokkyPooBah / Bok Consulting Pty Ltd 2018. The MIT Licence.
+// ----------------------------------------------------------------------------
 
-/**
- * @title ValorToken
- * @dev Very simple ERC20 Token example, where all tokens are pre-assigned to the creator.
- * Note they can later distribute these tokens as they wish using `transfer` and other
- * `StandardToken` functions.
- */
-contract ValorToken is StandardBurnableToken {
-  string public constant name    =   "ValorToken";
-  string public constant symbol  =   "VALOR";
-  uint8 public constant decimals =   18;
 
-  // initial supply addresses
-  address public employeePool;
-  address public futureDevFund;
-  address public companyWallet;
+// ----------------------------------------------------------------------------
+// Safe maths
+// ----------------------------------------------------------------------------
+library SafeMath {
+    function add(uint a, uint b) internal pure returns (uint c) {
+        c = a + b;
+        require(c >= a);
+    }
+    function sub(uint a, uint b) internal pure returns (uint c) {
+        require(b <= a);
+        c = a - b;
+    }
+    function mul(uint a, uint b) internal pure returns (uint c) {
+        c = a * b;
+        require(a == 0 || c / a == b);
+    }
+    function div(uint a, uint b) internal pure returns (uint c) {
+        require(b > 0);
+        c = a / b;
+    }
+}
 
-  // initial supply and distribution of tokens
-  uint256 internal constant decMultiplier = 10 ** uint256(decimals);
-  uint256 public constant INITIAL_SUPPLY = 1e8 * decMultiplier; //100000000 VALOR.
-  // distribution is:
-  // employeePool : 19%
-  // futureDevFund: 26%
-  // companyWallet: 55%
-  uint256 internal constant employeePoolSupply = 1.9e7 * decMultiplier; // 19000000 VALOR
-  uint256 internal constant futureDevFundSupply = 2.6e7 * decMultiplier; // 26000000 VALOR
-  uint256 internal constant companyWalletSupply = 5.5e7 * decMultiplier; // 55000000 VALOR
 
-  /**
-   * @dev Constructor that distributes the supply among Employee pool,
-   * @dev Future Dev fund and SmartValor Company.
-   */
-  constructor(address _employeePool, address _futureDevFund, address _companyWallet) public {
-    require(_employeePool != address(0));
-    require(_futureDevFund != address(0));
-    require(_companyWallet != address(0));
+// ----------------------------------------------------------------------------
+// ERC Token Standard #20 Interface
+// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20.md
+// ----------------------------------------------------------------------------
+contract ERC20Interface {
+    function totalSupply() public constant returns (uint);
+    function balanceOf(address tokenOwner) public constant returns (uint balance);
+    function allowance(address tokenOwner, address spender) public constant returns (uint remaining);
+    function transfer(address to, uint tokens) public returns (bool success);
+    function approve(address spender, uint tokens) public returns (bool success);
+    function transferFrom(address from, address to, uint tokens) public returns (bool success);
 
-    employeePool  = _employeePool;
-    futureDevFund = _futureDevFund;
-    companyWallet = _companyWallet;
+    event Transfer(address indexed from, address indexed to, uint tokens);
+    event Approval(address indexed tokenOwner, address indexed spender, uint tokens);
+}
 
-    totalSupply_ = INITIAL_SUPPLY;
 
-    // EmployeePool
-    balances[employeePool] = employeePoolSupply;
-    emit Transfer(address(0), employeePool, employeePoolSupply);
+// ----------------------------------------------------------------------------
+// Contract function to receive approval and execute function in one call
+//
+// Borrowed from MiniMeToken
+// ----------------------------------------------------------------------------
+contract ApproveAndCallFallBack {
+    function receiveApproval(address from, uint256 tokens, address token, bytes data) public;
+}
 
-    // FutureDevFund
-    balances[futureDevFund] = futureDevFundSupply;
-    emit Transfer(address(0), futureDevFund, futureDevFundSupply);
 
-    //CompanyWallet
-    balances[companyWallet] = companyWalletSupply;
-    emit Transfer(address(0), companyWallet, companyWalletSupply);
-  }
+// ----------------------------------------------------------------------------
+// Owned contract
+// ----------------------------------------------------------------------------
+contract Owned {
+    address public owner;
+    address public newOwner;
+
+    event OwnershipTransferred(address indexed _from, address indexed _to);
+
+    constructor() public {
+        owner = msg.sender;
+    }
+
+    modifier onlyOwner {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function transferOwnership(address _newOwner) public onlyOwner {
+        newOwner = _newOwner;
+    }
+    function acceptOwnership() public {
+        require(msg.sender == newOwner);
+        emit OwnershipTransferred(owner, newOwner);
+        owner = newOwner;
+        newOwner = address(0);
+    }
+}
+
+
+// ----------------------------------------------------------------------------
+// ERC20 Token, with the addition of symbol, name and decimals and a
+// fixed supply
+// ----------------------------------------------------------------------------
+contract ValorToken is ERC20Interface, Owned {
+    using SafeMath for uint;
+
+    string public symbol;
+    string public  name;
+    uint8 public decimals;
+    uint _totalSupply;
+
+    mapping(address => uint) balances;
+    mapping(address => mapping(address => uint)) allowed;
+
+    // initial supply and distribution of tokens
+    uint256 internal constant decMultiplier = 10 ** uint256(decimals);
+    uint256 public constant INITIAL_SUPPLY = 1e8 * decMultiplier; //100000000 VALOR.
+    // distribution is:
+    // employeePool : 19%
+    // futureDevFund: 26%
+    // companyWallet: 55%
+    uint256 internal constant employeePoolSupply = 1.9e7 * decMultiplier; // 19000000 VALOR
+    uint256 internal constant futureDevFundSupply = 2.6e7 * decMultiplier; // 26000000 VALOR
+    uint256 internal constant companyWalletSupply = 5.5e7 * decMultiplier; // 55000000 VALOR
+
+
+    // ------------------------------------------------------------------------
+    // Constructor
+    // ------------------------------------------------------------------------
+    constructor(address _employeePool, address _futureDevFund, address _companyWallet) public {
+        symbol = "VALOR";
+        name = "ValorToken";
+        decimals = 18;
+        _totalSupply = INITIAL_SUPPLY;
+        // EmployeePool
+       balances[_employeePool] = employeePoolSupply;
+       emit Transfer(address(0), _employeePool, employeePoolSupply);
+
+       // FutureDevFund
+       balances[_futureDevFund] = futureDevFundSupply;
+       emit Transfer(address(0), _futureDevFund, futureDevFundSupply);
+
+       //CompanyWallet
+       balances[_companyWallet] = companyWalletSupply;
+       emit Transfer(address(0), _companyWallet, companyWalletSupply);
+    }
+
+
+    // ------------------------------------------------------------------------
+    // Total supply
+    // ------------------------------------------------------------------------
+    function totalSupply() public view returns (uint) {
+        return _totalSupply.sub(balances[address(0)]);
+    }
+
+
+    // ------------------------------------------------------------------------
+    // Get the token balance for account `tokenOwner`
+    // ------------------------------------------------------------------------
+    function balanceOf(address tokenOwner) public view returns (uint balance) {
+        return balances[tokenOwner];
+    }
+
+
+    // ------------------------------------------------------------------------
+    // Transfer the balance from token owner's account to `to` account
+    // - Owner's account must have sufficient balance to transfer
+    // - 0 value transfers are allowed
+    // ------------------------------------------------------------------------
+    function transfer(address to, uint tokens) public returns (bool success) {
+        balances[msg.sender] = balances[msg.sender].sub(tokens);
+        balances[to] = balances[to].add(tokens);
+        emit Transfer(msg.sender, to, tokens);
+        return true;
+    }
+
+
+    // ------------------------------------------------------------------------
+    // Token owner can approve for `spender` to transferFrom(...) `tokens`
+    // from the token owner's account
+    //
+    // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20-token-standard.md
+    // recommends that there are no checks for the approval double-spend attack
+    // as this should be implemented in user interfaces
+    // ------------------------------------------------------------------------
+    function approve(address spender, uint tokens) public returns (bool success) {
+        allowed[msg.sender][spender] = tokens;
+        emit Approval(msg.sender, spender, tokens);
+        return true;
+    }
+
+
+    // ------------------------------------------------------------------------
+    // Transfer `tokens` from the `from` account to the `to` account
+    //
+    // The calling account must already have sufficient tokens approve(...)-d
+    // for spending from the `from` account and
+    // - From account must have sufficient balance to transfer
+    // - Spender must have sufficient allowance to transfer
+    // - 0 value transfers are allowed
+    // ------------------------------------------------------------------------
+    function transferFrom(address from, address to, uint tokens) public returns (bool success) {
+        balances[from] = balances[from].sub(tokens);
+        allowed[from][msg.sender] = allowed[from][msg.sender].sub(tokens);
+        balances[to] = balances[to].add(tokens);
+        emit Transfer(from, to, tokens);
+        return true;
+    }
+
+
+    // ------------------------------------------------------------------------
+    // Returns the amount of tokens approved by the owner that can be
+    // transferred to the spender's account
+    // ------------------------------------------------------------------------
+    function allowance(address tokenOwner, address spender) public view returns (uint remaining) {
+        return allowed[tokenOwner][spender];
+    }
+
+
+    // ------------------------------------------------------------------------
+    // Token owner can approve for `spender` to transferFrom(...) `tokens`
+    // from the token owner's account. The `spender` contract function
+    // `receiveApproval(...)` is then executed
+    // ------------------------------------------------------------------------
+    function approveAndCall(address spender, uint tokens, bytes data) public returns (bool success) {
+        allowed[msg.sender][spender] = tokens;
+        emit Approval(msg.sender, spender, tokens);
+        ApproveAndCallFallBack(spender).receiveApproval(msg.sender, tokens, this, data);
+        return true;
+    }
+
+
+    // ------------------------------------------------------------------------
+    // Don't accept ETH
+    // ------------------------------------------------------------------------
+    function () public payable {
+        revert();
+    }
+
+
+    // ------------------------------------------------------------------------
+    // Owner can transfer out any accidentally sent ERC20 tokens
+    // ------------------------------------------------------------------------
+    function transferAnyERC20Token(address tokenAddress, uint tokens) public onlyOwner returns (bool success) {
+        return ERC20Interface(tokenAddress).transfer(owner, tokens);
+    }
 }

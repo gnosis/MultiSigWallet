@@ -25,6 +25,20 @@
         mergedABI: []
       };
 
+      const useExternalProvider = function (wallet, resolve, reject) {
+        wallet.web3 = new Web3(new Web3.providers.HttpProvider(txDefault.ethereumNode));
+        // Check connection
+        wallet.web3.net.getListening(function(e){
+          if (e) {
+            Utils.dangerAlert("You are not connected to any node.");
+            reject();
+          }
+          else{
+            resolve();
+          }
+        });
+      }
+
       wallet.webInitialized = $q(function (resolve, reject) {
         window.addEventListener('load', function () {
           // Ledger wallet
@@ -71,21 +85,17 @@
           }
           // injected web3 provider (Metamask, mist, etc)
           else if (txDefault.wallet == "injected" && $window && $window.web3) {
-            wallet.web3 = new Web3($window.web3.currentProvider);
-            resolve();
+            web3.version.getNetwork((err, netId) => {
+              if (netId === 1) {
+                wallet.web3 = new Web3($window.web3.currentProvider);
+                resolve();
+              } else {
+                useExternalProvider(wallet, resolve, reject);
+              }
+            })
           }
           else {
-            wallet.web3 = new Web3(new Web3.providers.HttpProvider(txDefault.ethereumNode));
-            // Check connection
-            wallet.web3.net.getListening(function(e){
-              if (e) {
-                Utils.dangerAlert("You are not connected to any node.");
-                reject();
-              }
-              else{
-                resolve();
-              }
-            });
+            useExternalProvider(wallet, resolve, reject);
           }
         });
       });

@@ -354,8 +354,8 @@
               txBatch.add(
                 Wallet.getConfirmations($scope.wallet.address, tx, function (e, confirmations) {
                   $scope.$apply(function () {
-                    $scope.transactions[tx].confirmations = confirmations;
-                    if (confirmations.indexOf(Web3Service.coinbase) != -1) {
+                    $scope.transactions[tx].confirmations = confirmations.map(function(addr) {return addr.toLowerCase();});
+                    if (confirmations.indexOf(Web3Service.coinbase.toLowerCase()) !== -1) {
                       $scope.transactions[tx].confirmed=true;
                     }
                     else {

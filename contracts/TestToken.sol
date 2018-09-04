@@ -24,6 +24,15 @@ contract TestToken {
     mapping (address => mapping (address => uint256)) allowed;
     uint256 public totalSupply;
 
+
+    /*
+    * Simple constructor to add some tokens to sender. To speed up tests of the multisig wallet
+    */
+    constructor  () public{
+      balances[msg.sender] += 10000000;
+      totalSupply += 10000000;
+    }
+
     /*
      * Public functions
      */

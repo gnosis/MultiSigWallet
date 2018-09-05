@@ -1,20 +1,12 @@
-const MultisigWalletWithDailyLimit = artifacts.require('MultiSigWalletWithDailyLimit.sol')
-const MultisigWalletWithoutDailyLimit = artifacts.require('MultiSigWallet.sol')
-const MultisigWalletFactory = artifacts.require('MultiSigWalletWithDailyLimitFactory.sol')
+const MultisigWallet = artifacts.require('MultiSigWallet.sol')
 
-module.exports = deployer => {
-  const args = process.argv.slice()
-  if (process.env.DEPLOY_FACTORY){
-    deployer.deploy(MultisigWalletFactory)
-    console.log("Factory with Daily Limit deployed")
-  } else if (args.length < 5) {
-    console.error("Multisig with daily limit requires to pass owner " +
-      "list, required confirmations and daily limit")
-  } else if (args.length < 6) {
-    deployer.deploy(MultisigWalletWithoutDailyLimit, args[3].split(","), args[4])
-    console.log("Wallet deployed")
-  } else {
-    deployer.deploy(MultisigWalletWithDailyLimit, args[3].split(","), args[4], args[5])
-    console.log("Wallet with Daily Limit deployed")
+module.exports = function(deployer, network, accounts) {
+  // for now we are deploying into network with three accounts
+  if (network == "develop"){
+    deployer.deploy(MultisigWallet, [accounts[0], accounts[1], accounts[2]], 2);
   }
-}
+
+  if (network == "ropsten"){
+    deployer.deploy(MultisigWallet, ["0x30d18131e45e87ea443c77f7ccfadf4561458ec8", "0x5da752df882dd0975b709e96e8962187a6b35690", "0x627306090abab3a6e1400e9345bc60c78a8bef57"], 2);
+  }
+};

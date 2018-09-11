@@ -47,5 +47,5 @@ deploy:
   access_key_id: "{ACCESS_KEY_ID}"
   secret_access_key: "{SECRET_ACCESS_KEY}"
   bucket: wallet-desktop-builds
-  region: eu-east-1
+  region: us-east-1
   artifact: exe

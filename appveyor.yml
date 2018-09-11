@@ -1,3 +1,6 @@
+platform:
+  - x64
+
 # branches to build
 branches:
   # whitelist
@@ -20,17 +23,17 @@ clone_depth: 5 # clone entire repository history if not defined
 
 # scripts that run after cloning repository
 install:
-  - echo %APPVEYOR # todo remove
+  - ps: Install-Product node 8 x64
+  - ps: $env:DEBUG = "electron-builder"
   - npm i -g --production windows-build-tools
-  - yarn install && cd dapp && yarn install && cd ..
+  - cd dapp && rm -rf node_modules && rm package-lock.json && yarn add secp256k1 && yarn install && cd ..
 
 # to run your custom scripts instead of automatic MSBuild
 build_script:
-  - echo "Nothing to build"
+  - cd dapp/ && mkdir dist && yarn run build-win
 
 # scripts to run before deployment
 before_deploy:
-  - cd dapp/ && mkdir dist && yarn run build-win
   - chmod +x prepare_deploy_win.sh
   - prepare_deploy_win.sh
 
@@ -40,4 +43,4 @@ deploy:
   secret_access_key: "{SECRET_ACCESS_KEY}"
   bucket: wallet-desktop-builds
   region: eu-east-1
-  folder: /dapp/dist/
+  artifact: /dapp/dist/multisigweb*.exe

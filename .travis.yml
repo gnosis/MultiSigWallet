@@ -26,8 +26,8 @@ script:
 - npm run test-dapp
 - npm run test
 before_deploy:
-  - chmod +x prepare_deploy.sh
-  - ./prepare_deploy.sh
+  - chmod +x prepare_deploy_linux.sh
+  - ./prepare_deploy_linux.sh
 deploy:
   - provider: s3
     bucket: wallet-development

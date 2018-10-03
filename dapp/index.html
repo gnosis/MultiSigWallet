@@ -160,10 +160,13 @@
               </li>
             </ul>
             <ul class="nav navbar-nav pull-right">
+              <li ng-show="loggedIn">
+                <p class="navbar-text" ng-show="coinbase"> Account: {{coinbase}} </p>
+              </li>
               <li uib-dropdown>
                <a href="#" uib-dropdown-toggle ng-show="loggedIn">
                  <!-- <i class="fa fa-address-book-o" aria-hidden="true"></i> -->
-                 Account: {{coinbase|limitTo:20}}... <b class="caret"></b>
+                ... <b class="caret"></b>
                </a>
                <ul class="dropdown-menu">
                   <li ng-repeat="account in accounts"><a href="" ng-click="selectAccount(account)">{{account}}</a></li>

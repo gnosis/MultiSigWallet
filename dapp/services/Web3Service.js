@@ -354,14 +354,17 @@
         var web3Provider = new HookedWalletSubprovider({
           getAccounts: function (cb) {
             if(!factory.accounts.length) {
-              TrezorConnect.ethereumGetAddress("m/44'/60'/0'/0/0", function(response) {
-                if(response.success){
-                  factory.accounts = ["0x" + response.address];
-                  cb(null, factory.accounts)
-                }
-                else{
-                  cb(response.error)
-                }
+              // window.__TREZOR_CONNECT_SRC = 'https://localhost:8088/';
+              TrezorConnect.ethereumGetAddress({ 
+                  path: "m/44'/60'/0'" 
+              }).then(function(response) {
+                  if(response.success){
+                    factory.accounts = [response.address];
+                    cb(null, factory.accounts)
+                  }
+                  else{
+                    cb(response.error)
+                  }
               })
             }
             else {
@@ -376,16 +379,19 @@
               if(!txData.value){
                 txData.value = '0x00'
               }
-              TrezorConnect.ethereumSignTx(
-                "m/44'/60'/0'/0/0", // address path - either array or string, see example
-                Utils.trezorHex(txData.nonce),     // nonce - hexadecimal string
-                Utils.trezorHex(txData.gasPrice), // gas price - hexadecimal string
-                Utils.trezorHex(txData.gas), // gas limit - hexadecimal string
-                txData.to? Utils.trezorHex(txData.to):null,        // address
-                Utils.trezorHex(txData.value),     // value in wei, hexadecimal string
-                txData.data ? Utils.trezorHex(txData.data) : null,      // data, hexadecimal string OR null for no data
-                parseInt(chainID, 16),  // chain id for EIP-155 - is only used in fw 1.4.2 and newer, older will ignore it
-                function(response){
+              // window.__TREZOR_CONNECT_SRC = 'https://localhost:8088/';
+              TrezorConnect.ethereumSignTransaction({ 
+                  path: "m/44'/60'/0'",
+                  transaction: {
+                      nonce: txData.nonce,
+                      gasPrice: txData.gasPrice,
+                      gasLimit: txData.gas,
+                      to: txData.to,
+                      value: txData.value,
+                      data: txData.data,
+                      chainId: parseInt(chainID, 16)
+                  }
+              }).then(function(response) {
                   if (response.success){
                     txData.value = txData.value || '0x00';
                     txData.data = ethereumjs.Util.addHexPrefix(txData.data);
@@ -393,8 +399,8 @@
                     txData.nonce = parseInt(txData.nonce, 16);
                     txData.gasLimit = txData.gas;
                     txData.v = response.v;
-                    txData.s = '0x' + response.s;
-                    txData.r = '0x' + response.r;
+                    txData.s = response.s;
+                    txData.r = response.r;
                     // Sign transaction
                     var tx = new ethereumjs.Tx(txData);
                     cb(null, '0x' + tx.serialize().toString('hex'));
@@ -402,8 +408,8 @@
                   else{
                     cb(response.error)
                   }
-                })
-              });
+              })
+
           }
         });
 

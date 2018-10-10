@@ -1,0 +1,57 @@
+platform:
+  - x64
+
+# branches to build
+branches:
+  # whitelist
+  only:
+    - master
+    - develop
+
+skip_tags: true
+
+# Maximum number of concurrent jobs for the project
+max_jobs: 1
+
+# set clone depth
+clone_depth: 5 # clone entire repository history if not defined
+
+# to run your custom scripts instead of automatic tests
+# test_script:
+#  - npm run test-dapp
+#  - npm run test  
+
+# scripts that run after cloning repository
+install:
+  - ps: Install-Product node 8 x64
+  - ps: $env:DEBUG = "electron-builder"
+  - npm i -g --production windows-build-tools
+  - cd dapp && rm -rf node_modules && rm package-lock.json && yarn add secp256k1 && yarn install && cd ..
+
+# to run your custom scripts instead of automatic MSBuild
+build_script:
+  - cd dapp/ && mkdir dist && yarn run build-win
+
+# scripts to run before deployment
+after_build:
+  - chmod +x prepare_deploy_win.sh
+  - prepare_deploy_win.sh
+  - cp dapp/dist/*.exe .
+
+artifacts:
+  path: '*.exe'
+  name: exe
+
+environment:
+  access_key_id:
+    secure: RpimOJdJROGTnBToRjUoRBn7Tlnwc1eNHaAHpFcy1yk=
+  secret_access_key:
+    secure: LSAZENPbfm21aJt8qzYmuVmmlXnLGIwOKheK+hIlMd9jr2JsJyBjUhEbre6F6ZNq
+
+deploy:
+  provider: S3
+  access_key_id: "%access_key_id%"
+  secret_access_key: "%secret_access_key%"
+  bucket: wallet-desktop-builds
+  region: us-east-1
+  artifact: "exe"

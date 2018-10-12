@@ -39,7 +39,7 @@ this.TrezorConnect = (function () {
     var POPUP_PATH = window.TREZOR_POPUP_PATH || POPUP_ORIGIN + '/' + TREZOR_CONNECT_VERSION;
     var POPUP_URL = window.TREZOR_POPUP_URL || POPUP_PATH + '/popup/popup.html?v=' + new Date().getTime();
 
-    var POPUP_INIT_TIMEOUT = 15000;
+    var POPUP_INIT_TIMEOUT = 60000;
 
     /**
      * Public API.

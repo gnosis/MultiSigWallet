@@ -82,7 +82,7 @@
 			{
 					"name": "RCD August Extra Services (ETH)",
 					"tx": "0x226f69c2fc651f11115f3a8f963543e5708d9709f350d0350b5e8935fbf082e5"
-			},
+			}
 				]
 		},
 		{
@@ -289,7 +289,7 @@
 			"desc": "Operating Expenses (ANT)",
 			"multisigTx": "0xa7e191e9a9d9c5aa5d216815aa2efacd8d10402da511969d0f89d95ea8c89e66",
 			"entities": [{
-					"name": " ",
+					"name": "Payroll ANT",
 					"tx": " "}
 				]
 		},

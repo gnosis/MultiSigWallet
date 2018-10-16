@@ -14,7 +14,8 @@
 			},
 			{
 					"name": "RCD August Extra Services (ANT)",
-					"tx": "0x99a8d4822535112f4f0928d71e31c46a0efeda7629231a5d7b8ccaf2172e9dcb"}	     
+					"tx": "0x99a8d4822535112f4f0928d71e31c46a0efeda7629231a5d7b8ccaf2172e9dcb"
+			}	     
 
 				]
 		},
@@ -207,7 +208,8 @@
 			},
 			{
 					"name": "RCD July Extra Services (ANT)",
-					"tx": "0x96f17855ad933284883f956d9503abe330cf09deb5af6f5433d8d60ff1b27822"}	     
+					"tx": "0x96f17855ad933284883f956d9503abe330cf09deb5af6f5433d8d60ff1b27822"
+			}	     
 				]
 		},
 		{

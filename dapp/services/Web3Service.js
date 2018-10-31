@@ -4,7 +4,10 @@
     .module('multiSigWeb')
     .service("Web3Service", function ($window, $q, Utils, $uibModal, Connection, Config, $http) {
 
-      var factory = {};
+      var factory = {
+        coinbase: null,
+        accounts: []
+      };
 
       factory.webInitialized = $q(function (resolve, reject) {
         window.addEventListener('load', function () {
@@ -21,11 +24,24 @@
       */
       factory.enableMetamask = function (callback) {
         $window.ethereum.enable().then(function (accounts) {
+          factory.reloadWeb3Provider();
+          // Set accounts and coinbase
+          factory.accounts = accounts;
+          factory.coinbase = accounts[0];
           callback(null, accounts)
         }).catch(function (error) {
           callback(error, null)
         });
-      }
+      };
+
+      /**
+      * Returns true if metamask is injected, false otherwise
+      **/
+      factory.isMetamaskInjected = function () {
+        return window && (typeof window.web3 !== 'undefined' &&
+          (window.web3.currentProvider.constructor.name === 'MetamaskInpageProvider' || window.web3.currentProvider.isMetaMask)
+        );
+      };
 
       /**
       * Reloads web3 provider
@@ -39,21 +55,14 @@
 
         var web3 = null;
 
-        if ($window.ethereum) {
-            factory.enableMetamask(function (e, accounts) {
-              if (e) {
-                // TODO: show dialog
-                Utils.dangerAlert(e);
-              }
-              else {
-                factory.accounts = accounts;
-                factory.coinbase = accounts[0];
-              }
-            });
-        }
         // Legacy dapp browsers...
-        else if ($window.web3) {
+        if ($window.web3 && !$window.ethereum) {
           web3 = $window.web3;
+        }
+        // TODO: figure out whether Metamask standardize isEnabled() or find out
+        // another way to manage it
+        else if ($window.ethereum && window.ethereum._metamask.isEnabled()) {
+          web3 = $window.ethereum;
         }
 
         // Ledger wallet
@@ -78,8 +87,8 @@
           }
         }
         // injected web3 provider (Metamask, mist, etc)
-        else if (txDefault.wallet == "injected" && $window && $window.web3 && !isElectron) {
-          factory.web3 = new MultisigWeb3($window.web3.currentProvider);
+        else if (txDefault.wallet == "injected" && web3 && !isElectron) {
+          factory.web3 = web3.currentProvider !== undefined ? new MultisigWeb3(web3.currentProvider) : new MultisigWeb3(web3);
           if (resolve) {
             resolve();
           }
@@ -90,7 +99,7 @@
             resolve();
           }
         }
-        else {
+        else if (web3) {
           // Connect to Ethereum Node
           factory.web3 = new MultisigWeb3(new MultisigWeb3.providers.HttpProvider(txDefault.ethereumNode));
           // Check connection
@@ -107,6 +116,9 @@
               }
             }
           });
+        }
+        else if (resolve) {
+          resolve();
         }
       };
 

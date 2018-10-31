@@ -14,6 +14,20 @@
       });
 
       /**
+      * Asks Metamask to open its widget.
+      * Returns a callback call with the list of accounts or null in case the
+      * user rejects the approval request.
+      * @param callback, function (error, accounts)
+      */
+      factory.enableMetamask = function (callback) {
+        $window.ethereum.enable().then(function (accounts) {
+          callback(null, accounts)
+        }).catch(function (error) {
+          callback(error, null)
+        });
+      }
+
+      /**
       * Reloads web3 provider
       * @param resolve, function (optional)
       * @param reject, function (optional)
@@ -22,6 +36,25 @@
 
         factory.accounts = [];
         factory.coinbase = null;
+
+        var web3 = null;
+
+        if ($window.ethereum) {
+            factory.enableMetamask(function (e, accounts) {
+              if (e) {
+                // TODO: show dialog
+                Utils.dangerAlert(e);
+              }
+              else {
+                factory.accounts = accounts;
+                factory.coinbase = accounts[0];
+              }
+            });
+        }
+        // Legacy dapp browsers...
+        else if ($window.web3) {
+          web3 = $window.web3;
+        }
 
         // Ledger wallet
         if (txDefault.wallet == "ledger") {
@@ -169,28 +202,33 @@
       * Get ethereum accounts and update account list.
       */
       factory.updateAccounts = function (cb) {
-        return factory.web3.eth.getAccounts(
-          function (e, accounts) {
-            if (e) {
-              cb(e);
-            }
-            else {
-              factory.accounts = accounts;
-
-              if (factory.coinbase && accounts && accounts.length && accounts.indexOf(factory.coinbase) != -1) {
-                // same coinbase
-              }
-              else if (accounts) {
-                  factory.coinbase = accounts[0];
+        if (!isElectron && factory.coinbase) {
+          return factory.web3.eth.getAccounts(
+            function (e, accounts) {
+              if (e) {
+                cb(e);
               }
               else {
-                factory.coinbase = null;
-              }
+                factory.accounts = accounts;
 
-              cb(null, accounts);
+                if (factory.coinbase && accounts && accounts.length && accounts.indexOf(factory.coinbase) != -1) {
+                  // same coinbase
+                }
+                else if (accounts) {
+                    factory.coinbase = accounts[0];
+                }
+                else {
+                  factory.coinbase = null;
+                }
+
+                cb(null, accounts);
+              }
             }
-          }
-        );
+          );
+        }
+        else {
+          cb(null, null);
+        }
       };
 
       /* Ledger setup on browser*/

@@ -179,6 +179,9 @@
                 <span class="navbar-text">{{ethereumChain.chain.substr(0, 1).toUpperCase() + ethereumChain.chain.substr(1)}}</span>
                 <span class="navbar-text" ng-bind-html="statusIcon"></span>
               </li>
+              <li ng-show="!loggedIn">
+                <a hef="#" ng-click="openMetamaskWidget()">Unlock Metamask</a>
+              </li>
             </ul>
         </div>
     </nav>

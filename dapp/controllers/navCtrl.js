@@ -88,6 +88,14 @@
         }
       }
 
+      /**
+      * Opens Metamask widget and asks the user to allow the DApp accessing the accounts
+      */
+      $scope.openMetamaskWidget = function () {
+        // Ask to reload provider, it takes care of re-ejecuting metamask checks.
+        Web3Service.reloadWeb3Provider();
+      };
+
 
       $scope.updateInfo = function () {
 

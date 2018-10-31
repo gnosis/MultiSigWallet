@@ -6,4 +6,3 @@ sleep 5;
 karma start config.karma.js
 echo "Shutting down TestRpc..."
 kill -9 $testrpc_pid
-./node_modules/.bin/electron-rebuild;

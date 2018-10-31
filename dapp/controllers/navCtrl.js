@@ -91,9 +91,20 @@
       /**
       * Opens Metamask widget and asks the user to allow the DApp accessing the accounts
       */
-      $scope.openMetamaskWidget = function () {
+      $scope.openMetamaskWidget = function (resolve, reject) {
         // Ask to reload provider, it takes care of re-ejecuting metamask checks.
-        Web3Service.reloadWeb3Provider();
+        Web3Service.enableMetamask(function (error) {
+          if (error && reject) {
+            $scope.loggedIn = false;
+            reject();
+          }
+          else if (!error) {
+            $scope.loggedIn = true;
+            if (resolve) {
+              resolve();
+            }
+          }
+        });
       };
 
 
@@ -112,7 +123,7 @@
 
         // init params
         $scope.paramsPromise = Wallet.initParams().then(function () {
-          $scope.loggedIn = Web3Service.coinbase;
+          $scope.loggedIn = (Web3Service.coinbase !== undefined);
           $scope.coinbase = Web3Service.coinbase;
           $scope.nonce = Wallet.txParams.nonce;
           $scope.balance = Wallet.balance;
@@ -220,9 +231,20 @@
                 size: 'md',
                 backdrop: 'static',
                 windowClass: 'bootstrap-dialog type-info',
+                scope: $scope,
                 controller: function ($scope, $uibModalInstance) {
                   $scope.ok = function () {
                     $uibModalInstance.close();
+                  };
+
+                  $scope.metamaskInjected = Web3Service.isMetamaskInjected();
+
+                  $scope.openMetamaskWidgetAndClose = function () {
+                    $scope.openMetamaskWidget(function () {
+                      $scope.ok();
+                    }, function () {
+                      // DO nothing, user rejected unlocking Metamask
+                    });
                   };
                 }
               });

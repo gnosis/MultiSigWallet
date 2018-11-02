@@ -19,14 +19,14 @@ clone_depth: 5 # clone entire repository history if not defined
 # to run your custom scripts instead of automatic tests
 # test_script:
 #  - npm run test-dapp
-#  - npm run test  
+#  - npm run test
 
 # scripts that run after cloning repository
 install:
   - ps: Install-Product node 8 x64
   - ps: $env:DEBUG = "electron-builder"
   - npm i -g --production windows-build-tools
-  - cd dapp && rm -rf node_modules && rm package-lock.json && yarn add secp256k1 && yarn install && cd ..
+  - cd dapp && rm -rf node_modules && rm package-lock.json && yarn add secp256k1 && yarn run yarn-install && cd ..
 
 # to run your custom scripts instead of automatic MSBuild
 build_script:

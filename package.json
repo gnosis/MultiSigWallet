@@ -6,7 +6,6 @@
     "test-dapp": "cd dapp && npm test",
     "test": "sh truffle_test_runner.sh",
     "install": "cd dapp && npm install",
-    "yarn-install": "cd dapp && yarn install",
     "start": "cd dapp && npm start"
   },
   "repository": {

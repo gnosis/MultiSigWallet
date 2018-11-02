@@ -52,7 +52,6 @@
 
         factory.accounts = [];
         factory.coinbase = null;
-
         var web3 = null;
 
         // Legacy dapp browsers...
@@ -74,7 +73,7 @@
             }
           }
           else {
-            factory.ledgerSetup();
+            factory.ledgerSetup();d
             if (resolve) {
               resolve();
             }
@@ -89,6 +88,10 @@
         // injected web3 provider (Metamask, mist, etc)
         else if (txDefault.wallet == "injected" && web3 && !isElectron) {
           factory.web3 = web3.currentProvider !== undefined ? new MultisigWeb3(web3.currentProvider) : new MultisigWeb3(web3);
+          // Set accounts
+          factory.accounts = factory.web3.eth.accounts;
+          factory.coinbase = factory.accounts[0];
+
           if (resolve) {
             resolve();
           }
@@ -99,11 +102,14 @@
             resolve();
           }
         }
-        else if (web3) {
+        else if (txDefault.wallet == 'remotenode') {
           // Connect to Ethereum Node
+          // factory.web3 = new MultisigWeb3(new RpcSubprovider({
+          //   rpcUrl: txDefault.ethereumNode
+          // }));
           factory.web3 = new MultisigWeb3(new MultisigWeb3.providers.HttpProvider(txDefault.ethereumNode));
           // Check connection
-          factory.web3.net.getListening(function(e){
+          factory.web3.net.getListening(function(e) {
             if (e) {
               Utils.dangerAlert("You are not connected to any node.");
               if (reject) {
@@ -111,9 +117,23 @@
               }
             }
             else {
-              if (resolve) {
-                resolve();
-              }
+              // Get accounts from remote node
+              factory.web3.eth.getAccounts(function(e, accounts) {
+                if (e) {
+                  if (reject) {
+                    reject(e);
+                  }
+                }
+                else {
+                  // Set accounts
+                  factory.accounts = accounts;
+                  factory.coinbase = accounts[0];
+
+                  if (resolve) {
+                    resolve();
+                  }
+                }
+              });
             }
           });
         }

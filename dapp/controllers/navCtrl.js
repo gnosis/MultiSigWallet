@@ -123,7 +123,7 @@
 
         // init params
         $scope.paramsPromise = Wallet.initParams().then(function () {
-          $scope.loggedIn = (Web3Service.coinbase !== undefined);
+          $scope.loggedIn = (Web3Service.coinbase !== undefined && Web3Service.coinbase !== null);
           $scope.coinbase = Web3Service.coinbase;
           $scope.nonce = Wallet.txParams.nonce;
           $scope.balance = Wallet.balance;

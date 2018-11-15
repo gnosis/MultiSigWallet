@@ -6,6 +6,7 @@
       $scope.navCollapsed = true;
       $scope.isElectron = isElectron;
       $scope.config = Config.getConfiguration();
+      $scope.metamaskInjected = Web3Service.isMetamaskInjected();
 
       // Reload config when it changes
       $scope.$watch(

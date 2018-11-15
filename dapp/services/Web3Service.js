@@ -73,7 +73,7 @@
             }
           }
           else {
-            factory.ledgerSetup();d
+            factory.ledgerSetup();
             if (resolve) {
               resolve();
             }

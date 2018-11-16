@@ -1,6 +1,6 @@
 {
   "name": "multisig-wallet-gnosis",
-  "version": "1.3.7",
+  "version": "1.4.0",
   "description": "Main module, for installing all dependencies",
   "scripts": {
     "test-dapp": "cd dapp && npm test",
@@ -27,6 +27,7 @@
   "dependencies": {
     "child_process": "1.0.2",
     "ethereumjs-testrpc": "4.1.3",
+    "ganache-cli": "^6.1.8",
     "truffle": "3.4.11"
   },
   "devDependencies": {

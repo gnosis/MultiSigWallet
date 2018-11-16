@@ -4,7 +4,10 @@
     .module('multiSigWeb')
     .service("Web3Service", function ($window, $q, Utils, $uibModal, Connection, Config, $http) {
 
-      var factory = {};
+      var factory = {
+        coinbase: null,
+        accounts: []
+      };
 
       factory.webInitialized = $q(function (resolve, reject) {
         window.addEventListener('load', function () {
@@ -12,6 +15,33 @@
           factory.reloadWeb3Provider(resolve, reject);
         });
       });
+
+      /**
+      * Asks Metamask to open its widget.
+      * Returns a callback call with the list of accounts or null in case the
+      * user rejects the approval request.
+      * @param callback, function (error, accounts)
+      */
+      factory.enableMetamask = function (callback) {
+        $window.ethereum.enable().then(function (accounts) {
+          factory.reloadWeb3Provider();
+          // Set accounts and coinbase
+          factory.accounts = accounts;
+          factory.coinbase = accounts[0];
+          callback(null, accounts)
+        }).catch(function (error) {
+          callback(error, null)
+        });
+      };
+
+      /**
+      * Returns true if metamask is injected, false otherwise
+      **/
+      factory.isMetamaskInjected = function () {
+        return window && (typeof window.web3 !== 'undefined' &&
+          (window.web3.currentProvider.constructor.name === 'MetamaskInpageProvider' || window.web3.currentProvider.isMetaMask)
+        );
+      };
 
       /**
       * Reloads web3 provider
@@ -22,14 +52,35 @@
 
         factory.accounts = [];
         factory.coinbase = null;
+        var web3 = null;
+
+        // Legacy dapp browsers...
+        if ($window.web3 && !$window.ethereum) {
+          web3 = $window.web3;
+        }
+        // TODO: figure out whether Metamask standardize isEnabled() or find out
+        // another way to manage it
+        else if ($window.ethereum && window.ethereum._metamask.isEnabled()) {
+          web3 = $window.ethereum;
+        }
 
         // Ledger wallet
         if (txDefault.wallet == "ledger") {
           if (isElectron) {
             factory.ledgerElectronSetup();
-            if (resolve) {
-              resolve();
-            }
+            factory.web3.eth.getAccounts(function (e, accounts) {
+              if (e) {
+                if (reject) {
+                  reject(e);
+                }
+              } else {
+                factory.accounts = accounts;
+                factory.coinbase = factory.accounts[0];
+                if (resolve) {
+                  resolve();
+                }
+              }
+            });
           }
           else {
             factory.ledgerSetup();
@@ -45,8 +96,12 @@
           }
         }
         // injected web3 provider (Metamask, mist, etc)
-        else if (txDefault.wallet == "injected" && $window && $window.web3 && !isElectron) {
-          factory.web3 = new MultisigWeb3($window.web3.currentProvider);
+        else if (txDefault.wallet == "injected" && web3 && !isElectron) {
+          factory.web3 = web3.currentProvider !== undefined ? new MultisigWeb3(web3.currentProvider) : new MultisigWeb3(web3);
+          // Set accounts
+          factory.accounts = factory.web3.eth.accounts;
+          factory.coinbase = factory.accounts[0];
+
           if (resolve) {
             resolve();
           }
@@ -57,11 +112,14 @@
             resolve();
           }
         }
-        else {
+        else if (txDefault.wallet == 'remotenode') {
           // Connect to Ethereum Node
+          // factory.web3 = new MultisigWeb3(new RpcSubprovider({
+          //   rpcUrl: txDefault.ethereumNode
+          // }));
           factory.web3 = new MultisigWeb3(new MultisigWeb3.providers.HttpProvider(txDefault.ethereumNode));
           // Check connection
-          factory.web3.net.getListening(function(e){
+          factory.web3.net.getListening(function(e) {
             if (e) {
               Utils.dangerAlert("You are not connected to any node.");
               if (reject) {
@@ -69,11 +127,28 @@
               }
             }
             else {
-              if (resolve) {
-                resolve();
-              }
+              // Get accounts from remote node
+              factory.web3.eth.getAccounts(function(e, accounts) {
+                if (e) {
+                  if (reject) {
+                    reject(e);
+                  }
+                }
+                else {
+                  // Set accounts
+                  factory.accounts = accounts;
+                  factory.coinbase = accounts[0];
+
+                  if (resolve) {
+                    resolve();
+                  }
+                }
+              });
             }
           });
+        }
+        else if (resolve) {
+          resolve();
         }
       };
 
@@ -169,28 +244,33 @@
       * Get ethereum accounts and update account list.
       */
       factory.updateAccounts = function (cb) {
-        return factory.web3.eth.getAccounts(
-          function (e, accounts) {
-            if (e) {
-              cb(e);
-            }
-            else {
-              factory.accounts = accounts;
-
-              if (factory.coinbase && accounts && accounts.length && accounts.indexOf(factory.coinbase) != -1) {
-                // same coinbase
-              }
-              else if (accounts) {
-                  factory.coinbase = accounts[0];
+        if (!isElectron && factory.coinbase) {
+          return factory.web3.eth.getAccounts(
+            function (e, accounts) {
+              if (e) {
+                cb(e);
               }
               else {
-                factory.coinbase = null;
-              }
+                factory.accounts = accounts;
 
-              cb(null, accounts);
+                if (factory.coinbase && accounts && accounts.length && accounts.indexOf(factory.coinbase) != -1) {
+                  // same coinbase
+                }
+                else if (accounts) {
+                    factory.coinbase = accounts[0];
+                }
+                else {
+                  factory.coinbase = null;
+                }
+
+                cb(null, accounts);
+              }
             }
-          }
-        );
+          );
+        }
+        else {
+          cb(null, null);
+        }
       };
 
       /* Ledger setup on browser*/

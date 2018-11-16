@@ -68,9 +68,19 @@
         if (txDefault.wallet == "ledger") {
           if (isElectron) {
             factory.ledgerElectronSetup();
-            if (resolve) {
-              resolve();
-            }
+            factory.web3.eth.getAccounts(function (e, accounts) {
+              if (e) {
+                if (reject) {
+                  reject(e);
+                }
+              } else {
+                factory.accounts = accounts;
+                factory.coinbase = factory.accounts[0];
+                if (resolve) {
+                  resolve();
+                }
+              }
+            });
           }
           else {
             factory.ledgerSetup();

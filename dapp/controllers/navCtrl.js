@@ -141,7 +141,8 @@
               });
             }
             else {
-              $scope.accounts = [];
+              var accounts = Web3Service.accounts;
+              $scope.accounts = accounts || [];
             }
           }
         }, function (error) {

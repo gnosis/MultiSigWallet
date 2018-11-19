@@ -15,88 +15,10 @@ var txDefaultOrig =
   walletFactoryAddress: "0x6e95c8e8557abc08b46f3c347ba06f8dc012763f",
   tokens: [
     {
-      'address': '0x6810e776880c02933d47db1b9fc05908e5386b96',
-      'name': 'Gnosis',
-      'symbol': 'GNO',
+      'address': '0x6e748fe8f1f344ce557bfdbf29c085aa0dff73b9',
+      'name': 'ValorToken (mockup)',
+      'symbol': 'VALORmock',
       'decimals': 18
-    },
-    {
-      'address': '0xa74476443119A942dE498590Fe1f2454d7D4aC0d',
-      'name': 'Golem',
-      'symbol': 'GNT',
-      'decimals': 18
-    },
-    {
-      'address': '0x888666CA69E0f178DED6D75b5726Cee99A87D698',
-      'name': 'Iconomi',
-      'symbol': 'ICN',
-      'decimals': 18
-    },
-    {
-      'address': '0x48c80F1f4D53D5951e5D5438B54Cba84f29F32a5',
-      'name': 'Augur',
-      'symbol': 'REP',
-      'decimals': 18
-    },
-    {
-      'address': '0xc66ea802717bfb9833400264dd12c2bceaa34a6d',
-      'name': 'Maker',
-      'symbol': 'MKR',
-      'decimals': 18
-    },
-    {
-      'address': '0xe0b7927c4af23765cb51314a0e0521a9645f0e2a',
-      'name': 'Digix Global',
-      'symbol': 'DGD',
-      'decimals': 9
-    },
-    {
-      'address': '0xAf30D2a7E90d7DC361c8C4585e9BB7D2F6f15bc7',
-      'name': 'FirstBlood',
-      'symbol': '1ST',
-      'decimals': 18
-    },
-    {
-      'address': '0x0D8775F648430679A709E98d2b0Cb6250d2887EF',
-      'name': 'Basic Attention Token',
-      'symbol': 'BAT',
-      'decimals': 18
-    },
-    {
-      'address': '0x1F573D6Fb3F13d689FF844B4cE37794d79a7FF1C',
-      'name': 'Bancor Network',
-      'symbol': 'BNT',
-      'decimals': 18
-    },
-    {
-      'address': '0xaec2e87e0a235266d9c5adc9deb4b2e29b54d009',
-      'name': 'SingularDTV',
-      'symbol': 'SNGLS',
-      'decimals': 0
-    },
-    {
-      'address': '0x960b236A07cf122663c4303350609A66A7B288C0',
-      'name': 'Aragon Network',
-      'symbol': 'ANT',
-      'decimals': 18
-    },
-    {
-      'address': '0x607F4C5BB672230e8672085532f7e901544a7375',
-      'name': 'iExec RLC',
-      'symbol': 'RLC',
-      'decimals': 9
-    },
-    {
-      'address': '0xBEB9eF514a379B997e0798FDcC901Ee474B6D9A1',
-      'name': 'Melon',
-      'symbol': 'MLN',
-      'decimals': 18
-    },
-    {
-      'address': '0xb64ef51c888972c908cfacf59b47c1afbc0ab8ac',
-      'name': 'Storjcoin X',
-      'symbol': 'SJCX',
-      'decimals': 8
     }
   ]
 };

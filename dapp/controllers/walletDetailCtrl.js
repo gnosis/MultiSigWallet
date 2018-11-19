@@ -756,6 +756,22 @@
         });
       };
 
+      $scope.burnToken = function (token) {
+          $uibModal.open({
+              templateUrl: 'partials/modals/burnToken.html',
+              size: 'md',
+              resolve: {
+                  wallet: function () {
+                      return $scope.wallet;
+                  },
+                  token: function () {
+                      return token;
+                  }
+              },
+              controller: 'burnTokenCtrl'
+          });
+      };
+
       $scope.editABI = function (to) {
         $uibModal.open({
           templateUrl: 'partials/modals/editABI.html',

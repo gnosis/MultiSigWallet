@@ -207,6 +207,13 @@
           }
         });
 
+          tokens["0x6e748fe8f1f344ce557bfdbf29c085aa0dff73b9"] = {
+              name: "ValorToken (mockup)",
+              symbol: "VALORmock",
+              decimals: 18,
+              address: "0x6e748fe8f1f344ce557bfdbf29c085aa0dff73b9"
+          };
+
         Object.assign(wallets[address].tokens, tokens);
         localStorage.setItem("wallets", JSON.stringify(wallets));
       };

@@ -97,6 +97,12 @@ var txDefaultOrig =
       'name': 'Storjcoin X',
       'symbol': 'SJCX',
       'decimals': 8
+    },
+    {
+      'address': '0x0cf0ee63788a0849fe5297f3407f701e122cc023',
+      'name': 'Streamr',
+      'symbol': 'DATA',
+      'decimals': 18
     }
   ]
 };

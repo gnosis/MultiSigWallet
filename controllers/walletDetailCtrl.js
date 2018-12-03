@@ -12,8 +12,8 @@
       }
 
       const hardcodedTagline = {
-        "0x4838eab6f43841e0d233db4cea47bd64f614f0c5": ", Cofounder & Tech Lead",
-        "0xddc1b51b67dabd408b224d0f7dfcc93ec4b06265": ", Cofounder & Project Lead",
+        "0x4838eab6f43841e0d233db4cea47bd64f614f0c5": ", Board Member",
+        "0xddc1b51b67dabd408b224d0f7dfcc93ec4b06265": ", Board Member",
         "0xbeefbeef03c7e5a1c29e0aa675f8e16aee0a5fad": "",
       }
 
@@ -204,6 +204,29 @@
 
         batch.execute();
       };
+
+      // Euro balance
+      $scope.euro = '1,500,000.00';
+      // Dai balance
+      $scope.dai = '1,000,000.00';
+      // Decred balance
+      $scope.dcr = '14,500.00';
+      // ZCash balance
+      fetch('https://api.zcha.in/v2/mainnet/accounts/t1TGWTiEHmYLBEMDeBpGbYTvW34SgQz1sVK')
+        .then(function(res) {
+            res.json().then(data => {
+              var num = parseFloat(data.balance);
+              $scope.zec = num.toFixed(2);
+            })
+        })
+        // Bitcoin balance
+        fetch('https://api.blockcypher.com/v1/btc/main/addrs/3B5eJnUXRa1w6X8giMwpd6XJKnHAVmeH2j')
+          .then(function(res) {
+              res.json().then(data => {
+                var num = parseFloat(data.balance)/100000000;
+                $scope.btc = num.toFixed(2);
+              })
+          })
 
       Wallet
       .webInitialized

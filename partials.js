@@ -305,6 +305,46 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "              {{token|token}} {{token.balanceUSD|fiat}}\n" +
     "            </td>\n" +
     "          </tr>\n" +
+    "          <tr ng-repeat=\"token in wallet.tokens track by $index\">\n" +
+    "            <td>\n" +
+    "              Euro\n" +
+    "            </td>\n" +
+    "            <td class=\"text-right\">\n" +
+    "              {{euro}} EUR\n" +
+    "            </td>\n" +
+    "          </tr>\n" +
+    "          <tr ng-repeat=\"token in wallet.tokens track by $index\">\n" +
+    "            <td>\n" +
+    "              Zcash\n" +
+    "            </td>\n" +
+    "            <td class=\"text-right\">\n" +
+    "              {{zec}} ZEC\n" +
+    "            </td>\n" +
+    "          </tr>\n" +
+    "          <tr ng-repeat=\"token in wallet.tokens track by $index\">\n" +
+    "            <td>\n" +
+    "              Bitcoin\n" +
+    "            </td>\n" +
+    "            <td class=\"text-right\">\n" +
+    "              {{btc}} BTC\n" +
+    "            </td>\n" +
+    "          </tr>\n" +
+    "          <tr ng-repeat=\"token in wallet.tokens track by $index\">\n" +
+    "            <td>\n" +
+    "              Decred\n" +
+    "            </td>\n" +
+    "            <td class=\"text-right\">\n" +
+    "              {{dcr}} DCR\n" +
+    "            </td>\n" +
+    "          </tr>\n" +
+    "          <tr ng-repeat=\"token in wallet.tokens track by $index\">\n" +
+    "            <td>\n" +
+    "              Dai\n" +
+    "            </td>\n" +
+    "            <td class=\"text-right\">\n" +
+    "              {{dai}} DAI\n" +
+    "            </td>\n" +
+    "          </tr>\n" +
     "        </tbody>\n" +
     "      </table>\n" +
     "      <div ng-show=\"!totalTokens\" class=\"panel-body text-center\" uib-collapse=\"hideTokens\">\n" +
@@ -345,7 +385,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "      Multisig transactions\n" +
     "    </h4>\n" +
     "  </div>\n" +
-    "  <div class=\"table-responsive\">\n" +
+    "  <div class=\"table-responsive transaction-table\">\n" +
     "  <table class=\"table table-bordered table-tx\">\n" +
     "    <thead>\n" +
     "      <tr>\n" +
@@ -411,10 +451,10 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "          </ul>\n" +
     "          </div>\n" +
     "        </td>\n" +
-    "        <td>\n" +
+    "        <td class=\"confirmation-list\">\n" +
     "          <div class=\"row\">\n" +
     "            <div ng-class=\"{'col-md-12' : transactions[txId].executed, 'col-md-6' : !transactions[txId].executed}\">\n" +
-    "              <ul ng-repeat=\"owner in transactions[txId].confirmations\">\n" +
+    "              <ul  ng-repeat=\"owner in transactions[txId].confirmations\">\n" +
     "                <li>\n" +
     "                  {{wallet.owners[owner].name}}\n" +
     "                </li>\n" +

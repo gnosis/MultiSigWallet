@@ -9,6 +9,7 @@
     <!--<link href="./bootstrap/dist/css/bootstrap.css" rel="stylesheet" type="text/css" />-->
     <link href="./css/gnosis-bootstrap-dialog.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="./fonts/Maison Neue/fonts.css">
+    <link rel="stylesheet" href="./fonts/HKGrotesk-Regular.css">
     <!-- 3rd party Stylesheets -->
     <link href="./bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
     <link href="./bower_components/SpinKit/css/spinkit.css" rel="stylesheet" type="text/css" />
@@ -62,18 +63,41 @@
     <script src="./expose.js"></script>
   </head>
   <body ng-app="multiSigWeb">
-    <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <a class="navbar-brand" href="#">
-            <img src="./img/aragon-logo.svg" />
-            <img src="./img/aragon-text.svg" />
-          </a>
-        </div>
+    <div class="aragon-navbar navbar-fixed-top">
+      <div class="center">
+          <ul>
+            <li>
+              <a href="https://aragon.org/discover">
+                Discover
+              </a>
+            </li>
+            <li>
+              <a href="https://aragon.org/developers">
+                Developers
+              </a>
+            </li>
+            <li class="logo-li">
+              <a class="logo-link" href="https://aragon.org">
+                <img src="./img/logo.svg" />
+              </a>
+            </li>
+            <li>
+              <a href="https://aragon.org/project">
+                Project
+              </a>
+            </li>
+            <li>
+              <a href="https://aragon.org/network">
+                Network
+              </a>
+            </li>
+          </ul>
+      </div>
+    </div>
 
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <p class="navbar-text">Foundation Multisig – <a href="https://etherscan.io/address/aragonproject.eth" target="blank">aragonproject.eth</a></p>
-        </div>
+    <nav class="navbar navbar-default secondary-navbar">
+      <div class="container">
+        <p class="navbar-text">Association Multisig <span class="divider">–</span> <a href="https://etherscan.io/address/aragonproject.eth" target="blank">aragonproject.eth</a></p>
       </div>
     </nav>
     <div class="container">

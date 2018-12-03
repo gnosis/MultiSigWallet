@@ -2,8 +2,9 @@ body {
   /*background: #fafafa !important;*/
   color: #505050;
   font-weight: normal;
-  background-color: #F8FCFD !important;
-  font-family: 'Maison Neue', 'Helvetica Neue', Arial, Helvetica, sans-serif !important;
+  font-size: 15px;
+  background-color: white;
+  font-family: 'HKGrotesk-Regular', 'Maison Neue', 'Helvetica Neue', Arial, Helvetica, sans-serif !important;
 }
 
 .navbar-default {
@@ -15,15 +16,14 @@ body {
 }
 
 .panel {
-  background-color: white !important;
-  border: 1px solid #e8e8e8;
+  box-shadow: rgba(0, 0, 0, 0.07) 0px 4px 6px 0px;
+  background-color: rgb(249, 250, 252);
+  border: 0 solid transparent;
   padding: 10px;
-  /*box-shadow: 0 4px 10px rgba(59, 59, 59, 0.25);*/
 }
 
 .panel-default > .panel-heading {
-  background-color: white !important;
-  border-color: white !important;
+  background-color: rgb(249, 250, 252);
   color: #3b3b3b !important;
   padding: 10px 8px !important;
 }
@@ -60,18 +60,14 @@ body {
 }
 
 .panel-footer {
-  background-color: #fff !important;
+  background-color: #f9fafc !important;
   border-top: none !important;
 }
 
 .pagination > li > a, .pagination > li > span {
-  border-color: white !important;
-  background-color: #fafafa !important;
+  border-color: #e8e8e8;
+  background-color: #f9fafc!important;
   color: #3b3b3b;
-}
-
-.navbar > .container {
-  margin-top: 3px;
 }
 
 .navbar {
@@ -83,7 +79,7 @@ body {
 }
 
 body {
-  padding-top: 94px;
+  padding-top: 64px;
 }
 
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
@@ -157,8 +153,26 @@ table.table-tx tbody tr td {
   border-bottom: 1px solid #e8e8e8!important;
 }
 
+.transaction-table .confirmation-list ul {
+  list-style-type: none;
+  padding-left: 0;
+  min-width: 149px;
+}
+.transaction-table .confirmation-list ul li {
+  background: #DCCDFF;
+  border-radius: 100px;
+  font-size: 14px;
+  color: black;
+  text-align: center;
+  letter-spacing: 0;
+  opacity: 0.7;
+  line-height: 16px;
+  padding: 4px 0px;
+  background: #DAEAEF;
+}
+
 .pagination > li > a, .pagination > li > span {
-  background-color: #fff!important;
+  background-color: #f9fafc!important;
 }
 
 .pagination > li:first-child > a, .pagination > li:first-child > span, .pagination > li:last-child > a, .pagination > li:last-child > span {
@@ -186,4 +200,125 @@ table.table-tx tbody tr td {
 .panel-heading select {
   width: 120px!important;
   margin-top: -10px;
+}
+
+/* Aragon website navbar
+/* ---------------------------------------------------------- */
+
+.aragon-navbar {
+  width: 100%;
+  height: 64px;
+  background: rgb(28, 29, 35);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 20px;
+  z-index: 5;
+}
+.aragon-navbar ul {
+  padding: 0;
+}
+.aragon-navbar .brand {
+  display: flex;
+}
+.aragon-navbar  a {
+  position: relative;
+  outline: 0 !important;
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 50px;
+  text-decoration: none;
+  font-size: 17px;
+  white-space: nowrap;
+  color: #ffffff;
+}
+.aragon-navbar  a:hover {
+  cursor: pointer;
+}
+
+
+.aragon-navbar .center {
+  align-items: center;
+  justify-content: space-between;
+  width: auto;
+  height: 100%;
+  display: inherit;
+}
+.aragon-navbar .center ul {
+    display: flex;
+    height: 100%;
+    margin: 0;
+}
+.aragon-navbar .center ul li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 185px;
+}
+.aragon-navbar .center ul li.logo-li {
+    width: 100px;
+}
+.aragon-navbar .center ul li.logo-li a{
+    padding: 0;
+}
+.aragon-navbar .center  button {
+    margin: 0 0 0 10px;
+}
+
+.logo-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 148px;
+  height: 100%;
+}
+.logo-link img {
+  height: 45px;
+}
+
+@media (max-width: 745px) {
+  .aragon-navbar .center ul li {
+      display: none
+  }
+  .aragon-navbar .center ul li.logo-li {
+      display: flex;
+  }
+  .footer-container {
+    grid-template-columns: 33% !important;
+  }
+  .mobile-full {
+    grid-column-start: 1 !important;
+    grid-column-end: 4 !important;
+  }
+}
+
+.secondary-navbar {
+  background-color: #26272f;
+  border: transparent;
+  color: white;
+  display: flex;
+  align-items: center;
+}
+
+.secondary-navbar .navbar-text {
+  font-weight: bold;
+  margin: 0;
+  font-size: 17px;
+  padding-left: 2px;
+}
+
+.secondary-navbar .divider {
+  padding: 0 10px;
+}
+.secondary-navbar a {
+  color: #01c3e3;
+  text-decoration: none;
+  outline: none;
+}
+
+.secondary-navbar a:hover {
+  color: #039eb7;
+  text-decoration: none;
 }

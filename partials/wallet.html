@@ -74,6 +74,46 @@
               {{token|token}} {{token.balanceUSD|fiat}}
             </td>
           </tr>
+          <tr ng-repeat="token in wallet.tokens track by $index">
+            <td>
+              Euro
+            </td>
+            <td class="text-right">
+              {{euro}} EUR
+            </td>
+          </tr>
+          <tr ng-repeat="token in wallet.tokens track by $index">
+            <td>
+              Zcash
+            </td>
+            <td class="text-right">
+              {{zec}} ZEC
+            </td>
+          </tr>
+          <tr ng-repeat="token in wallet.tokens track by $index">
+            <td>
+              Bitcoin
+            </td>
+            <td class="text-right">
+              {{btc}} BTC
+            </td>
+          </tr>
+          <tr ng-repeat="token in wallet.tokens track by $index">
+            <td>
+              Decred
+            </td>
+            <td class="text-right">
+              {{dcr}} DCR
+            </td>
+          </tr>
+          <tr ng-repeat="token in wallet.tokens track by $index">
+            <td>
+              Dai
+            </td>
+            <td class="text-right">
+              {{dai}} DAI
+            </td>
+          </tr>
         </tbody>
       </table>
       <div ng-show="!totalTokens" class="panel-body text-center" uib-collapse="hideTokens">
@@ -114,7 +154,7 @@
       Multisig transactions
     </h4>
   </div>
-  <div class="table-responsive">
+  <div class="table-responsive transaction-table">
   <table class="table table-bordered table-tx">
     <thead>
       <tr>
@@ -180,10 +220,10 @@
           </ul>
           </div>
         </td>
-        <td>
+        <td class="confirmation-list">
           <div class="row">
             <div ng-class="{'col-md-12' : transactions[txId].executed, 'col-md-6' : !transactions[txId].executed}">
-              <ul ng-repeat="owner in transactions[txId].confirmations">
+              <ul  ng-repeat="owner in transactions[txId].confirmations">
                 <li>
                   {{wallet.owners[owner].name}}
                 </li>

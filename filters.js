@@ -174,15 +174,18 @@
           }
         }
         else if (addressCandidate && addressCandidate.indexOf && addressCandidate.indexOf("0x") != -1) {
-          for (key in Wallet.wallets) {
-            var wallet = Wallet.wallets[key];
-            if ( wallet && wallet.owners && wallet.owners[addressCandidate] && wallet.owners[addressCandidate].name){
-              return wallet.owners[addressCandidate].name;
+          if (addressCandidate == '0x5756ddfa7d643542ae3a0add8cea5ad602d59035') {
+            return 'Operations wallet';
+          } else {
+            for (key in Wallet.wallets) {
+              var wallet = Wallet.wallets[key];
+              if ( wallet && wallet.owners && wallet.owners[addressCandidate] && wallet.owners[addressCandidate].name){
+                return wallet.owners[addressCandidate].name;
+              }
             }
+            return addressCandidate;
           }
-          return addressCandidate;
-        }
-        else {
+        }  else {
           return addressCandidate;
         }
       };

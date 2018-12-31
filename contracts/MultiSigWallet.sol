@@ -9,9 +9,12 @@ contract MultiSigWallet {
      *  Events
      */
     event Confirmation(address indexed sender, uint indexed transactionId);
-    event Revocation(address indexed sender, uint indexed transactionId);
+    event ConfirmRevocation(address indexed sender, uint indexed transactionId);
+    event Block(address indexed sender, uint indexed transactionId);
+    event BlockRevocation(address indexed sender, uint indexed transactionId);
     event Submission(uint indexed transactionId);
     event Execution(uint indexed transactionId);
+    event Rejection(uint indexed transactionId);
     event ExecutionFailure(uint indexed transactionId);
     event Deposit(address indexed sender, uint value);
     event OwnerAddition(address indexed owner);
@@ -28,6 +31,7 @@ contract MultiSigWallet {
      */
     mapping (uint => Transaction) public transactions;
     mapping (uint => mapping (address => bool)) public confirmations;
+    mapping (uint => mapping (address => bool)) public rejections;
     mapping (address => bool) public isOwner;
     address[] public owners;
     uint public required;
@@ -38,6 +42,7 @@ contract MultiSigWallet {
         uint value;
         bytes data;
         bool executed;
+        bool rejected;
     }
 
     /*
@@ -68,13 +73,28 @@ contract MultiSigWallet {
         _;
     }
 
+    modifier blocked(uint transactionId, address owner) {
+        require(rejections[transactionId][owner]);
+        _;
+    }
+
     modifier notConfirmed(uint transactionId, address owner) {
         require(!confirmations[transactionId][owner]);
         _;
     }
 
+    modifier notBlocked(uint transactionId, address owner) {
+        require(!rejections[transactionId][owner]);
+        _;
+    }
+
     modifier notExecuted(uint transactionId) {
         require(!transactions[transactionId].executed);
+        _;
+    }
+
+    modifier notRejected(uint transactionId) {
+        require(!transactions[transactionId].rejected);
         _;
     }
 
@@ -216,7 +236,32 @@ contract MultiSigWallet {
         notExecuted(transactionId)
     {
         confirmations[transactionId][msg.sender] = false;
-        Revocation(msg.sender, transactionId);
+        ConfirmRevocation(msg.sender, transactionId);
+    }
+
+    /// @dev Allows an owner to block a transaction.
+    /// @param transactionId Transaction ID.
+    function blockTransaction(uint transactionId)
+        public
+        ownerExists(msg.sender)
+        transactionExists(transactionId)
+        notBlocked(transactionId, msg.sender)
+    {
+        rejections[transactionId][msg.sender] = true;
+        Block(msg.sender, transactionId);
+        executeTransaction(transactionId);
+    }
+
+    /// @dev Allows an owner to revoke a block for a transaction.
+    /// @param transactionId Transaction ID.
+    function revokeBlock(uint transactionId)
+        public
+        ownerExists(msg.sender)
+        blocked(transactionId, msg.sender)
+        notExecuted(transactionId)
+    {
+        rejections[transactionId][msg.sender] = false;
+        BlockRevocation(msg.sender, transactionId);
     }
 
     /// @dev Allows anyone to execute a confirmed transaction.
@@ -226,8 +271,9 @@ contract MultiSigWallet {
         ownerExists(msg.sender)
         confirmed(transactionId, msg.sender)
         notExecuted(transactionId)
+        notRejected(transactionId)
     {
-        if (isConfirmed(transactionId)) {
+        if (isConfirmed(transactionId) && !isRejected(transactionId)) {
             Transaction storage txn = transactions[transactionId];
             txn.executed = true;
             if (external_call(txn.destination, txn.value, txn.data.length, txn.data))
@@ -278,6 +324,26 @@ contract MultiSigWallet {
         }
     }
 
+    /// @dev Returns the rejected status of a transaction.
+    /// @param transactionId Transaction ID.
+    /// @return Rejection status.
+    function isRejected(uint transactionId)
+        public
+        constant
+        returns (bool)
+    {
+      uint count = 0;
+      for (uint i=0; i<owners.length; i++) {
+          if (rejections[transactionId][owners[i]])
+              count += 1;
+          if (count == required)
+              Transaction storage txn = transactions[transactionId];
+              txn.rejected = true;
+              Rejection(transactionId);
+              return true;
+      }
+    }
+
     /*
      * Internal functions
      */
@@ -296,7 +362,8 @@ contract MultiSigWallet {
             destination: destination,
             value: value,
             data: data,
-            executed: false
+            executed: false,
+            rejected: false
         });
         transactionCount += 1;
         Submission(transactionId);
@@ -362,6 +429,27 @@ contract MultiSigWallet {
         _confirmations = new address[](count);
         for (i=0; i<count; i++)
             _confirmations[i] = confirmationsTemp[i];
+    }
+
+    /// @dev Returns array with owner addresses, which confirmed transaction.
+    /// @param transactionId Transaction ID.
+    /// @return Returns array of owner addresses.
+    function getRejections(uint transactionId)
+        public
+        constant
+        returns (address[] _rejections)
+    {
+        address[] memory rejectionsTemp = new address[](owners.length);
+        uint count = 0;
+        uint i;
+        for (i=0; i<owners.length; i++)
+            if (rejections[transactionId][owners[i]]) {
+                rejectionsTemp[count] = owners[i];
+                count += 1;
+            }
+        _rejections = new address[](count);
+        for (i=0; i<count; i++)
+            _rejections[i] = rejectionsTemp[i];
     }
 
     /// @dev Returns list of transaction IDs in defined range.

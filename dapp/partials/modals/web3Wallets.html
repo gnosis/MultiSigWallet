@@ -15,6 +15,9 @@
   <p>
     You can monitor existing wallets without an account management software but you cannot create new wallets or sign transactions.
   </p>
+  <p ngIf="metamaskInjected">
+    <a href="#" ng-click="openMetamaskWidgetAndClose()">Unlock Metamask</a>
+  </p>
 </div>
 <div class="modal-footer">
   <button type="button" ng-click="ok()" class="btn btn-default" id="terms-button" >

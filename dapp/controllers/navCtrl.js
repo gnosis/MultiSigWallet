@@ -6,6 +6,7 @@
       $scope.navCollapsed = true;
       $scope.isElectron = isElectron;
       $scope.config = Config.getConfiguration();
+      $scope.metamaskInjected = Web3Service.isMetamaskInjected();
 
       // Reload config when it changes
       $scope.$watch(
@@ -88,6 +89,25 @@
         }
       }
 
+      /**
+      * Opens Metamask widget and asks the user to allow the DApp accessing the accounts
+      */
+      $scope.openMetamaskWidget = function (resolve, reject) {
+        // Ask to reload provider, it takes care of re-ejecuting metamask checks.
+        Web3Service.enableMetamask(function (error) {
+          if (error && reject) {
+            $scope.loggedIn = false;
+            reject();
+          }
+          else if (!error) {
+            $scope.loggedIn = true;
+            if (resolve) {
+              resolve();
+            }
+          }
+        });
+      };
+
 
       $scope.updateInfo = function () {
 
@@ -104,7 +124,7 @@
 
         // init params
         $scope.paramsPromise = Wallet.initParams().then(function () {
-          $scope.loggedIn = Web3Service.coinbase;
+          $scope.loggedIn = !isElectron ? (Web3Service.coinbase !== undefined && Web3Service.coinbase !== null) : true;
           $scope.coinbase = Web3Service.coinbase;
           $scope.nonce = Wallet.txParams.nonce;
           $scope.balance = Wallet.balance;
@@ -121,7 +141,8 @@
               });
             }
             else {
-              $scope.accounts = [];
+              var accounts = Web3Service.accounts;
+              $scope.accounts = accounts || [];
             }
           }
         }, function (error) {
@@ -212,9 +233,20 @@
                 size: 'md',
                 backdrop: 'static',
                 windowClass: 'bootstrap-dialog type-info',
+                scope: $scope,
                 controller: function ($scope, $uibModalInstance) {
                   $scope.ok = function () {
                     $uibModalInstance.close();
+                  };
+
+                  $scope.metamaskInjected = Web3Service.isMetamaskInjected();
+
+                  $scope.openMetamaskWidgetAndClose = function () {
+                    $scope.openMetamaskWidget(function () {
+                      $scope.ok();
+                    }, function () {
+                      // DO nothing, user rejected unlocking Metamask
+                    });
                   };
                 }
               });

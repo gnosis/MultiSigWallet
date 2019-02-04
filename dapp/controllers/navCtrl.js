@@ -7,6 +7,7 @@
       $scope.isElectron = isElectron;
       $scope.config = Config.getConfiguration();
       $scope.metamaskInjected = Web3Service.isMetamaskInjected();
+      $scope.web3ProviderName = null;
 
       // Reload config when it changes
       $scope.$watch(
@@ -219,6 +220,7 @@
           Connection.checkConnection();
           $scope.updateConnectionStatus();
           $scope.connectionInterval = $interval($scope.updateConnectionStatus, txDefault.connectionChecker.checkInterval);
+          $scope.web3ProviderName = txDefault.wallet;
 
           $scope.updateInfo().then(function () {
             var chooseWeb3ProviderShown = Config.getConfiguration('chooseWeb3ProviderShown');

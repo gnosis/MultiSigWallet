@@ -24,7 +24,7 @@
       */
       factory.enableMetamask = function (callback) {
         $window.ethereum.enable().then(function (accounts) {
-          factory.reloadWeb3Provider();
+          factory.reloadWeb3Provider(null, callback);
           // Set accounts and coinbase
           factory.accounts = accounts;
           factory.coinbase = accounts[0];
@@ -67,26 +67,26 @@
         // Ledger wallet
         if (txDefault.wallet == "ledger") {
           if (isElectron) {
-            factory.ledgerElectronSetup();
-            factory.web3.eth.getAccounts(function (e, accounts) {
-              if (e) {
-                if (reject) {
-                  reject(e);
-                }
-              } else {
-                factory.accounts = accounts;
-                factory.coinbase = factory.accounts[0];
-                if (resolve) {
-                  resolve();
-                }
+            factory.ledgerElectronSetup().then(function () {
+              if (resolve) {
+                resolve()
               }
-            });
+            }, function (e) {
+              if (reject) {
+                reject(e)
+              }
+            })
           }
           else {
-            factory.ledgerSetup();
-            if (resolve) {
-              resolve();
-            }
+            factory.ledgerSetup().then(function () {
+              if (resolve) {
+                resolve()
+              }
+            }, function (e) {
+              if (reject) {
+                reject(e)
+              }
+            })
           }
         }
         else if (txDefault.wallet == "trezor") {
@@ -240,42 +240,70 @@
         });
       };
 
+      // /**
+      // * Get ethereum accounts and update account list.
+      // */
+      // factory.updateAccounts = function (cb) {
+      //   if (!isElectron && factory.coinbase) {
+      //     return factory.web3.eth.getAccounts(
+      //       function (e, accounts) {
+      //         if (e) {
+      //           cb(e);
+      //         }
+      //         else {
+      //           factory.accounts = accounts;
+      //
+      //           if (factory.coinbase && accounts && accounts.length && accounts.indexOf(factory.coinbase) != -1) {
+      //             // same coinbase
+      //           }
+      //           else if (accounts) {
+      //               factory.coinbase = accounts[0];
+      //           }
+      //           else {
+      //             factory.coinbase = null;
+      //           }
+      //
+      //           cb(null, accounts);
+      //         }
+      //       }
+      //     );
+      //   }
+      //   else {
+      //     cb(null, null);
+      //   }
+      // };
+
       /**
       * Get ethereum accounts and update account list.
       */
       factory.updateAccounts = function (cb) {
-        if (!isElectron && factory.coinbase) {
-          return factory.web3.eth.getAccounts(
-            function (e, accounts) {
-              if (e) {
-                cb(e);
+        return factory.web3.eth.getAccounts(
+          function (e, accounts) {
+            if (e) {
+              cb(e);
+            }
+            else {
+              factory.accounts = accounts;
+
+              if (factory.coinbase && accounts && accounts.length && accounts.indexOf(factory.coinbase) != -1) {
+                // same coinbase
+              }
+              else if (accounts) {
+                  factory.coinbase = accounts[0];
               }
               else {
-                factory.accounts = accounts;
-
-                if (factory.coinbase && accounts && accounts.length && accounts.indexOf(factory.coinbase) != -1) {
-                  // same coinbase
-                }
-                else if (accounts) {
-                    factory.coinbase = accounts[0];
-                }
-                else {
-                  factory.coinbase = null;
-                }
-
-                cb(null, accounts);
+                factory.coinbase = null;
               }
+
+              cb(null, accounts);
             }
-          );
-        }
-        else {
-          cb(null, null);
-        }
+          }
+        );
       };
 
       /* Ledger setup on browser*/
       factory.ledgerSetup = function () {
-        ledgerwallet(
+        return ledgerwallet(
           {
             rpcUrl: txDefault.ethereumNode,
             onSubmit: function () {
@@ -331,6 +359,18 @@
 
                 $scope.checkCoinbase();
               }
+            });
+
+            return new Promise(function(resolve, reject) {
+              factory.web3.eth.getAccounts(function (e, accounts) {
+                if (e) {
+                  reject(e);
+                } else {
+                  factory.accounts = accounts;
+                  factory.coinbase = factory.accounts[0];
+                  resolve();
+                }
+              });
             });
           }
         );
@@ -423,6 +463,18 @@
 
             $scope.checkCoinbase();
           }
+        });
+
+        return new Promise(function(resolve, reject) {
+          factory.web3.eth.getAccounts(function (e, accounts) {
+            if (e) {
+              reject(e);
+            } else {
+              factory.accounts = accounts;
+              factory.coinbase = factory.accounts[0];
+              resolve();
+            }
+          });
         });
       };
 

@@ -1,6 +1,6 @@
 {
   "name": "multisig-wallet-gnosis",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Main module, for installing all dependencies",
   "scripts": {
     "test-dapp": "cd dapp && npm test",

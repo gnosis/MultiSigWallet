@@ -486,6 +486,7 @@
         var web3Provider = new HookedWalletSubprovider({
           getAccounts: function (cb) {
             if(!factory.accounts.length) {
+              TrezorConnect.closeAfterFailure(false);
               TrezorConnect.ethereumGetAddress("m/44'/60'/0'/0/0", function(response) {
                 if(response.success){
                   factory.accounts = ["0x" + response.address];
@@ -508,6 +509,7 @@
               if(!txData.value){
                 txData.value = '0x00'
               }
+              TrezorConnect.closeAfterFailure(false);
               TrezorConnect.ethereumSignTx(
                 "m/44'/60'/0'/0/0", // address path - either array or string, see example
                 Utils.trezorHex(txData.nonce),     // nonce - hexadecimal string

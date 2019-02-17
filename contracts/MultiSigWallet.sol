@@ -241,7 +241,7 @@ contract MultiSigWallet {
 
     // call has been separated into its own function in order to take advantage
     // of the Solidity's code generator to produce a loop that copies tx.data into memory.
-    function external_call(address destination, uint value, uint dataLength, bytes data) private returns (bool) {
+    function external_call(address destination, uint value, uint dataLength, bytes data) internal returns (bool) {
         bool result;
         assembly {
             let x := mload(0x40)   // "Allocate" memory for output (0x40 is where "free memory" pointer is stored by convention)

@@ -25,6 +25,8 @@
       factory.enableMetamask = function (callback) {
         $window.ethereum.enable().then(function (accounts) {
           factory.reloadWeb3Provider(null, callback);
+          // Convert to checksummed addresses
+          accounts = factory.toChecksumAddress(accounts);
           // Set accounts and coinbase
           factory.accounts = accounts;
           factory.coinbase = accounts[0];
@@ -99,7 +101,8 @@
         else if (txDefault.wallet == "injected" && web3 && !isElectron) {
           factory.web3 = web3.currentProvider !== undefined ? new MultisigWeb3(web3.currentProvider) : new MultisigWeb3(web3);
           // Set accounts
-          factory.accounts = factory.web3.eth.accounts;
+          // Convert to checksummed addresses
+          factory.accounts = factory.toChecksumAddress(factory.web3.eth.accounts);
           factory.coinbase = factory.accounts[0];
 
           if (resolve) {
@@ -136,6 +139,8 @@
                 }
                 else {
                   // Set accounts
+                  // Convert to checksummed addresses
+                  accounts = factory.toChecksumAddress(accounts);
                   factory.accounts = accounts;
                   factory.coinbase = accounts[0];
 
@@ -151,6 +156,22 @@
           resolve();
         }
       };
+
+      factory.toChecksumAddress = function (item) {
+        let checkSummedItem;
+        if (item instanceof Array) {
+          checkSummedItem = [];
+          for (let x=0; x<item.length; x++) {
+            checkSummedItem.push(factory.web3.toChecksumAddress(item[x]))
+          }
+        } else if (typeof item == "string") {
+          checkSummedItem = Web3Service.web3.toChecksumAddress(item)
+        } else {
+          return item;
+        }
+        
+        return checkSummedItem
+      }
 
       /**
       * Configure gas limit and gas price
@@ -283,6 +304,8 @@
               cb(e);
             }
             else {
+              // Convert to Checksummed addresses
+              accounts = factory.toChecksumAddress(accounts);
               factory.accounts = accounts;
 
               if (factory.coinbase && accounts && accounts.length && accounts.indexOf(factory.coinbase) != -1) {
@@ -366,6 +389,8 @@
                 if (e) {
                   reject(e);
                 } else {
+                  // Convert to Checksummed addresses
+                  accounts = factory.toChecksumAddress(accounts);
                   factory.accounts = accounts;
                   factory.coinbase = factory.accounts[0];
                   resolve();
@@ -384,6 +409,8 @@
         var web3Provider = new HookedWalletSubprovider({
           getAccounts: function (cb) {
             $http.get("http://localhost:" + ledgerPort + "/accounts").success(function (accounts) {
+              // Convert to Checksummed addresses
+              accounts = factory.toChecksumAddress(accounts);
               cb(null, accounts);
             }).error(cb);
           },
@@ -470,6 +497,8 @@
             if (e) {
               reject(e);
             } else {
+              // Convert to Checksummed addresses
+              accounts = factory.toChecksumAddress(accounts);
               factory.accounts = accounts;
               factory.coinbase = factory.accounts[0];
               resolve();
@@ -488,7 +517,8 @@
             if(!factory.accounts.length) {
               TrezorConnect.ethereumGetAddress("m/44'/60'/0'/0/0", function(response) {
                 if(response.success){
-                  factory.accounts = ["0x" + response.address];
+                  // Convert to Checksummed address
+                  factory.accounts = factory.toChecksumAddress(["0x" + response.address]);
                   cb(null, factory.accounts)
                 }
                 else{
@@ -798,8 +828,10 @@
           }
         }
         else if (factory.getKeystore()) {
+          let _address;
           Config.getConfiguration('accounts').map(function (account) {
-            factory.addresses.push('0x' + account.address.replace('0x', ''));
+            address = '0x' + account.address.replace('0x', '');
+            addr.push(factory.toChecksumAddress(_address));
           });
         }
       };

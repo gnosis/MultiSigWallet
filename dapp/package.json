@@ -90,9 +90,9 @@
     "asar": "0.13.1",
     "babel-register": "6.26.0",
     "coffee-script": "1.10.0",
+    "electron": "1.8.6",
     "electron-builder": "20.15.1",
     "electron-packager": "8.7.2",
-    "electron": "1.8.6",
     "growl": "^1.10.5",
     "grunt": "1.0.0",
     "grunt-contrib-jshint": "1.1.0",
@@ -107,7 +107,8 @@
     "karma-jasmine": "1.1.1",
     "karma-phantomjs-launcher": "1.0.4",
     "phantomjs-polyfill-object-assign": "0.0.2",
-    "scrypt": "6.0.3"
+    "scrypt": "6.0.3",
+    "terser": "^3.16.1"
   },
   "build": {
     "appId": "pm.gnosis.wallet",

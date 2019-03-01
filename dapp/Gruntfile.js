@@ -82,13 +82,13 @@ module.exports = function(grunt) {
     },
     ngtemplates:  {
       multiSigWeb:        {
-        src:      ['partials/**.html', 'partials/modals/**.html'],
-        dest:     'partials.js'
+        src:      ['src/partials/**.html', 'src/partials/modals/**.html'],
+        dest:     'src/partials.js'
       }
     },
     watch: {
       scripts: {
-        files: ['partials/*.html', 'partials/modals/*.html'],
+        files: ['src/partials/*.html', 'src/partials/modals/*.html'],
         tasks: ['ngtemplates'],
         options: {
           livereload: true,
@@ -96,7 +96,7 @@ module.exports = function(grunt) {
       }
     },
     eslint: {
-     target: ['Gruntfile.js', 'controllers/**.js', 'services/**.js', '**.js']
+     target: ['Gruntfile.js', 'src/controllers/**.js', 'src/services/**.js', '**.js']
    },
    'npm-command': {
       certs: {
@@ -133,10 +133,10 @@ module.exports = function(grunt) {
     const appMode = grunt.option('mode') || 'web';
     console.log(`Running in ${appMode} mode`);
 
-    const jsBundlePath = path.resolve(__dirname, 'bundles/js/bundle.js');
-    const jsStandaloneDirPath = path.resolve(__dirname, 'bundles/js');
-    const cssBundlePath = path.resolve(__dirname, 'bundles/css/bundle.css');
-    const fontsStandaloneDirPath = path.resolve(__dirname, 'bundles/fonts');
+    const jsBundlePath = path.resolve(__dirname, 'src/bundles/js/bundle.js');
+    const jsStandaloneDirPath = path.resolve(__dirname, 'src/bundles/js');
+    const cssBundlePath = path.resolve(__dirname, 'src/bundles/css/bundle.css');
+    const fontsStandaloneDirPath = path.resolve(__dirname, 'src/bundles/fonts');
 
     const modules = [
       'node_modules/web3/dist/web3.min.js',
@@ -157,7 +157,7 @@ module.exports = function(grunt) {
       'node_modules/clipboard/dist/clipboard.min.js',
       'node_modules/ngclipboard/dist/ngclipboard.min.js',
       'node_modules/angular-ui-notification/dist/angular-ui-notification.min.js',
-      'trezor-connect-v4.js'
+      'src/trezor-connect-v4.js'
     ];
 
     const webOnlyModules = [

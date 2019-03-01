@@ -75,3 +75,6 @@ dapp/localhost.key
 
 # Travis
 .travis/deploy_key
+
+# built package.json
+dapp/src/package.json

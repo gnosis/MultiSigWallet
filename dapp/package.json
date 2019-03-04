@@ -9,21 +9,19 @@
   },
   "homepage": "https://wallet.gnosis.pm",
   "description": "Angular web app made for Multi Sig Wallet",
-  "main": "main.js",
+  "main": "src/main.js",
   "scripts": {
-    "test": "sh testrpc.sh",
+    "build-linux": "build --linux",
+    "build-win": "build --win",
+    "build-osx": "build --mac",
+    "build-web": "grunt bundle",
+    "copy-package": "cp package.json src/package.json",
     "certs": "openssl req -x509 -sha256 -nodes -newkey rsa:2048 -days 365 -keyout localhost.key -out localhost.crt -subj '/CN=localhost/O=Multisig/C=US'",
     "dist": "zip -x node_modules/\\* -x npm-debug.log -x tests/\\* -x config.karma.js -x .DS_Store -x .gitignore -r ../multisigWallet.zip ./",
     "postinstall": "grunt ngtemplates",
-    "start": "http-server -a 0.0.0.0 -p 5000",
-    "start-electron": "NODE_ENV=development electron .",
-    "package-linux-x64": "electron-packager . MultisigWallet --prune --ignore=tests/* --ignore=testrpc.sh --platform=linux --out=./dist --overwrite=true --asar=true",
-    "package-osx": "electron-packager . MultisigWallet --prune --ignore=tests/* --ignore=testrpc.sh --platform=darwin --out=./dist --overwrite=true --asar=true",
-    "package-win": "electron-packager . MultisigWallet --prune --ignore=tests/* --ignore=testrpc.sh --platform=win32 --out=./dist --overwrite=true --asar=true",
-    "package-all": "electron-packager . MultisigWallet --prune --ignore=tests/* --ignore=testrpc.sh --platform=all --out=./dist --overwrite=true --asar=true",
-    "build-linux": "build --linux",
-    "build-win": "build --win",
-    "build-osx": "build --mac"
+    "start": "npm run build-web && npm run copy-package && http-server -a 0.0.0.0 -p 5000 src",
+    "start-electron": "NODE_ENV=development electron src/main.js",
+    "test": "sh testrpc.sh"
   },
   "keywords": [
     "ethereum",
@@ -90,9 +88,9 @@
     "asar": "0.13.1",
     "babel-register": "6.26.0",
     "coffee-script": "1.10.0",
+    "electron": "1.8.6",
     "electron-builder": "20.15.1",
     "electron-packager": "8.7.2",
-    "electron": "1.8.6",
     "growl": "^1.10.5",
     "grunt": "1.0.0",
     "grunt-contrib-jshint": "1.1.0",
@@ -107,7 +105,8 @@
     "karma-jasmine": "1.1.1",
     "karma-phantomjs-launcher": "1.0.4",
     "phantomjs-polyfill-object-assign": "0.0.2",
-    "scrypt": "6.0.3"
+    "scrypt": "6.0.3",
+    "terser": "^3.16.1"
   },
   "build": {
     "appId": "pm.gnosis.wallet",

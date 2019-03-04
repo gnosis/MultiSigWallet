@@ -135,8 +135,8 @@
             $scope.accounts = Web3Service.accounts;
           }
           else {
-            // Retrieves accounts from localStorage
-            if (Config.getConfiguration('accounts')) {
+            // Retrieves accounts from localStorage, only if we're using the lightwallet
+            if (txDefault.wallet == "lightwallet" && Config.getConfiguration('accounts')) {
               $scope.accounts = Config.getConfiguration('accounts').map(function (account) {
                 return account.address;
               });

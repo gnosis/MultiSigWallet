@@ -320,14 +320,23 @@
           });
         }
 
-        // Converts the addresses to lower case
+        // Converts the addresses to Checksumed addresses
         var owners = {};
-        for (var key in w.owners) {
-          w.owners[key].address = w.owners[key].address.toLowerCase();
-          owners[key.toLowerCase()] = w.owners[key];
+        let checksumedAddress;
+        for (var x = 0; x < w.owners.length; x++) {
+          checksumedAddress = Web3Service.toChecksumAddress(w.owners[x].address);
+          owners[checksumedAddress] = w.owners[x]
         }
 
-        Object.assign(wallets[address], {address: address, name: w.name, owners: owners, tokens: tokens});
+        Object.assign(
+          wallets[address], {
+            address: address,
+            name: w.name,
+            owners: owners,
+            tokens: tokens
+          }
+        );
+        
         localStorage.setItem("wallets", JSON.stringify(wallets));
         wallet.updates++;
         try{

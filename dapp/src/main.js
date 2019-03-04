@@ -24,6 +24,8 @@ function restServerSetup () {
   let restServer = express();
   let restPort = 8080;
   let connection = null;
+  // Ledger legacy derivation path
+  const derivationPath = "44'/60'/0'/0";
   restServer.use(bodyParser.json());
   /**
   *
@@ -91,7 +93,7 @@ function restServerSetup () {
       .then(
         function(eth) {
           Promise.race([
-            eth.getAddress_async("44'/60'/0'/0", true),
+            eth.getAddress_async(derivationPath, true),
             new Promise(
               (_, reject) => {
                 setTimeout(
@@ -132,7 +134,7 @@ function restServerSetup () {
           const hex = tx.serialize().toString("hex");
 
           // Pass to _ledger for signing
-          eth.signTransaction_async("44'/60'/0'/0", hex)
+          eth.signTransaction_async(derivationPath, hex)
           .then(result => {
               // Store signature in transaction
               tx.v = new Buffer(result.v, "hex");

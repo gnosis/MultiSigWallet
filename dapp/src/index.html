@@ -2,49 +2,27 @@
 <html>
   <head>
     <title>Multisignature Wallet</title>
-    <script src="./node_modules/web3/dist/web3.min.js">
-      </script>
     <script>
       // Detect if it's an Electron app or not
       var isElectron = (window && window.process && window.process.type) ? true : false;
     </script>
     <!-- Favicon -->
-    <link rel="icon" type="image/png" sizes="any" href="./img/wallet-logo.png" />
+    <link rel="icon" type="image/png" sizes="any" href="./bundles/img/wallet-logo.png" />
     <!-- Custom Stylesheets -->
-    <link href="./css/app.css" rel="stylesheet" type="text/css" />
-    <link href="./css/gnosis-bootstrap.css" rel="stylesheet" type="text/css" />
-    <!--<link href="./bootstrap/dist/css/bootstrap.css" rel="stylesheet" type="text/css" />-->
-    <link href="./css/gnosis-bootstrap-dialog.css" rel="stylesheet" type="text/css" />
-    <!-- 3rd party Stylesheets -->
-    <link href="./node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-    <link href="./node_modules/spinkit/css/spinkit.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="./node_modules/angular-ui-notification/dist/angular-ui-notification.css">
+    <link rel="stylesheet" href="./bundles/css/bundle.css" />
     <!-- 3rd party Script -->
     <script>
       if (isElectron) {
-        if (typeof module === 'object') {window.module = module; module = undefined;}
-        $ = require('./node_modules/jquery/dist/jquery.min.js');
+        if (typeof module === 'object') {
+          window.module = module;
+          module = undefined;
+        }
+        $ = require('./bundles/js/jquery.min.js');
         var ledgerPort = require('electron').remote.getGlobal('ledgerPort');
       }
     </script>
-    <script src="./node_modules/web3-provider-engine/dist/HookedWalletSubprovider.js"></script>
-    <script src="./node_modules/web3-provider-engine/dist/RpcSubprovider.js"></script>
-    <script src="./node_modules/browser-builds/dist/ethereumjs-tx/ethereumjs-tx-1.3.3.min.js"></script>
-    <script src="./node_modules/angular/angular.min.js"></script>
-    <script src="./node_modules/angular-animate/angular-animate.min.js"></script>
-    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="./node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
-    <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="./node_modules/angular-route/angular-route.min.js"></script>
-    <script src="./node_modules/angular-touch/angular-touch.min.js"></script>
+    <script src="./bundles/js/bundle.js"></script>
 
-    <script src="./node_modules/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js"></script>
-    <script src="./node_modules/moment/min/moment-with-locales.min.js"></script>
-    <script src="./node_modules/abi-decoder/dist/abi-decoder.js"></script>
-    <script src="./node_modules/clipboard/dist/clipboard.min.js"></script>
-    <script src="./node_modules/ngclipboard/dist/ngclipboard.min.js"></script>
-    <script src="./node_modules/angular-ui-notification/dist/angular-ui-notification.min.js"></script>
-    <script src="./trezor-connect-v4.js"></script>
     <script>
       if (isElectron) {
         var lightwallet = require("eth-lightwallet");
@@ -54,15 +32,8 @@
         var encryptor = require('browser-passworder');
         var shell = require('electron').shell;
       }
-      else {
-        document.write('<script src="./node_modules/ledger-wallet-provider/dist/ledgerwallet.js"><' + '/script>');
-      }
     </script>
-    <script src="./node_modules/web3-provider-engine/dist/ProviderEngine.js"></script>
-    <!-- Testing -->
-    <!--
-    <script src="./ledgerwallet.js"></script>
-    -->
+
     <!-- App -->
     <script src="./config.js"></script>
     <script src="./app.js"></script>
@@ -117,8 +88,8 @@
     <script src="./controllers/footerCtrl.js"></script>
     <script src="./expose.js"></script>
     <script>
-      if (isElectron) {
-        if (window.module) module = window.module;
+      if (isElectron && window.module) {
+        module = window.module;
       }
     </script>
   </head>
@@ -133,7 +104,7 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="#">
-              <img src="./img/wallet-logo.svg" class="img-responsive" />
+              <img src="./bundles/img/wallet-logo.svg" class="img-responsive" />
             </a>
         </div>
         <div class="collapse navbar-collapse" uib-collapse="navCollapsed">
@@ -162,7 +133,6 @@
             <ul class="nav navbar-nav pull-right">
               <li uib-dropdown>
                <a href="#" uib-dropdown-toggle ng-show="loggedIn">
-                 <!-- <i class="fa fa-address-book-o" aria-hidden="true"></i> -->
                  Account: {{coinbase|limitTo:20}}... <b class="caret"></b>
                </a>
                <ul class="dropdown-menu">

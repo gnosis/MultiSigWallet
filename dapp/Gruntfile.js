@@ -131,6 +131,7 @@ module.exports = function(grunt) {
 
     const MODE_WEB = 'web';
     const appMode = grunt.option('mode') || 'web';
+    const minify = grunt.option('minify') ? grunt.option('minify') : false;
     console.log(`Running in ${appMode} mode`);
 
     const jsBundlePath = path.resolve(__dirname, 'src/bundles/js/bundle.js');
@@ -218,6 +219,19 @@ module.exports = function(grunt) {
       }
     }
 
+    // Update file
+    if (minify) {
+      console.log('Start minifying JS...');
+      jsBundleFileContent = Terser.minify(jsBundleFileContent); // Minify JS
+      if (jsBundleFileContent.error) {
+        console.error('There have been some errores while minifying', jsBundleFileContent.error);
+      } else {
+        fs.writeFileSync(jsBundlePath, jsBundleFileContent.code, 'utf8');
+      }
+    } else {
+      fs.writeFileSync(jsBundlePath, jsBundleFileContent, 'utf8');
+    }
+
     // Standalone libs
     let standaloneModuleContent;
     let jsStandaloneFileContent;
@@ -229,12 +243,7 @@ module.exports = function(grunt) {
       jsStandaloneFileContent += standaloneModuleContent;
       fs.writeFileSync(jsStandaloneDirPath + '/' + standaloneLibs[x].name, jsStandaloneFileContent, 'utf8');
     }
-    // Update file
-    jsBundleFileContent = Terser.minify(jsBundleFileContent); // Minify JS
-    console.log("Errors? " + jsBundleFileContent.error);
-    fs.writeFileSync(jsBundlePath, jsBundleFileContent.code, 'utf8');
     
-
     // Package CSS
     let cssBundleFileContent = '';
     let cssContent;

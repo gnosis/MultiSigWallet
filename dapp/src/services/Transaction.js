@@ -338,15 +338,15 @@
         });
       };
 
-      Web3Service
-      .webInitialized()
-      .then(
-        function () {
-          // init transactions loop
-          factory.checkReceipts();
-          $interval(factory.checkReceipts, 15000);
-        }
-      );
+      // Web3Service
+      // .webInitialized()
+      // .then(
+      //   function () {
+      //     // init transactions loop
+      //     factory.checkReceipts();
+      //     $interval(factory.checkReceipts, 15000);
+      //   }
+      // );
 
       return factory;
     });

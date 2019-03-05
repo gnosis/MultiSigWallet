@@ -342,41 +342,43 @@
               size: 'md',
               backdrop: 'static',
               windowClass: 'bootstrap-dialog type-info',
-              controller: function ($scope, $uibModalInstance, Web3Service) {
+              controller: function ($scope, $uibModalInstance) {
                 $scope.isElectron = isElectron;
+                $scope.isConnected = false;
 
                 $scope.close = function () {
                   $uibModalInstance.close();
                   resolve();
                 };
 
-                $scope.checkCoinbase = function () {
-                  if (Web3Service.coinbase) {
-                    setTimeout($uibModalInstance.close, 1000);
-                    resolve();
-                  }
-                  else {
-                    setTimeout($scope.checkCoinbase, 1000);
-                  }
-                };
+                // $scope.checkCoinbase = function () {
+                //   if (Web3Service.coinbase) {
+                //     setTimeout($uibModalInstance.close, 1000);
+                //     resolve();
+                //   }
+                //   else {
+                //     setTimeout($scope.checkCoinbase, 1000);
+                //   }
+                // };
 
-                $scope.checkCoinbase();
+                // $scope.checkCoinbase();
 
                 $scope.connect = function () {
                   $scope.showSpinner = true;
                   factory.web3.eth.getAccounts(function (e, accounts) {
                     $scope.showSpinner = false;
-                    if (e) {
-                      reject(e);
-                    } else if (accounts == 500) {
-                      reject(new Error('500'));
+                    if (e || accounts == 500) {
+                      // reject(e);
+                      // Show error message
                     } else {
                       // Convert to Checksummed addresses
                       accounts = factory.toChecksumAddress(accounts);
                       factory.accounts = accounts;
                       factory.coinbase = factory.accounts[0];
-                      $uibModalInstance.close();
+                      // Set isConnected to true and show "success" message
+                      $scope.isConnected = true;
                       resolve();
+                      // $uibModalInstance.close();
                     }
                   });
                 }
@@ -489,6 +491,7 @@
           factory.engine.start();
 
           return openLedgerModal(true);
+
           // return new Promise(function(resolve, reject) {
           //   factory.web3.eth.getAccounts(function (e, accounts) {
           //     if (e) {

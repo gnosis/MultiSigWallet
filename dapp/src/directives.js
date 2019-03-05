@@ -31,8 +31,8 @@
         };
       })
       .directive('disabledIfNoAccountsOrWalletAvailable', function (Web3Service, Wallet) {
-        // Disables an element when no accounts are setted
-        // or a wallet has not been created on the current network
+        // Disables an element when no accounts are set up
+        // or a wallet was not created on the current network
         return {
           link: function (scope, element, attrs) {
 
@@ -41,8 +41,8 @@
                 return scope.wallet.maxWithdraw;
               },
               function () {
-                Wallet.initParams().then(
-                  function () {
+                // Wallet.initParams().then(
+                //   function () {
                     if (scope.wallet && scope.wallet.isOnChain == true) {
                       element.removeAttr('disabled');
                     }
@@ -70,8 +70,8 @@
                         }
                       });
                     }
-                  }
-                );
+                //   }
+                // );
               }
             );
           }

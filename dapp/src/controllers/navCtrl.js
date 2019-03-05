@@ -213,6 +213,7 @@
       /**
       * Initialize web3
       */
+     function startup() {
       Web3Service.webInitialized().then(
         function () {
           /**
@@ -226,6 +227,9 @@
           $scope.web3ProviderName = txDefault.wallet;
 
           $scope.updateInfo().then(function () {
+            // Start Tx receipts checker
+            Transaction.checkReceipts();
+
             var chooseWeb3ProviderShown = Config.getConfiguration('chooseWeb3ProviderShown');
             if (gdprTermsAccepted && !chooseWeb3ProviderShown && isElectron) {
               // show selection modal
@@ -233,6 +237,9 @@
             }
             else if (gdprTermsAccepted && !isElectron && !Web3Service.coinbase
                 && txDefault.wallet !== "ledger" && txDefault.wallet !== 'lightwallet') {
+              // Do lookup on regular interval
+              $interval($scope.updateInfo, txDefault.accountsChecker.checkInterval);
+
               $uibModal.open({
                 templateUrl: 'partials/modals/web3Wallets.html',
                 size: 'md',
@@ -245,6 +252,7 @@
                   };
 
                   $scope.metamaskInjected = Web3Service.isMetamaskInjected();
+                  
 
                   $scope.openMetamaskWidgetAndClose = function () {
                     $scope.openMetamaskWidget(function () {
@@ -255,13 +263,18 @@
                   };
                 }
               });
+            } else {
+              // Do lookup on regular interval
+              $interval($scope.updateInfo, txDefault.accountsChecker.checkInterval);
             }
           });
         },
-        function (error, e) {
+        function (error) {
           // do nothing
         }
       );
+     }
+     startup();
 
       $scope.$on('$destroy', function () {
         $interval.cancel($scope.interval);

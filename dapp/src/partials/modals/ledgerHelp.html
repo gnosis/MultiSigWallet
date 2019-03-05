@@ -34,11 +34,18 @@
       </li>
     </ul>
   </p>
-  <button type="button" ng-click="connect()" class="btn btn-default">
+
+  <p ng-hide="isConnected" class="top-20 text-center">
+    <button type="button" ng-click="connect()" class="btn btn-default">
     <span ng-show="!showSpinner">Connect</span>
     <span ng-show="showSpinner">Approve on Ledger</span>
     <i class="fa fa-spinner fa-spin" ng-show="showSpinner"></i>
   </button>
+  </p>
+  <p ng-show="isConnected" class="top-20 text-center online-status">
+    Your Ledger is now connected to Multisig.
+  </p>
+
 </div>
 <div class="modal-footer">
   <button type="button" ng-click="close()" class="btn btn-default" id="terms-button" >

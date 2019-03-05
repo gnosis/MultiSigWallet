@@ -23,6 +23,7 @@
       * Shows the Web3 provider selection modal
       */
       function showWeb3SelectionModal () {
+        var navCtrlScope = $scope;
         $uibModal.open({
           templateUrl: 'partials/modals/chooseWeb3Wallet.html',
           size: 'md',
@@ -37,10 +38,14 @@
               Config.setConfiguration("userConfig", JSON.stringify($scope.config));
               loadConfiguration(); // config.js
               // Reload we3 provider
-              Web3Service.reloadWeb3Provider();
-              Utils.success("Welcome, you can start using your Multisignature Wallet.");
-              Config.setConfiguration('chooseWeb3ProviderShown', true);
-              $uibModalInstance.close();
+              Web3Service.webInitialized().then(function () {
+                Config.setConfiguration('chooseWeb3ProviderShown', true);
+                setTimeout($uibModalInstance.close, 1000);
+
+                Utils.success("Welcome, you can start using your Multisignature Wallet.");
+                // Update info on regular interval
+                $interval(navCtrlScope.updateInfo, txDefault.accountsChecker.checkInterval);
+              });
             };
           }
         });
@@ -111,7 +116,6 @@
 
 
       $scope.updateInfo = function () {
-
         /**
         * Setup Ethereum Chain infos
         */
@@ -194,30 +198,29 @@
       $scope.statusIcon = $sce.trustAsHtml('<i class=\'fa fa-refresh fa-spin fa-fw\' aria-hidden=\'true\'></i>');
 
       $scope.updateConnectionStatus = function () {
-        $scope.$watch(function(){
-          $scope.connectionStatus = Connection.isConnected;
-          $scope.statusIcon = Connection.isConnected ? $sce.trustAsHtml('Online <i class=\'fa fa-circle online-status\' aria-hidden=\'true\'></i>') : $sce.trustAsHtml('<i class=\'fa fa-refresh fa-spin fa-fw\' aria-hidden=\'true\'></i> Offline <i class=\'fa fa-circle offline-status\' aria-hidden=\'true\'></i>');
-        });
-
+        // $scope.$watch(function(){
+        $scope.connectionStatus = Connection.isConnected;
+        $scope.statusIcon = Connection.isConnected ? $sce.trustAsHtml('Online <i class=\'fa fa-circle online-status\' aria-hidden=\'true\'></i>') : $sce.trustAsHtml('<i class=\'fa fa-refresh fa-spin fa-fw\' aria-hidden=\'true\'></i> Offline <i class=\'fa fa-circle offline-status\' aria-hidden=\'true\'></i>');
+        // });
       };
 
       /**
       * Update info independently we're online or offline
       */
-      $scope.updateInfo();
-      $scope.interval = $interval($scope.updateInfo, 5000);
+      // $scope.updateInfo();
+      // $scope.interval = $interval($scope.updateInfo, 5000);
 
       /**
       * Initialize web3
       */
-      Web3Service.webInitialized.then(
+      Web3Service.webInitialized().then(
         function () {
           /**
           * Lookup connection status
           * Check connectivity first on page loading
           * and then at time interval
           */
-          Connection.checkConnection();
+          // Connection.checkConnection();
           $scope.updateConnectionStatus();
           $scope.connectionInterval = $interval($scope.updateConnectionStatus, txDefault.connectionChecker.checkInterval);
           $scope.web3ProviderName = txDefault.wallet;

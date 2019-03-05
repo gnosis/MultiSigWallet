@@ -184,19 +184,15 @@
           batch.execute();
         };
 
-        Web3Service
-          .webInitialized
-          .then(
-            function () {
-              Wallet
-                .initParams()
-                .then(function () {
-                  $scope.updateParams();
-                  $scope.interval = $interval($scope.updateParams, 15000);
-                });
-            }
-          );
-
+        function startup() {
+          Wallet
+            .initParams()
+            .then(function () {
+              $scope.updateParams();
+              $scope.interval = $interval($scope.updateParams, 15000);
+            });
+        }
+        startup();
 
         $scope.$on('$destroy', function () {
           $interval.cancel($scope.interval);

@@ -3,9 +3,12 @@ var txDefaultOrig =
   gasLimit: 3141592,
   gasPrice: 18000000000,
   ethereumNode: "https://mainnet.infura.io:443",
-  connectionChecker:{
+  connectionChecker: {
     method : "OPTIONS",
     url : "https://www.google.com",
+    checkInterval: 5000
+  },
+  accountsChecker: {
     checkInterval: 5000
   },
   ethGasStation: "https://safe-relay.gnosis.pm/api/v1/gas-station/",

@@ -297,8 +297,8 @@
 
       factory.getEthereumChain = function () {
         return $q(function (resolve, reject) {
-          Web3Service.webInitialized.then(
-            function () {
+          // Web3Service.webInitialized().then(
+            // function () {
               Web3Service.web3.eth.getBlock(0, function(e, block) {
                 var data = {};
 
@@ -333,13 +333,13 @@
 
                 resolve(data);
               });
-            }
-          );
+            // }
+          // );
         });
       };
 
       Web3Service
-      .webInitialized
+      .webInitialized()
       .then(
         function () {
           // init transactions loop

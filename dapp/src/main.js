@@ -17,6 +17,10 @@ let ledgerAddresses = null;
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 
+process.on('unhandledRejection', function (error) {
+  console.log(error);
+});
+
 /**
 *
 */

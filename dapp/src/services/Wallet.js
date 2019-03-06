@@ -282,6 +282,8 @@
                         );
                       }
                       else {
+                        // If no coinbase is set, defaults to 0
+                        wallet.balance = 0;
                         resolve();
                       }
                     })

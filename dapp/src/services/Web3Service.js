@@ -70,8 +70,9 @@
           if ($window.web3 && !$window.ethereum) {
             web3 = $window.web3;
           }
-          // TODO: figure out whether Metamask standardize isEnabled() or find out
+          // TODO: figure out whether Metamask standardizes isEnabled() or find out
           // another way to manage it
+          // https://github.com/MetaMask/metamask-extension/blob/2f7d4494278ad809c1cc9fcc0d9438182003b22d/app/scripts/inpage.js#L101
           else if ($window.ethereum && window.ethereum._metamask.isEnabled()) {
             web3 = $window.ethereum;
           }

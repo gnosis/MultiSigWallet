@@ -229,8 +229,9 @@
         $scope.restoreWallet = function () {
           $uibModal.open({
             animation: false,
-            templateUrl: 'partials/modals/restoreWallet.html', 
+            templateUrl: 'partials/modals/restoreWallet.html',
             size: 'md',
+            scope: $scope,
             controller: function ($scope, $uibModalInstance) {
               $scope.ok = function () {
                 $scope.old.address = Web3Service.toChecksumAddress($scope.old.address);
@@ -241,6 +242,9 @@
                   else {
                     // Add default tokens to wallet
                     Token.setDefaultTokens($scope.old.address);
+                    // Load wallet's info immediately
+                    $scope.updateParams();
+                    // Close modal
                     $uibModalInstance.close();
                   }
                 });

@@ -2,7 +2,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("newWalletCtrl", function ($scope, $uibModalInstance, $uibModal, Utils, Transaction, Wallet, Token, callback, Web3Service) {
+    .controller("newWalletCtrl", function ($scope, $uibModalInstance, Utils, Transaction, Wallet, Token, callback, Web3Service) {
 
       $scope.newOwner = {};
       $scope.owners = {};
@@ -28,6 +28,7 @@
             else {
               if (!contract.address) {
                 $uibModalInstance.close();
+                // Execute transaction
                 Transaction.add({txHash: contract.transactionHash, callback: function (receipt) {
                   // Save wallet
                   Wallet.updateWallet({name: $scope.name, address: receipt.contractAddress, owners: $scope.owners});

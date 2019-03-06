@@ -11,6 +11,9 @@ var txDefaultOrig =
   accountsChecker: {
     checkInterval: 5000
   },
+  transactionChecker: {
+    checkInterval: 15000
+  },
   ethGasStation: "https://safe-relay.gnosis.pm/api/v1/gas-station/",
   wallet: "injected",
   defaultChainID: null,

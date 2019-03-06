@@ -228,7 +228,7 @@
 
           $scope.updateInfo().then(function () {
             // Start Tx receipts checker
-            Transaction.checkReceipts();
+            $interval(Transaction.checkReceipts, txDefault.transactionChecker.checkInterval);
 
             var chooseWeb3ProviderShown = Config.getConfiguration('chooseWeb3ProviderShown');
             if (gdprTermsAccepted && !chooseWeb3ProviderShown && isElectron) {

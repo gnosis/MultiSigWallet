@@ -17,6 +17,8 @@
 
           // call callback if it has
           if (factory.callbacks[receipt.transactionHash]) {
+            // Checksum contract address
+            receipt.contractAddress = receipt.contractAddress ? Web3Service.toChecksumAddress(receipt.contractAddress) : receipt.contractAddress;
             factory.callbacks[receipt.transactionHash](receipt);
           }
         }

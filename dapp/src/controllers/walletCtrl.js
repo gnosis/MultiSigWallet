@@ -229,10 +229,11 @@
         $scope.restoreWallet = function () {
           $uibModal.open({
             animation: false,
-            templateUrl: 'partials/modals/restoreWallet.html',
+            templateUrl: 'partials/modals/restoreWallet.html', 
             size: 'md',
             controller: function ($scope, $uibModalInstance) {
               $scope.ok = function () {
+                $scope.old.address = Web3Service.toChecksumAddress($scope.old.address);
                 Wallet.restore($scope.old, function (e) {
                   if (e) {
                     Utils.dangerAlert(e);

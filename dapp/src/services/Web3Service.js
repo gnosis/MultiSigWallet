@@ -365,11 +365,13 @@
 
                 $scope.connect = function () {
                   $scope.showSpinner = true;
+
                   factory.web3.eth.getAccounts(function (e, accounts) {
                     $scope.showSpinner = false;
                     if (e || accounts == 500) {
                       // reject(e);
-                      // Show error message
+                      // TODO Show error message
+
                     } else {
                       // Convert to Checksummed addresses
                       accounts = factory.toChecksumAddress(accounts);

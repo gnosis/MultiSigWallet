@@ -2,7 +2,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("settingsCtrl", function (Web3Service, $scope, Config, Utils, Transaction, $uibModal, $sce, $location, $http) {
+    .controller("settingsCtrl", function (Web3Service, $scope, Config, CommunicationBus, Utils, Transaction, $uibModal, $sce, $location, $http) {
 
       // Don't save the following config values to localStorage
       var configBlacklist = [
@@ -142,23 +142,42 @@
         // Reload web3 provider only if it has been updated in the configuration,
         // Otherwise update specific providers individually,
         // this allows us to avoid providing connection/show setup to Ledger/Trezor
+
+        // CommunicationBus.unsetUpdateInfoInterval();
+        CommunicationBus.stopInterval('updateInfo');
+
+        if (Web3Service.engine) {
+          Web3Service.engine.stop();
+        }
+
         if (!previousConfig || configCopy.wallet != previousConfig.wallet) {
-          Web3Service.reloadWeb3Provider();
+          Web3Service.webInitialized().then(function () {
+            CommunicationBus.startInterval('updateInfo', txDefault.accountsChecker.checkInterval);
+          })
+
         } else if (configCopy.wallet == 'lightwallet') {
           Web3Service.lightWalletSetup();
+          CommunicationBus.startInterval('updateInfo', txDefault.accountsChecker.checkInterval);
+
         } else if (configCopy.wallet != 'remotenode') {
-          // Web3Service.engine._providers.pop();
           // Filter out rpc sub providers
           Web3Service.engine._providers = Web3Service.engine._providers.filter(function (item, idx) {
             return !item.rpcUrl
           });
-          Web3Service.engine.stop();
+
           Web3Service.engine.addProvider(new RpcSubprovider({
             rpcUrl: configCopy.ethereumNode
           }));
-          Web3Service.engine.start();
+
+          CommunicationBus.startInterval('updateInfo', txDefault.accountsChecker.checkInterval);
+
         } else {
           Web3Service.web3 = new MultisigWeb3(new MultisigWeb3.providers.HttpProvider(configCopy.ethereumNode));
+          CommunicationBus.startInterval('updateInfo', txDefault.accountsChecker.checkInterval);
+        }
+
+        if (Web3Service.engine) {
+          Web3Service.engine.start();
         }
 
         // If we're using lightwallet for 1st time,
@@ -169,8 +188,6 @@
           $location.path('/accounts');
         }
 
-        // Trigger updates, so that whatchers can execute their lookup function
-        Config.triggerUpdates();
         // Show 'success' notification
         Utils.success("Configuration updated successfully.");
       };

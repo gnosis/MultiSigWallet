@@ -142,7 +142,7 @@
         // Reload web3 provider only if it has been updated in the configuration,
         // Otherwise update specific providers individually,
         // this allows us to avoid providing connection/show setup to Ledger/Trezor
-        if (configCopy.wallet != previousConfig.wallet) {
+        if (!previousConfig || configCopy.wallet != previousConfig.wallet) {
           Web3Service.reloadWeb3Provider();
         } else if (configCopy.wallet == 'lightwallet') {
           Web3Service.lightWalletSetup();

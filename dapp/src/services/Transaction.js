@@ -17,6 +17,8 @@
 
           // call callback if it has
           if (factory.callbacks[receipt.transactionHash]) {
+            // Checksum contract address
+            receipt.contractAddress = receipt.contractAddress ? Web3Service.toChecksumAddress(receipt.contractAddress) : receipt.contractAddress;
             factory.callbacks[receipt.transactionHash](receipt);
           }
         }
@@ -297,8 +299,8 @@
 
       factory.getEthereumChain = function () {
         return $q(function (resolve, reject) {
-          Web3Service.webInitialized.then(
-            function () {
+          // Web3Service.webInitialized().then(
+            // function () {
               Web3Service.web3.eth.getBlock(0, function(e, block) {
                 var data = {};
 
@@ -333,20 +335,20 @@
 
                 resolve(data);
               });
-            }
-          );
+            // }
+          // );
         });
       };
 
-      Web3Service
-      .webInitialized
-      .then(
-        function () {
-          // init transactions loop
-          factory.checkReceipts();
-          $interval(factory.checkReceipts, 15000);
-        }
-      );
+      // Web3Service
+      // .webInitialized()
+      // .then(
+      //   function () {
+      //     // init transactions loop
+      //     factory.checkReceipts();
+      //     $interval(factory.checkReceipts, 15000);
+      //   }
+      // );
 
       return factory;
     });

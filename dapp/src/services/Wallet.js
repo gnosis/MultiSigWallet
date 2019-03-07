@@ -282,6 +282,8 @@
                         );
                       }
                       else {
+                        // If no coinbase is set, defaults to 0
+                        wallet.balance = 0;
                         resolve();
                       }
                     })
@@ -302,7 +304,7 @@
 
       wallet.updateWallet = function (w) {
         var wallets = wallet.getAllWallets();
-        var address = w.address.toLowerCase();
+        var address = w.address;
         if (!wallets[address]) {
           wallets[address] = {};
         }
@@ -311,11 +313,11 @@
           var tokenAddresses = Object.keys(w.tokens);
           tokenAddresses.map(function (item) {
             var token = w.tokens[item];
-            tokens[token.address.toLowerCase()] = {
+            tokens[token.address] = {
               name: token.name,
               symbol: token.symbol,
               decimals: token.decimals,
-              address: token.address.toLowerCase()
+              address: token.address
             };
           });
         }
@@ -657,7 +659,7 @@
                 // Add wallet, add My account to the object by default, won't be
                 // displayed anyway if user is not an owner, but if it is, name will be used
                 if (Web3Service.coinbase) {
-                  var coinbase = Web3Service.coinbase.toLowerCase();
+                  var coinbase = Web3Service.toChecksumAddress(Web3Service.coinbase);
                   info.owners = {};
                   info.owners[coinbase] = { address: coinbase, name: 'My Account'};
                 }

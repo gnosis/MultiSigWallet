@@ -2,7 +2,7 @@
   function () {
     angular
       .module("multiSigWeb")
-      .controller("walletDetailCtrl", function (Web3Service, $scope, $filter, $sce, Wallet, $routeParams, Utils, Transaction, $interval, $uibModal, Token, ABI) {
+      .controller("walletDetailCtrl", function (Web3Service, $scope, $filter, Wallet, $routeParams, Utils, $interval, $uibModal, Token, ABI) {
         $scope.wallet = {};
 
         $scope.$watch(
@@ -184,19 +184,15 @@
           batch.execute();
         };
 
-        Web3Service
-          .webInitialized
-          .then(
-            function () {
-              Wallet
-                .initParams()
-                .then(function () {
-                  $scope.updateParams();
-                  $scope.interval = $interval($scope.updateParams, 15000);
-                });
-            }
-          );
-
+        function startup() {
+          Wallet
+            .initParams()
+            .then(function () {
+              $scope.updateParams();
+              $scope.interval = $interval($scope.updateParams, 15000);
+            });
+        }
+        startup();
 
         $scope.$on('$destroy', function () {
           $interval.cancel($scope.interval);

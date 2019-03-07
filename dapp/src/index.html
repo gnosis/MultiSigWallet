@@ -131,8 +131,8 @@
               </li>
             </ul>
             <ul class="nav navbar-nav pull-right">
-              <li uib-dropdown>
-               <a href="#" uib-dropdown-toggle ng-show="loggedIn">
+              <li uib-dropdown ng-show="loggedIn">
+               <a href="#" uib-dropdown-toggle ng-show="coinbase"> <!-- show only if coinbase is set -->
                  Account: {{coinbase|limitTo:20}}... <b class="caret"></b>
                </a>
                <ul class="dropdown-menu">

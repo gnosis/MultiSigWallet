@@ -142,11 +142,11 @@
 
         txDefault.tokens.map(function (token) {
           if (!tokens[token.address]) {
-            tokens[token.address.toLowerCase()] = {
+            tokens[token.address] = {
               name: token.name,
               symbol: token.symbol,
               decimals: token.decimals,
-              address: token.address.toLowerCase()
+              address: token.address
             };
           }
         });

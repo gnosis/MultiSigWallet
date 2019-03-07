@@ -27,10 +27,10 @@ module.exports = function(config) {
       'bower_components/web3-provider-engine/dist/ProviderEngine.js',
       'bower_components/angular-ui-notification/dist/angular-ui-notification.js',
       'node_modules/phantomjs-polyfill-object-assign/object-assign-polyfill.js',
-      'app.js',
-      'abi.js',
-      'config.js',
-      'services/**/*.js',
+      'src/app.js',
+      'src/abi.js',
+      'src/config.js',
+      'src/services/**/*.js',
       'tests/*.test*'
     ],
 

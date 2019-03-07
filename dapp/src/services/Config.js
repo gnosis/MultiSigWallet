@@ -17,11 +17,15 @@
 
       factory.setConfiguration = function (key, value) {
         localStorage.setItem(key, value);
-        this.updates++;
+        this.triggerUpdates();
       };
 
       factory.removeConfiguration = function (key) {
         localStorage.removeItem(key);
+        this.triggerUpdates();
+      };
+
+      factory.triggerUpdates = function () {
         this.updates++;
       };
 

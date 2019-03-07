@@ -317,19 +317,19 @@
               else {
                 // Convert to Checksummed addresses
                 accounts = factory.toChecksumAddress(accounts);
-                factory.accounts = accounts;
+                factory.accounts = accounts.length ? accounts : [];
 
-                if (factory.coinbase && accounts && accounts.length && accounts.indexOf(factory.coinbase) != -1) {
+                if (factory.coinbase && factory.accounts.indexOf(factory.coinbase) != -1) {
                   // same coinbase
                 }
-                else if (accounts) {
-                  factory.coinbase = accounts[0];
+                else if (factory.accounts) {
+                  factory.coinbase = factory.accounts[0];
                 }
                 else {
                   factory.coinbase = null;
                 }
 
-                cb(null, accounts);
+                cb(null, factory.accounts);
               }
             }
           );
@@ -491,23 +491,10 @@
           factory.engine.addProvider(new RpcSubprovider({
             rpcUrl: txDefault.ethereumNode
           }));
+
           factory.engine.start();
 
           return openLedgerModal(true);
-
-          // return new Promise(function(resolve, reject) {
-          //   factory.web3.eth.getAccounts(function (e, accounts) {
-          //     if (e) {
-          //       reject(e);
-          //     } else {
-          //       // Convert to Checksummed addresses
-          //       accounts = factory.toChecksumAddress(accounts);
-          //       factory.accounts = accounts;
-          //       factory.coinbase = factory.accounts[0];
-          //       resolve();
-          //     }
-          //   });
-          // });
         };
 
         /* Trezor setup */
@@ -597,9 +584,9 @@
         factory.addresses = [];
 
         /**
-        *
+        * Sets Web3 up for the lightwallet
         */
-        function _web3Setup() {
+        function _lightwalletWeb3Setup() {
           // Set HookedWeb3Provider
           const ethUtil = require('ethereumjs-util');
           const EthTx = require('ethereumjs-tx');
@@ -703,7 +690,7 @@
               factory.restoreLightWallet(password);
             }
             else {
-              _web3Setup();
+              _lightwalletWeb3Setup();
             }
           }
         };
@@ -826,7 +813,7 @@
                 .then(function (decryptedV3String) {
                   factory.keystore = JSON.parse(decryptedV3String); //ethereumWallet.fromV3(decryptedV3String, password);
                   factory.addresses = factory.getLightWalletAddresses();
-                  _web3Setup();
+                  _lightwalletWeb3Setup();
                 });
             }
             catch (error) {

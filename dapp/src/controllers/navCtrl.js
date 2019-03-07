@@ -16,6 +16,8 @@
         },
         function () {
           $scope.config = Config.getUserConfiguration();
+          // Reload main info (accounts, balances)
+          $scope.updateInfo();
         }
       );
 

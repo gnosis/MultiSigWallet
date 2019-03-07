@@ -2,7 +2,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("settingsCtrl", function (Web3Service, $scope, Config, Wallet, Utils, Transaction, $window, $uibModal, $sce, $location, $http) {
+    .controller("settingsCtrl", function (Web3Service, $scope, Config, Utils, Transaction, $uibModal, $sce, $location, $http) {
 
       // Don't save the following config values to localStorage
       var configBlacklist = [
@@ -139,8 +139,27 @@
 
         loadConfiguration(); // config.js
 
-        // Reload we3 provider
-        Web3Service.reloadWeb3Provider();
+        // Reload web3 provider only if it has been updated in the configuration,
+        // Otherwise update specific providers individually,
+        // this allows us to avoid providing connection/show setup to Ledger/Trezor
+        if (configCopy.wallet != previousConfig.wallet) {
+          Web3Service.reloadWeb3Provider();
+        } else if (configCopy.wallet == 'lightwallet') {
+          Web3Service.lightWalletSetup();
+        } else if (configCopy.wallet != 'remotenode') {
+          // Web3Service.engine._providers.pop();
+          // Filter out rpc sub providers
+          Web3Service.engine._providers = Web3Service.engine._providers.filter(function (item, idx) {
+            return !item.rpcUrl
+          });
+          Web3Service.engine.stop();
+          Web3Service.engine.addProvider(new RpcSubprovider({
+            rpcUrl: configCopy.ethereumNode
+          }));
+          Web3Service.engine.start();
+        } else {
+          Web3Service.web3 = new MultisigWeb3(new MultisigWeb3.providers.HttpProvider(configCopy.ethereumNode));
+        }
 
         // If we're using lightwallet for 1st time,
         // redirect the user to accounts/add page
@@ -150,11 +169,14 @@
           $location.path('/accounts');
         }
 
+        // Trigger updates, so that whatchers can execute their lookup function
+        Config.triggerUpdates();
+        // Show 'success' notification
         Utils.success("Configuration updated successfully.");
       };
 
       /**
-      * Adds a new custon ui-select item to Ethereum Node
+      * Adds a new custom ui-select item to Ethereum Node
       */
       $scope.addCustomEthereumNode = function(param) {
         var item = {

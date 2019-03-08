@@ -6,7 +6,7 @@ echo "=== PREPARE DEPLOY ==="
 
 # Check dist is for desktop devices and the commit was towards
 if [[ ${DIST} == "desktop" ]] && [[ ${TRAVIS_BRANCH} == ${ENABLED_BRANCH} || ${TRAVIS_BRANCH} == ${TRAVIS_TAG} ]] && [[ ${TRAVIS_OS_NAME} == "linux" ]]; then
-  cd dapp/ && mkdir dist && npm run build-linux;
+  cd dapp/ && mkdir dist && npm run build-libs-electron && npm run build-linux;
 
   if [[ ${TRAVIS_BRANCH} == ${TRAVIS_TAG} ]]; then
     # it is a TAG
@@ -15,7 +15,7 @@ if [[ ${DIST} == "desktop" ]] && [[ ${TRAVIS_BRANCH} == ${ENABLED_BRANCH} || ${T
 fi
 
 if [[ ${DIST} == "desktop" ]] && [[ ${TRAVIS_BRANCH} == ${ENABLED_BRANCH} || ${TRAVIS_BRANCH} == ${TRAVIS_TAG} ]] && [[ ${TRAVIS_OS_NAME} == "osx" ]]; then
-  cd dapp/ && mkdir dist && npm run build-osx;
+  cd dapp/ && mkdir dist && npm run build-libs-electron && npm run build-osx;
 
   if [[ ${TRAVIS_BRANCH} == ${TRAVIS_TAG} ]]; then
     # it is a TAG
@@ -25,7 +25,8 @@ if [[ ${DIST} == "desktop" ]] && [[ ${TRAVIS_BRANCH} == ${ENABLED_BRANCH} || ${T
 fi
 
 if [[ ${DIST} == "web" ]] && [[ ${TRAVIS_OS_NAME} == "linux" ]]; then
-  rm -rf dapp/node_modules/electron* dapp/node_modules/http-server dapp/node_modules/grunt* dapp/node_modules/webpack dapp/node_modules/karma* dapp/node_modules/babel*;
+  # Copy package.json into the web project, it's required to load the APP version on the UI
+  npm run build-libs-web && npm run copy-package;
 fi
 
 echo "=== PREPARE DEPLOY DONE ==="

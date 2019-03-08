@@ -14,13 +14,14 @@
     "build-linux": "build --linux",
     "build-win": "build --win",
     "build-osx": "build --mac",
-    "build-web": "grunt bundle",
+    "build-libs-web": "grunt bundle --minify=true",
+    "build-libs-electron": "grunt bundle --mode=electron --minify=true",
     "copy-package": "cp package.json src/package.json",
     "certs": "openssl req -x509 -sha256 -nodes -newkey rsa:2048 -days 365 -keyout localhost.key -out localhost.crt -subj '/CN=localhost/O=Multisig/C=US'",
     "dist": "zip -x node_modules/\\* -x npm-debug.log -x tests/\\* -x config.karma.js -x .DS_Store -x .gitignore -r ../multisigWallet.zip ./",
     "postinstall": "grunt ngtemplates",
-    "start": "npm run build-web && npm run copy-package && http-server -a 0.0.0.0 -p 5000 src",
-    "start-electron": "NODE_ENV=development electron src/main.js",
+    "start": "grunt bundle && npm run copy-package && http-server -a 0.0.0.0 -p 5000 src",
+    "start-electron": "grunt bundle --mode=electron && NODE_ENV=development electron src/main.js",
     "test": "sh testrpc.sh"
   },
   "keywords": [

@@ -25,8 +25,8 @@ process.on('unhandledRejection', function (error) {
 *
 */
 function restServerSetup () {
-  let restServer = express();
-  let restPort = 8080;
+  restServer = express();
+  restPort = 8080;
   let connection = null;
   // Ledger legacy derivation path
   const derivationPath = "44'/60'/0'/0";

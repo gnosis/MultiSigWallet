@@ -27,15 +27,9 @@ var txDefaultOrig =
       'decimals': 18
     },
     {
-      'address': '0xa74476443119A942dE498590Fe1f2454d7D4aC0d',
-      'name': 'Golem',
-      'symbol': 'GNT',
-      'decimals': 18
-    },
-    {
-      'address': '0x888666CA69E0f178DED6D75b5726Cee99A87D698',
-      'name': 'Iconomi',
-      'symbol': 'ICN',
+      'address': '0x960b236A07cf122663c4303350609A66A7B288C0',
+      'name': 'Aragon Network',
+      'symbol': 'ANT',
       'decimals': 18
     },
     {
@@ -45,9 +39,21 @@ var txDefaultOrig =
       'decimals': 18
     },
     {
-      'address': '0xc66ea802717bfb9833400264dd12c2bceaa34a6d',
-      'name': 'Maker',
-      'symbol': 'MKR',
+      'address': '0x1F573D6Fb3F13d689FF844B4cE37794d79a7FF1C',
+      'name': 'Bancor Network',
+      'symbol': 'BNT',
+      'decimals': 18
+    },
+    {
+      'address': '0x0D8775F648430679A709E98d2b0Cb6250d2887EF',
+      'name': 'Basic Attention Token',
+      'symbol': 'BAT',
+      'decimals': 18
+    },
+    {
+      'address': '0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359',
+      'name': 'DAI Stable Coin',
+      'symbol': 'DAI',
       'decimals': 18
     },
     {
@@ -63,27 +69,15 @@ var txDefaultOrig =
       'decimals': 18
     },
     {
-      'address': '0x0D8775F648430679A709E98d2b0Cb6250d2887EF',
-      'name': 'Basic Attention Token',
-      'symbol': 'BAT',
+      'address': '0xa74476443119A942dE498590Fe1f2454d7D4aC0d',
+      'name': 'Golem',
+      'symbol': 'GNT',
       'decimals': 18
     },
     {
-      'address': '0x1F573D6Fb3F13d689FF844B4cE37794d79a7FF1C',
-      'name': 'Bancor Network',
-      'symbol': 'BNT',
-      'decimals': 18
-    },
-    {
-      'address': '0xaec2e87e0a235266d9c5adc9deb4b2e29b54d009',
-      'name': 'SingularDTV',
-      'symbol': 'SNGLS',
-      'decimals': 0
-    },
-    {
-      'address': '0x960b236A07cf122663c4303350609A66A7B288C0',
-      'name': 'Aragon Network',
-      'symbol': 'ANT',
+      'address': '0x888666CA69E0f178DED6D75b5726Cee99A87D698',
+      'name': 'Iconomi',
+      'symbol': 'ICN',
       'decimals': 18
     },
     {
@@ -93,16 +87,34 @@ var txDefaultOrig =
       'decimals': 9
     },
     {
+      'address': '0xc66ea802717bfb9833400264dd12c2bceaa34a6d',
+      'name': 'Maker',
+      'symbol': 'MKR',
+      'decimals': 18
+    },
+    {
       'address': '0xBEB9eF514a379B997e0798FDcC901Ee474B6D9A1',
       'name': 'Melon',
       'symbol': 'MLN',
       'decimals': 18
     },
     {
+      'address': '0xaec2e87e0a235266d9c5adc9deb4b2e29b54d009',
+      'name': 'SingularDTV',
+      'symbol': 'SNGLS',
+      'decimals': 0
+    },
+    {
       'address': '0xb64ef51c888972c908cfacf59b47c1afbc0ab8ac',
       'name': 'Storjcoin X',
       'symbol': 'SJCX',
       'decimals': 8
+    },
+    {
+      'address': '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+      'name': 'Wrapped Ether',
+      'symbol': 'WETH',
+      'decimals': 18
     }
   ]
 };

@@ -323,11 +323,13 @@
         }
 
         // Converts the addresses to Checksumed addresses
-        var owners = {};
-        let checksumedAddress;
-        for (var x = 0; x < w.owners.length; x++) {
-          checksumedAddress = Web3Service.toChecksumAddress(w.owners[x].address);
-          owners[checksumedAddress] = w.owners[x]
+        if (w.owners) {
+          var owners = {};
+          var checksumedAddress;
+          for (var x = 0; x < w.owners.length; x++) {
+            checksumedAddress = Web3Service.toChecksumAddress(w.owners[x].address);
+            owners[checksumedAddress] = w.owners[x]
+          }
         }
 
         Object.assign(

@@ -70,12 +70,20 @@ textarea.json-config {
   border:none !important;
 }
 
+.pointer {
+  cursor: pointer;
+}
+
 .list-decimal {
   list-style-type: decimal;
 }
 
 .sk-circle .sk-child:before{
   background-color: white !important;
+}
+
+.grey {
+  color: #889aa6;
 }
 
 /*.ui-select-choices-row:hover {

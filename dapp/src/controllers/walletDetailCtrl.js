@@ -68,26 +68,37 @@
                 function (e, owners) {
                   $scope.owners = Web3Service.toChecksumAddress(owners);
                   // Check if the owners are in the wallet.owners object
-                  var walletOwnerskeys = Object.keys($scope.wallet.owners);
+                  var walletOwnerskeys = $scope.wallet.owners ? Object.keys($scope.wallet.owners) : [];
 
-                  for (var x = 0; x < $scope.owners.length; x++) {
-                    // If owner not in list
-                    if (walletOwnerskeys.indexOf($scope.owners[x]) == -1) {
-                      $scope.wallet.owners[$scope.owners[x]] = {
-                        'name': 'Owner ' + (x + 1),
-                        'address': $scope.owners[x]
+                  if (!$scope.wallet.owners) {   
+                    $scope.wallet.owners = {};  
+                    $scope.owners.forEach(function (item, index) {
+                      $scope.wallet.owners[item] = {
+                        'name': 'Owner ' + (index + 1),
+                        'address': item
                       };
-                    }
-                    else {
-                      if (!$scope.wallet.owners[$scope.owners[x]].name) {
-                        // Set owner name with its address
-                        // $scope.wallet.owners[$scope.owners[x]].name = $scope.wallet.owners[$scope.owners[x]].address;
-                        $scope.wallet.owners[$scope.owners[x]].name = 'Owner ' + (x + 1);
+                      if (index == $scope.owners.length-1) { // last item
+                        Wallet.updateWallet($scope.wallet);
+                      }
+                    });              
+                  } else {
+                    for (var x = 0; x < $scope.owners.length; x++) {
+                      // If owner not in list
+                      if (walletOwnerskeys.indexOf($scope.owners[x]) == -1) {
+                        $scope.wallet.owners[$scope.owners[x]] = {
+                          'name': 'Owner ' + (x + 1),
+                          'address': $scope.owners[x]
+                        };
+                      }
+                      else {
+                        if (!$scope.wallet.owners[$scope.owners[x]].name) {
+                          // Set owner name with its address
+                          // $scope.wallet.owners[$scope.owners[x]].name = $scope.wallet.owners[$scope.owners[x]].address;
+                          $scope.wallet.owners[$scope.owners[x]].name = 'Owner ' + (x + 1);
+                        }
                       }
                     }
                   }
-
-                  //Wallet.updateWallet($scope.wallet);
                 }
               )
           );
@@ -327,6 +338,7 @@
                 txBatch.add(
                   Wallet.getTransaction($scope.wallet.address, tx, function (e, info) {
                     if (!e && info.to) {
+                      info.to = Web3Service.toChecksumAddress(info.to);
                       $scope.$apply(function () {
                         // Added reference to the wallet
                         info.from = $scope.wallet.address;

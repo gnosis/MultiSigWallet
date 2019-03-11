@@ -13,7 +13,7 @@
 
       factory.update = function (abi, to, name) {
         abiDecoder.addABI(abi);
-        factory.saved[to.toLowerCase()] = { abi: abi, name: name};
+        factory.saved[to] = { abi: abi, name: name};
 
         localStorage.setItem("abis", JSON.stringify(factory.saved));
       };

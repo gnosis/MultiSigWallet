@@ -2,6 +2,7 @@
   <h1>
     {{wallet.name}} {{balance|ether}}
   </h1>
+  <h5 class="grey">{{wallet.address}}</h5>
 </div>
 <!-- Owners panel -->
 <div class="panel panel-default">
@@ -214,9 +215,14 @@
           {{txId|bigNumber}}
         </td>
         <td>
-          <span uib-popover="{{transactions[txId].to}}" popover-enable="'true'" popover-trigger="'mouseenter'">
+          <div uib-popover="{{transactions[txId].to}}" popover-enable="'true'" popover-trigger="'mouseenter'">
+            <button type="button" class="btn btn-default btn-sm"
+              data-clipboard-text="{{transactions[txId].to}}"
+              ngclipboard>
+              <span class="glyphicon glyphicon-copy"></span>
+            </button>
             {{transactions[txId].destination}}
-          </span>
+          </div>
         </td>
         <td>
           {{transactions[txId].value|ether}}
@@ -233,7 +239,7 @@
               <ul>
                 <li ng-repeat="param in transactions[txId].dataDecoded.params">
                   {{param.name}}:
-                  <span uib-popover="{{param.value}}" popover-enable="param.value && param.value.toString().length > 7" popover-trigger="'mouseenter'">
+                  <span uib-popover-template="'partials/addressPopoverTemplate.html'" popover-enable="param.value && param.value.toString().length > 7" popover-trigger="'click'" class="pointer">
                     {{param.value|addressCanBeOwner:wallet|logParam}}
                   </span>
                 </li>

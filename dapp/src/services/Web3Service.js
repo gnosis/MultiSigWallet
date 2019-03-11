@@ -200,7 +200,7 @@
                     return params;
                   }
                 },
-                controller: function ($scope, $uibModalInstance, Web3Service, Wallet, options) {
+                controller: function ($scope, $uibModalInstance, Wallet, options) {
                   $scope.send = function () {
                     $uibModalInstance.close({ gas: $scope.gasLimit, gasPrice: $scope.gasPrice * 1e9 });
                   };

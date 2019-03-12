@@ -172,6 +172,28 @@
         }
       };
     })
+    .filter('addressCanBeToken', function (Web3Service) {
+      return function (addressCandidate, wallet) {
+        if (addressCandidate && addressCandidate.indexOf && addressCandidate.indexOf("0x") != -1) {
+          addressCandidate = Web3Service.toChecksumAddress(addressCandidate);
+          if (wallet.tokens) {
+            var foundToken = null;
+            var keys = Object.keys(wallet.tokens);
+            for (var x=0; x<keys.length; x++) {
+                var token = wallet.tokens[keys[x]];
+                if (addressCandidate == token.address) {
+                    foundToken = token;
+                    break;
+                }
+            }
+            if (foundToken) {
+                return foundToken.symbol;
+            }
+          }
+        }
+        return addressCandidate;
+      };
+    })
     .filter('formatEventName', function (){
       return function (text){
         return text.split(/(?=[A-Z])/).join(' ');

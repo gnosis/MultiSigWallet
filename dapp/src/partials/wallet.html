@@ -240,7 +240,7 @@
                 <li ng-repeat="param in transactions[txId].dataDecoded.params">
                   {{param.name}}:
                   <span uib-popover-template="'partials/addressPopoverTemplate.html'" popover-enable="param.value && param.value.toString().length > 7" popover-trigger="'click'" class="pointer">
-                    {{param.value|addressCanBeOwner:wallet|logParam}}
+                    {{param.value|addressCanBeOwner:wallet|addressCanBeToken:wallet|logParam}}
                   </span>
                 </li>
               </ul>

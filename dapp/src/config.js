@@ -1,5 +1,9 @@
 var txDefaultOrig =
 {
+  websites: {
+    "wallet": "https://wallet.gnosis.pm",
+    "gnosis": "https://gnosis.pm"
+  },
   gasLimit: 3141592,
   gasPrice: 18000000000,
   ethereumNode: "https://mainnet.infura.io:443",

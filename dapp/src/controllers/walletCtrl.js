@@ -2,11 +2,11 @@
   function () {
     angular
       .module('multiSigWeb')
-      .controller('walletCtrl', function (Web3Service, $rootScope, $scope, Wallet, Utils, Token, Transaction, $uibModal, $interval) {
+      .controller('walletCtrl', function ($rootScope, $scope, $uibModal, CommunicationBus, Token, Utils, Wallet, Web3Service) {
 
         $scope.checkTerms = function () {
           if (localStorage.getItem("termsAccepted")) {
-            $interval.cancel($scope.termsInterval);
+            CommunicationBus.stopInterval('termsInterval');
             $scope.newWalletSelect();
           };
         };
@@ -120,10 +120,13 @@
         };
 
         function startup() {
-          $scope.interval = $interval($scope.updateParams, 10000);
+          CommunicationBus.addFn($scope.updateParams, 'interval');
+          CommunicationBus.addFn($scope.checkTerms, 'termsInterval');
+          CommunicationBus.startInterval('interval', 10000);
+
           $scope.wallets = Wallet.wallets;
           if (Web3Service.coinbase && (!$scope.wallets || !Object.keys($scope.wallets).length && !$rootScope.alreadyLogged)) {
-            $scope.termsInterval = $interval($scope.checkTerms, 500);
+            CommunicationBus.startInterval('termsInterval', 500);
           }
           $scope.updateParams();
           $rootScope.alreadyLogged = true;
@@ -140,8 +143,8 @@
         startup();
 
         $scope.$on('$destroy', function () {
-          $interval.cancel($scope.interval);
-          $interval.cancel($scope.termsInterval);
+          CommunicationBus.stopInterval('interval');
+          CommunicationBus.stopInterval('termsInterval');
         });
 
         /*$scope.currentPage = 1;

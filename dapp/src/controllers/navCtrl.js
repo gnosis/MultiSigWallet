@@ -69,11 +69,11 @@
                 };
 
                 $scope.openTerms = function () {
-                  shell.openExternal('https://wallet.gnosis.pm/TermsofUseMultisig.pdf');
+                  shell.openExternal(txDefault.websites.wallet + '/TermsofUseMultisig.pdf');
                 }
 
                 $scope.openPolicy = function () {
-                  shell.openExternal('https://gnosis.pm/assets/pdf/PrivacyPolicyGnosisLtd.pdf');
+                  shell.openExternal(txDefault.websites.gnosis + '/assets/pdf/PrivacyPolicyGnosisLtd.pdf');
                 }
               }
             });
@@ -89,6 +89,8 @@
                   $uibModalInstance.close($scope.walletOption);
                   localStorage.setItem("gdprTermsAccepted", true);
                 };
+
+                $scope.websites = txDefault.websites;
               }
             });
           }

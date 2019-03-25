@@ -326,7 +326,8 @@
         if (w.owners) {
           var owners = {};
           var checksumedAddress;
-          for (var x = 0; x < w.owners.length; x++) {
+
+          for (var x in w.owners) {
             checksumedAddress = Web3Service.toChecksumAddress(w.owners[x].address);
             owners[checksumedAddress] = w.owners[x]
           }

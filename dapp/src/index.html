@@ -162,7 +162,7 @@
     <footer>
         <nav class="imprint" ng-controller="footerCtrl">
           <div class="container" ng-hide="isElectron">
-              Please read our full <a href="https://gnosis.pm/assets/pdf/PrivacyPolicyGnosisLtd.pdf" target="_blank" >Privacy Policy</a> and <a href="/TermsofUseMultisig.pdf" target="_blank" >Terms of Use</a>. - <a target="_blank" href="/imprint.html">Imprint</a>
+              Please read our full <a ng-click="openPolicy()">Privacy Policy</a> and <a href="/TermsofUseMultisig.pdf" target="_blank" >Terms of Use</a>. - <a target="_blank" href="/imprint.html">Imprint</a>
           </div>
           <div class="container" ng-show="isElectron">
             Please read our full <a ng-click="openPolicy()">Privacy Policy</a> and <a ng-click="openTerms()">Terms of Use</a>. - <a ng-click="openImprint()">Imprint</a>

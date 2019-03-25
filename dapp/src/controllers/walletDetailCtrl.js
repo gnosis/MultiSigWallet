@@ -2,7 +2,7 @@
   function () {
     angular
       .module("multiSigWeb")
-      .controller("walletDetailCtrl", function (Web3Service, $scope, $filter, Wallet, $routeParams, Utils, $interval, $uibModal, Token, ABI) {
+      .controller("walletDetailCtrl", function ($scope, $filter, $routeParams, $uibModal, $interval, ABI, Token, Utils, Wallet, Web3Service) {
         $scope.wallet = {};
 
         $scope.$watch(

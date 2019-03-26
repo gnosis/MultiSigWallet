@@ -2,7 +2,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("confirmMultisigTransactionOfflineCtrl", function ($scope, address, Wallet, Transaction, $uibModalInstance, Utils) {
+    .controller("confirmMultisigTransactionOfflineCtrl", function ($scope, address, Wallet, $uibModalInstance, Utils) {
 
       $scope.transactionId = null;
 

@@ -158,17 +158,6 @@
         }
       };
 
-      /*$scope.updateABI = function () {
-        if ($scope.tx.to && $scope.tx.to.length > 40) {
-          $scope.abis = ABI.get();
-          if ($scope.abis[$scope.tx.to]) {
-            $scope.abi = JSON.stringify($scope.abis[$scope.tx.to].abi);
-            $scope.name = $scope.abis[$scope.tx.to].name;
-            $scope.updateMethods();
-          }
-        }
-      };*/
-
       $scope.updateABI = function () {
         var to = $scope.tx.to;
         if (to && to.length > 40) {
@@ -181,15 +170,6 @@
           }
         }
       };
-
-      /*$scope.updateMethods = function () {
-        $scope.abiArray = JSON.parse($scope.abi);
-        $scope.abiArray.map(function (item, index) {
-          if (!item.constant && item.name && item.type == "function") {
-            $scope.methods.push({name: item.name, index: index});
-          }
-        });
-      };*/
 
       // Parse abi
       $scope.updateMethods = function () {

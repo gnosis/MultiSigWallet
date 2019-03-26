@@ -9,18 +9,7 @@
           accounts: []
         };
 
-        // factory.webInitialized = $q(function (resolve, reject) {
-        //   window.addEventListener('load', function () {
-        //     // Ledger wallet
-        //     factory.reloadWeb3Provider(resolve, reject);
-        //   });
-        // });
-
         factory.webInitialized = function () {
-          // window.addEventListener('load', function () {
-          //   // Ledger wallet
-          //   factory.reloadWeb3Provider();
-          // });
           return new Promise(function (resolve, reject) {
             factory.reloadWeb3Provider(resolve, reject);
           });

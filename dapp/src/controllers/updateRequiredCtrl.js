@@ -2,7 +2,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("updateRequiredCtrl", function ($scope, Wallet, Transaction, $routeParams, Utils, $uibModalInstance, wallet) {
+    .controller("updateRequiredCtrl", function ($scope, Wallet, Transaction, Utils, $uibModalInstance, wallet) {
       $scope.address = wallet.address;
 
 

@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .service('Wallet', function ($window, $http, $q, $rootScope, $uibModal, Utils, ABI, Connection, Web3Service) {
+    .service('Wallet', function ($http, $q, $rootScope, $uibModal, ABI, Connection, Web3Service) {
       // Init wallet factory object
       var wallet = {
         wallets: JSON.parse(localStorage.getItem("wallets")) || {},
@@ -52,7 +52,7 @@
         return $q(
           function(resolve, reject){
             $http
-              .get(txDefault.ethGasStation)
+              .get(txDefault.websites.ethGasStation)
               .then(
                 function(response) {
                   resolve(response.data.standard)

@@ -2,7 +2,7 @@
   function () {
     angular
       .module('multiSigWeb')
-      .controller('navCtrl', function ($scope, Wallet, Web3Service, Config, CommunicationBus, Connection, Transaction, $interval, $sce, $location, $uibModal, Utils) {
+      .controller('navCtrl', function ($scope, $sce, $location, $uibModal, Wallet, Web3Service, Config, CommunicationBus, Connection, Transaction, Utils) {
         $scope.navCollapsed = true;
         $scope.isElectron = isElectron;
         $scope.config = Config.getConfiguration();
@@ -177,7 +177,6 @@
                 $scope.loggedIn = true;
               }
               else {
-                // $scope.accounts = [];
                 $scope.loggedIn = false;
               }
             }
@@ -199,17 +198,9 @@
         $scope.statusIcon = $sce.trustAsHtml('<i class=\'fa fa-refresh fa-spin fa-fw\' aria-hidden=\'true\'></i>');
 
         $scope.updateConnectionStatus = function () {
-          // $scope.$watch(function(){
           $scope.connectionStatus = Connection.isConnected;
           $scope.statusIcon = Connection.isConnected ? $sce.trustAsHtml('Online <i class=\'fa fa-circle online-status\' aria-hidden=\'true\'></i>') : $sce.trustAsHtml('<i class=\'fa fa-refresh fa-spin fa-fw\' aria-hidden=\'true\'></i> Offline <i class=\'fa fa-circle offline-status\' aria-hidden=\'true\'></i>');
-          // });
         };
-
-        /**
-        * Update info independently we're online or offline
-        */
-        // $scope.updateInfo();
-        // $scope.interval = $interval($scope.updateInfo, 5000);
 
         /**
         * Initialize web3
@@ -279,11 +270,11 @@
             }
           );
         }
-        startup();
 
-        // $scope.$on('$destroy', function () {
-        //   $interval.cancel($scope.interval);
-        // });
+        /**
+        * STARTUP FUNCTION
+        */
+        startup();
 
         $scope.selectAccount = function (account) {
           Web3Service.selectAccount(account);

@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .controller('accountCtrl', function ($window, $scope, Config, $uibModal, Utils, $location, Web3Service) {
+    .controller('accountCtrl', function ($scope, Config, $uibModal, Utils, Web3Service) {
 
       $scope.account = {};
       $scope.showLoadingSpinner = false;

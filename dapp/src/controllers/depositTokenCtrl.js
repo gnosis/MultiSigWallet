@@ -2,7 +2,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("depositTokenCtrl", function ($scope, Transaction, Token, $routeParams, $uibModalInstance, Wallet, Utils, wallet, token) {
+    .controller("depositTokenCtrl", function ($scope, Transaction, Token, $uibModalInstance, Utils, wallet, token) {
       $scope.wallet = wallet;
       $scope.token = token;
       $scope.amount = 10;

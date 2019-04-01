@@ -1,0 +1,104 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Add account
+  </h3>
+</div>
+<div>
+  <div class="modal-body">
+
+    <p class="top-20">Please enter a password to securely encrypt your wallet.</p>
+
+    <form name="password_form" novalidate ng-submit="createWallet()">
+      <div>
+        <input type="password" ng-model="account.password" ng-minlength="8"
+          name="password" required="" placeholder="Password" class="form-control">
+      </div>
+      <div ng-show="password_form.$submitted || password_form.password.$touched">
+        <div class="alert-fail" ng-show="password_form.password.$error.required">A password must be entered.</div>
+        <div class="alert-fail" ng-show="password_form.password.$error.minlength">A password should contain at least 8 characters.</div>
+      </div>
+
+      <div class="top-10">
+        <input type="password" ng-model="account.password_repeat" match="account.password"
+          name="password_repeat" required="" placeholder="Repeat password" class="form-control"
+          ng-disabled="!isObjectEmpty(password_form.password.$error)">
+      </div>
+
+      <div ng-show="password_form.$submitted || password_form.password_repeat.$touched">
+        <div class="alert-fail" ng-show="password_form.password_repeat.$error.required">Enter the same password again.</div>
+        <div class="alert-fail" ng-show="password_form.password_repeat.$error.mismatch">Passwords do not match.</div>
+      </div>
+      <p class="top-20">Please enter a name for the account.</p>
+      <div class="top-10">
+        <input type="text" ng-model="account.name" ng-minlength="1"
+          name="name" required="" placeholder="Account name" class="form-control"
+          ng-disabled="!isObjectEmpty(password_form.password_repeat.$error)">
+      </div>
+
+      <div ng-show="password_form.$submitted || password_form.name.$touched">
+        <div class="alert-fail" ng-show="password_form.name.$error.required">A name for the account must be entered.</div>
+        <div class="alert-fail" ng-show="password_form.name.$error.minlength">The name should contain at least 1 character.</div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-success"
+      ng-disabled="password_form.$invalid"
+      ng-click="ok()"
+      ng-show="!showLoadingSpinner">
+      Create Account
+    </button>
+    <button type="button" class="btn btn-success"
+      ng-show="showLoadingSpinner"
+      disabled>
+      <i class="fa fa-spinner fa-spin"></i>
+      Creating...
+    </button>
+    <button class="btn btn-danger" ng-click="cancel()">
+      Cancel
+    </button>
+  </div>
+</div>
+<!--<div ng-if="hasKeystore">
+  <div class="modal-body">
+    <form name="account_form" novalidate>
+      <p class="top-20">Please enter a name for the account.</p>
+      <div class="top-10">
+        <input type="text" ng-model="account.name" ng-minlength="1"
+          name="name" required="" placeholder="Account name" class="form-control">
+      </div>
+      <div ng-show="account_form.name.$invalid && !account_form.name.$pristine">
+        <div class="alert-fail" ng-show="account_form.name.$error.required">A name for the account must be entered.</div>
+        <div class="alert-fail" ng-show="account_form.name.$error.minlength">The name should contain at least 1 character.</div>
+      </div>
+
+      <p class="top-20">Provide your password.</p>
+      <div class="top-10">
+        <input type="password" ng-model="account.password" ng-minlength="8"
+          name="password" required="" placeholder="Password" class="form-control"
+          ng-disabled="!isObjectEmpty(account_form.name.$error)">
+      </div>
+      <div ng-show="account_form.password.$invalid && !account_form.password.$pristine">
+        <div class="alert-fail" ng-show="account_form.password.$error.required">A password must be entered.</div>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-success"
+      ng-disabled="account_form.$invalid"
+      ng-click="newAccount()"
+      ng-show="!showLoadingSpinner">
+      Create Account
+    </button>
+    <button type="button" class="btn btn-success"
+      ng-show="showLoadingSpinner"
+      disabled>
+      <i class="fa fa-spinner fa-spin"></i>
+      Creating...
+    </button>
+    <button class="btn btn-danger" ng-click="cancel()">
+      Cancel
+    </button>
+  </div>
+</div>-->

@@ -1,0 +1,314 @@
+<div class="page-header">
+  <h1>
+    {{wallet.name}} {{balance|ether}}
+  </h1>
+  <h5 class="grey">{{wallet.address}}</h5>
+</div>
+<!-- Owners panel -->
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="pull-right">
+      <button type="button" disabled-if-no-accounts ng-click="removeOwnerOffline()" class="btn btn-default" show-hide-by-connectivity="offline">
+        Remove offline
+      </button>
+      <button type="button" disabled-if-no-accounts ng-click="replaceOwnerOffline()" class="btn btn-default" show-hide-by-connectivity="offline">
+        Replace offline
+      </button>
+      <button type="button" disabled-if-no-accounts ng-click="addOwner()" class="btn btn-default">
+        Add
+      </button>
+      <button type="button" ng-click="hideOwners=true" class="btn btn-default" ng-hide="hideOwners">
+        <span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span>
+      </button>
+      <button type="button" ng-click="hideOwners=false" class="btn btn-default" ng-show="hideOwners">
+        <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
+      </button>
+    </div>
+    <h4>
+      Owners
+    </h4>
+  </div>
+  <table class="table table-hover table-bordered table-striped" uib-collapse="hideOwners">
+    <thead>
+      <tr>
+        <th>
+          Name
+        </th>
+        <th>
+          Address
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="owner in owners track by $index">
+        <td>
+          {{getOwnerName(owner)}}
+          <div class="pull-right">
+            <button type="button" ng-click="editOwner(owner)" class="btn btn-default btn-sm">
+              Edit
+            </button>
+            <button type="button" ng-click="replaceOwner(owner)"
+              class="btn btn-default btn-sm"
+              disabled-if-no-accounts
+              show-hide-by-connectivity="online">
+              Replace
+            </button>
+            <button type="button" ng-click="removeOwner(owner)"
+              class="btn btn-danger btn-sm"
+              disabled-if-no-accounts
+              show-hide-by-connectivity="online"
+              ng-hide="owners.length == 1">
+              Remove
+            </button>
+          </div>
+        </td>
+        <td>
+          {{owner}}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<!-- Tokens panel -->
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="pull-right">
+      <button type="button" ng-click="addToken()" class="btn btn-default">
+        Add
+      </button>
+      <button type="button" ng-click="hideTokens=true" class="btn btn-default" ng-hide="hideTokens">
+        <span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span>
+      </button>
+      <button type="button" ng-click="hideTokens=false" class="btn btn-default" ng-show="hideTokens">
+        <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
+      </button>
+    </div>
+    <h4>
+      Tokens
+    </h4>
+  </div>
+  <table class="table table-hover table-bordered table-striped" uib-collapse="hideTokens">
+    <thead>
+      <tr>
+        <th>
+          Name
+        </th>
+        <th>
+          Multisig balance
+        </th>
+        <th>
+          Account balance
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="token in wallet.tokens track by $index">
+        <td>
+          {{token.name}}
+          <div class="pull-right">
+            <button type="button" class="btn btn-default btn-sm"
+            ng-click="editToken(token)">
+              Edit
+            </button>
+            <button type="button" class="btn btn-danger btn-sm"
+            ng-click="removeToken(token)">
+              Remove
+            </button>
+          </div>
+        </td>
+        <td>
+          {{token|token}}
+          <div class="pull-right">
+            <button type="button" class="btn btn-default btn-sm" disabled-if-no-accounts
+            ng-click="depositToken(token)">
+              Deposit
+            </button>
+            <button type="button" class="btn btn-default btn-sm" disabled-if-no-accounts
+            ng-click="withdrawToken(token)">
+              Withdraw
+            </button>
+          </div>
+        </td>
+        <td>
+          {{userTokens[token.address]|token}}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div ng-show="!totalTokens" class="panel-body text-center" uib-collapse="hideTokens">
+    No tokens. Add an ERC20 token <a href="" ng-click="addToken()">now</a>.
+  </div>
+</div>
+<!-- Multisig transactions panel -->
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="pull-right form-inline">
+      <button type="button" class="btn btn-default" disabled-if-no-accounts
+      ng-click="confirmMultisigTransactionOffline()" show-hide-by-connectivity="offline">
+        Confirm offline
+      </button>
+      <button type="button" class="btn btn-default" disabled-if-no-accounts
+      ng-click="revokeMultisigTransactionOffline()" show-hide-by-connectivity="offline">
+        Revoke offline
+      </button>
+      <button type="button" class="btn btn-default" disabled-if-no-accounts
+      ng-click="executeMultisigTransactionOffline()" show-hide-by-connectivity="offline">
+        Execute offline
+      </button>
+      <button type="button" class="btn btn-default" disabled-if-no-accounts
+      ng-click="addTransaction()">
+        Add
+      </button>
+      <select class="form-control" ng-model="showTxs" ng-change="updateParams()">
+        <option value="all">
+          All
+        </option>
+        <option value="pending">
+          Pending
+        </option>
+        <option value="executed">
+          Executed
+        </option>
+      </select>
+      <select class="form-control" ng-change="updateTransactions()" ng-model="itemsPerPage" convert-to-number>
+        <option value="5">
+          5/p
+        </option>
+        <option value="10">
+          10/p
+        </option>
+        <option value="20">
+          20/p
+        </option>
+      </select>
+    </div>
+    <h4>
+      Multisig transactions
+    </h4>
+  </div>
+  <table class="table table-hover table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>
+          ID
+        </th>
+        <th>
+          Destination
+        </th>
+        <th>
+          Value
+        </th>
+        <th>
+          Data/Subject
+        </th>
+        <th>
+          Confirmations
+        </th>
+        <th>
+          Executed
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="txId in txIds track by $index">
+        <td>
+          {{txId|bigNumber}}
+        </td>
+        <td>
+          <div uib-popover="{{transactions[txId].to}}" popover-enable="'true'" popover-trigger="'mouseenter'">
+            <button type="button" class="btn btn-default btn-sm"
+              data-clipboard-text="{{transactions[txId].to}}"
+              ngclipboard>
+              <span class="glyphicon glyphicon-copy"></span>
+            </button>
+            {{transactions[txId].destination}}
+          </div>
+        </td>
+        <td>
+          {{transactions[txId].value|ether}}
+        </td>
+        <td>
+          <div class="text-center" ng-show="!transactions[txId].dataDecoded.title">
+            -
+          </div>
+          <div class="row">
+            <div ng-class="{'col-md-8': transactions[txId].dataDecoded.notDecoded || transactions[txId].dataDecoded.params, 'col-md-12': !transactions[txId].dataDecoded.notDecoded && !transactions[txId].dataDecoded.params}">
+              <span popover-trigger="'mouseenter'" uib-popover-template="'partials/multisigData.html'" popover-placement="bottom" popover-append-to-body="true" popover-enable="transactions[txId].data != '0x'">
+                {{transactions[txId].dataDecoded.title}}
+              </span>
+              <ul>
+                <li ng-repeat="param in transactions[txId].dataDecoded.params">
+                  {{param.name}}:
+                  <span uib-popover-template="'partials/addressPopoverTemplate.html'" popover-enable="param.value && param.value.toString().length > 7" popover-trigger="'click'" class="pointer">
+                    {{param.value|addressCanBeOwner:wallet|addressCanBeToken:wallet|logParam}}
+                  </span>
+                </li>
+              </ul>
+            </div>
+            <div ng-class="{'col-md-4': transactions[txId].dataDecoded.notDecoded || transactions[txId].dataDecoded.params}" ng-show="transactions[txId].dataDecoded.notDecoded || transactions[txId].dataDecoded.params">
+              <button class="btn btn-default btn-sm pull-right" ng-click="editABI(transactions[txId].to)">
+                Edit ABI
+              </button>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="row">
+            <div ng-class="{'col-md-12' : transactions[txId].executed, 'col-md-6' : !transactions[txId].executed}">
+              <ul ng-repeat="owner in transactions[txId].confirmations">
+                <li>
+                  {{wallet.owners[owner].name}}
+                </li>
+              </ul>
+            </div>
+            <div ng-hide="transactions[txId].executed || transactions[txId].confirmed" ng-class="{'col-md-12' : !transactions[txId].confirmations.length, 'col-md-6' : transactions[txId].confirmations.length}">
+              <button type="button" class="btn btn-default btn-sm pull-right"
+                ng-hide="transactions[txId].executed || transactions[txId].confirmed"
+                ng-click="confirmTransaction(txId)"
+                disabled-if-no-accounts
+                show-hide-by-connectivity="online">
+                Confirm
+              </button>
+            </div>
+            <div class="col-md-6" ng-show="transactions[txId].confirmed && !transactions[txId].executed">
+              <button type="button" class="btn btn-default btn-sm pull-right"
+                  ng-show="transactions[txId].confirmed && !transactions[txId].executed"
+                  ng-click="revokeConfirmation(txId)"
+                  disabled-if-no-accounts
+                  show-hide-by-connectivity="online">
+                Revoke confirmation
+              </button>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="row">
+            <div ng-class="{'col-md-12' : transactions[txId].executed, 'col-md-6' : !transactions[txId].executed}">
+              <span ng-show="transactions[txId].executed">
+                Yes
+              </span>
+              <span ng-hide="transactions[txId].executed">
+                No
+              </span>
+            </div>
+            <div class="col-md-6" ng-show="!transactions[txId].executed && transactions[txId].confirmations.length == confirmations">
+              <button type="button" class="pull-right btn btn-default btn-sm pull-right"
+                ng-show="!transactions[txId].executed && transactions[txId].confirmations.length == confirmations"
+                ng-click="executeTransaction(txId)"
+                disabled-if-no-accounts
+                show-hide-by-connectivity="online">
+                Execute
+              </button>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div ng-hide="totalItems" class="panel-body text-center">
+    No multisig transactions. Send a multisig transaction <a href="" ng-click="addTransaction()">now</a>.
+  </div>
+  <div class="panel-footer">
+    <ul uib-pagination total-items="totalItems" ng-model="currentPage" ng-change="updateTransactions()" items-per-page="itemsPerPage"></ul>
+  </div>
+</div>

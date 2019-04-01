@@ -1,0 +1,24 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Deposit
+  </h3>
+</div>
+<form class="form" name="form">
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="value">Amount (ETH):</label>
+      <input id="value" type="number" class="form-control" ng-model="amount" step="any" min="0" max="999999999999999" required >
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" ng-click="deposit()" ng-disabled="form.$invalid" class="btn btn-default" show-hide-by-connectivity="online">
+      Send transaction
+    </button>
+    <button type="button" ng-click="sign()" ng-disabled="form.$invalid" class="btn btn-default" show-hide-by-connectivity="offline">
+      Sign offline
+    </button>
+    <button type="button" class="btn btn-danger" ng-click="cancel()">
+      Cancel
+    </button>
+  </div>
+</form>

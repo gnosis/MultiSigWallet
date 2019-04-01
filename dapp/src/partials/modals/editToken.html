@@ -1,0 +1,36 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Add/edit token
+  </h3>
+</div>
+<form name="form" class="form">
+  <div class="modal-body" id="modal-body">
+    <div class="form-group">
+      <label for="address">Address</label>
+      <input id="address" type="text" class="form-control" ng-min="40" ng-change="updateInfo()"
+      ng-model="editToken.address" ng-disabled="editMode" required />
+    </div>
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input id="name" type="text" class="form-control" ng-disabled="!editToken.address" ng-model="editToken.name" required />
+    </div>
+    <div class="form-group">
+      <label for="symbol">Symbol</label>
+      <input id="symbol" type="text" class="form-control" ng-disabled="!editToken.address" ng-model="editToken.symbol" required />
+    </div>
+    <div class="form-group">
+      <label for="decimals">Decimals</label>
+      <input id="decimals" type="number" class="form-control" ng-disabled="!editToken.address" ng-model="editToken.decimals" min="0" required />
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-default" type="button" ng-click="ok()"
+      disabled-if-invalid-address="{{editToken.address}}"
+      ng-disabled="form.$invalid">
+      Ok
+    </button>
+    <button class="btn btn-danger" type="button" ng-click="cancel()">
+      Cancel
+    </button>
+  </div>
+</form>

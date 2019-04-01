@@ -1,0 +1,25 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Sign multisig transaction offline
+  </h3>
+</div>
+<form ng-submit="ok()" name="form">
+  <div class="modal-body">
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="multisig-nonce">Transaction id</label>
+        <input id="multisig-nonce" class="form-control" type="number" ng-model="nonces.multisig" required />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="account-nonce">Nonce</label>
+      <input id="account-nonce" class="form-control" type="number" ng-model="nonces.account" required />
+    </div>
+  </div>
+  <div class="modal-footer">
+    <input class="btn btn-default" type="submit" value="Ok" ng-disabled="form.$invalid" />
+    <button class="btn btn-danger" type="button" ng-click="cancel()">
+      Cancel
+    </button>
+  </div>
+</form>

@@ -1,0 +1,31 @@
+<div class="modal-header">
+    <h3 class="modal-title">
+      Configure Gas
+    </h3>
+</div>
+<form class="form" name="form">
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="value">Gas limit:</label>
+            <input id="value" type="number" class="form-control" ng-model="gasLimit" step="any" ng-change="calculateFee()"
+                ng-min="minimumGasLimit" max="999999999999999" required >
+        </div>
+        <div class="form-group">
+            <label for="value">Gas price (GWei):</label>
+            <input id="value" type="number" class="form-control" ng-model="gasPrice" step="any" min="0" ng-change="calculateFee()" 
+                max="999999999999999" required >
+        </div>
+        <div class="form-group">
+            <label for="value">Tx fees (ETH):</label>
+            <input id="value" disabled type="number" class="form-control" ng-model="txFee" step="any" min="0" max="999999999999999" required >
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="send()" ng-disabled="form.$invalid">
+            Send transaction
+        </button>  
+        <button type="button" class="btn btn-danger" ng-click="cancel()">
+            Cancel
+        </button>
+    </div>
+</form>

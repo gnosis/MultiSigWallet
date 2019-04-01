@@ -1,0 +1,64 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Account import
+  </h3>
+</div>
+<div>
+  <div class="modal-body">
+
+    <form name="password_form" novalidate ng-submit="uploadKeystore()">
+      <p class="top-20">Please select your keystore file.</p>
+      <div>
+        <button  type="button"
+          class="btn btn-default"
+          onclick="document.querySelector('.keystore-file-upload').click()">
+          Browse...
+        </button>
+        <input class="keystore-file-upload"
+          type="file"
+          style="display:none;"
+          onchange="angular.element(this).scope().isFileValid(this)">
+          {{fileName}}
+      </div>
+
+      <p class="top-20">Password</p>
+      <div>
+        <input type="password" ng-model="account.password" ng-minlength="8"
+          name="password" required="" placeholder="Password" class="form-control"
+          ng-disabled="!fileValid">
+      </div>
+      <div ng-show="password_form.$submitted || password_form.password.$touched">
+        <div class="alert-fail" ng-show="password_form.password.$error.required">A password must be entered.</div>
+        <div class="alert-fail" ng-show="password_form.password.$error.minlength">A password should contain at least 8 characters.</div>
+      </div>
+
+      <p class="top-20">Please enter a name for the account.</p>
+      <div class="top-10">
+        <input type="text" ng-model="account.name" ng-minlength="1"
+          name="name" required="" placeholder="Account name" class="form-control"
+          ng-disabled="!isObjectEmpty(password_form.password.$error)">
+      </div>
+      <div ng-show="password_form.$submitted || password_form.name.$touched">
+        <div class="alert-fail" ng-show="password_form.name.$error.required">A name for the account must be entered.</div>
+        <div class="alert-fail" ng-show="password_form.name.$error.minlength">The name should contain at least 1 character.</div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-success"
+      ng-disabled="password_form.$invalid"
+      ng-click="uploadKeystore()"
+      ng-show="!showLoadingSpinner">
+      Import Account
+    </button>
+    <button type="button" class="btn btn-success"
+      ng-show="showLoadingSpinner"
+      disabled>
+      <i class="fa fa-spinner fa-spin"></i>
+      Importing...
+    </button>
+    <button class="btn btn-danger" ng-click="cancel()">
+      Cancel
+    </button>
+  </div>
+</div>

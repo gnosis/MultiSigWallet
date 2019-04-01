@@ -1,0 +1,19 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Edit owner
+  </h3>
+</div>
+<div class="modal-body" id="modal-body">
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input id="name" type="text" class="form-control" ng-model="owner.name" required />
+  </div>  
+</div>
+<div class="modal-footer">
+  <button class="btn btn-default" type="button" ng-click="ok()">
+    Ok
+  </button>
+  <button class="btn btn-danger" type="button" ng-click="cancel()">
+    Cancel
+  </button>
+</div>

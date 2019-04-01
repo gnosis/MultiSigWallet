@@ -1,0 +1,31 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Remove token
+  </h3>
+</div>
+<div class="modal-body">
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input id="name" type="text" class="form-control" ng-model="token.name" onfocus="this.blur()" readonly />
+  </div>
+  <div class="form-group">
+    <label for="address"> Address </label>
+    <input id="address" type="text" class="form-control" ng-model="token.address" onfocus="this.blur()" readonly />
+  </div>
+  <div class="form-group">
+    <label for="symbol"> Symbol </label>
+    <input id="symbol" type="text" class="form-control" ng-model="token.symbol" onfocus="this.blur()" readonly />
+  </div>
+  <div class="form-group">
+    <label for="decimals"> Decimals </label>
+    <input id="decimals" type="text" class="form-control" ng-model="token.decimals" onfocus="this.blur()" readonly />
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-default" type="button" ng-click="ok()">
+    Ok
+  </button>
+  <button class="btn btn-danger" type="button" ng-click="cancel()">
+    Cancel
+  </button>
+</div>

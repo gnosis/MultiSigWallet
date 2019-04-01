@@ -1,0 +1,24 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Change required confirmations
+  </h3>
+</div>
+<form name="form" class="form">
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="confirmations">Required confirmations</label>
+      <input id="confirmations" type="number" class="form-control" ng-min="1" ng-model="required" required>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-disabled="form.$invalid" ng-click="update()" show-hide-by-connectivity="online">
+      Send multisig transaction
+    </button>
+    <button type="button" class="btn btn-default" ng-disabled="form.$invalid" ng-click="signOffline()" show-hide-by-connectivity="offline">
+      Sign offline
+    </button>
+    <button type="button" class="btn btn-danger" ng-click="cancel()">
+      Cancel
+    </button>
+  </div>
+</form>

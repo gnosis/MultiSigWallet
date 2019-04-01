@@ -56,7 +56,7 @@ contract MultiSigWalletWithDailyLimit is MultiSigWallet {
             txn.executed = true;
             if (!_confirmed)
                 spentToday += txn.value;
-            if (txn.destination.call.value(txn.value)(txn.data))
+            if (external_call(txn.destination, txn.value, txn.data.length, txn.data))
                 Execution(transactionId);
             else {
                 ExecutionFailure(transactionId);

@@ -1,0 +1,31 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Replace owner
+  </h3>
+</div>
+<form class="form" name="form">
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input id="name" type="text" class="form-control" ng-model="owner.name" readonly />
+    </div>
+    <div class="form-group">
+      <label for="address"> Owner address </label>
+      <input id="address" type="text" class="form-control" ng-model="owner.address" readonly />
+    </div>
+    <div class="form-group">
+      <label for="newOwner"> New owner address </label>
+      <input id="newOwner" type="text" class="form-control" ng-minlength="40" ng-model="newOwner" required />
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-default" type="button" ng-disabled="form.$invalid"
+      disabled-if-invalid-address="{{newOwner}}"
+      ng-click="send()">
+      Send multisig transaction
+    </button>
+    <button class="btn btn-danger" type="button" ng-click="cancel()">
+      Cancel
+    </button>
+  </div>
+</form>

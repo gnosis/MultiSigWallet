@@ -1,0 +1,25 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Restore deployed wallet
+  </h3>
+</div>
+<form class="form" name="restoreWallet">
+  <div class="modal-body" id="modal-body">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input id="name" type="text" class="form-control" ng-model="old.name" required />
+    </div>
+    <div class="form-group">
+      <label for="address">Address</label>
+      <input id="address" type="text" class="form-control" ng-model="old.address" required />
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-default" type="button" ng-click="ok()" ng-disabled="restoreWallet.$invalid">
+      Ok
+    </button>
+    <button class="btn btn-danger" type="button" ng-click="cancel()">
+      Cancel
+    </button>
+  </div>
+</form>

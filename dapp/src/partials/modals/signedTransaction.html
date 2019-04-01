@@ -1,0 +1,19 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Send signed transaction
+  </h3>
+</div>
+<div class="modal-body">
+  <div class="form-group">
+    <label for="raw">Signed transaction</label>
+    <textarea id="raw" class="form-control" rows="5" ng-model="tx"></textarea>
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-default" ng-click="sendRawTransaction()">
+    Send
+  </button>
+  <button class="btn btn-danger" ng-click="cancel()">
+    Cancel
+  </button>
+</div>

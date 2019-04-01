@@ -1,0 +1,54 @@
+<div class="modal-header">
+  <div class="bootstrap-dialog-header">
+    <div class="bootstrap-dialog-title">
+      Unlock your Ledger wallet
+    </div>
+  </div>
+</div>
+<div class="modal-body">
+  <img src="./bundles/img/ledger.jpg" class="img-responsive" />
+  <br>
+  <p>
+    In order to use the multisig with your Ledger wallet you need to:
+    <ul>
+      <li>
+        Connect your Ledger wallet to your USB port
+      </li>
+      <li>
+        Enter your Ledger wallet pin code
+      </li>
+      <li>
+        Update ledger firmware if version < 1.2
+      </li>
+      <li>
+        Install the Ethereum app on your Ledger wallet
+      </li>
+      <li ng-hide="isElectron">
+        Enable Browser support and contract data on settings
+      </li>
+      <li ng-show="isElectron">
+        Disable Browser support and enable contract data on settings
+      </li>
+      <li>
+        Allow the multisig DApp to access your accounts on the Ledger wallet
+      </li>
+    </ul>
+  </p>
+
+  <p ng-hide="isConnected" class="top-20 text-center">
+    <button type="button" ng-click="connect()" class="btn btn-default">
+    <span ng-show="!showSpinner">Connect</span>
+    <span ng-show="showSpinner">Approve on Ledger</span>
+    <i class="fa fa-spinner fa-spin" ng-show="showSpinner"></i>
+  </button>
+  </p>
+  <p ng-show="isConnected" class="top-20 text-center online-status">
+    Your Ledger is now connected to Multisig.
+  </p>
+
+</div>
+<div class="modal-footer">
+  <button type="button" ng-click="close()" class="btn btn-default" id="terms-button" >
+    Close
+  </button>
+</div>

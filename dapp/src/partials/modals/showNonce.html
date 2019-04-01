@@ -1,0 +1,19 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Nonce
+  </h3>
+</div>
+<div class="modal-body">
+  <div class="form-group">
+    <label for="signed">Nonce</label>
+    <input type="text" class="form-control" ng-model="nonce" id="nonce" />
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-default" ngclipboard-success="copy()" ngclipboard data-clipboard-target="#nonce">
+    Copy
+  </button>
+  <button class="btn btn-danger" ng-click="cancel()">
+    Cancel
+  </button>
+</div>

@@ -1,0 +1,55 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Send multisig transaction
+  </h3>
+</div>
+<form class="form" name="form">
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="destination">Destination</label>
+      <input id="destination" type="text" ng-model="tx.to" ng-change="updateABI()"  ng-min="40" class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label for="name">Contract name (optional)</label>
+      <input type="text" class="form-control" ng-model="name" name="name" />
+    </div>
+    <div class="form-group">
+      <label for="value">Amount (ETH)</label>
+      <input id="value" type="number" class="form-control" ng-model="tx.value" min="0" max="999999999999999" ng-required="!abi">
+    </div>
+    <div class="form-group">
+      <label for="abi"> ABI string </label>
+      <textarea id="abi" rows="5" type="text" class="form-control" ng-model="abi" ng-change="updateMethods()" ng-required="!tx.value"></textarea>
+    </div>
+    <div class="form-group">
+      <label for="method">Method</label>
+      <select id="method" ng-model="method"
+       ng-options="method.name for method in methods track by method.index"
+       ng-required="tx.abi" class="form-control" ng-change="setMethod()" ng-disabled="!abiArray" ></select>
+    </div>
+    <div class="form-group" ng-show="method && abiArray[method.index].inputs.length > 0">
+      <h3>
+        Parameters
+      </h3>
+      <div class="form-group" ng-repeat="param in abiArray[method.index].inputs" >
+        <div ng-switch on="param.type">
+          <label ng-attr-for="{{ 'value-' + $index }}">{{param.name}}</label>
+          <input ng-attr-id="{{ 'value-' + $index }}" ng-switch-default type="text" class="form-control" ng-model="params[$index]">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" ng-click="send()" class="btn btn-default" ng-disabled="form.$invalid"
+      disabled-if-invalid-address="{{tx.to}}"
+      show-hide-by-connectivity="online">
+      Send multisig transaction
+    </button>
+    <button type="button" ng-click="signOff()" class="btn btn-default" ng-disabled="form.$invalid" show-hide-by-connectivity="offline">
+      Sign offline
+    </button>
+    <button type="button" ng-click="cancel()" class="btn btn-danger">
+      Cancel
+    </button>
+  </div>
+</form>

@@ -8,7 +8,7 @@ module.exports = function(grunt) {
         'dev': {
 
             // the server root directory
-            root: './',
+            root: './src',
 
             // the server port
             // can also be written as a function, e.g.
@@ -82,13 +82,13 @@ module.exports = function(grunt) {
     },
     ngtemplates:  {
       multiSigWeb:        {
-        src:      ['partials/**.html', 'partials/modals/**.html'],
-        dest:     'partials.js'
+        src:      ['src/partials/**.html', 'src/partials/modals/**.html'],
+        dest:     'src/partials.js'
       }
     },
     watch: {
       scripts: {
-        files: ['partials/*.html', 'partials/modals/*.html'],
+        files: ['src/partials/*.html', 'src/partials/modals/*.html'],
         tasks: ['ngtemplates'],
         options: {
           livereload: true,
@@ -96,7 +96,7 @@ module.exports = function(grunt) {
       }
     },
     eslint: {
-     target: ['Gruntfile.js', 'controllers/**.js', 'services/**.js', '**.js']
+     target: ['Gruntfile.js', 'src/controllers/**.js', 'src/services/**.js', '**.js']
    },
    'npm-command': {
       certs: {
@@ -123,4 +123,145 @@ module.exports = function(grunt) {
 
   grunt.registerTask('default', ['ngtemplates', 'http-server']);
   grunt.registerTask('ledger', ['ssl-cert', 'ngtemplates', 'http-server:ssl']);
+  grunt.registerTask('bundle', '', function () {
+    // Command: `npx grunt bundle` or `npx grunt bundle --mode=electron`
+    const fs = require('fs');
+    const path = require('path')
+    const Terser = require("terser");
+
+    const MODE_WEB = 'web';
+    const appMode = grunt.option('mode') || 'web';
+    const minify = grunt.option('minify') ? grunt.option('minify') : false;
+    console.log(`Running in ${appMode} mode`);
+
+    const jsBundlePath = path.resolve(__dirname, 'src/bundles/js/bundle.js');
+    const jsStandaloneDirPath = path.resolve(__dirname, 'src/bundles/js');
+    const cssBundlePath = path.resolve(__dirname, 'src/bundles/css/bundle.css');
+    const fontsStandaloneDirPath = path.resolve(__dirname, 'src/bundles/fonts');
+
+    const modules = [
+      'node_modules/web3/dist/web3.min.js',
+      'node_modules/web3-provider-engine/dist/HookedWalletSubprovider.js',
+      'node_modules/web3-provider-engine/dist/RpcSubprovider.js',
+      'node_modules/web3-provider-engine/dist/ProviderEngine.js',
+      'node_modules/browser-builds/dist/ethereumjs-tx/ethereumjs-tx-1.3.3.min.js',
+      'node_modules/angular/angular.min.js',
+      'node_modules/angular-animate/angular-animate.min.js',
+      'node_modules/jquery/dist/jquery.min.js',
+      'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
+      'node_modules/bootstrap/dist/js/bootstrap.min.js',
+      'node_modules/angular-route/angular-route.min.js',
+      'node_modules/angular-touch/angular-touch.min.js',
+      'node_modules/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js',
+      'node_modules/moment/min/moment-with-locales.min.js',
+      'node_modules/abi-decoder/dist/abi-decoder.js',
+      'node_modules/clipboard/dist/clipboard.min.js',
+      'node_modules/ngclipboard/dist/ngclipboard.min.js',
+      'node_modules/angular-ui-notification/dist/angular-ui-notification.min.js',
+      'src/trezor-connect-v4.js'
+    ];
+
+    const webOnlyModules = [
+      'node_modules/ledger-wallet-provider/dist/ledgerwallet.js'
+    ];
+
+    const standaloneLibs = [
+      {
+        'name': 'jquery.min.js',
+        'path': 'node_modules/jquery/dist/jquery.min.js'
+      }
+    ];
+
+    const css = [
+      'css/app.css',
+      'css/gnosis-bootstrap.css',
+      'css/gnosis-bootstrap-dialog.css',
+      'node_modules/font-awesome/css/font-awesome.min.css',
+      'node_modules/spinkit/css/spinkit.css',
+      'node_modules/angular-ui-notification/dist/angular-ui-notification.css'
+    ];
+
+    const standaloneFonts = [
+      {
+        'name': 'fontawesome-webfont.woff2',
+        'path': 'node_modules/font-awesome/fonts/fontawesome-webfont.woff2',
+      }
+    ];
+
+    try {
+      // Remove file if it exists
+      fs.unlinkSync(jsBundlePath);
+    } catch (error) {
+      //console.error(error);
+    }
+    try {
+      fs.unlinkSync(cssBundlePath);
+    } catch (error) {
+      //console.error(error);
+    }
+
+    let jsBundleFileContent = '';
+    let moduleContent;
+    for (let x in modules) {
+      console.log("Packaging " + modules[x]);
+      moduleContent = fs.readFileSync(modules[x], 'utf8');
+      jsBundleFileContent += '\n';
+      jsBundleFileContent += moduleContent;
+    }
+
+    if (appMode == MODE_WEB) {
+      moduleContent = '';
+      for (let x in webOnlyModules) {
+        console.log("Packaging " + webOnlyModules[x]);
+        moduleContent = fs.readFileSync(webOnlyModules[x], 'utf8');
+        jsBundleFileContent += '\n';
+        jsBundleFileContent += moduleContent;
+      }
+    }
+
+    // Update file
+    if (minify) {
+      console.log('Start minifying JS...');
+      jsBundleFileContent = Terser.minify(jsBundleFileContent); // Minify JS
+      if (jsBundleFileContent.error) {
+        console.error('There have been some errores while minifying', jsBundleFileContent.error);
+      } else {
+        fs.writeFileSync(jsBundlePath, jsBundleFileContent.code, 'utf8');
+      }
+    } else {
+      fs.writeFileSync(jsBundlePath, jsBundleFileContent, 'utf8');
+    }
+
+    // Standalone libs
+    let standaloneModuleContent;
+    let jsStandaloneFileContent;
+    for (let x in standaloneLibs) {
+      console.log("Packaging " + standaloneLibs[x].name);
+      standaloneModuleContent = fs.readFileSync(standaloneLibs[x].path, 'utf8');
+      jsStandaloneFileContent = ''; // clear file content
+      jsStandaloneFileContent += '\n';
+      jsStandaloneFileContent += standaloneModuleContent;
+      fs.writeFileSync(jsStandaloneDirPath + '/' + standaloneLibs[x].name, jsStandaloneFileContent, 'utf8');
+    }
+    
+    // Package CSS
+    let cssBundleFileContent = '';
+    let cssContent;
+    for (let x in css) {
+      console.log("Packaging " + css[x]);
+      cssContent = fs.readFileSync(css[x], 'utf8');
+      cssBundleFileContent += '\n';
+      cssBundleFileContent += cssContent;
+    }
+    // Update file
+    fs.writeFileSync(cssBundlePath, cssBundleFileContent, 'utf8');
+
+    // Copy standalone Fonts
+    for (let x in standaloneFonts) {
+      console.log("Copying " + standaloneFonts[x].path + "into fonts/" + standaloneFonts[x].name);
+      // fs.copyFileSync(src, dest)
+      fs.copyFileSync(standaloneFonts[x].path, fontsStandaloneDirPath + '/' + standaloneFonts[x].name)
+    }
+
+  })
 };

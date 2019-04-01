@@ -1,0 +1,26 @@
+<div class="modal-header">
+  <div class="bootstrap-dialog-header">
+    <div class="bootstrap-dialog-title">
+      No account found
+    </div>
+  </div>
+</div>
+<div class="modal-body">
+  <p>
+    This wallet requires a 3rd party Ethereum account management software like
+    <a href="https://metamask.io/" class="prevent-focus" target="_blank">Metamask</a>,
+    <a href="https://github.com/ethereum/mist" target="_blank">Mist</a> or
+    <a href="https://ethcore.io/parity.html" target="_blank">Parity</a>.
+  </p>
+  <p>
+    You can monitor existing wallets without an account management software but you cannot create new wallets or sign transactions.
+  </p>
+  <p ngIf="metamaskInjected">
+    <a href="#" ng-click="openMetamaskWidgetAndClose()">Unlock Metamask</a>
+  </p>
+</div>
+<div class="modal-footer">
+  <button type="button" ng-click="ok()" class="btn btn-default" id="terms-button" >
+    Ok
+  </button>
+</div>

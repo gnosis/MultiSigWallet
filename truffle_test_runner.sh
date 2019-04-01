@@ -4,3 +4,4 @@ run-with-testrpc -d 'truffle test test/javascript/testMultiSigWalletWithDailyLim
 run-with-testrpc -d 'truffle test test/javascript/testMultiSigWalletWithDailyLimitFactory.js'
 run-with-testrpc -d 'truffle test test/javascript/testExecutionAfterRequirementsChanged.js'
 run-with-testrpc -d 'truffle test test/javascript/testExternalCalls.js'
+run-with-testrpc -d 'truffle test test/javascript/testExternalCallsWithDailyLimit.js'

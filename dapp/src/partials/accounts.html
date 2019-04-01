@@ -1,0 +1,64 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="pull-right">
+      <button type="button" class="btn btn-default"
+        id="add-lightwallet-account"
+        ng-click="createWallet()">
+        Add
+      </button>
+      <button  type="button"
+        class="btn btn-default"
+        ng-click="openImportLightWallet()">
+        Import
+      </button>
+    </div>
+    <h4>
+      Accounts
+    </h4>
+  </div>
+  <table class="table table-hover table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>
+          Name
+        </th>
+        <th>
+          Address
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="account in account.addresses|objectToArray|limitTo:itemsPerPage:itemsPerPage*(currentPage-1) track by $index">
+        <td>
+          <a ng-href="#/wallet/{{account.address}}" ng-bind-html="account.name | dashIfEmpty"></a>
+          <div class="pull-right form-inline">
+            <button type="button" class="btn btn-default btn-sm" ng-click="editAccount(account)">
+              Edit
+            </button>
+            <button type="button" class="btn btn-danger btn-sm" ng-click="removeAccount(account)">
+              Remove
+            </button>
+          </div>
+        </td>
+        <td>
+          <span uib-popover="{{account.address}}" popover-trigger="'mouseenter'" id="{{$index}}">
+            {{account.address}}
+          </span>
+          <div class="pull-right">
+            <button type="button"
+              class="btn btn-default "
+              ng-click="exportV3(account.address)">
+              Export
+            </button>
+            <button class="btn btn-default" type="button" ngclipboard-success="copyAccount()" ngclipboard data-clipboard-target="[id='{{$index}}']">
+              Copy
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div ng-if="!account.addresses || account.addresses.length == 0" class="panel-body text-center">
+    No accounts. Add an account <a href="" ng-click="createWallet()">now</a>.
+  </div>
+</div>

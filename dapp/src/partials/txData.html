@@ -1,0 +1,4 @@
+<div class="tx-data">
+  {{transaction.info.input|limitTo:1000}}
+  <span ng-show="transaction.info.input.length > 1000">...</span>
+</div>

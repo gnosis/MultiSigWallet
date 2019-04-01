@@ -1,0 +1,98 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Deploy new wallet
+  </h3>
+</div>
+<form class="form" name="newWallet">
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input id="name" type="text" class="form-control" ng-model="name" required ng-min-length="1" />
+    </div>
+    <div class="form-group">
+      <label for="required">Required confirmations</label>
+      <input id="required" type="number" class="form-control" ng-min="1" ng-max="{{maxAllowedConfirmations}}" ng-model="confirmations" required />
+    </div>
+    <div class="form-group">
+      <label for="daily-limit"> Daily limit (ETH) </label>
+      <input id="daily-limit" type="number" class="form-control" ng-min="0" max="999999999999999" ng-model="limit" required />
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Owners
+      </div>
+      <table class="table table-hover table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>
+              Name
+            </th>
+            <th>
+              Address
+            </th>
+            <th>
+              Action
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="owner in owners">
+            <td>
+              {{owner.name}}
+            </td>
+            <td>
+              {{owner.address}}
+            </td>
+            <td>
+              <button type="button" class="btn btn-danger" ng-click="removeOwner(owner.address)">
+                Remove
+              </button>
+            </td>
+          </tr>
+          <!--<tr>
+            <td>
+            </td>
+            <td>
+            </td>
+            <td>
+              <button ng-click="addOwner()" type="button" class="btn btn-default">
+                Add
+              </button>
+            </td>
+          </tr>-->
+          <tr>
+            <td>
+              <input type="text" class="form-control" placeholder="Name" ng-model="newOwner.name" />
+            </td>
+            <td>
+              <input type="text" class="form-control" placeholder="Address" ng-model="newOwner.address" />
+            </td>
+            <td>
+              <button ng-click="addOwner()" type="button" class="btn btn-default"
+                ng-disabled="newOwner.address == undefined || !newOwner.address.length > 0">
+                Add
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-default" type="button" ng-click="deployWallet()" ng-disabled="newWallet.$invalid" show-hide-by-factory-status="offline" >
+      Deploy
+    </button>
+    <button class="btn btn-default" type="button" ng-click="deployFactoryWallet()" ng-disabled="newWallet.$invalid" show-hide-by-factory-status="online">
+      Deploy with factory
+    </button>
+    <button class="btn btn-default" type="button" ng-click="deployOfflineWallet()" ng-disabled="newWallet.$invalid" show-hide-by-connectivity="offline">
+      Sign deployment offline
+    </button>
+    <button class="btn btn-default" type="button" ng-click="deployFactoryWalletOffline()" ng-disabled="newWallet.$invalid" show-hide-by-connectivity="offline">
+      Sign deployment with factory offline
+    </button>
+    <button class="btn btn-danger" type="button" ng-click="cancel()">
+      Cancel
+    </button>
+  </div>
+</form>

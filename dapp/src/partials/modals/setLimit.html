@@ -1,0 +1,24 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Change daily limit
+  </h3>
+</div>
+<form name="form" class="form">
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="limit">Daily limit (ETH)</label>
+      <input id="limit" type="number" step="any" ng-model="limit" min="0" max="999999999999999" class="form-control" required />
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-disabled="form.$invalid" ng-click="setLimit()" show-hide-by-connectivity="online">
+      Send multisig transaction
+    </button>
+    <button type="button" class="btn btn-default" ng-disabled="form.$invalid" ng-click="sign()" show-hide-by-connectivity="offline">
+      Sign offline
+    </button>
+    <button type="button" class="btn btn-danger" ng-click="cancel()">
+      Cancel
+    </button>
+  </div>
+</form>

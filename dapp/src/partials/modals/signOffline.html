@@ -1,0 +1,19 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Sign transaction offline
+  </h3>
+</div>
+<form ng-submit="ok()">
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="nonce">Nonce</label>
+      <input id="nonce" class="form-control" type="number" ng-model="nonce" ng-min="0" required />
+    </div>
+  </div>
+  <div class="modal-footer">
+    <input class="btn btn-default" type="submit" value="Ok" />
+    <button class="btn btn-danger" type="button" ng-click="cancel()">
+      Cancel
+    </button>
+  </div>
+</form>

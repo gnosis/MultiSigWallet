@@ -1,0 +1,29 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Remove wallet
+  </h3>
+</div>
+<form class="form" name="removeWallet">
+  <div class="modal-body" id="modal-body">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input id="name" type="text" class="form-control" ng-model="wallet.name" disabled />
+    </div>
+    <div class="form-group">
+      <label for="address">Address</label>
+      <input id="address" type="text" class="form-control" disabled ng-model="wallet.address" />
+    </div>
+    <div class="form-group">
+      <label for="confirmation">Enter wallet name for confirmation</label>
+      <input id="confirmation" type="text" class="form-control" ng-model="confirmation" />
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-default" type="button" ng-click="ok()" ng-disabled="confirmation != wallet.name">
+      Ok
+    </button>
+    <button class="btn btn-danger" type="button" ng-click="cancel()">
+      Cancel
+    </button>
+  </div>
+</form>

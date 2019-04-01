@@ -1,0 +1,171 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Multisignature Wallet</title>
+    <script>
+      // Detect if it's an Electron app or not
+      var isElectron = (window && window.process && window.process.type) ? true : false;
+    </script>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="any" href="./bundles/img/wallet-logo.png" />
+    <!-- Custom Stylesheets -->
+    <link rel="stylesheet" href="./bundles/css/bundle.css" />
+    <!-- 3rd party Script -->
+    <script>
+      if (isElectron) {
+        if (typeof module === 'object') {
+          window.module = module;
+          module = undefined;
+        }
+        $ = require('./bundles/js/jquery.min.js');
+        var ledgerPort = require('electron').remote.getGlobal('ledgerPort');
+      }
+    </script>
+    <script src="./bundles/js/bundle.js"></script>
+
+    <script>
+      if (isElectron) {
+        var lightwallet = require("eth-lightwallet");
+        var FileSaver = require("file-saver/FileSaver.min.js");
+        var ethereumWallet = require('ethereumjs-wallet');
+        var hdkeyring = require('eth-hd-keyring');
+        var encryptor = require('browser-passworder');
+        var shell = require('electron').shell;
+      }
+    </script>
+
+    <!-- App -->
+    <script src="./config.js"></script>
+    <script src="./app.js"></script>
+    <script src="./filters.js"></script>
+    <script src="./routes.js"></script>
+    <script src="./abi.js"></script>
+    <script src="./directives.js"></script>
+    <script src="./partials.js"></script>
+
+    <!-- Services -->
+    <script src="./services/Web3Service.js"></script>
+    <script src="./services/Wallet.js"></script>
+    <script src="./services/Utils.js"></script>
+    <script src="./services/Transaction.js"></script>
+    <script src="./services/Token.js"></script>
+    <script src="./services/Connection.js"></script>
+    <script src="./services/ABI.js"></script>
+    <script src="./services/Config.js"></script>
+    <script src="./services/CommunicationBus.js"></script>
+    <!-- Controllers -->
+    <script src="./controllers/addTokenCtrl.js"></script>
+    <script src="./controllers/navCtrl.js"></script>
+    <script src="./controllers/walletCtrl.js"></script>
+    <script src="./controllers/transactionCtrl.js"></script>
+    <script src="./controllers/signedTransactionCtrl.js"></script>
+    <script src="./controllers/sendTransactionCtrl.js"></script>
+    <script src="./controllers/walletDetailCtrl.js"></script>
+    <script src="./controllers/updateRequiredCtrl.js"></script>
+    <script src="./controllers/depositCtrl.js"></script>
+    <script src="./controllers/walletTransactionCtrl.js"></script>
+    <script src="./controllers/newWalletCtrl.js"></script>
+    <script src="./controllers/setLimitCtrl.js"></script>
+    <script src="./controllers/revokeCtrl.js"></script>
+    <script src="./controllers/confirmTransactionCtrl.js"></script>
+    <script src="./controllers/addOwnerCtrl.js"></script>
+    <script src="./controllers/removeOwnerCtrl.js"></script>
+    <script src="./controllers/signOfflineCtrl.js"></script>
+    <script src="./controllers/executeTransactionCtrl.js"></script>
+    <script src="./controllers/withdrawLimitCtrl.js"></script>
+    <script src="./controllers/settingsCtrl.js"></script>
+    <script src="./controllers/exportWalletConfigCtrl.js"></script>
+    <script src="./controllers/importWalletConfigCtrl.js"></script>
+    <script src="./controllers/removeWalletCtrl.js"></script>
+    <script src="./controllers/depositTokenCtrl.js"></script>
+    <script src="./controllers/withdrawTokenCtrl.js"></script>
+    <script src="./controllers/replaceOwnerCtrl.js"></script>
+    <script src="./controllers/replaceOwnerOfflineCtrl.js"></script>
+    <script src="./controllers/nonceCtrl.js"></script>
+    <script src="./controllers/confirmMultisigTransactionOfflineCtrl.js"></script>
+    <script src="./controllers/editABICtrl.js"></script>
+    <script src="./controllers/accountCtrl.js"></script>
+    <script src="./controllers/footerCtrl.js"></script>
+    <script>
+      if (isElectron && window.module) {
+        module = window.module;
+      }
+    </script>
+  </head>
+  <body ng-app="multiSigWeb">
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation" ng-controller="navCtrl">
+        <div class="navbar-header">
+            <!-- note the ng-init and ng-click here: -->
+            <button type="button" class="navbar-toggle" ng-click="navCollapsed = !navCollapsed">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">
+              <img src="./bundles/img/wallet-logo.svg" class="img-responsive" />
+            </a>
+        </div>
+        <div class="collapse navbar-collapse" uib-collapse="navCollapsed">
+            <ul class="nav navbar-nav">
+              <li ng-class="getMenuItemClass('/wallets')">
+                <a href="#/wallets">
+                  Wallets
+                </a>
+              </li>
+              <li ng-if="isElectron && config.wallet=='lightwallet'" ng-class="getMenuItemClass('/accounts')">
+                <a href="#/accounts">
+                  Accounts
+                </a>
+              </li>
+              <li ng-class="getMenuItemClass('/transactions')">
+                <a href="#/transactions">
+                  Transactions
+                </a>
+              </li>
+              <li ng-class="getMenuItemClass('/settings')">
+                <a href="#/settings">
+                  Settings
+                </a>
+              </li>
+            </ul>
+            <ul class="nav navbar-nav pull-right">
+              <li uib-dropdown ng-show="loggedIn">
+               <a href="#" uib-dropdown-toggle ng-show="coinbase"> <!-- show only if coinbase is set -->
+                 Account: {{coinbase|limitTo:20}}... <b class="caret"></b>
+               </a>
+               <ul class="dropdown-menu">
+                  <li ng-repeat="account in accounts"><a href="" ng-click="selectAccount(account)">{{account}}</a></li>
+               </ul>
+              </li>
+              <li ng-show="loggedIn">
+                <p class="navbar-text" ng-show="balance"> Balance: {{balance|ether}} </p>
+              </li>
+              <li ng-show="loggedIn">
+                <p class="navbar-text" ng-show="nonce"> Nonce: {{nonce}} </p>
+              </li>
+              <li>
+                <span class="navbar-text">{{ethereumChain.chain.substr(0, 1).toUpperCase() + ethereumChain.chain.substr(1)}}</span>
+                <span class="navbar-text" ng-bind-html="statusIcon"></span>
+              </li>
+              <li ng-show="web3ProviderName === 'injected' && metamaskInjected && !loggedIn">
+                <a hef="#" ng-click="openMetamaskWidget()">Unlock Metamask</a>
+              </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+      <ng-view></ng-view>
+    </div>
+    <footer>
+        <nav class="imprint" ng-controller="footerCtrl">
+          <div class="container" ng-hide="isElectron">
+              Please read our full <a ng-click="openPolicy()">Privacy Policy</a> and <a href="/TermsofUseMultisig.pdf" target="_blank" >Terms of Use</a>. - <a target="_blank" href="/imprint.html">Imprint</a>
+          </div>
+          <div class="container" ng-show="isElectron">
+            Please read our full <a ng-click="openPolicy()">Privacy Policy</a> and <a ng-click="openTerms()">Terms of Use</a>. - <a ng-click="openImprint()">Imprint</a>
+        </div>
+          </nav>
+    </footer>
+  </body>
+</html>

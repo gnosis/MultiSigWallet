@@ -1,0 +1,102 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="pull-right">
+      <button type="button" class="btn btn-default" ng-click="newWalletSelect()">
+        Add
+      </button>
+    </div>
+    <h4>
+      Wallets
+    </h4>
+  </div>
+  <table class="table table-hover table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>
+          Name
+        </th>
+        <th>
+          Address
+        </th>
+        <th>
+          Balance
+        </th>
+        <th>
+          Required confirmations
+        </th>
+        <th>
+          Daily limit
+        </th>
+        <th>
+          Limit for today
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="(walletAddress, wallet) in wallets|objectToArray|limitTo:itemsPerPage:itemsPerPage*(currentPage-1) track by $index">
+        <td>
+          <span ng-if="!wallet.isOnChain" show-hide-by-connectivity="online"
+            uib-popover="This wallet was created on another chain" popover-trigger="'mouseenter'"
+            class="not-on-chain-wallet pull-left glyphicon glyphicon-exclamation-sign"></span>
+          <a ng-href="#/wallet/{{wallet.address}}" ng-bind-html="wallet.name | dashIfEmpty"></a>
+          <div class="pull-right form-inline">
+            <button type="button" class="btn btn-default btn-sm" ng-click="editWallet(wallet)"
+              disabled-if-no-accounts-or-wallet-available="{{wallet.address}}">
+              Edit
+            </button>
+            <button type="button" class="btn btn-danger btn-sm" ng-click="removeWallet(wallet.address)">
+              Remove
+            </button>            
+          </div>
+        </td>
+        <td>
+          <div uib-popover="{{wallet.address}}" popover-trigger="'mouseenter'">
+            {{::wallet.address|address}}
+            <button type="button" class="btn btn-default btn-sm pull-right"
+              disabled-if-no-accounts-or-wallet-available="{{wallet.address}}"
+              data-clipboard-text="{{wallet.address}}"
+              ngclipboard>
+              Copy
+            </button>
+          </div>
+        </td>
+        <td>
+          <span value-or-dash-by-connectivity="{{wallet.balance|ether}}">{{wallet.balance|ether}}</span>
+          <button type="button" disabled-if-no-accounts-or-wallet-available="{{wallet.address}}"
+            class="btn btn-default btn-sm pull-right"
+            ng-click="deposit(wallet)">
+            Deposit
+          </button>
+        </td>
+        <td>
+          <span class="col-xs-9" value-or-dash-by-connectivity="{{wallet.confirmations|bigNumber|dashIfEmpty}}"></span>
+          <button type="button" disabled-if-no-accounts-or-wallet-available="{{wallet.address}}"
+            class="btn btn-default btn-sm col-xs-3"
+            ng-click="setRequired(wallet)">
+            Edit
+          </button>
+        </td>
+        <td>
+          <span value-or-dash-by-connectivity="{{wallet.limit|ether}}">{{wallet.limit|ether}}</span>
+          <button type="button" disabled-if-no-accounts-or-wallet-available="{{wallet.address}}"
+            class="btn btn-default btn-sm pull-right"
+            ng-click="setLimit(wallet)">
+            Edit
+          </button>
+        </td>
+        <td>
+          <span value-or-dash-by-connectivity="{{wallet.maxWithdraw|ether}}">{{wallet.maxWithdraw|ether}}</span>
+          <button type="button" disabled-if-no-accounts-or-wallet-available="{{wallet.address}}"
+            class="btn btn-default btn-sm pull-right"
+            data-action="withdraw"
+            ng-click="withdrawLimit(wallet)">
+            Withdraw
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div ng-hide="totalItems" class="panel-body text-center">
+    No wallets. Add wallet <a href="" ng-click="newWalletSelect()">now</a>.
+  </div>
+</div>

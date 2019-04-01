@@ -1,0 +1,44 @@
+<div class="modal-header">
+  <div class="bootstrap-dialog-header">
+    <div class="bootstrap-dialog-title">Terms of Use and Privacy Policy</div>
+  </div>  
+</div>
+<div class="modal-body">
+  <p>
+      For using the application, you have to agree with our <a href="/TermsofUseMultisig.pdf" target="_blank" >Terms of Use</a> and <a href="{{ websites.gnosis }}/assets/pdf/PrivacyPolicyGnosisLtd.pdf" target="_blank">Privacy Policy</a>.
+  </p>
+  <p>
+    Don't use the wallet hosted at
+    <a href="{{ websites.wallet }}" class="prevent-focus" target="_blank">{{ websites.wallet }}</a> to sign transactions.
+    Use <a href="{{ websites.wallet }}" target="_blank">{{ websites.wallet }}</a> only to
+    check the status of your wallet. Use a locally installed version for signing.
+    A version can be obtained <a href="https://github.com/gnosis/MultiSigWallet/releases" target="_blank">here</a>.
+  </p>
+  <p>
+    All smart contracts have been audited carefully multiple times.
+    However, all contracts are <strong>WITHOUT ANY WARRANTY;</strong> without even
+    the implied warranty of <strong>MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE</strong>.
+  </p>
+  <p>
+    Use at your own risk.
+  </p>
+  <div class="checkbox">
+      <label>
+        <input type="checkbox" ng-model="termsOfUse">
+        I have read and understood the Terms of Use
+      </label>
+  </div>
+  <div class="checkbox">
+      <label>
+        <input type="checkbox" ng-model="privacyPolicy">
+        I have read and understood the Privacy Policy
+      </label>
+  </div>
+  
+
+</div>
+<div class="modal-footer">
+  <button type="button" ng-click="ok()" class="btn btn-default" id="terms-button" ng-disabled="!termsOfUse || !privacyPolicy">
+    Continue
+  </button>
+</div>

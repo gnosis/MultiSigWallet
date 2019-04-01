@@ -1,0 +1,30 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Add owner
+  </h3>
+</div>
+<form class="form" name="form">
+  <div class="modal-body" id="modal-body">
+    <div class="form-group" show-hide-by-connectivity="online">
+      <label for="name">Name</label>
+      <input id="name" type="text" class="form-control" ng-model="owner.name" />
+    </div>
+    <div class="form-group">
+      <label for="address">Address</label>
+      <input id="address" type="text" class="form-control" ng-model="owner.address" required />
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-default" type="button" ng-disabled="form.$invalid"
+      disabled-if-invalid-address="{{owner.address}}"
+      ng-click="send()" show-hide-by-connectivity="online">
+      Send multisig transaction
+    </button>
+    <button class="btn btn-default" type="button" ng-disabled="form.$invalid" ng-click="sign()" show-hide-by-connectivity="offline">
+      Sign offline
+    </button>
+    <button class="btn btn-danger" type="button" ng-click="cancel()">
+      Cancel
+    </button>
+  </div>
+</form>

@@ -1,0 +1,74 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4>
+      Settings
+    </h4>
+  </div>
+  <form ng-submit="update()">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-6 form-group">
+          <label for="node">Ethereum node</label>
+          <editable-select
+            ng-model="config.selectedEthereumNode"
+            options="config.ethereumNodes"
+            other="Custom node"
+            template-url="editable-select-settings-tpl.html">
+          </editable-select>
+        </div>
+        <div class="col-md-6 form-group">
+          <label for="wallet-factory">Web3 provider</label>
+          <provider-list
+            default-item="config.wallet"
+            selected-item="providers[$index].name">
+          </provider-list>
+        </div>
+      </div>
+      <div class="row" show-hide-by-connectivity="offline">
+        <div class="col-md-6 form-group">
+          <label for="gas-limit">Gas limit</label>
+          <input id="gas-limit" type="number" ng-model="config.gasLimit" class="form-control" />
+        </div>
+        <div class="col-md-6 form-group">
+          <label for="gas-price">Gas price</label>
+          <input id="gas-price" type="number" ng-model="config.gasPrice" class="form-control" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 form-group">
+          <label for="wallet-factory">Wallet factory contract</label>
+          <editable-select
+            ng-model="config.walletFactoryAddress"
+            options="config.walletFactoryAddressList"
+            other="Custom contract"
+            template-url="editable-select-contract-settings-tpl.html"
+            type="contract-address">
+          </editable-select>
+        </div>
+      </div>
+    </div>
+    <div class="panel-footer">
+      <input type="submit" class="btn btn-default" value="Update settings" />
+      <button type="button" class="btn btn-default" ng-click="reset()">
+        Reset settings
+      </button>
+      <input type="button" class="btn btn-default" value="Import wallets" ng-click="showImportWalletDialog()" />
+      <input type="button" class="btn btn-default" value="Export wallets" ng-click="showExportWalletDialog()" />
+    </div>
+  </form>
+</div>
+
+<div class="panel panel-default" ng-if="appVersion !== undefined">
+  <div class="panel-heading">
+    <h4>
+      About
+    </h4>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-6">
+        App Version {{ appVersion }}
+      </div>
+    </div>
+  </div>
+</div>

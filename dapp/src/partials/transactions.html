@@ -1,0 +1,127 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="pull-right">
+      <button type="button" class="btn btn-default" disabled-if-no-accounts
+       ng-click="sendTransaction()" show-hide-by-connectivity="online">
+        Send transaction
+      </button>
+      <button type="button" class="btn btn-default"
+      ng-click="sendRawTransaction()" show-hide-by-connectivity="online">
+        Send signed transaction
+      </button>
+      <button type="button" class="btn btn-default" ng-click="getNonce()" show-hide-by-connectivity="online">
+        Get nonce
+      </button>
+      <button type="button" class="btn btn-danger" ng-disabld="!totalItems" ng-click="removeAll()">
+        Remove all
+      </button>
+    </div>
+    <h4>
+      Transactions
+    </h4>
+  </div>
+  <table class="table table-hover table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>
+          Destination
+        </th>
+        <th>
+          Value
+        </th>
+        <th>
+          Data
+        </th>
+        <th>
+          Nonce
+        </th>
+        <th>
+          Mined
+        </th>
+        <th>
+          Logs
+        </th>
+        <th>
+          Remove
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="transaction in transactions | limitTo:currentPage*itemsPerPage:itemsPerPage*(currentPage-1) track by $index">
+        <td>
+          <a uib-popover="{{transaction.multisig || transaction.info.to}}" popover-trigger="'mouseenter'"
+          ng-href="{{etherscan}}/tx/{{transaction.txHash}}" target="_blank"
+          ng-bind-html="getDestinationOrContract(transaction) | dashIfEmpty">
+          </a>
+        </td>
+        <td ng-bind-html="transaction.info.value | ether | dashIfEmpty">
+        </td>
+        <td>
+          <div ng-show="transaction.decodedData.title" class="row">
+            <div ng-class="{'col-md-8' : !transaction.toWallet && !transaction.toToken, 'col-md-12': transaction.toWallet || transaction.toToken}">
+              <span  popover-trigger="'mouseenter'" uib-popover-template="'partials/txData.html'" popover-placement="bottom" popover-append-to-body="true">
+                {{transaction.decodedData.title}}
+              </span>
+            <ul>
+              <li ng-repeat="param in transaction.decodedData.params" ng-show="!(param.name=='data') || param.value !='0x' ">
+                {{param.name}}:
+                <span popover-enable="param.value" popover-trigger="'mouseenter'"
+                  uib-popover-template="'partials/paramValueData.html'">
+                  {{param.value|addressCanBeOwner:wallet|logParam:(param.name == 'value' && transaction.decodedData.title == 'submitTransaction')}}
+                </span>
+              </li>
+            </ul>
+            </div>
+            <div class="col-md-4" ng-show="transaction.decodedData.notDecoded || transaction.decodedData.params" ng-hide="transaction.toWallet">
+              <button class="btn btn-default btn-sm pull-right" ng-click="editABI(transaction.info.to)">
+                Edit ABI
+              </button>
+            </div>
+          </div>
+          <div class="text-center" ng-show="!transaction.decodedData.title">
+            -
+          </div>
+        </td>
+        <td ng-bind-html="transaction.info.nonce | dashIfEmpty">
+        </td>
+        <td>
+          <span ng-show="transaction.receipt">
+            Yes
+          </span>
+          <span ng-hide="transaction.receipt">
+            No
+          </span>
+        </td>
+        <td>
+          <ul ng-show="transaction.receipt.decodedLogs.length">
+            <li ng-repeat="log in transaction.receipt.decodedLogs track by $index">
+              {{log.name}}
+              <ul>
+                <li ng-repeat="param in log.events track by $index">
+                  {{param.name}}:
+                  <span uib-popover="{{param.value}}" popover-enable="param.value && param.value.toString().length > 7" popover-trigger="'mouseenter'">
+                    {{param.value|addressCanBeOwner|logParam:(param.name == 'value')}}
+                  </span>
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <p ng-show="!transaction.receipt.decodedLogs.length" class="text-center">
+            -
+          </p>
+        </td>
+        <td>
+          <button class="btn btn-danger btn-sm" ng-click="remove(transaction.txHash)">
+            Remove
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div ng-hide="totalItems" class="text-center panel-body">
+    No transactions. Send a transaction <a href="" ng-click="sendTransaction()">now</a>.
+  </div>
+  <div class="panel-footer">
+    <ul uib-pagination total-items="totalItems" ng-model="currentPage" items-per-page="itemsPerPage"></ul>
+  </div>
+</div>

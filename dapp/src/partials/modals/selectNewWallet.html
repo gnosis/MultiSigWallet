@@ -1,0 +1,27 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Add wallet
+  </h3>
+</div>
+<div class="modal-body">
+  <div class="radio" ng-show="coinbase">
+    <label>
+      <input type="radio" value="create" ng-model="walletOption">
+      Create new wallet
+    </label>
+  </div>
+  <div class="radio">
+    <label>
+      <input type="radio" value="restore" ng-model="walletOption">
+      Restore deployed wallet
+    </label>
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-default" ng-click="ok()">
+    Next
+  </button>
+  <button class="btn btn-danger" ng-click="cancel()">
+    Cancel
+  </button>
+</div>

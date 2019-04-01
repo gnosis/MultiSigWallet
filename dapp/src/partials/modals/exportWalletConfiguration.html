@@ -1,0 +1,18 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Export wallets
+  </h3>
+</div>
+<div class="modal-body">
+  <div class="form-group">
+    <textarea ng-model="configuration" id="configuration" class="form-control json-config"></textarea>
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-default" type="button" ngclipboard-success="copy()" ngclipboard data-clipboard-target="#configuration">
+    Copy
+  </button>
+  <button type="button" class="btn btn-danger" ng-click="close()">
+    Close
+  </button>
+</div>

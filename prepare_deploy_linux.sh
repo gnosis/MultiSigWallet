@@ -26,7 +26,7 @@ fi
 
 if [[ ${DIST} == "web" ]] && [[ ${TRAVIS_OS_NAME} == "linux" ]]; then
   # Copy package.json into the web project, it's required to load the APP version on the UI
-  npm run build-libs-web && npm run copy-package;
+  cd dapp/ && npm run build-libs-web && npm run copy-package;
 fi
 
 echo "=== PREPARE DEPLOY DONE ==="

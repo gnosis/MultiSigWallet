@@ -12,7 +12,6 @@
         return JSON.stringify(validConfig);
       }
 
-      //$scope.configuration = JSON.stringify(Wallet.getValidConfigFromJSON(JSON.parse(localStorage.getItem("wallets")) || "", 'export'));
       $scope.configuration = getConfiguration();
 
       $scope.close = function () {

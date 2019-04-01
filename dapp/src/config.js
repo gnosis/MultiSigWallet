@@ -1,5 +1,10 @@
 var txDefaultOrig =
 {
+  websites: {
+    "wallet": "https://wallet.gnosis.pm",
+    "gnosis": "https://gnosis.pm",
+    "ethGasStation": "https://safe-relay.gnosis.pm/api/v1/gas-station/"
+  },
   gasLimit: 3141592,
   gasPrice: 18000000000,
   ethereumNode: "https://mainnet.infura.io:443",
@@ -14,7 +19,6 @@ var txDefaultOrig =
   transactionChecker: {
     checkInterval: 15000
   },
-  ethGasStation: "https://safe-relay.gnosis.pm/api/v1/gas-station/",
   wallet: "injected",
   defaultChainID: null,
   // Mainnet

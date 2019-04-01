@@ -1,6 +1,6 @@
 {
   "name": "multisigweb",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "eslintConfig": {
     "env": {
       "browser": true,
@@ -8,7 +8,7 @@
     }
   },
   "homepage": "https://wallet.gnosis.pm",
-  "description": "Angular web app made for Multi Sig Wallet",
+  "description": "Ethereum MultiSignature Wallet",
   "main": "src/main.js",
   "scripts": {
     "build-linux": "build --linux",

@@ -2,7 +2,7 @@
   function () {
     angular
     .module('multiSigWeb')
-    .service('Connection', function ($rootScope, $http, $interval) {
+    .service('Connection', function ($rootScope, $interval) {
 
       var factory = {};
       var isConnected = false;

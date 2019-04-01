@@ -132,11 +132,6 @@
         // Save new configuation
         Config.setConfiguration("userConfig", JSON.stringify(configCopy));
 
-        /*if (Web3Service.web3.currentProvider.constructor.name == "HttpProvider") {
-          Web3Service.web3 = new Web3( new Web3.providers.HttpProvider($scope.config.ethereumNode));
-          $window.web3 = Web3Service.web3;
-        }*/
-
         loadConfiguration(); // config.js
 
         // Reload web3 provider only if it has been updated in the configuration,
@@ -236,7 +231,7 @@
       };
 
       /**
-      *
+      * Open reset settings modal
       */
       $scope.reset = function () {
         $uibModal.open({

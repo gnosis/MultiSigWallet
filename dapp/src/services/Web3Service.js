@@ -191,7 +191,12 @@
                 },
                 controller: function ($scope, $uibModalInstance, Wallet, options) {
                   $scope.send = function () {
-                    $uibModalInstance.close({ gas: $scope.gasLimit, gasPrice: $scope.gasPrice * 1e9 });
+                    $uibModalInstance.close(
+                      { 
+                        gas: $scope.gasLimit, 
+                        gasPrice: Math.ceil($scope.gasPrice * 1e9)
+                      }
+                    );
                   };
 
                   $scope.cancel = function () {

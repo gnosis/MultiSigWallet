@@ -22,7 +22,7 @@ process.on('unhandledRejection', function (error) {
 });
 
 /**
-*
+* Configures and starts an internal REST server
 */
 function restServerSetup () {
   restServer = express();
@@ -32,7 +32,7 @@ function restServerSetup () {
   const derivationPath = "44'/60'/0'/0";
   restServer.use(bodyParser.json());
   /**
-  *
+  * Gets connection to Ledger HW
   */
   function getLedgerConnection() {
     const connectionPromise = new Promise( (resolve, reject) => {
@@ -85,8 +85,7 @@ function restServerSetup () {
     ]);
   }
 
-  // Declare routes
-  // @todo to be implemented
+  // Declare REST routes
   restServer.route('/accounts')
   .get(function (req, res) {
     if (ledgerAddresses) {
@@ -174,6 +173,7 @@ function restServerSetup () {
       global['ledgerPort'] = restPort;
     })
     .on('error', function (err) {
+      // Look for ports available internally on user's PC
       if (restPort < 65536-1) {
         restPort++;
         _startRestServer();
@@ -185,31 +185,85 @@ function restServerSetup () {
   _startRestServer();
 }
 
+/****************************************************************
+ * 
+ *       ELECTRON APPLICATION SETUP/CONFIGURATION
+ * 
+ ****************************************************************/
+
 /**
-*
+* Creates the main menu (upper application menu)
 */
-function createWindow () {
-  // Create the browser window.
-  mainWindow = new BrowserWindow(
-    {
-      maximizable: true
-    }
-  );
+function createMainMenu () {
+  const application = {
+    label: 'Application',
+    submenu: [
+      {
+        label: 'About',
+        role: 'about',
+      },
+      {
+        type: 'separator',
+      },
+      {
+        label: 'Quit',
+        accelerator: 'Command+Q',
+        click: () => {
+          app.quit();
+        },
+      },
+    ],
+  };
 
-  mainWindow.maximize();
+  const edit = {
+    label: 'Edit',
+    submenu: [
+      {
+        label: 'Undo',
+        accelerator: 'CmdOrCtrl+Z',
+        role: 'undo',
+      },
+      {
+        label: 'Redo',
+        accelerator: 'Shift+CmdOrCtrl+Z',
+        role: 'redo',
+      },
+      {
+        type: 'separator',
+      },
+      {
+        label: 'Cut',
+        accelerator: 'CmdOrCtrl+X',
+        role: 'cut',
+      },
+      {
+        label: 'Copy',
+        accelerator: 'CmdOrCtrl+C',
+        role: 'copy',
+      },
+      {
+        label: 'Paste',
+        accelerator: 'CmdOrCtrl+V',
+        role: 'paste',
+      },
+      {
+        label: 'Select All',
+        accelerator: 'CmdOrCtrl+A',
+        role: 'selectAll',
+      },
+    ],
+  };
 
-  // and load the index.html of the app.
-  mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'index.html'),
-    protocol: 'file:',
-    slashes: true
-  }));
+  const template = [application, edit];
 
-  // Open the DevTools.
-  if (process.env.NODE_ENV == 'development') {
-    mainWindow.webContents.openDevTools();
-  }
+  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+}
 
+/**
+ * Creates the context menus (right mouse click menus)
+ * @param {window} windowInstance 
+ */
+function createContextMenus (windowInstance) {
   // Declare context menus
   const selectionMenu = Menu.buildFromTemplate([
     {role: 'copy'},
@@ -229,14 +283,40 @@ function createWindow () {
   ]);
 
   // Set up context menu
-  mainWindow.webContents.on('context-menu', (e, props) => {
+  windowInstance.webContents.on('context-menu', (e, props) => {
     const { selectionText, isEditable } = props;
     if (isEditable) {
-      inputMenu.popup(mainWindow);
+      inputMenu.popup(windowInstance);
     } else if (selectionText && selectionText.trim() !== '') {
-      selectionMenu.popup(mainWindow);
+      selectionMenu.popup(windowInstance);
     }
   });
+}
+
+/**
+ * Creates the main window
+ */
+function createWindow () {
+  // Create the browser window.
+  mainWindow = new BrowserWindow(
+    {
+      maximizable: true
+    }
+  );
+
+  mainWindow.maximize();
+
+  // and load the app's index.html file.
+  mainWindow.loadURL(url.format({
+    pathname: path.join(__dirname, 'index.html'),
+    protocol: 'file:',
+    slashes: true
+  }));
+
+  // Open the DevTools only if on "development" environment.
+  if (process.env.NODE_ENV == 'development') {
+    mainWindow.webContents.openDevTools();
+  }
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
@@ -246,19 +326,13 @@ function createWindow () {
     mainWindow = null;
   });
 
+  createContextMenus(mainWindow);
+  createMainMenu();
   restServerSetup();
-
-  /*mainWindow.webContents.executeJavaScript(`
-    var path = require('path');
-    module.paths.push(path.resolve('node_modules'));
-    module.paths.push(path.resolve('../node_modules'));
-    module.paths.push(path.resolve(__dirname, '..', '..', 'electron', 'node_modules'));
-    module.paths.push(path.resolve(__dirname, '..', '..', 'electron.asar', 'node_modules'));
-    module.paths.push(path.resolve(__dirname, '..', '..', 'app', 'node_modules'));
-    module.paths.push(path.resolve(__dirname, '..', '..', 'app.asar', 'node_modules'));
-    path = undefined;
-  `);*/
 }
+
+// https://github.com/electron/electron/blob/master/docs/api/app.md#appsetnamename
+app.setName('Gnosis Multisig');
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

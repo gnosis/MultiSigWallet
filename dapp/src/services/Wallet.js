@@ -407,8 +407,10 @@
           var tokenKeys;
 
           for (var x=0; x<walletKeys.length; x++) {
-            var owners = jsonConfig.wallets[walletKeys[x]].owners;
-            var tokens = jsonConfig.wallets[walletKeys[x]].tokens || [];
+            var _owners = jsonConfig.wallets[walletKeys[x]].owners;
+            var owners = Web3Service.toChecksumAddress(_owners);
+            var _tokens = jsonConfig.wallets[walletKeys[x]].tokens || [];
+            var tokens = Web3Service.toChecksumAddress(_tokens);
             var validOwners = {};
             var validTokens = {};
 

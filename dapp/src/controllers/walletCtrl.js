@@ -131,6 +131,14 @@
           $scope.updateParams();
           $rootScope.alreadyLogged = true;
 
+          // Convert `wallets`'s addresses to checksum addresses
+          // We convert `wallets` to checksum addresses because some users might still
+          // be using a not checksummed configuration, which was stored into the browser before
+          // the user visited the current app version.
+          var walletsData = JSON.parse(localStorage.getItem("wallets")) || {};
+          walletsData = Wallet.toChecksummedConfiguration(walletsData);
+          localStorage.setItem('wallets', JSON.stringify(walletsData));
+
           // The localStorage item is setted in
           // notificationsSignupConfirmationCtrl
           if (localStorage.getItem("show-signup-success")) {

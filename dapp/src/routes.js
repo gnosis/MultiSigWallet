@@ -29,6 +29,9 @@
         controller: 'accountCtrl',
         templateUrl: 'partials/accounts.html'
       })
+      .when("/404", {
+        templateUrl: 'partials/404.html'
+      })
       .otherwise({
         redirectTo: '/wallets'
       });

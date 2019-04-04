@@ -2,16 +2,24 @@
   function () {
     angular
       .module("multiSigWeb")
-      .controller("walletDetailCtrl", function ($scope, $filter, $routeParams, $uibModal, $interval, ABI, Token, Utils, Wallet, Web3Service) {
+      .controller("walletDetailCtrl", function ($scope, $filter, $routeParams, $uibModal, $interval, $location, ABI, Token, Utils, Wallet, Web3Service) {
         $scope.wallet = {};
+
+        // Javascript doesn't have a deep object copy, this is a patch
+        // Convert $routeParams.address to checksum address, users might be using lowercase addresses
+        var walletCopy = Wallet.getAllWallets()[Web3Service.toChecksumAddress($routeParams.address)];
+
+        if (!walletCopy) {
+          // redirect to 404
+          $location.path('/404');
+          return;
+        }
 
         $scope.$watch(
           function () {
             return Wallet.updates;
           },
           function () {
-            // Javascript doesn't have a deep object copy, this is a patch
-            var walletCopy = Wallet.getAllWallets()[$routeParams.address];
             var tokenAddresses = Object.keys(walletCopy.tokens);
             // The token collection is updated by the controller and the service, so must be merged.
             tokenAddresses.map(function (item) {

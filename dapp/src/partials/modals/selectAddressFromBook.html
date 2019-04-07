@@ -1,0 +1,46 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Browse address book
+  </h3>
+</div>
+<div class="modal-body" id="modal-body">
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input id="name" type="text" class="form-control" ng-model="searchItem.name" ng-change="search()" />
+  </div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Address</th>
+        <th>Type</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        ng-if="addressArray.length > 0" 
+        ng-repeat="item in addressArray | filter:searchItem">
+        <td>
+          <button class="btn btn-default" ng-click="choose(item)">
+            <i class="fa fa-plus"></i>  
+          </button>
+          {{ item.name }}
+        </td>
+        <td>
+          {{ item.address }}
+        </td>
+        <td>
+          {{ item.type }}
+        </td>
+      </tr>
+      <tr ng-if="addressArray.length == 0">
+        <td colspan="3">No items available in the address book.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-danger" type="button" ng-click="cancel()">
+    Cancel
+  </button>
+</div>

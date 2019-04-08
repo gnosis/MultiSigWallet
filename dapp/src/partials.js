@@ -2735,7 +2735,13 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "<form class=\"form\" name=\"form\">\n" +
     "  <div class=\"modal-body\">\n" +
     "    <div class=\"form-group\">\n" +
-    "      <label for=\"destination\">Destination</label>\n" +
+    "      <label for=\"destination\">\n" +
+    "        Destination\n" +
+    "        <!-- pick address from address book -->\n" +
+    "        <button class=\"btn btn-default btn-sm\" ng-click=\"openAddressBook()\">\n" +
+    "          <i class=\"fa fa-address-book\" title=\"Address book\"></i>\n" +
+    "        </button>\n" +
+    "      </label>\n" +
     "      <input id=\"destination\" type=\"text\" ng-model=\"tx.to\" ng-change=\"updateABI()\"  ng-min=\"40\" class=\"form-control\" required>\n" +
     "    </div>\n" +
     "    <div class=\"form-group\">\n" +

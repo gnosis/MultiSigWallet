@@ -6,7 +6,7 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("walletTransactionCtrl", function (Web3Service, $scope, Wallet, Transaction, Utils, wallet, $uibModalInstance, ABI) {
+    .controller("walletTransactionCtrl", function (Web3Service, $scope, Wallet, Transaction, Utils, wallet, $uibModal, $uibModalInstance, ABI) {
 
       $scope.wallet = wallet;
       $scope.abiArray = null;
@@ -15,6 +15,51 @@
       $scope.params = [];
       $scope.tx = {
         value: 0
+      };
+
+      /**
+       * Opens the address book modal
+       */
+      $scope.openAddressBook = function () {
+        $uibModal.open({
+          templateUrl: 'partials/modals/selectAddressFromBook.html',
+          size: 'lg',
+          controller: function ($scope, $uibModalInstance) {
+            // Load address book
+            $scope.addressBook = JSON.parse(localStorage.getItem('addressBook') || '{}');
+            // Sort addresses alphabetically
+            $scope.addressArray = Object.keys($scope.addressBook).reduce(function (acc, value) {
+              acc.push($scope.addressBook[value]);
+              return acc;
+            }, [])
+            .sort(function (a, b) {
+              if (a.name < b.name) {
+                return -1;
+              }
+              if (a.name > b.name) {
+                return 1;
+              }
+              return 0;
+            });
+
+            $scope.choose = function (item) {
+              $uibModalInstance.close({
+                item: item
+              });
+            };
+
+            $scope.cancel = function () {
+              $uibModalInstance.dismiss();
+            };
+          }
+        })
+        .result
+        .then(function (returnData) {
+          // Set transaction's recipient
+          if (returnData && returnData.item) {
+            $scope.tx.to = returnData.item.address;
+          }
+        });
       };
 
       $scope.updateABI = function () {

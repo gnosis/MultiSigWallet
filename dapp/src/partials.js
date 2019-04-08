@@ -1419,6 +1419,33 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
   );
 
 
+  $templateCache.put('src/partials/modals/editAddressBookItem.html',
+    "<div class=\"modal-header\">\n" +
+    "  <h3 class=\"modal-title\">\n" +
+    "    Edit address book item\n" +
+    "  </h3>\n" +
+    "</div>\n" +
+    "<div class=\"modal-body\" id=\"modal-body\">\n" +
+    "  <div class=\"form-group\">\n" +
+    "    <label for=\"name\">Name</label>\n" +
+    "    <input id=\"name\" type=\"text\" class=\"form-control\" ng-model=\"book.name\" required />\n" +
+    "  </div>\n" +
+    "  <div class=\"form-group\">\n" +
+    "    <label for=\"address\">Address</label>\n" +
+    "    <input id=\"address\" type=\"text\" class=\"form-control\" ng-model=\"book.address\" readonly />\n" +
+    "  </div>\n" +
+    "</div>\n" +
+    "<div class=\"modal-footer\">\n" +
+    "  <button class=\"btn btn-default\" type=\"button\" ng-click=\"ok()\" ng-disabled=\"!book.address.length > 0 || !book.name.length > 0\">\n" +
+    "    Ok\n" +
+    "  </button>\n" +
+    "  <button class=\"btn btn-danger\" type=\"button\" ng-click=\"cancel()\">\n" +
+    "    Cancel\n" +
+    "  </button>\n" +
+    "</div>\n"
+  );
+
+
   $templateCache.put('src/partials/modals/editLightWalletAccount.html',
     "<div class=\"modal-header\">\n" +
     "  <h3 class=\"modal-title\">\n" +
@@ -2323,7 +2350,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    </thead>\n" +
     "    <tbody>\n" +
     "      <tr\n" +
-    "        ng-if=\"addressArray.length == 0\" \n" +
+    "        ng-if=\"addressArray.length > 0\" \n" +
     "        ng-repeat=\"item in addressArray | filter:searchItem\">\n" +
     "        <td>\n" +
     "          <button class=\"btn btn-default\" ng-click=\"choose(item)\">\n" +

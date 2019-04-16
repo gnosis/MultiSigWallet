@@ -1,0 +1,58 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="pull-right">
+      <button type="button" class="btn btn-default" ng-click="addAddress()">
+        Add
+      </button>
+    </div>
+    <h4>
+      Address book
+    </h4>
+  </div>
+  <table class="table table-hover table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>
+          Name
+        </th>
+        <th>
+          Address
+        </th>
+        <th>
+          Type
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="(key, book) in addressBook">
+        <td>
+          <span>{{ book.name }}</span>
+          <div class="pull-right form-inline">
+            <button type="button" class="btn btn-default btn-sm" ng-click="editAddress(book)">
+              Edit
+            </button>
+            <button type="button" class="btn btn-danger btn-sm" ng-click="removeAddress(book.address)">
+              Remove
+            </button>            
+          </div>
+        </td>
+        <td>
+          <div uib-popover="{{book.address}}" popover-trigger="'mouseenter'">
+            {{::book.address|address}}
+            <button type="button" class="btn btn-default btn-sm pull-right"
+              data-clipboard-text="{{book.address}}"
+              ngclipboard>
+              Copy
+            </button>
+          </div>
+        </td>
+        <td>
+          <span>{{ book.type }}</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div ng-if="showEmptyBook()" class="panel-body text-center">
+    No addresses. Add a new entry <a href="" ng-click="addAddress()">now</a>.
+  </div>
+</div>

@@ -379,6 +379,9 @@
         *    },
         *    "abis" : {
         *        "address" : [ abi array ]
+        *    },
+        *    "addressBook": {
+        * 
         *    }
         *  }
         *
@@ -392,12 +395,20 @@
         var validJsonConfig = {};
         validJsonConfig.wallets = {};
         validJsonConfig.abis = {};
+        validJsonConfig.addressBook = {};
 
         if (!angular.equals(jsonConfig.abis, {})) {
             validJsonConfig.abis = jsonConfig.abis;
         }
         else {
           delete validJsonConfig.abis;
+        }
+
+        if (!angular.equals(jsonConfig.addressBook, {})) {
+          validJsonConfig.addressBook = jsonConfig.addressBook;
+        }
+        else {
+          delete validJsonConfig.addressBook;
         }
 
         if (!angular.equals(jsonConfig.wallets, {})) {
@@ -491,9 +502,15 @@
           }
         }
 
-        wallet.wallets = wallet.toChecksummedConfiguration(walletsData);
+        wallet.wallets = wallet.toChecksummedWalletConfiguration(walletsData);
         // Save changes to `wallets` 
         localStorage.setItem("wallets", JSON.stringify(wallet.wallets));
+        // Save changes to `addressBook`
+        if (validJsonConfig.addressBook) {
+          // Convert addresses to checksum
+          validJsonConfig.addressBook = Web3Service.toChecksumAddress(validJsonConfig.addressBook);
+          localStorage.setItem("addressBook", JSON.stringify(validJsonConfig.addressBook));
+        }
         wallet.updates++;
         try {
           $rootScope.$digest();
@@ -504,7 +521,7 @@
       /**
        * Convert addresses to checksum addresses and returns the converted object
        */
-      wallet.toChecksummedConfiguration = function (walletsData) {
+      wallet.toChecksummedWalletConfiguration = function (walletsData) {
         /*
         * {
         *   wallets: {

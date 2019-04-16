@@ -136,7 +136,7 @@
           // be using a not checksummed configuration, which was stored into the browser before
           // the user visited the current app version.
           var walletsData = JSON.parse(localStorage.getItem("wallets")) || {};
-          walletsData = Wallet.toChecksummedConfiguration(walletsData);
+          walletsData = Wallet.toChecksummedWalletConfiguration(walletsData);
           localStorage.setItem('wallets', JSON.stringify(walletsData));
 
           // The localStorage item is setted in

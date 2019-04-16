@@ -1617,6 +1617,11 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "  </h3>\n" +
     "</div>\n" +
     "<div class=\"modal-body\">\n" +
+    "  <div>\n" +
+    "      <input type=\"checkbox\" id=\"check-addressbook\"\n" +
+    "        ng-model=\"exportOptions.addressBook\" ng-click=\"setConfiguration()\">\n" +
+    "      <label class=\"custom-control-label\" for=\"check-addressbook\">Address book</label>\n" +
+    "  </div>\n" +
     "  <div class=\"form-group\">\n" +
     "    <textarea ng-model=\"configuration\" id=\"configuration\" class=\"form-control json-config\"></textarea>\n" +
     "  </div>\n" +

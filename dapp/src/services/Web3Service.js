@@ -172,6 +172,10 @@
             for (key in item) {
               checkSummedKey = factory.web3.toChecksumAddress(key);
               checkSummedItem[checkSummedKey] = item[key];
+
+              if (checkSummedItem[checkSummedKey].address) {
+                checkSummedItem[checkSummedKey].address = factory.web3.toChecksumAddress(checkSummedItem[checkSummedKey].address);
+              }
             }
           } else {
             return item;

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+truffle migrate --network ropsten 0x2750b8a858d26234d597D82a3423e6bcE7f3d7E1,0x0633575558C1cEdBf851f91b607c2365F6b83f76,0xc1c5da1673935527d4EFE1714Ef8dcbee12a9380 2

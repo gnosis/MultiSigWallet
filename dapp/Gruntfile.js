@@ -158,6 +158,7 @@ module.exports = function(grunt) {
       'node_modules/clipboard/dist/clipboard.min.js',
       'node_modules/ngclipboard/dist/ngclipboard.min.js',
       'node_modules/angular-ui-notification/dist/angular-ui-notification.min.js',
+      'node_modules/ethereumjs-wallet/index.js',
       'src/trezor-connect-v4.js'
     ];
 
@@ -226,6 +227,7 @@ module.exports = function(grunt) {
       if (jsBundleFileContent.error) {
         console.error('There have been some errores while minifying', jsBundleFileContent.error);
       } else {
+        console.log('Saving bundled file...');
         fs.writeFileSync(jsBundlePath, jsBundleFileContent.code, 'utf8');
       }
     } else {

@@ -30,7 +30,7 @@ install:
 
 # to run your custom scripts instead of automatic MSBuild
 build_script:
-  - cd dapp/ && mkdir dist && yarn run build-win
+  - cd dapp/ && mkdir dist && yarn build-libs-electron && yarn build-win
 
 # scripts to run before deployment
 after_build:

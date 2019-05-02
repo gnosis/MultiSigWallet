@@ -77,19 +77,6 @@ describe('Wallet Service', function(){
             return {};
           });
 
-          /*var store = {};
-          spyOn(localStorage, ['getItem']).and.returnValue(function (key) {
-            console.log('get item from localstorage');
-            return store[key];
-          });
-          spyOn(localStorage, ['setItem']).and.returnValue(function (key, value) {
-            console.log('set item in localstorage');
-            return store[key] = value + '';
-          });
-          spyOn(localStorage, ['clear']).and.returnValue(function () {
-            console.log('clear localstorage');
-            store = {};
-          });*/
           walletService.deployWithLimit(accounts, 1, new Web3().toBigNumber(1).mul('1e18'),
             function (e, r) {
               if (r.address) {
@@ -99,15 +86,10 @@ describe('Wallet Service', function(){
                       method: "evm_snapshot",
                       id: 123456
                     }, function (e, response) {
-
-                      console.log("before");
-                      console.log(response);
-
                       snapId = response.result;
                       walletAddress = r.address;
 
                       expect(typeof(walletAddress)).toEqual("string");
-                      console.log("Before Test configurated");
                       done();
                 });
 

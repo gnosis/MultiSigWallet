@@ -70,10 +70,9 @@
                 if (code.length > 100 && Wallet.json.multiSigDailyLimit.binHex.slice(-992) == hexBytecode){
                   // it is a multisig
                   $scope.book.type = types.multisig;
-                  $scope.addToBook($scope.book);
                 } else {
-                  // 70a08231 -> balanceOf(address)
-                  if (code.indexOf('70a08231') !== -1) {
+                  // 0x18160ddd -> sha3('totalSupply()').slice(0,10)
+                  if (code.indexOf('18160ddd') !== -1) {
                     $scope.book.type = types.token;
                   } else if (code !== '0x') {
                     // it is a generic contract
@@ -82,10 +81,10 @@
                     // Mark it as a EOA
                     $scope.book.type = types.eoa;
                   }
-
-                  $scope.addToBook($scope.book);
-                  $uibModalInstance.close();
                 }
+
+                $scope.addToBook($scope.book);
+                $uibModalInstance.close();
                 
               });
             };

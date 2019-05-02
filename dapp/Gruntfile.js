@@ -158,7 +158,6 @@ module.exports = function(grunt) {
       'node_modules/clipboard/dist/clipboard.min.js',
       'node_modules/ngclipboard/dist/ngclipboard.min.js',
       'node_modules/angular-ui-notification/dist/angular-ui-notification.min.js',
-      'node_modules/ethereumjs-wallet/index.js',
       'src/trezor-connect-v4.js'
     ];
 

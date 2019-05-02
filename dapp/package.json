@@ -86,6 +86,7 @@
     "web3-provider-engine": "git+https://github.com/denisgranha/provider-engine.git#compiled-subprovider"
   },
   "devDependencies": {
+    "angular-mocks": "1.5.8",
     "asar": "0.13.1",
     "babel-register": "6.26.0",
     "coffee-script": "1.10.0",

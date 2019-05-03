@@ -257,11 +257,14 @@
                 var token = {};
                 Object.assign(token, $scope.wallet.tokens[tokenAddress]);
                 token.balance = new Web3().toBigNumber("0x" + tx.data.slice(74));
-                var filteredAddress = $filter("addressCanBeOwner")(account, $scope.wallet);
-                if (filteredAddress==account && $scope.addressBook && $scope.addressBook[filteredAddress]) {
-                  // filteredAddress is not an owner, but it is an item in address book
-                  filteredAddress = $scope.addressBook[filteredAddress].name;
+
+                var filteredAddress = $filter("addressBookNameOrFalse")(account, $scope.wallet);
+
+                if (!filteredAddress) {
+                  // address is not an item in address book
+                  filteredAddress = $filter("addressCanBeOwner")(account, $scope.wallet);
                 }
+
                 return {
                   title: "Transfer " + $filter("token")(token) + " to " + filteredAddress
                 };

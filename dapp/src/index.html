@@ -86,6 +86,7 @@
     <script src="./controllers/editABICtrl.js"></script>
     <script src="./controllers/accountCtrl.js"></script>
     <script src="./controllers/footerCtrl.js"></script>
+    <script src="./controllers/addressBookCtrl.js"></script>
     <script>
       if (isElectron && window.module) {
         module = window.module;
@@ -121,6 +122,11 @@
               <li ng-class="getMenuItemClass('/transactions')">
                 <a href="#/transactions">
                   Transactions
+                </a>
+              </li>
+              <li ng-class="getMenuItemClass('/address-book')">
+                <a href="#/address-book">
+                  Address Book
                 </a>
               </li>
               <li ng-class="getMenuItemClass('/settings')">

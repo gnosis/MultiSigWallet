@@ -226,6 +226,7 @@ module.exports = function(grunt) {
       if (jsBundleFileContent.error) {
         console.error('There have been some errores while minifying', jsBundleFileContent.error);
       } else {
+        console.log('Saving bundled file...');
         fs.writeFileSync(jsBundlePath, jsBundleFileContent.code, 'utf8');
       }
     } else {

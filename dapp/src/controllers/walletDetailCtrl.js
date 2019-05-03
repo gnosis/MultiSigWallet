@@ -2,16 +2,24 @@
   function () {
     angular
       .module("multiSigWeb")
-      .controller("walletDetailCtrl", function ($scope, $filter, $routeParams, $uibModal, $interval, ABI, Token, Utils, Wallet, Web3Service) {
+      .controller("walletDetailCtrl", function ($scope, $filter, $routeParams, $uibModal, $interval, $location, ABI, Token, Utils, Wallet, Web3Service) {
         $scope.wallet = {};
+
+        // Javascript doesn't have a deep object copy, this is a patch
+        // Convert $routeParams.address to checksum address, users might be using lowercase addresses
+        var walletCopy = Wallet.getAllWallets()[Web3Service.toChecksumAddress($routeParams.address)];
+
+        if (!walletCopy) {
+          // redirect to 404
+          $location.path('/404');
+          return;
+        }
 
         $scope.$watch(
           function () {
             return Wallet.updates;
           },
           function () {
-            // Javascript doesn't have a deep object copy, this is a patch
-            var walletCopy = Wallet.getAllWallets()[$routeParams.address];
             var tokenAddresses = Object.keys(walletCopy.tokens);
             // The token collection is updated by the controller and the service, so must be merged.
             tokenAddresses.map(function (item) {
@@ -45,6 +53,8 @@
         $scope.showTxs = "all";
         $scope.hideOwners = true;
         $scope.hideTokens = true;
+        // Get address book from localStorage
+        $scope.addressBook = JSON.parse(localStorage.getItem('addressBook') || '{}');
 
         $scope.updateParams = function () {
 
@@ -243,12 +253,20 @@
                 };
               case "a9059cbb":
                 var tokenAddress = tx.to;
-                var account = "0x" + tx.data.slice(34, 74);
+                var account = Web3Service.toChecksumAddress("0x" + tx.data.slice(34, 74));
                 var token = {};
                 Object.assign(token, $scope.wallet.tokens[tokenAddress]);
                 token.balance = new Web3().toBigNumber("0x" + tx.data.slice(74));
+
+                var filteredAddress = $filter("addressBookNameOrFalse")(account, $scope.wallet);
+
+                if (!filteredAddress) {
+                  // address is not an item in address book
+                  filteredAddress = $filter("addressCanBeOwner")(account, $scope.wallet);
+                }
+
                 return {
-                  title: "Transfer " + $filter("token")(token) + " to " + $filter("addressCanBeOwner")(account, $scope.wallet)
+                  title: "Transfer " + $filter("token")(token) + " to " + filteredAddress
                 };
               case "e20056e6":
                 var oldOwner = "0x" + tx.data.slice(34, 74);
@@ -284,6 +302,12 @@
                 }
             }
           }
+          // Check if trasanction was sent to an item in address book
+          else if ($scope.addressBook && $scope.addressBook[tx.to]) {
+            return {
+              title: "Transfer " + $filter("ether")(tx.value) + " to " + $scope.addressBook[tx.to].name
+            }
+          }
           else {
             return {
               title: "Transfer " + $filter("ether")(tx.value) + " to " + $filter("addressCanBeOwner")(tx.to, $scope.wallet)
@@ -293,13 +317,20 @@
 
         $scope.getDestination = function (tx) {
           if (Wallet.wallets[tx.to]) {
+            // Destination is a Wallet
             return Wallet.wallets[tx.to].name;
           }
           else if ($scope.wallet.owners && $scope.wallet.owners[tx.to] && $scope.wallet.owners[tx.to].name) {
+            // Destination is one of the owners of a wallet
             return $scope.wallet.owners[tx.to].name;
           }
+          // Destination is a Token
           else if ($scope.wallet.tokens && $scope.wallet.tokens[tx.to] && $scope.wallet.tokens[tx.to].name) {
             return $scope.wallet.tokens[tx.to].name;
+          }
+          else if ($scope.addressBook && $scope.addressBook[tx.to]) {
+            // Destination is an item in address book
+            return $scope.addressBook[tx.to].name;
           }
           else {
             var abis = ABI.get();
@@ -338,6 +369,7 @@
                 txBatch.add(
                   Wallet.getTransaction($scope.wallet.address, tx, function (e, info) {
                     if (!e && info.to) {
+                      // Convert to checksum address
                       info.to = Web3Service.toChecksumAddress(info.to);
                       $scope.$apply(function () {
                         // Added reference to the wallet

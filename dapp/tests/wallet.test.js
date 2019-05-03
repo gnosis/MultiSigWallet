@@ -5,10 +5,8 @@ describe('Wallet Service', function(){
   var utilsService = {};
   var connectionService = {};
   var accounts = ["0x291d64e40fdc9eb1ae5721e6dc5d60260e61a7b1", "0xcf9428b6257a19eb4f6640ab9ead9a5bb5bae3c1"];
-  var destination = "0xE3eB3DA4cae8BE5eFF65886A399e9f8E36a290A5";
   var host = 'http://localhost:8545';
   var web3;
-  var ethJs;
   var snapId;
   var walletAddress;
   jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
@@ -31,19 +29,16 @@ describe('Wallet Service', function(){
           web3.eth.defaultAccount = web3.eth.accounts[0]; //set default account;
           web3Service.web3 = web3;
 
-          /*ethJs = {'Util' : ethUtil};
-          walletService.EthJS = ethJs;*/
-
           // Mock Tx params in a function
           var getTxParams = function (tx) {
-            console.log("getTxParams");
+            console.log("Return mocked getTxParams");
             var defaultObj = {
               nonce: web3.eth.getTransactionCount(accounts[0]),
               from: accounts[0],
               gasPrice: 20000000000,
               gas: '0x47E7C4', //'0x47E7C4',
               gasLimit: txDefault.gasLimit,
-              walletFactoryAddress : '0xa6d9c5f7d4de3cef51ad3b7235d79ccc95114de5'
+              walletFactoryAddress : '0x7bf8705722156d74e17d0a3e1dce54779604aab6' 
             };
 
             Object.assign(defaultObj, tx);
@@ -53,62 +48,87 @@ describe('Wallet Service', function(){
           spyOn(walletService, ['txParams'] ).and.callFake(getTxParams);
           spyOn(walletService, ['txDefaults']).and.callFake(getTxParams);
           spyOn(walletService, ['updateWallet']).and.callFake(function (w) {
-            console.log("called Wallet.updateWallet");
+            console.log("called mocked function Wallet.updateWallet");
           });
 
           var $q = $injector.get('$q');
           var webInitialized = $q(function (resolve, reject) {
-            console.log("call webInitialized");
+            console.log("call mocked function webInitialized");
           });
 
           spyOn(web3Service, ['webInitialized'] ).and.returnValue(webInitialized);
           spyOn(walletService, ['initParams'] ).and.returnValue(function(){
-            console.log("call initParams");
+            console.log("call mocked function initParams");
           });
 
           spyOn(utilsService, ['dangerAlert'] ).and.returnValue({});
 
           var addTx = function(tx) {
-            console.log("Called Transaction.add");
+            console.log("Called mocked function Transaction.add");
           };
           spyOn(transactionService, ['add']).and.callFake(addTx);
           spyOn(transactionService, ['get']).and.callFake(function(){
-            console.log('called Transaction.get');
+            console.log('called mocked function Transaction.get');
             return {};
           });
 
-          /*var store = {};
-          spyOn(localStorage, ['getItem']).and.returnValue(function (key) {
-            console.log('get item from localstorage');
-            return store[key];
+          // Mock 'deployWithLimit' to skip configureGas modal
+          spyOn(walletService, 'deployWithLimit').and.callFake(function (accounts, requiredConfirmations, limit, cb) {
+            var MultiSigDailyLimit = web3Service.web3.eth.contract(abiJSON.multiSigDailyLimit.abi);
+            MultiSigDailyLimit.new(
+              accounts,
+              requiredConfirmations,
+              limit,
+              {
+                data: abiJSON.multiSigDailyLimit.binHex,
+                gas: 4000000,
+                gasPrice: 1000000000
+              },
+              cb
+            );
           });
-          spyOn(localStorage, ['setItem']).and.returnValue(function (key, value) {
-            console.log('set item in localstorage');
-            return store[key] = value + '';
+
+          // Mock 'deployWithLimitFactory' to skip configureGas modal 
+          spyOn(walletService, 'deployWithLimitFactory').and.callFake(function (accounts, requiredConfirmations, limit, cb) {
+            var walletFactory = web3Service.web3.eth.contract(abiJSON.multiSigDailyLimitFactory.abi).at(getTxParams().walletFactoryAddress);
+
+            walletFactory.create(
+              accounts,
+              requiredConfirmations,
+              limit,
+              {
+                data: abiJSON.multiSigDailyLimit.binHex,
+                gas: 4700000,
+                gasPrice: 1000000000
+              },
+              cb
+            );
+
           });
-          spyOn(localStorage, ['clear']).and.returnValue(function () {
-            console.log('clear localstorage');
-            store = {};
-          });*/
+
+          // Mock 'sendTransaction' to skip configureGas modal
+          spyOn(web3Service, 'sendTransaction').and.callFake(function (method, params, options, cb) {
+            method.sendTransaction.apply(method.sendTransaction, params.concat(cb));
+          });
+
           walletService.deployWithLimit(accounts, 1, new Web3().toBigNumber(1).mul('1e18'),
             function (e, r) {
               if (r.address) {
-
+                console.log("[Karma] beforeEach, create EVM snapshot");
                 web3.currentProvider.sendAsync({
                       jsonrpc: "2.0",
                       method: "evm_snapshot",
                       id: 123456
                     }, function (e, response) {
-
-                      console.log("before");
-                      console.log(response);
-
-                      snapId = response.result;
-                      walletAddress = r.address;
-
-                      expect(typeof(walletAddress)).toEqual("string");
-                      console.log("Before Test configurated");
-                      done();
+                      if (!e) {
+                        snapId = response.result;
+                        walletAddress = r.address;
+                        console.log("[Karma] afterEach, snapshot created successfully");
+                        expect(typeof(walletAddress)).toEqual("string");
+                        done();
+                      } else {
+                        done.fail(e);
+                      }
                 });
 
               }
@@ -119,14 +139,14 @@ describe('Wallet Service', function(){
   });
 
   afterEach(function (done) {
-    console.log("revert snapshot");
+    console.log("[Karma] AfterEach, revert snapshot");
     web3.currentProvider.sendAsync({
       jsonrpc: "2.0",
       method: "evm_revert",
       id: 12345,
       params: [snapId]
     }, function (e, response) {
-      console.log("after snapshot");
+      console.log("[Karma] afterEach, EVM snapshot reverted successfully");
       console.log(response);
       done();
     });
@@ -142,44 +162,6 @@ describe('Wallet Service', function(){
       done();
     });
   });
-
-/*
-TO BE REVIEWED
-  it('Send multisig transaction', function (done) {
-    var txObj = {};
-    txObj.to = accounts[1];
-    txObj.value = new Web3().toBigNumber(1).mul('1e18');
-
-    var countBeforeTx = web3.eth.getTransactionCount(walletAddress);
-    console.log(countBeforeTx);
-    var walletInstance = web3.eth.contract(walletService.json.multiSigDailyLimit.abi).at(walletAddress);
-    walletInstance.submitTransaction(
-      txObj.to,
-      txObj.value,
-      '0x0',
-      countBeforeTx,
-      walletService.txDefaults(),
-      function (e, r) {
-        console.log(e);
-        console.log(r);
-        var countAfterTx = web3.eth.getTransactionCount(walletAddress);
-        console.log(countAfterTx);
-        done();
-      }
-    );
-
-    // walletService.submitTransaction(walletAddress,  txObj, walletService.json.multiSigDailyLimit.abi, null, [],
-    //   function (e1, tx) {
-    //     console.log('Submit transaction');
-    //     if(e1){console.log(e1.message);}
-    //     console.log(tx);
-    //     var countAfterTx = web3.eth.getTransactionCount(walletAddress);
-    //     console.log(countAfterTx);
-    //     done();
-    //   }
-    // );
-  });
-*/
 
   it('Update required confirmations', function (done) {
     var required = 2;
@@ -199,6 +181,7 @@ TO BE REVIEWED
       batch.execute();
     }).call();
   });
+
 
   it('Update daily limit', function (done) {
     var limit = 2;
@@ -233,9 +216,6 @@ TO BE REVIEWED
   });
 
   it('Deposit ether on multisig', function (done) {
-
-    var limit = 1;
-
     transactionService.send(
       {
         to: walletAddress,
@@ -271,7 +251,6 @@ TO BE REVIEWED
   });
 
   it('Recover wallet', function (done) {
-
     var info = {'address' : walletAddress};
     walletService.coinbase = walletAddress;
     walletService.restore(info, function (e, r) {
@@ -294,7 +273,6 @@ TO BE REVIEWED
 
 
     walletService.updateLimit(walletAddress, new Web3().toBigNumber(2).mul('1e18'), {}, function (e, r){ //.mul('1e18')
-      console.log("##############");
       if(e){console.log(e.message);}
 
       var withdrawTx = {};
@@ -311,13 +289,11 @@ TO BE REVIEWED
         null,
         {},
         function (e, tx) {
-          console.log("####### Withdraw1 #######");
           expect(e).toBe(null);
 
           var batch2 = web3.createBatch();
           batch2.add(
             web3.eth.getBalance.request(walletAddress, function (e, response) {
-              console.log("####### Get Balance1 #######");
               console.log(response.toNumber());
               expect(response.eq(9)).toEqual(true);
 
@@ -332,12 +308,9 @@ TO BE REVIEWED
                 null,
                 {},
                 function (e, tx) {
-                  console.log("####### Withdraw2 #######");
-
                   var batch3 = web3.createBatch();
                   batch3.add(
                     web3.eth.getBalance.request(walletAddress, function (e2, response2) {
-                      console.log("####### Get Balance2 #######");
                       // Balance should not have changed
                       console.log(response2.toNumber());
                       expect(response2.eq(9)).toEqual(true);
@@ -380,28 +353,7 @@ TO BE REVIEWED
         }
       );
     });
-
-
-
-    //  {
-    //   var instance = Web3Service.web3.eth.contract(wallet.json.multiSigDailyLimit.abi).at(address);
-    //   var data = instance.changeDailyLimit.getData(
-    //     limit,
-    //     cb
-    //   );
-    //   // Get nonce
-    //   wallet.getTransactionCount(address, true, true, function (e, count) {
-    //     if (e) {
-    //       cb(e);
-    //     }
-    //     else {
-    //       instance.submitTransaction(address, "0x0", data, count, wallet.txDefaults(), cb);
-    //     }
-    //   }).call();
-    // };
-
   });
-
 
   it('Add owner', function (done) {
     // Deploy new wallet with 1 owner
@@ -490,140 +442,5 @@ TO BE REVIEWED
       }
     );
   });
-
-
-  /*it('Update required confirmations', function (done) {
-
-    var limit = 1;
-
-    var batch = web3.createBatch();
-    batch.add(
-      walletService.getRequired(walletAddress, function (e1, r1) {
-        expect(e1).toBe(null);
-        expect(r1.eq(1)).toBe(true);
-
-        // Update required confirmations
-        walletService.updateRequired(walletAddress, 2, function (e2, r2) {
-          //expect(e2).toBe(null);
-
-          var batch2 = web3.createBatch();
-          batch2.add(
-            walletService.getRequired(walletAddress, function (e3, r3) {
-              expect(r3.toNumber()).toBe(2);
-              done();
-            })
-          );
-          batch2.execute();
-        });
-      })
-    );
-
-    batch.execute();
-
-  });*/
-
-  // it('Update wallet', function (done) {
-  //   var limit = 1;
-  //
-  //   walletService.deployWithLimit([account], 1, new Web3().toBigNumber(limit).mul('1e18'),
-  //     function (e, r) {
-  //       if (r.address) {
-  //
-  //         var owner = {'0x291d64e40fdc9eb1ae5721e6dc5d60260e61a7b1':{'address':'0x291d64e40fdc9eb1ae5721e6dc5d60260e61a7b1'}};
-  //         var owners = [owner];
-  //         r.name = 'TestWallet';
-  //         r.owners = owners;
-  //         //walletService.updateWallet(r);
-  //
-  //         var owners = {};
-  //         for (var key in r.owners) {
-  //           console.log(key);
-  //           console.log(r.owners[key]);
-  //           r.owners[key].address = r.owners[key].address.toLowerCase();
-  //           owners[key.toLowerCase()] = r.owners[key];
-  //         }
-  //
-  //         //expect(walletService.wallets[r.address].name).toBe(r.name)
-  //         done();
-  //       }
-  //     }
-  //   );
-  // });
-
-  // it('Remove wallet', function (done) {
-  //   walletService.deployWithLimit([account], 1, new Web3().toBigNumber(0).mul('1e18'),
-  //     function (e, r) {
-  //       if (r.address) {
-  //         walletService.updateWallet(r); // Add transaction to walletService.wallets
-  //         expect(walletService.wallets[r.address]).not.toBe(undefined);
-  //         walletService.removeWallet(r.address);
-  //         expect(walletService.wallets[r.address]).toBe(undefined);
-  //         done();
-  //       }
-  //     }
-  //   );
-  // });
-
-  /*it('Deposit and Withdraw', function (done) {
-
-    var limit = 1;
-    var deposit = 10;
-
-    walletService.deployWithLimit([account], 1, new Web3().toBigNumber(0).mul('1e18'),
-      function (e, r) {
-        if (r.address) {
-          // Deposit
-          transactionService.send(
-            {
-              to: r.address,
-              from: account,
-              value: new Web3().toBigNumber(deposit)
-            },
-            function (e, tx) {
-
-              var batch = web3.createBatch();
-              console.log("Deposit transaction was sent.");
-              // Get balance
-              batch.add(
-                web3.eth.getBalance.request(r.address, function (e, response) {
-
-                  expect(response.toNumber()).toEqual(deposit);
-
-                  var withdrawTx = {};
-                  withdrawTx.value = new Web3().toBigNumber(5);
-                  withdrawTx.to = account;
-                  withdrawTx.data = '0x0';
-
-                  batch.add(
-                    // Withdraw
-                    walletService.submitTransaction(
-                      r.address,
-                      withdrawTx,
-                      null,
-                      null,
-                      null,
-                      function (e, tx) {
-                        var batch2 = web3.createBatch();
-                        batch2.add(
-                          web3.eth.getBalance.request(r.address, function (e, rr) {
-                            expect(rr.toNumber()).toEqual(5);
-                            done();
-                          })
-                        );
-                        batch2.execute();
-                      }
-                    )
-                  );
-                })
-              );
-              batch.execute();
-            }
-          );
-        }
-      }
-    );
-  });*/
-
-
 
 });

@@ -158,14 +158,25 @@
         };
 
         factory.toChecksumAddress = function (item) {
-          let checkSummedItem;
+          var checkSummedItem;
           if (item instanceof Array) {
             checkSummedItem = [];
-            for (let x = 0; x < item.length; x++) {
+            for (var x = 0; x < item.length; x++) {
               checkSummedItem.push(factory.web3.toChecksumAddress(item[x]))
             }
           } else if (typeof item == "string") {
             checkSummedItem = factory.web3.toChecksumAddress(item)
+          } else if (typeof item == "object") {
+            checkSummedItem = {};
+            var checkSummedKey;
+            for (key in item) {
+              checkSummedKey = factory.web3.toChecksumAddress(key);
+              checkSummedItem[checkSummedKey] = item[key];
+
+              if (checkSummedItem[checkSummedKey].address) {
+                checkSummedItem[checkSummedKey].address = factory.web3.toChecksumAddress(checkSummedItem[checkSummedKey].address);
+              }
+            }
           } else {
             return item;
           }
@@ -815,7 +826,7 @@
             }
           }
           else if (factory.getKeystore()) {
-            let _address;
+            var _address;
             Config.getConfiguration('accounts').map(function (account) {
               address = '0x' + account.address.replace('0x', '');
               addr.push(factory.toChecksumAddress(_address));

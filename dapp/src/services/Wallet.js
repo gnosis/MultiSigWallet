@@ -379,6 +379,9 @@
         *    },
         *    "abis" : {
         *        "address" : [ abi array ]
+        *    },
+        *    "addressBook": {
+        * 
         *    }
         *  }
         *
@@ -392,12 +395,20 @@
         var validJsonConfig = {};
         validJsonConfig.wallets = {};
         validJsonConfig.abis = {};
+        validJsonConfig.addressBook = {};
 
         if (!angular.equals(jsonConfig.abis, {})) {
             validJsonConfig.abis = jsonConfig.abis;
         }
         else {
           delete validJsonConfig.abis;
+        }
+
+        if (!angular.equals(jsonConfig.addressBook, {})) {
+          validJsonConfig.addressBook = jsonConfig.addressBook;
+        }
+        else {
+          delete validJsonConfig.addressBook;
         }
 
         if (!angular.equals(jsonConfig.wallets, {})) {
@@ -477,13 +488,11 @@
         // Setting up new configuration
         // No data validation at the moment
         var walletsData = JSON.parse(localStorage.getItem("wallets")) || {};
-        var abisData = ABI.get();
         var validJsonConfig = wallet.getValidConfigFromJSON(JSON.parse(jsonConfig), 'import');
         // Object.assign doesn't create a new key => value pair if
         // the key already exists, so at the moment we execute the
         // entire JSON object returning OK to the user.
         Object.assign(walletsData, validJsonConfig.wallets);
-        localStorage.setItem("wallets", JSON.stringify(walletsData));
 
         // Update abis if the key exists in the configuration object
         if (validJsonConfig.abis !== undefined) {
@@ -493,12 +502,83 @@
           }
         }
 
-        wallet.wallets = walletsData;
+        wallet.wallets = wallet.toChecksummedWalletConfiguration(walletsData);
+        // Save changes to `wallets` 
+        localStorage.setItem("wallets", JSON.stringify(wallet.wallets));
+        // Save changes to `addressBook`
+        if (validJsonConfig.addressBook) {
+          // Convert addresses to checksum
+          validJsonConfig.addressBook = Web3Service.toChecksumAddress(validJsonConfig.addressBook);
+          localStorage.setItem("addressBook", JSON.stringify(validJsonConfig.addressBook));
+        }
         wallet.updates++;
         try {
           $rootScope.$digest();
         }
         catch (e) {}
+      };
+
+      /**
+       * Convert addresses to checksum addresses and returns the converted object
+       */
+      wallet.toChecksummedWalletConfiguration = function (walletsData) {
+        /*
+        * {
+        *   wallets: {
+        *     "0x2d4ff1A416375B61Eb61124f673C4c44bA063140": {
+        *       owners: {
+        *         "0x1d4cc1A416375B61Eb61125f673D4c44bA063130": {
+        *           address: "0x1d4cc1A416375B61Eb61125f673D4c44bA063130",
+        *           name: "John"
+        *         }
+        *       },
+        *       tokens: {
+        *         "0x6810e776880C02933D47DB1b9fc05908e5386b96": {
+        *           address: "0x6810e776880C02933D47DB1b9fc05908e5386b96",
+        *           name: "GNO",
+        *           symbol: "GNO",
+        *           decimals: 18
+        *         }
+        *       }
+        *     }
+        *   }
+        * }
+        *
+        */
+        // Convert wallets' keys to checksum
+        walletsData = Web3Service.toChecksumAddress(walletsData);
+        for (var wallet in walletsData) {
+          walletsData[wallet].address = Web3Service.toChecksumAddress(walletsData[wallet].address || wallet);
+
+          var owners = {};
+          var tokens = {};
+
+          // Convert owners
+          for (var owner in walletsData[wallet].owners) {
+            owners[Web3Service.toChecksumAddress(owner)] = {
+              address: Web3Service.toChecksumAddress(walletsData[wallet].owners[owner].address || owner),
+              name: walletsData[wallet].owners[owner].name,
+            }
+          }
+
+          // Convert tokens
+          for (var token in walletsData[wallet].tokens) {
+            tokens[Web3Service.toChecksumAddress(token)] = {};
+
+            Object.assign(
+              tokens[Web3Service.toChecksumAddress(token)],
+              walletsData[wallet].tokens[token], 
+              {
+                address: Web3Service.toChecksumAddress(walletsData[wallet].tokens[token].address || token)
+              }
+            );
+          }
+
+          walletsData[wallet].owners = owners;
+          walletsData[wallet].tokens = tokens;
+        }
+
+        return walletsData;
       };
 
       wallet.removeWallet = function (address) {

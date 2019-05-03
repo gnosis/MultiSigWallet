@@ -143,13 +143,19 @@
         return text || text === 0 ? $sce.trustAsHtml(text.toString()) : $sce.trustAsHtml("<p class='text-center'>\n-\n</p>");
       };
     })
-    .filter('addressCanBeOwner', function (Wallet) {
+    .filter('addressBookNameOrFalse', function (Wallet) {
       return function (addressCandidate) {
+        var addressBook = JSON.parse(localStorage.getItem('addressBook') || '{}');
+        return (addressBook[addressCandidate] && addressBook[addressCandidate].name || false);
+      }
+    })
+    .filter('addressCanBeOwner', function (Wallet) {
+      return function (addressCandidate, currentWallet) {
         if (addressCandidate && Array.isArray(addressCandidate)) {
           for (key in Wallet.wallets) {
             var wallet = Wallet.wallets[key];
             return addressCandidate.map(function (address) {
-              if ( wallet && wallet.owners && wallet.owners[address] && wallet.owners[address].name){
+              if (wallet && wallet.owners && wallet.owners[address] && wallet.owners[address].name){
                 return wallet.owners[address].name;
               }
               else {
@@ -158,6 +164,16 @@
             });
           }
         }
+        // If address is owner of the current wallet, return its name
+        else if (addressCandidate
+          && addressCandidate.indexOf
+          && addressCandidate.indexOf("0x") != -1
+          && currentWallet
+          && currentWallet.owners
+          && currentWallet.owners[addressCandidate]
+          && currentWallet.owners[addressCandidate].name) {
+            return currentWallet.owners[addressCandidate].name;
+          }
         else if (addressCandidate && addressCandidate.indexOf && addressCandidate.indexOf("0x") != -1) {
           for (key in Wallet.wallets) {
             var wallet = Wallet.wallets[key];

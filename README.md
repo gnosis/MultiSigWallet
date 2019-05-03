@@ -46,7 +46,7 @@ npm test
 npm run test-dapp
 ```
 
-Deploy
+Deploy Contracts
 -------------
 ### Deploy multisig wallet:
 ```
@@ -56,6 +56,14 @@ truffle migrate <account1,account2,...,accountN> <requiredConfirmations>
 ```
 truffle migrate <account1,account2,...,accountN> <requiredConfirmations> <dailyLimit>
 ```
+
+Deployed instances with significant funds
+-------------
+- Aragon [0xcafe1a77e84698c83ca8931f54a755176ef75f2c](https://etherscan.io/address/0xcafe1a77e84698c83ca8931f54a755176ef75f2c)
+- Bancor [0x5894110995b8c8401bd38262ba0c8ee41d4e4658](https://etherscan.io/address/0x5894110995b8c8401bd38262ba0c8ee41d4e4658)
+- Golem [0x7da82c7ab4771ff031b66538d2fb9b0b047f6cf9](https://etherscan.io/address/0x7da82c7ab4771ff031b66538d2fb9b0b047f6cf9)
+- MysteriumDev [0x7e6614722614e434c4df9901bab31e466ba12fa4](https://etherscan.io/address/0x7e6614722614e434c4df9901bab31e466ba12fa4)
+- District0x [0xd20e4d854c71de2428e1268167753e4c7070ae68](https://etherscan.io/address/0xd20e4d854c71de2428e1268167753e4c7070ae68)
 
 Interface Releases
 ------------------
@@ -70,14 +78,12 @@ Security
 -------------
 All contracts are WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-Deployed instances with significant funds
--------------
-- Aragon [0xcafe1a77e84698c83ca8931f54a755176ef75f2c](https://etherscan.io/address/0xcafe1a77e84698c83ca8931f54a755176ef75f2c)
-- Bancor [0x5894110995b8c8401bd38262ba0c8ee41d4e4658](https://etherscan.io/address/0x5894110995b8c8401bd38262ba0c8ee41d4e4658)
-- Golem [0x7da82c7ab4771ff031b66538d2fb9b0b047f6cf9](https://etherscan.io/address/0x7da82c7ab4771ff031b66538d2fb9b0b047f6cf9)
-- MysteriumDev [0x7e6614722614e434c4df9901bab31e466ba12fa4](https://etherscan.io/address/0x7e6614722614e434c4df9901bab31e466ba12fa4)
-- District0x [0xd20e4d854c71de2428e1268167753e4c7070ae68](https://etherscan.io/address/0xd20e4d854c71de2428e1268167753e4c7070ae68)
-
 License
 -------------
 [LGPL v3](./LICENSE)
+
+FAQ
+-------------
+### How to set a custom Ethereum Node?
+You can specify a custom Ethereum Node endpoint by going to `settings` page. Click on `Ethereum Node` dropdown menu and select `Custom configuration`, this would make the Ethereum node's field editable. Please write your new endpoint there. Remember, if `Web3 Provider` is set to `Default (Metamask, Mist, Parity)`, Multisig will use the Ethereum Node endpoint coming with the Web3 Provider, so in that case go to your injected Web3 Provider (Metamask for instance) and update/switch your Ethereum Node endpoint.
+

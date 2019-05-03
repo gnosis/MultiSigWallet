@@ -1,6 +1,19 @@
 angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
   'use strict';
 
+  $templateCache.put('src/partials/404.html',
+    "<div>\n" +
+    "    <h4>\n" +
+    "      Page not found\n" +
+    "    </h4>\n" +
+    "    <p>\n" +
+    "      The resource you're looking for doesn't exist.\n" +
+    "    </p>\n" +
+    "  \n" +
+    "</div>"
+  );
+
+
   $templateCache.put('src/partials/accounts.html',
     "<div class=\"panel panel-default\">\n" +
     "  <div class=\"panel-heading\">\n" +
@@ -64,6 +77,68 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "  </table>\n" +
     "  <div ng-if=\"!account.addresses || account.addresses.length == 0\" class=\"panel-body text-center\">\n" +
     "    No accounts. Add an account <a href=\"\" ng-click=\"createWallet()\">now</a>.\n" +
+    "  </div>\n" +
+    "</div>\n"
+  );
+
+
+  $templateCache.put('src/partials/addressBook.html',
+    "<div class=\"panel panel-default\">\n" +
+    "  <div class=\"panel-heading\">\n" +
+    "    <div class=\"pull-right\">\n" +
+    "      <button type=\"button\" class=\"btn btn-default\" ng-click=\"addAddress()\">\n" +
+    "        Add\n" +
+    "      </button>\n" +
+    "    </div>\n" +
+    "    <h4>\n" +
+    "      Address book\n" +
+    "    </h4>\n" +
+    "  </div>\n" +
+    "  <table class=\"table table-hover table-bordered table-striped\">\n" +
+    "    <thead>\n" +
+    "      <tr>\n" +
+    "        <th>\n" +
+    "          Name\n" +
+    "        </th>\n" +
+    "        <th>\n" +
+    "          Address\n" +
+    "        </th>\n" +
+    "        <th>\n" +
+    "          Type\n" +
+    "        </th>\n" +
+    "      </tr>\n" +
+    "    </thead>\n" +
+    "    <tbody>\n" +
+    "      <tr ng-repeat=\"(key, book) in addressBook\">\n" +
+    "        <td>\n" +
+    "          <span>{{ book.name }}</span>\n" +
+    "          <div class=\"pull-right form-inline\">\n" +
+    "            <button type=\"button\" class=\"btn btn-default btn-sm\" ng-click=\"editAddress(book)\">\n" +
+    "              Edit\n" +
+    "            </button>\n" +
+    "            <button type=\"button\" class=\"btn btn-danger btn-sm\" ng-click=\"removeAddress(book.address)\">\n" +
+    "              Remove\n" +
+    "            </button>            \n" +
+    "          </div>\n" +
+    "        </td>\n" +
+    "        <td>\n" +
+    "          <div uib-popover=\"{{book.address}}\" popover-trigger=\"'mouseenter'\">\n" +
+    "            {{::book.address|address}}\n" +
+    "            <button type=\"button\" class=\"btn btn-default btn-sm pull-right\"\n" +
+    "              data-clipboard-text=\"{{book.address}}\"\n" +
+    "              ngclipboard>\n" +
+    "              Copy\n" +
+    "            </button>\n" +
+    "          </div>\n" +
+    "        </td>\n" +
+    "        <td>\n" +
+    "          <span>{{ book.type }}</span>\n" +
+    "        </td>\n" +
+    "      </tr>\n" +
+    "    </tbody>\n" +
+    "  </table>\n" +
+    "  <div ng-if=\"showEmptyBook()\" class=\"panel-body text-center\">\n" +
+    "    No addresses. Add a new entry <a href=\"\" ng-click=\"addAddress()\">now</a>.\n" +
     "  </div>\n" +
     "</div>\n"
   );
@@ -811,6 +886,33 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
   );
 
 
+  $templateCache.put('src/partials/modals/addAddressToBook.html',
+    "<div class=\"modal-header\">\n" +
+    "  <h3 class=\"modal-title\">\n" +
+    "    Add address\n" +
+    "  </h3>\n" +
+    "</div>\n" +
+    "<div class=\"modal-body\" id=\"modal-body\">\n" +
+    "  <div class=\"form-group\">\n" +
+    "    <label for=\"name\">Name</label>\n" +
+    "    <input id=\"name\" type=\"text\" class=\"form-control\" ng-model=\"book.name\" required />\n" +
+    "  </div>\n" +
+    "  <div class=\"form-group\">\n" +
+    "    <label for=\"address\">Address</label>\n" +
+    "    <input id=\"address\" type=\"text\" class=\"form-control\" ng-model=\"book.address\" required />\n" +
+    "  </div>\n" +
+    "</div>\n" +
+    "<div class=\"modal-footer\">\n" +
+    "  <button class=\"btn btn-default\" type=\"button\" ng-click=\"ok()\" ng-disabled=\"!book.address.length > 0 || !book.name.length > 0\">\n" +
+    "    Ok\n" +
+    "  </button>\n" +
+    "  <button class=\"btn btn-danger\" type=\"button\" ng-click=\"cancel()\">\n" +
+    "    Cancel\n" +
+    "  </button>\n" +
+    "</div>\n"
+  );
+
+
   $templateCache.put('src/partials/modals/addLightWalletAccount.html',
     "<div class=\"modal-header\">\n" +
     "  <h3 class=\"modal-title\">\n" +
@@ -1317,6 +1419,33 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
   );
 
 
+  $templateCache.put('src/partials/modals/editAddressBookItem.html',
+    "<div class=\"modal-header\">\n" +
+    "  <h3 class=\"modal-title\">\n" +
+    "    Edit address book item\n" +
+    "  </h3>\n" +
+    "</div>\n" +
+    "<div class=\"modal-body\" id=\"modal-body\">\n" +
+    "  <div class=\"form-group\">\n" +
+    "    <label for=\"name\">Name</label>\n" +
+    "    <input id=\"name\" type=\"text\" class=\"form-control\" ng-model=\"book.name\" required />\n" +
+    "  </div>\n" +
+    "  <div class=\"form-group\">\n" +
+    "    <label for=\"address\">Address</label>\n" +
+    "    <input id=\"address\" type=\"text\" class=\"form-control\" ng-model=\"book.address\" readonly />\n" +
+    "  </div>\n" +
+    "</div>\n" +
+    "<div class=\"modal-footer\">\n" +
+    "  <button class=\"btn btn-default\" type=\"button\" ng-click=\"ok()\" ng-disabled=\"!book.address.length > 0 || !book.name.length > 0\">\n" +
+    "    Ok\n" +
+    "  </button>\n" +
+    "  <button class=\"btn btn-danger\" type=\"button\" ng-click=\"cancel()\">\n" +
+    "    Cancel\n" +
+    "  </button>\n" +
+    "</div>\n"
+  );
+
+
   $templateCache.put('src/partials/modals/editLightWalletAccount.html',
     "<div class=\"modal-header\">\n" +
     "  <h3 class=\"modal-title\">\n" +
@@ -1488,6 +1617,11 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "  </h3>\n" +
     "</div>\n" +
     "<div class=\"modal-body\">\n" +
+    "  <div>\n" +
+    "      <input type=\"checkbox\" id=\"check-addressbook\"\n" +
+    "        ng-model=\"exportOptions.addressBook\" ng-click=\"setConfiguration()\">\n" +
+    "      <label class=\"custom-control-label\" for=\"check-addressbook\">Address book</label>\n" +
+    "  </div>\n" +
     "  <div class=\"form-group\">\n" +
     "    <textarea ng-model=\"configuration\" id=\"configuration\" class=\"form-control json-config\"></textarea>\n" +
     "  </div>\n" +
@@ -1808,6 +1942,33 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    </button>\n" +
     "  </div>\n" +
     "</form>\n"
+  );
+
+
+  $templateCache.put('src/partials/modals/removeAddressFromBook.html',
+    "<div class=\"modal-header\">\n" +
+    "  <h3 class=\"modal-title\">\n" +
+    "    Remove address from book\n" +
+    "  </h3>\n" +
+    "</div>\n" +
+    "<div class=\"modal-body\" id=\"modal-body\">\n" +
+    "  <div class=\"form-group\">\n" +
+    "    <label for=\"name\">Name</label>\n" +
+    "    <input id=\"name\" type=\"text\" class=\"form-control\" ng-model=\"book.name\" readonly />\n" +
+    "  </div>\n" +
+    "  <div class=\"form-group\">\n" +
+    "    <label for=\"address\">Address</label>\n" +
+    "    <input id=\"address\" type=\"text\" class=\"form-control\" ng-model=\"book.address\" readonly />\n" +
+    "  </div>\n" +
+    "</div>\n" +
+    "<div class=\"modal-footer\">\n" +
+    "  <button class=\"btn btn-default\" type=\"button\" ng-click=\"ok()\">\n" +
+    "    Ok\n" +
+    "  </button>\n" +
+    "  <button class=\"btn btn-danger\" type=\"button\" ng-click=\"cancel()\">\n" +
+    "    Cancel\n" +
+    "  </button>\n" +
+    "</div>\n"
   );
 
 
@@ -2173,6 +2334,56 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
   );
 
 
+  $templateCache.put('src/partials/modals/selectAddressFromBook.html',
+    "<div class=\"modal-header\">\n" +
+    "  <h3 class=\"modal-title\">\n" +
+    "    Browse address book\n" +
+    "  </h3>\n" +
+    "</div>\n" +
+    "<div class=\"modal-body\" id=\"modal-body\">\n" +
+    "  <div class=\"form-group\">\n" +
+    "    <label for=\"name\">Name</label>\n" +
+    "    <input id=\"name\" type=\"text\" class=\"form-control\" ng-model=\"searchItem.name\" ng-change=\"search()\" />\n" +
+    "  </div>\n" +
+    "  <table class=\"table table-striped\">\n" +
+    "    <thead>\n" +
+    "      <tr>\n" +
+    "        <th>Name</th>\n" +
+    "        <th>Address</th>\n" +
+    "        <th>Type</th>\n" +
+    "      </tr>\n" +
+    "    </thead>\n" +
+    "    <tbody>\n" +
+    "      <tr\n" +
+    "        ng-if=\"addressArray.length > 0\" \n" +
+    "        ng-repeat=\"item in addressArray | filter:searchItem\">\n" +
+    "        <td>\n" +
+    "          <button class=\"btn btn-default\" ng-click=\"choose(item)\">\n" +
+    "            <i class=\"fa fa-plus\"></i>  \n" +
+    "          </button>\n" +
+    "          {{ item.name }}\n" +
+    "        </td>\n" +
+    "        <td>\n" +
+    "          {{ item.address }}\n" +
+    "        </td>\n" +
+    "        <td>\n" +
+    "          {{ item.type }}\n" +
+    "        </td>\n" +
+    "      </tr>\n" +
+    "      <tr ng-if=\"addressArray.length == 0\">\n" +
+    "        <td colspan=\"3\">No items available in the address book.</td>\n" +
+    "      </tr>\n" +
+    "    </tbody>\n" +
+    "  </table>\n" +
+    "</div>\n" +
+    "<div class=\"modal-footer\">\n" +
+    "  <button class=\"btn btn-danger\" type=\"button\" ng-click=\"cancel()\">\n" +
+    "    Cancel\n" +
+    "  </button>\n" +
+    "</div>\n"
+  );
+
+
   $templateCache.put('src/partials/modals/selectNewWallet.html',
     "<div class=\"modal-header\">\n" +
     "  <h3 class=\"modal-title\">\n" +
@@ -2213,7 +2424,13 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "<form name=\"form\" class=\"form\">\n" +
     "  <div class=\"modal-body\">\n" +
     "    <div class=\"form-group\">\n" +
-    "      <label for=\"destination\">Destination</label>\n" +
+    "      <label for=\"destination\">\n" +
+    "        Destination\n" +
+    "        <!-- pick address from address book -->\n" +
+    "        <button class=\"btn btn-default btn-sm\" ng-click=\"openAddressBook()\">\n" +
+    "          <i class=\"fa fa-address-book\" title=\"Address book\"></i>\n" +
+    "        </button>\n" +
+    "      </label>\n" +
     "      <input id=\"destination\" type=\"text\" ng-model=\"tx.to\" ng-change=\"updateABI()\"  ng-min=\"40\" class=\"form-control\" required>\n" +
     "    </div>\n" +
     "    <div class=\"form-group\">\n" +
@@ -2523,7 +2740,13 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "<form class=\"form\" name=\"form\">\n" +
     "  <div class=\"modal-body\">\n" +
     "    <div class=\"form-group\">\n" +
-    "      <label for=\"destination\">Destination</label>\n" +
+    "      <label for=\"destination\">\n" +
+    "        Destination\n" +
+    "        <!-- pick address from address book -->\n" +
+    "        <button class=\"btn btn-default btn-sm\" ng-click=\"openAddressBook()\">\n" +
+    "          <i class=\"fa fa-address-book\" title=\"Address book\"></i>\n" +
+    "        </button>\n" +
+    "      </label>\n" +
     "      <input id=\"destination\" type=\"text\" ng-model=\"tx.to\" ng-change=\"updateABI()\"  ng-min=\"40\" class=\"form-control\" required>\n" +
     "    </div>\n" +
     "    <div class=\"form-group\">\n" +

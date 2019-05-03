@@ -64,28 +64,42 @@
               }
 
               $scope.book.address = checksumAddress;
-              
-              Web3Service.web3.eth.getCode($scope.book.address, function (e, code){
-                var hexBytecode = code.slice(-992);
-                if (code.length > 100 && Wallet.json.multiSigDailyLimit.binHex.slice(-992) == hexBytecode){
+
+              // Get multisig instance from specified address
+              var multisigInstance = Web3Service.web3.eth.contract(Wallet.json.multiSigDailyLimit.abi).at($scope.book.address);
+              // Look for MAX_OWNER_COUNT property in Multisig contract,
+              // it will be > 0 if the address corresponds to a real Multisig instance
+              multisigInstance.MAX_OWNER_COUNT(function (e, count) {
+                if (e) {
+                  Utils.dangerAlert(e);
+                  $uibModalInstance.close();
+                } else if (count && count.gt(0)) {
                   // it is a multisig
                   $scope.book.type = types.multisig;
+                  $scope.addToBook($scope.book);
+                  $uibModalInstance.close();
                 } else {
-                  // 0x18160ddd -> sha3('totalSupply()').slice(0,10)
-                  if (code.indexOf('18160ddd') !== -1) {
-                    $scope.book.type = types.token;
-                  } else if (code !== '0x') {
-                    // it is a generic contract
-                    $scope.book.type = types.contract;
-                  } else {
-                    // Mark it as a EOA
-                    $scope.book.type = types.eoa;
-                  }
+                  Web3Service.web3.eth.getCode($scope.book.address, function (e, code){
+                    if (e) {
+                      Utils.dangerAlert(e);
+                      $uibModalInstance.close();
+                    } else if (code.indexOf('18160ddd') !== -1) {
+                      // 0x18160ddd -> sha3('totalSupply()').slice(0,10)
+                      $scope.book.type = types.token;
+                    } else if (code !== '0x') {
+                      // it is a generic contract
+                      $scope.book.type = types.contract;
+                    } else {
+                      // Mark it as a EOA
+                      $scope.book.type = types.eoa;
+                    }
+
+                    $scope.addToBook($scope.book);
+                    $uibModalInstance.close();
+
+                  });
                 }
 
-                $scope.addToBook($scope.book);
-                $uibModalInstance.close();
-                
               });
             };
 

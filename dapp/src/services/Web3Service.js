@@ -157,6 +157,10 @@
           }
         };
 
+        /**
+         * Converts an object to a checksummed address when possible.
+         * Accepts objects, strings and arrays.
+         */
         factory.toChecksumAddress = function (item) {
           var checkSummedItem;
           if (item instanceof Array) {
@@ -170,11 +174,21 @@
             checkSummedItem = {};
             var checkSummedKey;
             for (key in item) {
-              checkSummedKey = factory.web3.toChecksumAddress(key);
-              checkSummedItem[checkSummedKey] = item[key];
+              checkSummedKey = key.startsWith('0x') ? factory.web3.toChecksumAddress(key) : key;
+              checkSummedItem[checkSummedKey] = (typeof item[key] == "string" && item[key].startsWith('0x')) ? factory.web3.toChecksumAddress(item[key]) : item[key];
 
-              if (checkSummedItem[checkSummedKey].address) {
+              if (checkSummedItem[checkSummedKey] && checkSummedItem[checkSummedKey].address) {
                 checkSummedItem[checkSummedKey].address = factory.web3.toChecksumAddress(checkSummedItem[checkSummedKey].address);
+              }
+
+              // specific to Transaction object
+              if (checkSummedItem[checkSummedKey] && checkSummedItem[checkSummedKey].info) {
+                // Convert info object to checksummed
+                checkSummedItem[checkSummedKey].info = factory.toChecksumAddress(checkSummedItem[checkSummedKey].info);
+              }
+              if (checkSummedItem[checkSummedKey] && checkSummedKey == "info") {
+                // Convert info object to checksummed
+                checkSummedItem[checkSummedKey] = factory.toChecksumAddress(checkSummedItem[checkSummedKey]);
               }
             }
           } else {

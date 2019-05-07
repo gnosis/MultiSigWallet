@@ -158,6 +158,11 @@
           var walletsData = JSON.parse(localStorage.getItem("wallets")) || {};
           walletsData = Wallet.toChecksummedWalletConfiguration(walletsData);
           localStorage.setItem('wallets', JSON.stringify(walletsData));
+
+          // Convert transactions's addresses too
+          var transactions = JSON.parse(localStorage.getItem("transactions")) || {};
+          transactions = Web3Service.toChecksumAddress(transactions);
+          localStorage.setItem('transactions', JSON.stringify(transactions));
         };
 
         /*$scope.currentPage = 1;

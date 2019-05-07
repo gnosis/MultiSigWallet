@@ -38,27 +38,33 @@
         * Add transaction object to the transactions collection
         */
         factory.add = function (tx) {
+          // Convert incoming object's addresses to checksummed ones
+          var checksummedTx = Web3Service.toChecksumAddress(tx);
+          
           var transactions = factory.get();
-          transactions[tx.txHash] = tx;
-          if (tx.callback) {
-            factory.callbacks[tx.txHash] = tx.callback;
+          transactions[tx.txHash] = checksummedTx;
+          if (checksummedTx.callback) {
+            factory.callbacks[checksummedTx.txHash] = tx.callback;
           }
-          tx.date = new Date();
+          checksummedTx.date = new Date();
           localStorage.setItem("transactions", JSON.stringify(transactions));
           factory.updates++;
           try {
             $rootScope.$digest();
           }
-          catch (e) { }
+          catch (e) {}
+
           Web3Service.web3.eth.getTransaction(
-            tx.txHash,
+            checksummedTx.txHash,
             getTransactionInfo
           );
         };
 
         factory.update = function (txHash, newObj) {
           var transactions = factory.get();
-          Object.assign(transactions[txHash], newObj);
+          // Convert incoming object's addresses to checksummed ones
+          var checksummedObj = Web3Service.toChecksumAddress(newObj);
+          Object.assign(transactions[txHash], checksummedObj);
           localStorage.setItem("transactions", JSON.stringify(transactions));
           factory.updates++;
           try {

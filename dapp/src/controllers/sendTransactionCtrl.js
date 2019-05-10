@@ -51,6 +51,9 @@
           if (returnData && returnData.item) {
             $scope.tx.to = returnData.item.address;
           }
+          // ng-change="updateABI()" doesn't work here, so we need
+          // to trigget it manually
+          $scope.updateABI();
         });
       };
 
@@ -206,7 +209,7 @@
       $scope.updateABI = function () {
         var to = $scope.tx.to;
         if (to && to.length > 40) {
-          to = to.toLowerCase();
+          to = Web3Servicxe.toChecksumAddress(to);
           $scope.abis = ABI.get();
           if ($scope.abis[to]) {
             $scope.abi = JSON.stringify($scope.abis[to].abi);

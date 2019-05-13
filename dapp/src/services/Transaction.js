@@ -12,13 +12,13 @@
 
         function processReceipt(e, receipt) {
           if (!e && receipt) {
+            receipt = Web3Service.toChecksumAddress(receipt);
             receipt.decodedLogs = Wallet.decodeLogs(receipt.logs);
             factory.update(receipt.transactionHash, { receipt: receipt });
 
             // call callback if it has
             if (factory.callbacks[receipt.transactionHash]) {
-              // Checksum contract address
-              receipt.contractAddress = receipt.contractAddress ? Web3Service.toChecksumAddress(receipt.contractAddress) : receipt.contractAddress;
+              // Execute callback function
               factory.callbacks[receipt.transactionHash](receipt);
             }
           }
@@ -26,6 +26,8 @@
 
         function getTransactionInfo(e, info) {
           if (!e && info) {
+            // Convert info object to an object containing checksum addresses
+            info = Web3Service.toChecksumAddress(info);
             factory.update(info.hash, { info: info });
           }
         }
@@ -39,14 +41,14 @@
         */
         factory.add = function (tx) {
           // Convert incoming object's addresses to checksummed ones
-          var checksummedTx = Web3Service.toChecksumAddress(tx);
+          tx = Web3Service.toChecksumAddress(tx);
           
           var transactions = factory.get();
-          transactions[tx.txHash] = checksummedTx;
-          if (checksummedTx.callback) {
-            factory.callbacks[checksummedTx.txHash] = tx.callback;
+          transactions[tx.txHash] = tx;
+          if (tx.callback) {
+            factory.callbacks[tx.txHash] = tx.callback;
           }
-          checksummedTx.date = new Date();
+          tx.date = new Date();
           localStorage.setItem("transactions", JSON.stringify(transactions));
           factory.updates++;
           try {
@@ -55,7 +57,7 @@
           catch (e) {}
 
           Web3Service.web3.eth.getTransaction(
-            checksummedTx.txHash,
+            tx.txHash,
             getTransactionInfo
           );
         };
@@ -63,8 +65,9 @@
         factory.update = function (txHash, newObj) {
           var transactions = factory.get();
           // Convert incoming object's addresses to checksummed ones
-          var checksummedObj = Web3Service.toChecksumAddress(newObj);
-          Object.assign(transactions[txHash], checksummedObj);
+          newObj = Web3Service.toChecksumAddress(newObj);
+          txHash = Web3Service.toChecksumAddress(txHash);
+          Object.assign(transactions[txHash], newObj);
           localStorage.setItem("transactions", JSON.stringify(transactions));
           factory.updates++;
           try {

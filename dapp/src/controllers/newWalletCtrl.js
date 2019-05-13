@@ -102,9 +102,11 @@
       };
 
       $scope.addOwner = function () {
-          $scope.owners[$scope.newOwner.address] = $scope.newOwner;
-          $scope.newOwner = {}; // reset values
-          $scope.maxAllowedConfirmations = Object.keys($scope.owners).length
+        // Checksum owner's address
+        $scope.newOwner = Web3Service.toChecksumAddress($scope.newOwner);
+        $scope.owners[$scope.newOwner.address] = $scope.newOwner;
+        $scope.newOwner = {}; // reset values
+        $scope.maxAllowedConfirmations = Object.keys($scope.owners).length
       };
     });
   }

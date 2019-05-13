@@ -61,6 +61,12 @@ var txDefaultOrig =
       'decimals': 18
     },
     {
+      'address': '0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf',
+      'name': 'DAOstack',
+      'symbol': 'GEN',
+      'decimals': 18
+    },
+    {
       'address': '0xe0b7927c4af23765cb51314a0e0521a9645f0e2a',
       'name': 'Digix Global',
       'symbol': 'DGD',

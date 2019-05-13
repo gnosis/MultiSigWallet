@@ -70,7 +70,7 @@
                 {
                   txHash: tx,
                   callback: function(receipt){
-                    var walletAddress = receipt.decodedLogs[0].events[1].value;
+                    var walletAddress = Web3Service.toChecksumAddress(receipt.decodedLogs[0].events[1].value);
                     Utils.success("Wallet deployed");
                     Wallet.updateWallet({name: $scope.name, address: walletAddress, owners: $scope.owners});
                     Transaction.update(tx, {multisig: walletAddress});

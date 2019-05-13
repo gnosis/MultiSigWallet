@@ -209,7 +209,7 @@
       $scope.updateABI = function () {
         var to = $scope.tx.to;
         if (to && to.length > 40) {
-          to = Web3Servicxe.toChecksumAddress(to);
+          to = Web3Service.toChecksumAddress(to);
           $scope.abis = ABI.get();
           if ($scope.abis[to]) {
             $scope.abi = JSON.stringify($scope.abis[to].abi);

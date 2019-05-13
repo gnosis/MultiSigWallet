@@ -8,6 +8,9 @@
       $scope.itemsPerPage = 10;
       $scope.wallets = Wallet.wallets;
 
+      // Get address book from localStorage
+      $scope.addressBook = JSON.parse(localStorage.getItem('addressBook') || '{}');
+
       // Get Ethereum Chain
       Transaction.getEthereumChain().then(
         function (data) {
@@ -27,10 +30,12 @@
             if (!$scope.transactionsMap[txKey]) {
               $scope.transactionsMap[txKey] = {};
             }
+
             Object.assign($scope.transactionsMap[txKey], storageTransactions[txKey]);
             txArray.push($scope.transactionsMap[txKey]);
             var abis = ABI.get();
             var savedABI = $scope.transactionsMap[txKey].info?abis[$scope.transactionsMap[txKey].info.to]:null;
+            
             if ($scope.transactionsMap[txKey].info && (!$scope.transactionsMap[txKey].decodedData || $scope.transactionsMap[txKey].decodedData.notDecoded || ($scope.transactionsMap[txKey].usedABI && (!savedABI || savedABI.abi )))) {
               if ($scope.transactionsMap[txKey].info.input !== "0x" && $scope.transactionsMap[txKey].info.input.data !== "0x0") {
                 // Decode data
@@ -116,10 +121,15 @@
       * Returns the transaction or contract address
       */
       $scope.getDestinationOrContract = function (tx) {
-        if (tx && tx.info && Wallet.wallets[tx.info.to] && Wallet.wallets[tx.info.to].name) {
+        if (tx && tx.info && tx.info.to && 
+          $scope.addressBook && $scope.addressBook[tx.info.to]) {
+          // Destination is an item in address book
+          return $scope.addressBook[tx.info.to].name;
+        }
+        else if (tx && tx.info && Wallet.wallets[tx.info.to] && Wallet.wallets[tx.info.to].name) {
           return Wallet.wallets[tx.info.to].name + " wallet";
         }
-        if (tx && tx.multisig) {
+        else if (tx && tx.multisig) {
           if( Wallet.wallets[tx.multisig] ) {
             return "Create wallet " + Wallet.wallets[tx.multisig].name;
           }

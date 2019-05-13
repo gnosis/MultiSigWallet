@@ -59,6 +59,9 @@
           if (returnData && returnData.item) {
             $scope.tx.to = returnData.item.address;
           }
+          // ng-change="updateABI()" doesn't work here, so we need
+          // to trigget it manually
+          $scope.updateABI();
         });
       };
 

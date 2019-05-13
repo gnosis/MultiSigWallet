@@ -1309,7 +1309,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "</div>\n" +
     "<div class=\"modal-body\">\n" +
     "  <p>\n" +
-    "      For using the application, you have to agree with our <a href=\"/TermsofUseMultisig.pdf\" target=\"_blank\" >Terms of Use</a> and <a href=\"{{ websites.gnosis }}/assets/pdf/PrivacyPolicyGnosisLtd.pdf\" target=\"_blank\">Privacy Policy</a>.\n" +
+    "      For using the application, you have to agree with our <a href=\"#\" ng-click=\"openTerms()\">Terms of Use</a> and <a href=\"#\" ng-click=\"openPolicy()\">Privacy Policy</a>.\n" +
     "  </p>\n" +
     "  <p>\n" +
     "    Don't use the wallet hosted at\n" +

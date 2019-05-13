@@ -2,22 +2,21 @@
     function () {
       angular
       .module('multiSigWeb')
-      .controller('footerCtrl', function ($scope) {
+      .controller('footerCtrl', function ($scope, Utils) {
         $scope.navCollapsed = true;
-        $scope.isElectron = isElectron;
 
         // electron show terms and policy
         // `shell` is an Electron only command
         $scope.openTerms = function() {
-            shell.openExternal(txDefault.websites.wallet + '/TermsofUseMultisig.pdf');
+          Utils.openResource(txDefault.resources.termsOfUse);
         }
 
         $scope.openPolicy = function () {
-            shell.openExternal(txDefault.websites.gnosis + '/assets/pdf/PrivacyPolicyGnosisLtd.pdf');
+          Utils.openResource(txDefault.resources.privacyPolicy);
         }
 
         $scope.openImprint = function () {
-            shell.openExternal(txDefault.websites.wallet + '/imprint.html');
+          Utils.openResource(txDefault.resources.imprint);
         }
 
       });

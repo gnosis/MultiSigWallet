@@ -249,8 +249,8 @@ function createMainMenu () {
       {
         label: 'Select All',
         accelerator: 'CmdOrCtrl+A',
-        role: 'selectAll',
-      },
+        role: 'selectall'
+      }
     ],
   };
 
@@ -268,7 +268,7 @@ function createContextMenus (windowInstance) {
   const selectionMenu = Menu.buildFromTemplate([
     {role: 'copy'},
     {type: 'separator'},
-    {role: 'selectall'},
+    {role: 'selectall'}
   ]);
 
   const inputMenu = Menu.buildFromTemplate([
@@ -279,7 +279,7 @@ function createContextMenus (windowInstance) {
     {role: 'copy'},
     {role: 'paste'},
     {type: 'separator'},
-    {role: 'selectall'},
+    {role: 'selectall'}
   ]);
 
   // Set up context menu

@@ -44,9 +44,9 @@ artifacts:
 
 environment:
   access_key_id:
-    secure: RpimOJdJROGTnBToRjUoRBn7Tlnwc1eNHaAHpFcy1yk=
+    secure: $(SECURE_ACCESS_KEY_ID)
   secret_access_key:
-    secure: LSAZENPbfm21aJt8qzYmuVmmlXnLGIwOKheK+hIlMd9jr2JsJyBjUhEbre6F6ZNq
+    secure: $(SECURE_SECRET_ACCESS_KEY)
 
 deploy:
   provider: S3

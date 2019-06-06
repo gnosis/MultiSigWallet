@@ -42,16 +42,10 @@ artifacts:
   path: '*.exe'
   name: exe
 
-environment:
-  access_key_id:
-    secure: RpimOJdJROGTnBToRjUoRBn7Tlnwc1eNHaAHpFcy1yk=
-  secret_access_key:
-    secure: LSAZENPbfm21aJt8qzYmuVmmlXnLGIwOKheK+hIlMd9jr2JsJyBjUhEbre6F6ZNq
-
 deploy:
   provider: S3
-  access_key_id: "%access_key_id%"
-  secret_access_key: "%secret_access_key%"
-  bucket: wallet-desktop-builds
-  region: us-east-1
+  access_key_id: $(AWS_ACCESS_KEY_ID)
+  secret_access_key: $(AWS_SECRET_ACCESS_KEY)
+  bucket: $(BUCKET_NAME)
+  region: $(AWS_REGION)
   artifact: "exe"

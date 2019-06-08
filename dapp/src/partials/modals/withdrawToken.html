@@ -10,7 +10,13 @@
       <input id="amount" type="number" class="form-control" ng-model="amount" ng-min="0" max="999999999999999" required>
     </div>
     <div class="form-group">
-      <label for="address">Destination</label>
+      <label for="address">
+        Destination
+        <!-- pick address from address book -->
+        <button class="btn btn-default btn-sm" ng-click="openAddressBook()">
+            <i class="fa fa-address-book" title="Address book"></i>
+          </button>          
+      </label>
       <input id="address" type="text" class="form-control" ng-model="to" ng-minlength="40" required>
     </div>
   </div>

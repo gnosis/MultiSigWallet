@@ -40,7 +40,7 @@
         **/
         factory.isMetamaskInjected = function () {
           return window && (typeof window.web3 !== 'undefined' &&
-            (window.web3.currentProvider.constructor.name === 'MetamaskInpageProvider' || window.web3.currentProvider.isMetaMask)
+            (window.web3.currentProvider.constructor.name === 'MetamaskInpageProvider' || window.web3.currentProvider.isMetaMask !== 'undefined')
           );
         };
 
@@ -59,11 +59,14 @@
           if ($window.web3 && !$window.ethereum) {
             web3 = $window.web3;
           }
-          // TODO: figure out whether Metamask standardizes isEnabled() or find out
-          // another way to manage it
           // https://github.com/MetaMask/metamask-extension/blob/2f7d4494278ad809c1cc9fcc0d9438182003b22d/app/scripts/inpage.js#L101
-          else if ($window.ethereum && window.ethereum._metamask.isEnabled()) {
+          else if ($window.ethereum) {
             web3 = $window.ethereum;
+          }
+
+          if (!web3) {
+            reject('Web3 Provider not connected');
+            return;
           }
 
           // Ledger wallet
@@ -102,12 +105,18 @@
             factory.web3 = web3.currentProvider !== undefined ? new MultisigWeb3(web3.currentProvider) : new MultisigWeb3(web3);
             // Set accounts
             // Convert to checksummed addresses
-            factory.accounts = factory.toChecksumAddress(factory.web3.eth.accounts);
-            factory.coinbase = factory.accounts[0];
+            factory.web3.eth.getAccounts(function (e, accounts) {
+              if (e) {
+                throw e;
+              } else {
+                factory.accounts = factory.toChecksumAddress(accounts);
+                factory.coinbase = factory.accounts[0];
+              }
+              if (resolve) {
+                resolve();
+              }
 
-            if (resolve) {
-              resolve();
-            }
+            });
           }
           else if (txDefault.wallet == 'lightwallet' && isElectron) {
             factory.lightWalletSetup();
@@ -217,8 +226,8 @@
                 controller: function ($scope, $uibModalInstance, Wallet, options) {
                   $scope.send = function () {
                     $uibModalInstance.close(
-                      { 
-                        gas: $scope.gasLimit, 
+                      {
+                        gas: $scope.gasLimit,
                         gasPrice: Math.ceil($scope.gasPrice * 1e9)
                       }
                     );

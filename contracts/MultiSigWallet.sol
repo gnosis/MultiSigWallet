@@ -23,7 +23,7 @@ contract MultiSigWallet {
      *  Constants
      */
     uint constant public MAX_OWNER_COUNT = 50;
-    ERC20 constant internal ERC20_REM_CONTRACT = ERC20(0x83984d6142934bb535793A82ADB0a46EF0F66B6d);
+    ERC20 constant internal ERC20_REM_CONTRACT = ERC20(0x83984d6142934bb535793A82ADB0a46EF0F66B6d);  // Remme ERC20 contract address
 
     /*
      *  Storage
@@ -187,7 +187,6 @@ contract MultiSigWallet {
     /// @param chainId Destination blockchain identifier on which swapped tokens should be  sent.
     /// @param userPublicKey Public key which is used to validate signature for claiming account name on Remchain.
     /// @param amountToSwap Amount of tokens to swap from ERC20 REM to Remchain.
-    /// @return Returns transaction ID.
     function requestSwap(string chainId, string userPublicKey, uint amountToSwap)
         public
     {

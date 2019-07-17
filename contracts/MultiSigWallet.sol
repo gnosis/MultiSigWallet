@@ -17,11 +17,13 @@ contract MultiSigWallet {
     event OwnerAddition(address indexed owner);
     event OwnerRemoval(address indexed owner);
     event RequirementChange(uint required);
+    event SwapRequest(address sender, string chainId, string userPublicKey, uint amountToSwap, uint timestamp);
 
     /*
      *  Constants
      */
     uint constant public MAX_OWNER_COUNT = 50;
+    ERC20 constant internal ERC20_REM_CONTRACT = ERC20(0x83984d6142934bb535793A82ADB0a46EF0F66B6d);
 
     /*
      *  Storage
@@ -179,6 +181,20 @@ contract MultiSigWallet {
     {
         required = _required;
         RequirementChange(_required);
+    }
+
+    /// @dev Allows a user to request swap from ERC20 REM to Remchain.
+    /// @param chainId Destination blockchain identifier on which swapped tokens should be  sent.
+    /// @param userPublicKey Public key which is used to validate signature for claiming account name on Remchain.
+    /// @param amountToSwap Amount of tokens to swap from ERC20 REM to Remchain.
+    /// @return Returns transaction ID.
+    function requestSwap(string chainId, string userPublicKey, uint amountToSwap)
+        public
+    {
+        if (!ERC20_REM_CONTRACT.transferFrom(msg.sender, address(this), amountToSwap)) {
+            revert();
+        }
+        SwapRequest(msg.sender, chainId, userPublicKey, amountToSwap, now);
     }
 
     /// @dev Allows an owner to submit and confirm a transaction.
@@ -389,4 +405,19 @@ contract MultiSigWallet {
         for (i=from; i<to; i++)
             _transactionIds[i - from] = transactionIdsTemp[i];
     }
+}
+
+/**
+ * @dev Interface of the ERC20 standard as defined in the EIP. Does not include
+ * the optional functions; to access them see `ERC20Detailed`.
+ */
+contract ERC20 {
+    function totalSupply() public returns (uint supply);
+    function balanceOf(address _owner) public returns (uint balance);
+    function transfer(address _to, uint _value) public returns (bool success);
+    function transferFrom(address _from, address _to, uint _value) public returns (bool success);
+    function approve(address _spender, uint _value) public returns (bool success);
+    function allowance(address _owner, address _spender) public returns (uint remaining);
+    function decimals() public returns(uint digits);
+    event Approval(address indexed _owner, address indexed _spender, uint _value);
 }

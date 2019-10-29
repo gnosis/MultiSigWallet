@@ -179,3 +179,67 @@ input[name="editable-select"]:disabled {
 ::selection {
   background: #b3c3ce;
   }
+
+.safe-migration-btn {
+  background: #1ba5c2;
+  color: #ffffff;
+  border: none;
+  padding: 10px 15px 10px 15px;
+  margin-top: 15px;
+  font-size: 18px;
+}
+
+/*.safe-migration-ul li:before {
+  background: #2c4c61;
+}*/
+
+.safe-migration-ul {
+  list-style: none;
+  margin-top: 20px;
+}
+
+.safe-migration-ul li::before {
+  content: counter(li);
+  color: #9baeba;
+  background: #2c4c61;
+  display: inline-block;
+  margin-left: -40px;
+  border-radius: 50%;
+  width: 28px;
+  padding-left: 10px;
+  height: 28px;
+  padding-top: 3px;
+  margin-right: 9px;
+}
+
+.safe-migration-ul li {
+  counter-increment: li;
+  margin-bottom: 10px;
+}
+
+.safe-features {
+  height: 180px;
+}
+
+/* .safe-features ul {
+  list-style: none;
+} */
+
+/* .safe-features li::before {
+  content: "\2022"; 
+  color: #1ba5c2; 
+  font-weight: bold; 
+  display: inline-block; 
+  width: 1em; 
+  margin-left: -1em;
+} */
+
+.safe-features .left {
+  float: left;
+  max-width: 420px;
+}
+
+.safe-features .right {
+  float: right;
+  max-width: 420px;
+}

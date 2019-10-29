@@ -338,7 +338,8 @@
             address: address,
             name: w.name,
             owners: owners,
-            tokens: tokens
+            tokens: tokens,
+            safeMigrated: w.safeMigrated || false
           }
         );
         

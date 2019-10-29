@@ -1,0 +1,61 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Gnosis Safe for Teams is like Multisig but better!
+  </h3>
+</div>
+<div class="modal-body" id="modal-body">
+  <p>
+    Gnosis Safe for Teams is a successor to the Multisig Wallet. 
+    Migrate your old Multisig and enjoy new benefits:
+  </p>
+
+  <div class="safe-features">
+      <ul class="left">
+        <li>
+          <h4>Future Proof</h4>
+          Add custom features using the modular design of the Gnosis Safe
+        </li>
+        <li>
+          <h4>Formally Verified</h4>
+          While our code is always audited, we've gone one step further and formally
+          verified the Gnosis Safe smart contracts
+        </li>
+      </ul>
+      <ul class="right">
+          <li>
+            <h4>Web3Connect</h4>
+            Connect with the Gnosis Safe for Teams with a wide range of popular wallets
+          </li>
+          <li>
+            <h4>User Experience</h4>
+            Interacting with a Multisignature Wallet has never been easier
+          </li>
+        </ul>
+  </div>
+
+  <h3>Migrating couldn't be easier:</h3>
+  <ul class="safe-migration-ul">
+    <li>
+      Click the button below to create new Safe. The owner and signature policies of your existing
+      Multisig will be applied to it automatically.
+    </li>
+    <li>
+      Try out the new interface and learn about the many benefits.
+    </li>
+    <li>
+      As soon as you feel comfortable, start moving funds to your new Safe. <a href="https://safe.gnosis.io/teams" target="_blank">read more</a>
+    </li>
+  </ul>
+  <div class="form-group centered-dash">
+    <button class="safe-migration-btn" ng-click="create()">Create new Safe</button>
+  </div>
+  <div class="form-group">
+
+  </div>
+</div>
+<div class="modal-footer">
+  <input type="checkbox" ng-model="data.hideMigrationModal" ng-checked="data.hideMigrationModal"> Don't show this again
+  <button class="btn btn-danger" type="button" ng-click="dismiss()">
+    Dismiss
+  </button>
+</div>

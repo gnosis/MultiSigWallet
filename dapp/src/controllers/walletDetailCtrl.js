@@ -56,6 +56,62 @@
         // Get address book from localStorage
         $scope.addressBook = JSON.parse(localStorage.getItem('addressBook') || '{}');
 
+        // Handle migration modal
+        if (!walletCopy.safeMigrated) {
+          $uibModal.open({
+            templateUrl: 'partials/modals/safeMigration.html',
+            size: 'lg',
+            resolve: {
+              wallet: walletCopy
+            },
+            controller: function ($scope, $uibModalInstance, Wallet, wallet) {
+
+              $scope.data = {
+                hideMigrationModal: true
+              };
+
+              // Get number of confirmations
+              Wallet
+              .getRequired(
+                wallet.address,
+                function (e, confirmations) {
+                  $scope.data.threshold = confirmations.toNumber();
+                }
+              ).call();
+
+              $scope.create = function () {
+                var ownersAddresses = Object.keys(wallet.owners);
+                var ownersNames = [];
+
+                for (var address of ownersAddresses) {
+                  ownersNames.push(wallet.owners[address].name);
+                }
+
+                var url = 'https://gnosis-safe.io/open';
+                url += '?name=' + wallet.name;
+                url += '&threshold=' + $scope.data.threshold;
+                url += '&owneraddresses=' + ownersAddresses.join(',');
+                url += '&ownernames=' + ownersNames.join(',');
+
+                window.open(url);
+                // $uibModalInstance.close();
+                $scope.data.hideMigrationModal = true; // don't show it again
+                $scope.dismiss();
+              };
+  
+              $scope.dismiss = function () {
+                if ($scope.data.hideMigrationModal == true) {
+                  // Don't show this modal again
+                  wallet.safeMigrated = true;
+                  Wallet.updateWallet(wallet);
+                }
+
+                $uibModalInstance.dismiss();
+              };
+            }
+          })
+        }
+
         $scope.updateParams = function () {
 
           var batch = Web3Service.web3.createBatch();

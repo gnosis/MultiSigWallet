@@ -2334,6 +2334,38 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
   );
 
 
+  $templateCache.put('src/partials/modals/safeMigration.html',
+    "<div class=\"modal-header\">\n" +
+    "  <h3 class=\"modal-title\">\n" +
+    "    Gnosis Safe for Teams is like Multisig but better!\n" +
+    "  </h3>\n" +
+    "</div>\n" +
+    "<div class=\"modal-body\" id=\"modal-body\">\n" +
+    "  <p>\n" +
+    "    Gnosis Safe for Teams is a successor to Multisig Wallet. Migrate your old Multisig and enjoy new benefits:\n" +
+    "  </p>\n" +
+    "\n" +
+    "  <h3>Migrate couldn't be easier:</h3>\n" +
+    "  <div class=\"form-group\">\n" +
+    "    <label for=\"name\">Name</label>\n" +
+    "    <input id=\"name\" type=\"text\" class=\"form-control\" ng-model=\"owner.name\" required />\n" +
+    "  </div>\n" +
+    "  <div class=\"form-group\">\n" +
+    "    <label for=\"address\">Address</label>\n" +
+    "    <input id=\"address\" type=\"text\" class=\"form-control\" ng-model=\"owner.address\" required />\n" +
+    "  </div>\n" +
+    "</div>\n" +
+    "<div class=\"modal-footer\">\n" +
+    "  <button class=\"btn btn-default\" type=\"button\" ng-click=\"ok()\" ng-disabled=\"!owner.address.length > 0\">\n" +
+    "    Ok\n" +
+    "  </button>\n" +
+    "  <button class=\"btn btn-danger\" type=\"button\" ng-click=\"cancel()\">\n" +
+    "    Cancel\n" +
+    "  </button>\n" +
+    "</div>\n"
+  );
+
+
   $templateCache.put('src/partials/modals/selectAddressFromBook.html',
     "<div class=\"modal-header\">\n" +
     "  <h3 class=\"modal-title\">\n" +

@@ -142,7 +142,7 @@
           // regex covers:
           // https://infura.io/v3/PROJECT-ID
           // https://*.infura.io/v3/PROJECT-ID
-          var validInfuraRegex = 'infura.io/v3/\w+';
+          var validInfuraRegex = 'infura.io/v3/\\w+';
           if (txDefault.ethereumNode.indexOf('infura.io') > -1 && !txDefault.ethereumNode.match(validInfuraRegex)) {
             // user is pointing to an infura endpoint, but he's not using a PROJECT-ID.
             var SHOW_INFURA_ALERT_STORAGE_KEY = 'showInfuraEndpointAlert';

@@ -153,7 +153,7 @@
               "<a href='https://infura.io/docs' target='_blank'>documentation</a> and discover how to create your project ID." +
               "<br/><br/>You can close this alert and read more on our <a href='https://github.com/gnosis/MultiSigWallet#how-to-set-a-custom-ethereum-node' target='_blank'>FAQs</a> afterwards." +
               "<br/><br/><h4>How to set the new endpoint on the Multisig</h4>" +
-              "Once you have created it and obtained the Infura endpoint, please set it on the Multisig by going " +
+              "Once you have created the project ID on Infura and obtained the Infura endpoint, please set it on the Multisig by going " +
               "to <a href='#/settings'>settings</a> page.<br/><br/>On settings, click on <u>Ethereum Node</u>'s dropdown menu and select <u>Custom configuration</u>, " +
               "this would make the <u>Ethereum node</u>'s field editable. Please write your new <b>Infura endpoint</b> there. " +
               "<br/><br/>Remember, if Web3 Provider is set to Default (Metamask, Mist, Parity), Multisig will use the Ethereum Node " +

@@ -2337,30 +2337,63 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
   $templateCache.put('src/partials/modals/safeMigration.html',
     "<div class=\"modal-header\">\n" +
     "  <h3 class=\"modal-title\">\n" +
-    "    Gnosis Safe for Teams is like Multisig but better!\n" +
+    "    Gnosis Safe Multisig is like Multisig but better!\n" +
     "  </h3>\n" +
     "</div>\n" +
     "<div class=\"modal-body\" id=\"modal-body\">\n" +
     "  <p>\n" +
-    "    Gnosis Safe for Teams is a successor to Multisig Wallet. Migrate your old Multisig and enjoy new benefits:\n" +
+    "    Gnosis Safe Multisig is a successor to the Multisig Wallet.\n" +
+    "    Migrate your old Multisig and enjoy new benefits:\n" +
     "  </p>\n" +
     "\n" +
-    "  <h3>Migrate couldn't be easier:</h3>\n" +
-    "  <div class=\"form-group\">\n" +
-    "    <label for=\"name\">Name</label>\n" +
-    "    <input id=\"name\" type=\"text\" class=\"form-control\" ng-model=\"owner.name\" required />\n" +
+    "  <div class=\"safe-features\">\n" +
+    "      <ul class=\"left\">\n" +
+    "        <li>\n" +
+    "          <h4>Future Proof</h4>\n" +
+    "          Add custom features using the modular design of the Gnosis Safe\n" +
+    "        </li>\n" +
+    "        <li>\n" +
+    "          <h4>Formally Verified</h4>\n" +
+    "          While our code is always audited, we've gone one step further and formally\n" +
+    "          verified the Gnosis Safe smart contracts\n" +
+    "        </li>\n" +
+    "      </ul>\n" +
+    "      <ul class=\"right\">\n" +
+    "          <li>\n" +
+    "            <h4>Web3Connect</h4>\n" +
+    "            Connect with the Gnosis Safe Multisig with a wide range of popular wallets\n" +
+    "          </li>\n" +
+    "          <li>\n" +
+    "            <h4>User Experience</h4>\n" +
+    "            Interacting with a Multisignature Wallet has never been easier\n" +
+    "          </li>\n" +
+    "        </ul>\n" +
+    "  </div>\n" +
+    "\n" +
+    "  <h3>Migrating couldn't be easier:</h3>\n" +
+    "  <ul class=\"safe-migration-ul\">\n" +
+    "    <li>\n" +
+    "      Click the button below to create a new Safe. The owner and signature policies of your existing\n" +
+    "      Multisig will be applied to it automatically.\n" +
+    "    </li>\n" +
+    "    <li>\n" +
+    "      Try out the new interface and learn about the many benefits.\n" +
+    "    </li>\n" +
+    "    <li>\n" +
+    "      As soon as you feel comfortable, start moving funds to your new Safe. <a href=\"https://safe.gnosis.io/teams\" target=\"_blank\">read more</a>\n" +
+    "    </li>\n" +
+    "  </ul>\n" +
+    "  <div class=\"form-group centered-dash\">\n" +
+    "    <button class=\"safe-migration-btn\" ng-click=\"create()\">Create new Safe</button>\n" +
     "  </div>\n" +
     "  <div class=\"form-group\">\n" +
-    "    <label for=\"address\">Address</label>\n" +
-    "    <input id=\"address\" type=\"text\" class=\"form-control\" ng-model=\"owner.address\" required />\n" +
+    "\n" +
     "  </div>\n" +
     "</div>\n" +
     "<div class=\"modal-footer\">\n" +
-    "  <button class=\"btn btn-default\" type=\"button\" ng-click=\"ok()\" ng-disabled=\"!owner.address.length > 0\">\n" +
-    "    Ok\n" +
-    "  </button>\n" +
-    "  <button class=\"btn btn-danger\" type=\"button\" ng-click=\"cancel()\">\n" +
-    "    Cancel\n" +
+    "  <input type=\"checkbox\" ng-model=\"data.hideMigrationModal\" ng-checked=\"data.hideMigrationModal\"> Don't show this again\n" +
+    "  <button class=\"btn btn-danger\" type=\"button\" ng-click=\"dismiss()\">\n" +
+    "    Dismiss\n" +
     "  </button>\n" +
     "</div>\n"
   );

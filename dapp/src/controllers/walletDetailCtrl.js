@@ -58,6 +58,10 @@
 
         // Handle migration modal
         if (!walletCopy.safeMigrated) {
+          $scope.showSafeMigrationModal();
+        }
+
+        $scope.showSafeMigrationModal = function () {
           $uibModal.open({
             templateUrl: 'partials/modals/safeMigration.html',
             size: 'lg',
@@ -67,7 +71,7 @@
             controller: function ($scope, $uibModalInstance, Wallet, wallet) {
 
               $scope.data = {
-                hideMigrationModal: true
+                hideMigrationModal: false
               };
 
               // Get number of confirmations
@@ -79,8 +83,19 @@
                 }
               ).call();
 
+              // Get owners
+              Wallet.getOwners(wallet.address, function (e, owners) {
+                if (e) {
+                    Utils.dangerAlert(e);
+                    return;
+                }
+
+                $scope.data.owners = owners.map(function (address) { return Web3Service.toChecksumAddress(address); });
+              }).call();
+
               $scope.create = function () {
-                var ownersAddresses = Object.keys(wallet.owners);
+
+                var ownersAddresses = $scope.data.owners; // Object.keys(wallet.owners);
                 var ownersNames = [];
 
                 for (var address of ownersAddresses) {
@@ -94,11 +109,9 @@
                 url += '&ownernames=' + ownersNames.join(',');
 
                 window.open(url);
-                // $uibModalInstance.close();
-                $scope.data.hideMigrationModal = true; // don't show it again
                 $scope.dismiss();
               };
-  
+
               $scope.dismiss = function () {
                 if ($scope.data.hideMigrationModal == true) {
                   // Don't show this modal again
@@ -109,8 +122,8 @@
                 $uibModalInstance.dismiss();
               };
             }
-          })
-        }
+          });
+        };
 
         $scope.updateParams = function () {
 
@@ -136,8 +149,8 @@
                   // Check if the owners are in the wallet.owners object
                   var walletOwnerskeys = $scope.wallet.owners ? Object.keys($scope.wallet.owners) : [];
 
-                  if (!$scope.wallet.owners) {   
-                    $scope.wallet.owners = {};  
+                  if (!$scope.wallet.owners) {
+                    $scope.wallet.owners = {};
                     $scope.owners.forEach(function (item, index) {
                       $scope.wallet.owners[item] = {
                         'name': 'Owner ' + (index + 1),
@@ -146,7 +159,7 @@
                       if (index == $scope.owners.length-1) { // last item
                         Wallet.updateWallet($scope.wallet);
                       }
-                    });              
+                    });
                   } else {
                     for (var x = 0; x < $scope.owners.length; x++) {
                       // If owner not in list
@@ -471,7 +484,7 @@
         /*$scope.getOwners = function () {
           var batch = Web3Service.web3.createBatch();
           $scope.owners = [];
-  
+
           function assignOwner (e, owner) {
             if (owner) {
               $scope.$apply(function () {
@@ -479,7 +492,7 @@
               });
             }
           }
-  
+
           for(var i=0; i<$scope.ownersNum; i++){
             // Get owners
             batch.add(

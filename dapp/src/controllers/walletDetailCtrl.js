@@ -56,11 +56,6 @@
         // Get address book from localStorage
         $scope.addressBook = JSON.parse(localStorage.getItem('addressBook') || '{}');
 
-        // Handle migration modal
-        if (!walletCopy.safeMigrated) {
-          $scope.showSafeMigrationModal();
-        }
-
         $scope.showSafeMigrationModal = function () {
           $uibModal.open({
             templateUrl: 'partials/modals/safeMigration.html',
@@ -71,7 +66,7 @@
             controller: function ($scope, $uibModalInstance, Wallet, wallet) {
 
               $scope.data = {
-                hideMigrationModal: false
+                hideMigrationModal: walletCopy.safeMigrated
               };
 
               // Get number of confirmations
@@ -116,9 +111,10 @@
                 if ($scope.data.hideMigrationModal == true) {
                   // Don't show this modal again
                   wallet.safeMigrated = true;
-                  Wallet.updateWallet(wallet);
+                } else {
+                  wallet.safeMigrated = false;
                 }
-
+                Wallet.updateWallet(wallet);
                 $uibModalInstance.dismiss();
               };
             }
@@ -181,6 +177,11 @@
                 }
               )
           );
+
+          // Handle migration modal
+          if (!walletCopy.safeMigrated) {
+            $scope.showSafeMigrationModal();
+          }
 
           // Get ETH Balance
           batch.add(

@@ -468,6 +468,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    {{wallet.name}} {{balance|ether}}\n" +
     "  </h1>\n" +
     "  <h5 class=\"grey\">{{wallet.address}}</h5>\n" +
+    "  <span class=\"btn btn-success\" ng-click=\"showSafeMigrationModal()\">Safe Multisig Migration</span>\n" +
     "</div>\n" +
     "<!-- Owners panel -->\n" +
     "<div class=\"panel panel-default\">\n" +

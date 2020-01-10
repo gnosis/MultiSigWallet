@@ -130,6 +130,12 @@ var txDefaultOrig =
       'name': 'Wrapped Ether',
       'symbol': 'WETH',
       'decimals': 18
+    },
+    {
+      'address': '0x4575f41308EC1483f3d399aa9a2826d74Da13Deb',
+      'name': 'Orchid',
+      'symbol': 'OXT',
+      'decimals': 18
     }
   ]
 };

@@ -1,3 +1,8 @@
+const DAPP_PORT = process.env.DAPP_PORT || 8282;
+const DAPP_HOST = process.env.DAPP_HOST || "0.0.0.0";
+const DAPP_CERT = process.env.DAPP_CERT || "localhost.crt";
+const DAPP_KEY = process.env.DAPP_KEY || "localhost.key";
+
 module.exports = function(grunt) {
 
   // Project configuration.
@@ -13,13 +18,13 @@ module.exports = function(grunt) {
             // the server port
             // can also be written as a function, e.g.
             // port: function() { return 8282; }
-            port: 8282,
+            port: DAPP_PORT,
 
             // the host ip address
             // If specified to, for example, "127.0.0.1" the server will
             // only be available on that ip.
             // Specify "0.0.0.0" to be available everywhere
-            host: "0.0.0.0",
+            host: DAPP_HOST,
 
             // cache: <sec>,
             showDir : true,
@@ -37,13 +42,13 @@ module.exports = function(grunt) {
             // the server port
             // can also be written as a function, e.g.
             // port: function() { return 8282; }
-            port: 8282,
+            port: DAPP_PORT,
 
             // the host ip address
             // If specified to, for example, "127.0.0.1" the server will
             // only be available on that ip.
             // Specify "0.0.0.0" to be available everywhere
-            host: "0.0.0.0",
+            host: DAPP_HOST,
 
             // cache: <sec>,
             showDir : true,
@@ -66,8 +71,8 @@ module.exports = function(grunt) {
             /// Use 'https: true' for default module SSL configuration
             /// (default state is disabled)
             https: {
-                cert: "localhost.crt",
-                key : "localhost.key"
+                cert: DAPP_CERT,
+                key:  DAPP_KEY
             },
             //
             // // Tell grunt task to open the browser

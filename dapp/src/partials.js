@@ -468,6 +468,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    {{wallet.name}} {{balance|ether}}\n" +
     "  </h1>\n" +
     "  <h5 class=\"grey\">{{wallet.address}}</h5>\n" +
+    "  <span class=\"btn btn-success\" ng-click=\"showSafeMigrationModal()\">Safe Multisig Migration</span>\n" +
     "</div>\n" +
     "<!-- Owners panel -->\n" +
     "<div class=\"panel panel-default\">\n" +
@@ -2331,6 +2332,71 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    </button>\n" +
     "  </div>\n" +
     "</form>\n"
+  );
+
+
+  $templateCache.put('src/partials/modals/safeMigration.html',
+    "<div class=\"modal-header\">\n" +
+    "  <h3 class=\"modal-title\">\n" +
+    "    Gnosis Safe Multisig is like Multisig but better!\n" +
+    "  </h3>\n" +
+    "</div>\n" +
+    "<div class=\"modal-body\" id=\"modal-body\">\n" +
+    "  <p>\n" +
+    "    Gnosis Safe Multisig is a successor to the Multisig Wallet.\n" +
+    "    Migrate your old Multisig and enjoy new benefits:\n" +
+    "  </p>\n" +
+    "\n" +
+    "  <div class=\"safe-features\">\n" +
+    "      <ul class=\"left\">\n" +
+    "        <li>\n" +
+    "          <h4>Future Proof</h4>\n" +
+    "          The upgradable and modular design allows you to be ready for future use-cases and asset-types\n" +
+    "        </li>\n" +
+    "        <li>\n" +
+    "          <h4>Formally Verified</h4>\n" +
+    "          While our code is always audited, we've gone one step further and formally\n" +
+    "          verified the Gnosis Safe smart contracts\n" +
+    "        </li>\n" +
+    "      </ul>\n" +
+    "      <ul class=\"right\">\n" +
+    "          <li>\n" +
+    "            <h4>DeFi-Compatible</h4>\n" +
+    "            You will soon be able to interact with various protocols right from the Safe Multisig interface\n" +
+    "          </li>\n" +
+    "          <li>\n" +
+    "            <h4>User Experience</h4>\n" +
+    "            Interacting with a Multisignature Wallet has never been easier\n" +
+    "          </li>\n" +
+    "        </ul>\n" +
+    "  </div>\n" +
+    "\n" +
+    "  <h3>Upgrading couldn't be easier:</h3>\n" +
+    "  <ul class=\"safe-migration-ul\">\n" +
+    "    <li>\n" +
+    "      Click the button below to create a new Safe. The owner and signature policies of your existing\n" +
+    "      Multisig will be applied to it automatically.\n" +
+    "    </li>\n" +
+    "    <li>\n" +
+    "      Try out the new interface and learn about the many benefits.\n" +
+    "    </li>\n" +
+    "    <li>\n" +
+    "      As soon as you feel comfortable, start moving funds to your new Safe. <a href=\"https://safe.gnosis.io/multisig\" target=\"_blank\">read more</a>\n" +
+    "    </li>\n" +
+    "  </ul>\n" +
+    "  <div class=\"form-group centered-dash\">\n" +
+    "    <button class=\"safe-migration-btn\" ng-click=\"create()\">Create new Safe</button>\n" +
+    "  </div>\n" +
+    "  <div class=\"form-group\">\n" +
+    "\n" +
+    "  </div>\n" +
+    "</div>\n" +
+    "<div class=\"modal-footer\">\n" +
+    "  <input type=\"checkbox\" ng-model=\"data.hideMigrationModal\" ng-checked=\"data.hideMigrationModal\"> Don't show this again\n" +
+    "  <button class=\"btn btn-danger\" type=\"button\" ng-click=\"dismiss()\">\n" +
+    "    Dismiss\n" +
+    "  </button>\n" +
+    "</div>\n"
   );
 
 

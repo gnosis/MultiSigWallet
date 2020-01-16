@@ -56,6 +56,71 @@
         // Get address book from localStorage
         $scope.addressBook = JSON.parse(localStorage.getItem('addressBook') || '{}');
 
+        $scope.showSafeMigrationModal = function () {
+          $uibModal.open({
+            templateUrl: 'partials/modals/safeMigration.html',
+            size: 'lg',
+            resolve: {
+              wallet: walletCopy
+            },
+            controller: function ($scope, $uibModalInstance, Wallet, wallet) {
+
+              $scope.data = {
+                hideMigrationModal: walletCopy.safeMigrated
+              };
+
+              // Get number of confirmations
+              Wallet
+              .getRequired(
+                wallet.address,
+                function (e, confirmations) {
+                  $scope.data.threshold = confirmations.toNumber();
+                }
+              ).call();
+
+              // Get owners
+              Wallet.getOwners(wallet.address, function (e, owners) {
+                if (e) {
+                    Utils.dangerAlert(e);
+                    return;
+                }
+
+                $scope.data.owners = owners.map(function (address) { return Web3Service.toChecksumAddress(address); });
+              }).call();
+
+              $scope.create = function () {
+
+                var ownersAddresses = $scope.data.owners; // Object.keys(wallet.owners);
+                var ownersNames = [];
+
+                for (var address of ownersAddresses) {
+                  ownersNames.push(wallet.owners[address].name);
+                }
+
+                var url = 'https://gnosis-safe.io/open';
+                url += '?name=' + wallet.name;
+                url += '&threshold=' + $scope.data.threshold;
+                url += '&owneraddresses=' + ownersAddresses.join(',');
+                url += '&ownernames=' + ownersNames.join(',');
+
+                window.open(url);
+                $scope.dismiss();
+              };
+
+              $scope.dismiss = function () {
+                if ($scope.data.hideMigrationModal == true) {
+                  // Don't show this modal again
+                  wallet.safeMigrated = true;
+                } else {
+                  wallet.safeMigrated = false;
+                }
+                Wallet.updateWallet(wallet);
+                $uibModalInstance.dismiss();
+              };
+            }
+          });
+        };
+
         $scope.updateParams = function () {
 
           var batch = Web3Service.web3.createBatch();
@@ -80,8 +145,8 @@
                   // Check if the owners are in the wallet.owners object
                   var walletOwnerskeys = $scope.wallet.owners ? Object.keys($scope.wallet.owners) : [];
 
-                  if (!$scope.wallet.owners) {   
-                    $scope.wallet.owners = {};  
+                  if (!$scope.wallet.owners) {
+                    $scope.wallet.owners = {};
                     $scope.owners.forEach(function (item, index) {
                       $scope.wallet.owners[item] = {
                         'name': 'Owner ' + (index + 1),
@@ -90,7 +155,7 @@
                       if (index == $scope.owners.length-1) { // last item
                         Wallet.updateWallet($scope.wallet);
                       }
-                    });              
+                    });
                   } else {
                     for (var x = 0; x < $scope.owners.length; x++) {
                       // If owner not in list
@@ -112,6 +177,11 @@
                 }
               )
           );
+
+          // Handle migration modal
+          if (!walletCopy.safeMigrated) {
+            $scope.showSafeMigrationModal();
+          }
 
           // Get ETH Balance
           batch.add(
@@ -415,7 +485,7 @@
         /*$scope.getOwners = function () {
           var batch = Web3Service.web3.createBatch();
           $scope.owners = [];
-  
+
           function assignOwner (e, owner) {
             if (owner) {
               $scope.$apply(function () {
@@ -423,7 +493,7 @@
               });
             }
           }
-  
+
           for(var i=0; i<$scope.ownersNum; i++){
             // Get owners
             batch.add(

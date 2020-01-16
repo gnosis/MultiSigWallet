@@ -125,7 +125,7 @@
           value: ethereumjs.Util.intToHex(0),
           gasPrice: ethereumjs.Util.intToHex(wallet.txParams.gasPrice),
           gas: ethereumjs.Util.intToHex(wallet.txParams.gasLimit),
-          nonce: nonce?nonce:ethereumjs.Util.intToHex(wallet.txParams.nonce),
+          nonce: nonce||nonce==0?nonce:ethereumjs.Util.intToHex(wallet.txParams.nonce),
           data: data
         };
 
@@ -338,7 +338,8 @@
             address: address,
             name: w.name,
             owners: owners,
-            tokens: tokens
+            tokens: tokens,
+            safeMigrated: w.safeMigrated || false
           }
         );
         

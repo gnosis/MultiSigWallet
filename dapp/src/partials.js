@@ -2388,7 +2388,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "    <button class=\"safe-migration-btn\" ng-click=\"create()\">Create new Safe</button>\n" +
     "  </div>\n" +
     "  <div class=\"form-group\">\n" +
-    "\n" +
+    "    Questions? <a href=\"mailto:safe@gnosis.io\">Get in touch!</a>\n" +
     "  </div>\n" +
     "</div>\n" +
     "<div class=\"modal-footer\">\n" +

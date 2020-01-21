@@ -178,11 +178,6 @@
               )
           );
 
-          // Handle migration modal
-          if (!walletCopy.safeMigrated) {
-            $scope.showSafeMigrationModal();
-          }
-
           // Get ETH Balance
           batch.add(
             Wallet.getBalance(
@@ -281,6 +276,11 @@
             .then(function () {
               $scope.updateParams();
               $scope.interval = $interval($scope.updateParams, 15000);
+              
+              // Handle migration modal
+              if (!walletCopy.safeMigrated) {
+                $scope.showSafeMigrationModal();
+              }
             });
         }
         startup();

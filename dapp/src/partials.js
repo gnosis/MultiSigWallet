@@ -2351,7 +2351,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "      <ul class=\"left\">\n" +
     "        <li>\n" +
     "          <h4>Future Proof</h4>\n" +
-    "          Add custom features using the modular design of the Gnosis Safe\n" +
+    "          The upgradable and modular design allows you to be ready for future use-cases and asset-types\n" +
     "        </li>\n" +
     "        <li>\n" +
     "          <h4>Formally Verified</h4>\n" +
@@ -2361,8 +2361,8 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "      </ul>\n" +
     "      <ul class=\"right\">\n" +
     "          <li>\n" +
-    "            <h4>Web3Connect</h4>\n" +
-    "            Connect with the Gnosis Safe Multisig with a wide range of popular wallets\n" +
+    "            <h4>DeFi-Compatible</h4>\n" +
+    "            You will soon be able to interact with various protocols right from the Safe Multisig interface\n" +
     "          </li>\n" +
     "          <li>\n" +
     "            <h4>User Experience</h4>\n" +
@@ -2371,7 +2371,7 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "        </ul>\n" +
     "  </div>\n" +
     "\n" +
-    "  <h3>Migrating couldn't be easier:</h3>\n" +
+    "  <h3>Upgrading couldn't be easier:</h3>\n" +
     "  <ul class=\"safe-migration-ul\">\n" +
     "    <li>\n" +
     "      Click the button below to create a new Safe. The owner and signature policies of your existing\n" +
@@ -2381,14 +2381,14 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "      Try out the new interface and learn about the many benefits.\n" +
     "    </li>\n" +
     "    <li>\n" +
-    "      As soon as you feel comfortable, start moving funds to your new Safe. <a href=\"https://safe.gnosis.io/teams\" target=\"_blank\">read more</a>\n" +
+    "      As soon as you feel comfortable, start moving funds to your new Safe. <a href=\"https://safe.gnosis.io/multisig\" target=\"_blank\">read more</a>\n" +
     "    </li>\n" +
     "  </ul>\n" +
     "  <div class=\"form-group centered-dash\">\n" +
     "    <button class=\"safe-migration-btn\" ng-click=\"create()\">Create new Safe</button>\n" +
     "  </div>\n" +
     "  <div class=\"form-group\">\n" +
-    "\n" +
+    "    Questions? <a href=\"mailto:safe@gnosis.io\">Get in touch!</a>\n" +
     "  </div>\n" +
     "</div>\n" +
     "<div class=\"modal-footer\">\n" +

@@ -60,6 +60,12 @@ var txDefaultOrig =
       'decimals': 18
     },
     {
+      'address': '0x746DdA2ea243400D5a63e0700F190aB79f06489e',
+      'name': 'BOSAGORA',
+      'symbol': 'BOA',
+      'decimals': 7
+    },
+    {
       'address': '0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359',
       'name': 'DAI Stable Coin',
       'symbol': 'DAI',

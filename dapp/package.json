@@ -89,7 +89,7 @@
     "asar": "0.13.1",
     "babel-register": "6.26.0",
     "coffee-script": "1.10.0",
-    "electron": "1.8.6",
+    "electron": "9.4.0",
     "electron-builder": "20.15.1",
     "electron-packager": "8.7.2",
     "growl": "^1.10.5",

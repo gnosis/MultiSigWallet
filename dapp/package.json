@@ -73,7 +73,7 @@
     "grunt-angular-templates": "1.1.0",
     "grunt-http-server": "2.0.0",
     "http-server": "0.9.0",
-    "jquery": "3.3.1",
+    "jquery": "3.5.0",
     "json-rpc-error": "2.0.0",
     "ledger-wallet-provider": "git+https://github.com/denisgranha/ledger-wallet-provider.git#v1.15.0",
     "ledgerco": "1.1.2",

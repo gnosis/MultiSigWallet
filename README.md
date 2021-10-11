@@ -33,6 +33,20 @@ Being used by
 - [Weifund](http://weifund.io/)
 - StabL
 
+Install dependencies
+--------------------
+[NPM](https://www.npmjs.com/get-npm)
+
+[NVM](https://github.com/creationix/nvm#install-script): 
+```
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | bash
+```
+
+`command -v nvm` should output nvm, but if there is no output or `command not found`, then restart the terminal.
+
+
+[Truffle](https://github.com/trufflesuite/truffle#install): `npm install -g truffle`
+
 Install
 -------------
 ```

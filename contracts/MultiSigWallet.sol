@@ -93,6 +93,7 @@ contract MultiSigWallet {
 
     /// @dev Fallback function allows to deposit ether.
     function()
+        public
         payable
     {
         if (msg.value > 0)
@@ -158,6 +159,7 @@ contract MultiSigWallet {
         onlyWallet
         ownerExists(owner)
         ownerDoesNotExist(newOwner)
+        notNull(newOwner)
     {
         for (uint i=0; i<owners.length; i++)
             if (owners[i] == owner) {

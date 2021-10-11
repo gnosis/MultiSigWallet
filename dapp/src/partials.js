@@ -2939,7 +2939,13 @@ angular.module('multiSigWeb').run(['$templateCache', function($templateCache) {
     "      <input id=\"amount\" type=\"number\" class=\"form-control\" ng-model=\"amount\" ng-min=\"0\" max=\"999999999999999\" required>\n" +
     "    </div>\n" +
     "    <div class=\"form-group\">\n" +
-    "      <label for=\"address\">Destination</label>\n" +
+    "      <label for=\"address\">\n" +
+    "        Destination\n" +
+    "        <!-- pick address from address book -->\n" +
+    "        <button class=\"btn btn-default btn-sm\" ng-click=\"openAddressBook()\">\n" +
+    "            <i class=\"fa fa-address-book\" title=\"Address book\"></i>\n" +
+    "          </button>          \n" +
+    "      </label>\n" +
     "      <input id=\"address\" type=\"text\" class=\"form-control\" ng-model=\"to\" ng-minlength=\"40\" required>\n" +
     "    </div>\n" +
     "  </div>\n" +
